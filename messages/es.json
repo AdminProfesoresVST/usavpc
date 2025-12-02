@@ -23,5 +23,29 @@
             "contact": "Contacto",
             "start": "Iniciar Evaluación"
         }
+    },
+    "Services": {
+        "title": "Nuestros Servicios",
+        "subtitle": "Herramientas avanzadas impulsadas por IA para agilizar su proceso de solicitud de visa de EE. UU.",
+        "analysisTitle": "Análisis de Elegibilidad con IA",
+        "analysisDesc": "Nuestro algoritmo patentado evalúa su perfil frente a miles de casos exitosos para determinar su probabilidad de aprobación.",
+        "strategyTitle": "Estrategia Personalizada",
+        "strategyDesc": "Reciba un informe PDF personalizado con recomendaciones específicas para fortalecer su solicitud antes de su entrevista.",
+        "documentTitle": "Pre-chequeo de Documentos",
+        "documentDesc": "Identifique documentación faltante o débil que podría llevar a retrasos en el procesamiento administrativo."
+    },
+    "About": {
+        "title": "Sobre Nosotros",
+        "missionTitle": "Nuestra Misión",
+        "missionDesc": "Democratizar el acceso a la consultoría profesional de visas a través de la tecnología, brindando orientación precisa y accesible a los solicitantes de todo el mundo.",
+        "securityTitle": "Seguridad Primero",
+        "securityDesc": "Utilizamos encriptación de nivel bancario de 256 bits para proteger sus datos personales. Su información nunca se comparte con terceros.",
+        "disclaimerTitle": "Descargo de Responsabilidad Importante",
+        "disclaimerDesc": "US Visa Processing Center es una empresa privada de tecnología y NO está afiliada con el Departamento de Estado de los Estados Unidos ni con ninguna agencia gubernamental."
+    },
+    "Contact": {
+        "title": "Contactar Soporte",
+        "desc": "¿Necesita ayuda? Nuestro equipo de soporte está aquí para ayudarle con cualquier problema técnico relacionado con su evaluación o informe.",
+        "email": "soporte@usvisaprocessingcenter.com"
     }
 }

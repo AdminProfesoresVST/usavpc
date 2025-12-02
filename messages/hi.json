@@ -23,5 +23,29 @@
             "contact": "संपर्क करें",
             "start": "मूल्यांकन शुरू करें"
         }
+    },
+    "Services": {
+        "title": "हमारी सेवाएं",
+        "subtitle": "Advanced AI-powered tools to streamline your US Visa application process.",
+        "analysisTitle": "AI Eligibility Analysis",
+        "analysisDesc": "Our proprietary algorithm evaluates your profile against thousands of successful cases to determine your approval probability.",
+        "strategyTitle": "Personalized Strategy",
+        "strategyDesc": "Receive a custom PDF report with specific recommendations to strengthen your application before your interview.",
+        "documentTitle": "Document Pre-Check",
+        "documentDesc": "Identify missing or weak documentation that could lead to administrative processing delays."
+    },
+    "About": {
+        "title": "हमारे बारे में",
+        "missionTitle": "Our Mission",
+        "missionDesc": "To democratize access to professional visa consulting through technology, providing accurate and accessible guidance to applicants worldwide.",
+        "securityTitle": "Security First",
+        "securityDesc": "We use bank-level 256-bit encryption to protect your personal data. Your information is never shared with third parties.",
+        "disclaimerTitle": "Important Disclaimer",
+        "disclaimerDesc": "US Visa Processing Center is a private technology company and is NOT affiliated with the United States Department of State or any government agency."
+    },
+    "Contact": {
+        "title": "Contact Support",
+        "desc": "Need assistance? Our support team is here to help with any technical issues regarding your assessment or report.",
+        "email": "support@usvisaprocessingcenter.com"
     }
 }
