@@ -13,6 +13,7 @@ const config: Config = {
                 background: 'var(--background)',
                 foreground: 'var(--foreground)',
                 "official-grey": "var(--official-grey)",
+                "trust-navy": "var(--trust-navy)",
                 "paper-white": "var(--paper-white)",
                 "alert-red": "var(--alert-red)",
                 "success-green": "var(--success-green)",

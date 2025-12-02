@@ -14,12 +14,14 @@ interface Message {
     role: "user" | "assistant";
     content: string;
     timestamp: Date;
+    formalVersion?: string;
+    redFlags?: string[];
 }
 
 export function ChatInterface() {
     const t = useTranslations('Chat');
     const [messages, setMessages] = useState<Message[]>([]);
-    // Initialize welcome message in useEffect to avoid hydration mismatch
+
     useEffect(() => {
         setMessages([
             {
@@ -76,12 +78,13 @@ export function ChatInterface() {
                 role: "assistant",
                 content: data.content,
                 timestamp: new Date(),
+                formalVersion: data.formal_version,
+                redFlags: data.red_flags
             };
 
             setMessages((prev) => [...prev, botMsg]);
         } catch (error) {
             console.error("Chat Error:", error);
-            // Fallback error message
             setMessages((prev) => [...prev, {
                 id: Date.now().toString(),
                 role: "assistant",
@@ -105,49 +108,85 @@ export function ChatInterface() {
                 </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-official-grey/50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-official-grey/50">
                 <AnimatePresence initial={false}>
                     {messages.map((msg) => (
-                        <motion.div
-                            key={msg.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.2 }}
-                            className={cn(
-                                "flex w-full",
-                                msg.role === "user" ? "justify-end" : "justify-start"
-                            )}
-                        >
-                            <div
+                        <div key={msg.id} className="flex flex-col gap-2">
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
                                 className={cn(
-                                    "flex max-w-[80%] gap-2",
-                                    msg.role === "user" ? "flex-row-reverse" : "flex-row"
+                                    "flex w-full",
+                                    msg.role === "user" ? "justify-end" : "justify-start"
                                 )}
                             >
                                 <div
                                     className={cn(
-                                        "h-8 w-8 rounded-sm flex items-center justify-center shrink-0",
-                                        msg.role === "user" ? "bg-primary text-white" : "bg-white border border-border text-primary"
+                                        "flex max-w-[80%] gap-2",
+                                        msg.role === "user" ? "flex-row-reverse" : "flex-row"
                                     )}
                                 >
-                                    {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
+                                    <div
+                                        className={cn(
+                                            "h-8 w-8 rounded-sm flex items-center justify-center shrink-0",
+                                            msg.role === "user" ? "bg-primary text-white" : "bg-white border border-border text-primary"
+                                        )}
+                                    >
+                                        {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
+                                    </div>
+                                    <div
+                                        className={cn(
+                                            "p-3 rounded-sm text-sm shadow-sm",
+                                            msg.role === "user"
+                                                ? "bg-primary text-white"
+                                                : "bg-white border border-border text-foreground"
+                                        )}
+                                    >
+                                        {msg.content}
+                                        <span className="block text-[10px] opacity-70 mt-1 text-right">
+                                            {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div
-                                    className={cn(
-                                        "p-3 rounded-sm text-sm shadow-sm",
-                                        msg.role === "user"
-                                            ? "bg-primary text-white"
-                                            : "bg-white border border-border text-foreground"
+                            </motion.div>
+
+                            {/* Magic Mirror & Red Flags (Only for Assistant messages) */}
+                            {msg.role === "assistant" && (
+                                <div className="pl-12 max-w-[85%] space-y-2">
+                                    {/* Formal Version */}
+                                    {msg.formalVersion && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            className="bg-official-grey border border-gray-200 rounded-sm p-3 text-xs text-muted-foreground"
+                                        >
+                                            <div className="flex items-center gap-1 mb-1 text-trust-navy font-bold uppercase tracking-wider text-[10px]">
+                                                <span>Formal Record</span>
+                                            </div>
+                                            <p className="italic">"{msg.formalVersion}"</p>
+                                        </motion.div>
                                     )}
-                                >
-                                    {msg.content}
-                                    <span className="block text-[10px] opacity-70 mt-1 text-right">
-                                        {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
+
+                                    {/* Red Flags */}
+                                    {msg.redFlags && msg.redFlags.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="bg-red-50 border border-red-100 rounded-sm p-3 text-xs text-alert-red"
+                                        >
+                                            <div className="flex items-center gap-1 mb-1 font-bold uppercase tracking-wider text-[10px]">
+                                                <span>Risk Factor Detected</span>
+                                            </div>
+                                            <ul className="list-disc list-inside">
+                                                {msg.redFlags.map((flag, idx) => (
+                                                    <li key={idx}>{flag}</li>
+                                                ))}
+                                            </ul>
+                                        </motion.div>
+                                    )}
                                 </div>
-                            </div>
-                        </motion.div>
+                            )}
+                        </div>
                     ))}
                 </AnimatePresence>
 

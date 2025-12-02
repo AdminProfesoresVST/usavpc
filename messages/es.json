@@ -1,8 +1,81 @@
 {
     "HomePage": {
-        "title": "Revisión de Elegibilidad y Estrategia de Visa",
-        "subtitle": "Complete esta entrevista preliminar para recibir su VisaScore™ y una estrategia de solicitud personalizada. Nuestro sistema impulsado por IA analiza su perfil frente a las tendencias consulares actuales.",
-        "devMode": "Modo Dev: Probar Generación de PDF"
+        "title": "Gestión Segura de Solicitudes de Visa",
+        "subtitle": "Asistencia profesional para su solicitud de visa B1/B2. Procesamiento seguro, preciso y eficiente.",
+        "cta": "Comprobar Elegibilidad / Iniciar",
+        "devMode": "Modo Dev: Probar Generación de PDF",
+        "Trust": {
+            "encryption": "Encriptación Bancaria",
+            "ai": "Detección de Errores con IA",
+            "speed": "Procesamiento en 24h"
+        },
+        "Fork": {
+            "optionA": {
+                "title": "Hágalo Usted Mismo",
+                "desc": "¿Vas a llenar el formulario tú solo? No lo envíes a ciegas. Usa nuestro sistema para auditar tu perfil antes de cometer un error irreversible.",
+                "price": "$39",
+                "cta": "Obtener Reporte de Estrategia"
+            },
+            "optionB": {
+                "title": "Servicio Completo (Cero Estrés)",
+                "desc": "¿No quieres lidiar con el sitio del gobierno ni con el inglés técnico? Nosotros nos encargamos de todo, de principio a fin. Tú solo responde preguntas fáciles.",
+                "price": "$99",
+                "cta": "Iniciar Servicio Completo"
+            }
+        },
+        "OCR": {
+            "title": "Validación de Identidad",
+            "instruction": "Por favor escanee su pasaporte para verificar su identidad y extraer sus datos.",
+            "cameraBtn": "Activar Cámara",
+            "scanning": "Analizando características de seguridad...",
+            "success": "Identidad Verificada",
+            "confirm": "¿Es correcta esta información?",
+            "fields": {
+                "name": "Nombre Completo",
+                "passport": "Número de Pasaporte",
+                "country": "País"
+            },
+            "next": "Confirmar y Continuar"
+        },
+        "Triage": {
+            "q1": {
+                "title": "¿Cuál es su motivo principal de viaje?",
+                "options": {
+                    "tourism": "Turismo / Visitar Familia",
+                    "business": "Negocios / Conferencia",
+                    "other": "Otro (Trabajo, Estudio)"
+                }
+            },
+            "q2": {
+                "title": "¿Alguna vez le han negado una visa de EE.UU.?",
+                "options": {
+                    "no": "No, nunca",
+                    "yes": "Sí, una o más veces"
+                }
+            },
+            "q3": {
+                "title": "¿Cuándo planea viajar?",
+                "options": {
+                    "asap": "Lo antes posible",
+                    "months": "En 3-6 meses",
+                    "flexible": "Flexible"
+                }
+            }
+        },
+        "Decision": {
+            "analyzing": "Analizando su perfil...",
+            "result": {
+                "good": "Alto Potencial de Aprobación",
+                "complex": "Caso Complejo Detectado"
+            },
+            "upsell": {
+                "title": "Estrategia Recomendada",
+                "desc": "Basado en su perfil, recomendamos nuestro Servicio Completo para asegurar que todos los detalles sean perfectos.",
+                "benefit1": "Revisión de Expertos",
+                "benefit2": "Preparación para Entrevista",
+                "cta": "Continuar a la Solicitud"
+            }
+        }
     },
     "Chat": {
         "title": "Asistente Consular",
@@ -67,6 +140,16 @@
         "securityDesc": "Utilizamos encriptación de nivel bancario de 256 bits para proteger sus datos personales. Su información nunca se comparte con terceros.",
         "disclaimerTitle": "Descargo de Responsabilidad Importante",
         "disclaimerDesc": "US Visa Processing Center es una empresa privada de tecnología y NO está afiliada con el Departamento de Estado de los Estados Unidos ni con ninguna agencia gubernamental."
+    },
+    "Dashboard": {
+        "title": "Estado de la Solicitud",
+        "welcome": "Bienvenido de nuevo",
+        "Status": {
+            "received": "Solicitud Recibida",
+            "validated": "Verificación de Seguridad",
+            "queue": "En Cola de Proceso",
+            "ready": "Listo para Revisión"
+        }
     },
     "Contact": {
         "title": "Contactar Soporte",

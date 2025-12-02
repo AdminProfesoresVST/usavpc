@@ -1,8 +1,91 @@
 {
     "HomePage": {
-        "title": "Visa Eligibility & Strategy Review",
-        "subtitle": "Complete this preliminary interview to receive your VisaScore™ and a personalized application strategy. Our AI-powered system analyzes your profile against current consular trends.",
-        "devMode": "Dev Mode: Test PDF Generation"
+        "title": "Secure Visa Application Management",
+        "subtitle": "Professional assistance for your B1/B2 visa application. Secure, accurate, and efficient processing.",
+        "cta": "Check Eligibility / Start",
+        "devMode": "Dev Mode: Test PDF Generation",
+        "Trust": {
+            "encryption": "Bank-level Encryption",
+            "ai": "AI Error Detection",
+            "speed": "24h Processing"
+        },
+        "Fork": {
+            "optionA": {
+                "title": "Do It Yourself",
+                "desc": "Going to fill out the form yourself? Don't send it blindly. Use our system to audit your profile before making an irreversible mistake.",
+                "price": "$39",
+                "cta": "Get Strategy Report"
+            },
+            "optionB": {
+                "title": "Full Service",
+                "desc": "Don't want to deal with the government site or technical English? We handle everything from start to finish. You just answer easy questions.",
+                "price": "$99",
+                "cta": "Start Full Service"
+            }
+        },
+        "OCR": {
+            "title": "Identity Validation",
+            "instruction": "Please scan your passport to verify your identity and retrieve your details.",
+            "cameraBtn": "Activate Camera",
+            "scanning": "Analyzing security features...",
+            "success": "Identity Verified",
+            "confirm": "Is this information correct?",
+            "fields": {
+                "name": "Full Name",
+                "passport": "Passport Number",
+                "country": "Country"
+            },
+            "next": "Confirm & Continue"
+        },
+        "Triage": {
+            "q1": {
+                "title": "What is your main purpose of travel?",
+                "options": {
+                    "tourism": "Tourism / Visit Family",
+                    "business": "Business / Conference",
+                    "other": "Other (Work, Study)"
+                }
+            },
+            "q2": {
+                "title": "Have you ever been refused a US visa?",
+                "options": {
+                    "no": "No, never",
+                    "yes": "Yes, once or more"
+                }
+            },
+            "q3": {
+                "title": "When do you plan to travel?",
+                "options": {
+                    "asap": "As soon as possible",
+                    "months": "In 3-6 months",
+                    "flexible": "Flexible"
+                }
+            }
+        },
+        "Decision": {
+            "analyzing": "Analyzing your profile...",
+            "result": {
+                "good": "High Approval Potential",
+                "complex": "Complex Case Detected"
+            },
+            "upsell": {
+                "title": "Recommended Strategy",
+                "desc": "Based on your profile, we recommend our Full Service to ensure all details are perfect.",
+                "benefit1": "Expert Review",
+                "benefit2": "Interview Prep",
+                "cta": "Continue to Application"
+            }
+        }
+    },
+    "Dashboard": {
+        "title": "Application Status",
+        "welcome": "Welcome back",
+        "Status": {
+            "received": "Application Received",
+            "validated": "Security Check Passed",
+            "queue": "In Processing Queue",
+            "ready": "Ready for Review"
+        }
     },
     "Chat": {
         "title": "Consular Assistant",

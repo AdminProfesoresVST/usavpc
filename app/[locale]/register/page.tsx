@@ -9,14 +9,14 @@ import { useTranslations } from 'next-intl';
 import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
 
-export default function LoginPage() {
+export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const supabase = createClient();
-    const t = useTranslations('Common'); // Using Common for now, should add Login namespace
+    // const t = useTranslations('Register'); // TODO: Add Register translations
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
@@ -24,13 +24,14 @@ export default function LoginPage() {
             email,
             options: {
                 emailRedirectTo: `${window.location.origin}/auth/callback`,
+                shouldCreateUser: true,
             },
         });
 
         if (error) {
             setMessage("Error: " + error.message);
         } else {
-            setMessage("Check your email for the login link!");
+            setMessage("Check your email to confirm your account!");
         }
         setLoading(false);
     };
@@ -49,9 +50,9 @@ export default function LoginPage() {
             <div className="container mx-auto px-4 py-16 flex justify-center relative z-10 flex-grow items-center">
                 <Card className="w-full max-w-md p-8 bg-white shadow-lg border-border">
                     <h1 className="text-2xl font-serif font-bold text-primary mb-6 text-center">
-                        Client Portal Login
+                        Create Account
                     </h1>
-                    <form onSubmit={handleLogin} className="space-y-4">
+                    <form onSubmit={handleRegister} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-foreground mb-1">
                                 Email Address
@@ -70,7 +71,7 @@ export default function LoginPage() {
                             disabled={loading}
                             className="w-full bg-primary text-white uppercase font-semibold"
                         >
-                            {loading ? "Sending Link..." : "Send Magic Link"}
+                            {loading ? "Creating Account..." : "Sign Up"}
                         </Button>
                         {message && (
                             <p className="text-sm text-center text-muted-foreground mt-4">
@@ -79,9 +80,9 @@ export default function LoginPage() {
                         )}
                     </form>
                     <div className="mt-6 text-center text-sm">
-                        <span className="text-muted-foreground">Don't have an account? </span>
-                        <Link href="/register" className="text-primary font-semibold hover:underline">
-                            Create Account
+                        <span className="text-muted-foreground">Already have an account? </span>
+                        <Link href="/login" className="text-primary font-semibold hover:underline">
+                            Login
                         </Link>
                     </div>
                 </Card>
