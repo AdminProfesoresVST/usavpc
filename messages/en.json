@@ -15,6 +15,13 @@
         "secureConnection": "Secure 256-bit SSL Connection",
         "secure": "Secure",
         "downloadReport": "Download Sample Strategy Report",
-        "generating": "Generating Report..."
+        "generating": "Generating Report...",
+        "nav": {
+            "home": "Home",
+            "services": "Services",
+            "about": "About",
+            "contact": "Contact",
+            "start": "Start Assessment"
+        }
     }
 }

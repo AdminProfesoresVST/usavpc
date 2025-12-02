@@ -1,9 +1,9 @@
-import { ChatInterface } from "@/components/chat/ChatInterface";
 import { DownloadReportButton } from "@/components/pdf/DownloadButton";
-import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 import { useTranslations } from 'next-intl';
 import { ShieldCheck, Clock, FileCheck } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const t = useTranslations('HomePage');
@@ -36,15 +36,16 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <CheckoutButton />
+            <Link href="/assessment">
+              <Button size="lg" className="bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-6 text-lg shadow-lg transform transition hover:scale-105">
+                {t('nav.start')}
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Main Content Area - Chatbot overlaps the hero */}
-      <section className="container mx-auto px-4 -mt-12 relative z-20 mb-16">
-        <ChatInterface />
-      </section>
+      {/* Main Content Area - Removed Chatbot, now just Trust Indicators */}
 
       {/* Trust Indicators */}
       <section className="container mx-auto px-4 py-12 mb-12">

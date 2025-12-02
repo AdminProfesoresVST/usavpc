@@ -15,6 +15,13 @@
         "secureConnection": "Conexión Segura SSL de 256 bits",
         "secure": "Seguro",
         "downloadReport": "Descargar Reporte de Estrategia de Muestra",
-        "generating": "Generando Reporte..."
+        "generating": "Generando Reporte...",
+        "nav": {
+            "home": "Inicio",
+            "services": "Servicios",
+            "about": "Nosotros",
+            "contact": "Contacto",
+            "start": "Iniciar Evaluación"
+        }
     }
 }

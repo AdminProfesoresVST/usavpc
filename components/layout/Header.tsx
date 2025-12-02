@@ -2,6 +2,7 @@ import { Lock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from 'next-intl';
+import { LanguageSelector } from "./LanguageSelector";
 
 export function Header() {
     const t = useTranslations('Common');
@@ -19,14 +20,27 @@ export function Header() {
                             className="object-contain"
                         />
                     </div>
-                    <span className="font-serif text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors">
+                    <span className="font-serif text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors hidden md:inline-block">
                         US Visa Processing Center
                     </span>
+                    <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-white/90 transition-colors md:hidden">
+                        USVPC
+                    </span>
                 </Link>
-                <div className="flex items-center gap-2 text-sm font-medium text-white/90">
-                    <Lock className="h-4 w-4" />
-                    <span className="hidden sm:inline-block">{t('secureConnection')}</span>
-                    <span className="sm:hidden">{t('secure')}</span>
+
+                <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-white/90">
+                    <Link href="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+                    <Link href="#" className="hover:text-white transition-colors">{t('nav.services')}</Link>
+                    <Link href="#" className="hover:text-white transition-colors">{t('nav.about')}</Link>
+                    <Link href="#" className="hover:text-white transition-colors">{t('nav.contact')}</Link>
+                </nav>
+
+                <div className="flex items-center gap-4">
+                    <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 px-3 py-1.5 rounded-sm border border-white/10">
+                        <Lock className="h-3 w-3" />
+                        <span>{t('secure')}</span>
+                    </div>
+                    <LanguageSelector />
                 </div>
             </div>
         </header>

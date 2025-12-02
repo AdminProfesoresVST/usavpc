@@ -12,9 +12,16 @@
         "error": "Je m'excuse, mais je rencontre actuellement des problèmes de connexion. Veuillez réessayer plus tard."
     },
     "Common": {
-        "secureConnection": "Connexion SSL Sécurisée 256-bit",
+        "secureConnection": "Connexion SSL Sécurisée 256 bits",
         "secure": "Sécurisé",
-        "downloadReport": "Télécharger l'Exemple de Rapport de Stratégie",
-        "generating": "Génération du Rapport..."
+        "downloadReport": "Télécharger un Exemple de Rapport",
+        "generating": "Génération du Rapport...",
+        "nav": {
+            "home": "Accueil",
+            "services": "Services",
+            "about": "À Propos",
+            "contact": "Contact",
+            "start": "Commencer l'Évaluation"
+        }
     }
 }
