@@ -21,7 +21,32 @@
             "services": "服务",
             "about": "关于我们",
             "contact": "联系方式",
-            "start": "开始评估"
+            "start": "开始评估",
+            "login": "登录"
+        },
+        "pricing": {
+            "title": "简单透明的定价",
+            "subtitle": "选择适合您需求的计划。",
+            "basic": {
+                "title": "基本评估",
+                "price": "免费",
+                "features": [
+                    "AI 资格检查",
+                    "基本风险评估",
+                    "一般建议"
+                ]
+            },
+            "pro": {
+                "title": "高级策略",
+                "price": "$49",
+                "features": [
+                    "深度 AI 分析",
+                    "个性化 PDF 报告",
+                    "文件清单",
+                    "面试准备指南"
+                ]
+            },
+            "cta": "开始"
         }
     },
     "Services": {

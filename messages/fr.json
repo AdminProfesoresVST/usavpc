@@ -21,7 +21,32 @@
             "services": "Services",
             "about": "À Propos",
             "contact": "Contact",
-            "start": "Commencer l'Évaluation"
+            "start": "Commencer l'Évaluation",
+            "login": "Connexion"
+        },
+        "pricing": {
+            "title": "Tarification Simple et Transparente",
+            "subtitle": "Choisissez le plan qui correspond à vos besoins.",
+            "basic": {
+                "title": "Évaluation De Base",
+                "price": "Gratuit",
+                "features": [
+                    "Vérification d'Éligibilité IA",
+                    "Évaluation des Risques de Base",
+                    "Recommandations Générales"
+                ]
+            },
+            "pro": {
+                "title": "Stratégie Premium",
+                "price": "$49",
+                "features": [
+                    "Analyse IA Approfondie",
+                    "Rapport PDF Personnalisé",
+                    "Liste de Documents",
+                    "Guide de Préparation à l'Entretien"
+                ]
+            },
+            "cta": "Commencer"
         }
     },
     "Services": {

@@ -21,7 +21,32 @@
             "services": "Servicios",
             "about": "Nosotros",
             "contact": "Contacto",
-            "start": "Iniciar Evaluación"
+            "start": "Iniciar Evaluación",
+            "login": "Ingresar"
+        },
+        "pricing": {
+            "title": "Precios Simples y Transparentes",
+            "subtitle": "Elija el plan que se adapte a sus necesidades.",
+            "basic": {
+                "title": "Evaluación Básica",
+                "price": "Gratis",
+                "features": [
+                    "Chequeo de Elegibilidad con IA",
+                    "Evaluación de Riesgo Básica",
+                    "Recomendaciones Generales"
+                ]
+            },
+            "pro": {
+                "title": "Estrategia Premium",
+                "price": "$49",
+                "features": [
+                    "Análisis Profundo con IA",
+                    "Reporte PDF Personalizado",
+                    "Lista de Documentos",
+                    "Guía de Entrevista"
+                ]
+            },
+            "cta": "Comenzar"
         }
     },
     "Services": {

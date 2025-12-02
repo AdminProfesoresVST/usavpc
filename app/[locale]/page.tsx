@@ -1,6 +1,6 @@
 import { DownloadReportButton } from "@/components/pdf/DownloadButton";
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, Clock, FileCheck } from "lucide-react";
+import { ShieldCheck, Clock, FileCheck, Check } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";

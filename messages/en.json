@@ -21,7 +21,32 @@
             "services": "Services",
             "about": "About",
             "contact": "Contact",
-            "start": "Start Assessment"
+            "start": "Start Assessment",
+            "login": "Login"
+        },
+        "pricing": {
+            "title": "Simple, Transparent Pricing",
+            "subtitle": "Choose the plan that fits your needs.",
+            "basic": {
+                "title": "Basic Assessment",
+                "price": "Free",
+                "features": [
+                    "AI Eligibility Check",
+                    "Basic Risk Assessment",
+                    "General Recommendations"
+                ]
+            },
+            "pro": {
+                "title": "Premium Strategy",
+                "price": "$49",
+                "features": [
+                    "Deep AI Analysis",
+                    "Personalized PDF Report",
+                    "Document Checklist",
+                    "Interview Prep Guide"
+                ]
+            },
+            "cta": "Get Started"
         }
     },
     "Services": {

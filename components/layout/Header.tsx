@@ -3,6 +3,7 @@ import { Link } from "@/src/i18n/routing";
 import Image from "next/image";
 import { useTranslations } from 'next-intl';
 import { LanguageSelector } from "./LanguageSelector";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
     const t = useTranslations('Common');
@@ -35,14 +36,18 @@ export function Header() {
                     <Link href="/contact" className="hover:text-white transition-colors">{t('nav.contact')}</Link>
                 </nav>
 
-                <div className="flex items-center gap-4">
-                    <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 px-3 py-1.5 rounded-sm border border-white/10">
-                        <Lock className="h-3 w-3" />
-                        <span>{t('secure')}</span>
-                    </div>
-                    <LanguageSelector />
+                <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 px-3 py-1.5 rounded-sm border border-white/10">
+                    <Lock className="h-3 w-3" />
+                    <span>{t('secure')}</span>
                 </div>
+                <Link href="/login">
+                    <Button variant="ghost" className="text-white hover:bg-white/10 hover:text-white font-medium">
+                        {t('nav.login')}
+                    </Button>
+                </Link>
+                <LanguageSelector />
             </div>
-        </header>
+        </div>
+        </header >
     );
 }
