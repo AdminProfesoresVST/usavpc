@@ -80,6 +80,104 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Services Preview Section */}
+      <section className="bg-white py-16 border-y border-border">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-serif font-bold text-trust-navy mb-12">{t('nav.services')}</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-6 rounded-lg border border-border hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">AI Eligibility Analysis</h3>
+              <p className="text-muted-foreground mb-4">Instant evaluation of your visa approval chances.</p>
+              <Link href="/services" className="text-primary font-medium hover:underline">Learn more &rarr;</Link>
+            </div>
+            <div className="p-6 rounded-lg border border-border hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileCheck className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Document Pre-Check</h3>
+              <p className="text-muted-foreground mb-4">Automated review of your application documents.</p>
+              <Link href="/services" className="text-primary font-medium hover:underline">Learn more &rarr;</Link>
+            </div>
+            <div className="p-6 rounded-lg border border-border hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Interview Strategy</h3>
+              <p className="text-muted-foreground mb-4">Personalized preparation for your consular interview.</p>
+              <Link href="/services" className="text-primary font-medium hover:underline">Learn more &rarr;</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-16 bg-official-grey">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-serif font-bold text-trust-navy mb-4">{t('pricing.title')}</h2>
+            <p className="text-muted-foreground">{t('pricing.subtitle')}</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 items-start">
+            {/* Basic Plan */}
+            <div className="bg-white rounded-lg shadow-sm border border-border p-8">
+              <h3 className="text-xl font-bold text-trust-navy mb-2">{t('pricing.basic.title')}</h3>
+              <div className="text-4xl font-bold text-primary mb-6">{t('pricing.basic.price')}</div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-success-green" />
+                  {t('pricing.basic.features.0')}
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-success-green" />
+                  {t('pricing.basic.features.1')}
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-success-green" />
+                  {t('pricing.basic.features.2')}
+                </li>
+              </ul>
+              <Link href="/assessment">
+                <Button className="w-full" variant="outline">{t('pricing.cta')}</Button>
+              </Link>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="bg-trust-navy text-white rounded-lg shadow-lg border border-trust-navy p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-xs font-bold px-3 py-1 uppercase tracking-wider">Recommended</div>
+              <h3 className="text-xl font-bold mb-2">{t('pricing.pro.title')}</h3>
+              <div className="text-4xl font-bold text-accent-gold mb-6">{t('pricing.pro.price')}</div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-accent-gold" />
+                  {t('pricing.pro.features.0')}
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-accent-gold" />
+                  {t('pricing.pro.features.1')}
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-accent-gold" />
+                  {t('pricing.pro.features.2')}
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-accent-gold" />
+                  {t('pricing.pro.features.3')}
+                </li>
+              </ul>
+              <Link href="/assessment">
+                <Button className="w-full bg-accent-gold text-trust-navy hover:bg-accent-gold/90 font-bold border-none">
+                  {t('pricing.cta')}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="container mx-auto px-4 pb-16 text-center">
         <p className="text-sm text-muted-foreground mb-4">{t('devMode')}</p>
         <DownloadReportButton />
