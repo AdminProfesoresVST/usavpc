@@ -9,26 +9,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-official-grey">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-primary to-[#002244] text-white py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-white/20">
-            <ShieldCheck className="w-4 h-4 text-success-green" />
-            <span>Official Visa Strategy & Eligibility Assessment</span>
+      {/* Hero Section - Strict Government Style */}
+      <section className="bg-primary text-white py-16 border-b-4 border-accent-gold">
+        <div className="container mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-sm text-sm font-medium mb-6">
+            <ShieldCheck className="w-4 h-4 text-white" />
+            <span className="uppercase tracking-wider text-xs">Official Visa Strategy & Eligibility Assessment</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 tracking-tight leading-tight">
+          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight">
             {t('title')}
           </h1>
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed">
             {t('subtitle')}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <CheckoutButton />
-            <p className="text-xs text-white/60 mt-2 sm:mt-0">
-              *Secure 256-bit Encrypted Payment
-            </p>
           </div>
         </div>
       </section>
