@@ -28,8 +28,8 @@ export default function Home() {
             <ShieldCheck className="w-4 h-4 text-white" />
             <span className="uppercase tracking-wider text-xs text-white">Visa Eligibility & Strategy Review</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight drop-shadow-md">
-            {t('title')}
+          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight drop-shadow-md text-white">
+            Visa Eligibility & Strategy Review
           </h1>
           <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed drop-shadow-sm">
             {t('subtitle')}
