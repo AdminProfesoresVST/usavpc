@@ -1,5 +1,6 @@
-import { CheckCircle } from "lucide-react";
-import Link from "next/link";
+```typescript
+import { CheckCircle, Download, ArrowRight } from "lucide-react";
+import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";
 
 export default function SuccessPage() {
