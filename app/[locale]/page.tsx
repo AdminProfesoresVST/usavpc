@@ -1,5 +1,6 @@
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { DownloadReportButton } from "@/components/pdf/DownloadButton";
+import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 import { useTranslations } from 'next-intl';
 
 export default function Home() {
@@ -11,9 +12,10 @@ export default function Home() {
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">
           {t('title')}
         </h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
           {t('subtitle')}
         </p>
+        <CheckoutButton />
       </div>
       <ChatInterface />
       <div className="mt-8">
