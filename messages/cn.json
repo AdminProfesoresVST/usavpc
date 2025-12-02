@@ -1,0 +1,20 @@
+{
+    "HomePage": {
+        "title": "签证资格与策略审查",
+        "subtitle": "完成此初步面试以获取您的 VisaScore™ 和个性化申请策略。我们的人工智能系统将根据当前的领事趋势分析您的个人资料。",
+        "devMode": "开发模式：测试 PDF 生成"
+    },
+    "Chat": {
+        "title": "领事助理",
+        "secureId": "安全自动化系统 • ID",
+        "placeholder": "在此输入您的回答...",
+        "welcome": "欢迎来到美国签证处理中心。我是您的自动领事助理。为了开始您的资格审查，请告诉我：您的国籍是哪里？",
+        "error": "抱歉，我目前遇到连接问题。请稍后再试。"
+    },
+    "Common": {
+        "secureConnection": "安全 256 位 SSL 连接",
+        "secure": "安全",
+        "downloadReport": "下载示例策略报告",
+        "generating": "正在生成报告..."
+    }
+}

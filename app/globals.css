@@ -1,26 +1,120 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* GovTech Palette */
+  --trust-navy: #003366;
+  --official-grey: #F0F2F5;
+  --paper-white: #FFFFFF;
+  --alert-red: #B71C1C;
+  --success-green: #1B5E20;
+  --text-dark: #1F2937;
+  --focus-ring: #2672DE;
+  --input-bg: #FAFAFA;
+  --input-border: #D1D5DB;
+
+  --background: var(--official-grey);
+  --foreground: var(--text-dark);
+
+  --card: var(--paper-white);
+  --card-foreground: var(--text-dark);
+
+  --popover: var(--paper-white);
+  --popover-foreground: var(--text-dark);
+
+  --primary: var(--trust-navy);
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #E5E7EB; /* Light grey for secondary actions */
+  --secondary-foreground: var(--text-dark);
+
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+
+  --accent: #E5E7EB;
+  --accent-foreground: var(--text-dark);
+
+  --destructive: var(--alert-red);
+  --destructive-foreground: #FFFFFF;
+
+  --border: var(--input-border);
+  --input: var(--input-bg); /* Using input bg color for input variable */
+  --ring: var(--focus-ring);
+
+  --radius: 0.125rem; /* 2px rounded-sm */
+}
+
+.dark {
+  /* Dark mode fallback (using same GovTech colors for now to maintain strictness, or dark variants) */
+  /* PRD implies strict GovTech aesthetic. Keeping it consistent. */
+  --background: #111827;
+  --foreground: #F9FAFB;
+  --card: #1F2937;
+  --card-foreground: #F9FAFB;
+  --popover: #1F2937;
+  --popover-foreground: #F9FAFB;
+  --primary: #2672DE; /* Brighter blue for dark mode */
+  --primary-foreground: #FFFFFF;
+  --secondary: #374151;
+  --secondary-foreground: #F9FAFB;
+  --muted: #374151;
+  --muted-foreground: #9CA3AF;
+  --accent: #374151;
+  --accent-foreground: #F9FAFB;
+  --destructive: #7F1D1D;
+  --destructive-foreground: #FFFFFF;
+  --border: #374151;
+  --input: #374151;
+  --ring: #2672DE;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold text-primary;
+  }
 }

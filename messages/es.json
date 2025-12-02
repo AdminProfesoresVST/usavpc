@@ -1,0 +1,20 @@
+{
+    "HomePage": {
+        "title": "Revisión de Elegibilidad y Estrategia de Visa",
+        "subtitle": "Complete esta entrevista preliminar para recibir su VisaScore™ y una estrategia de solicitud personalizada. Nuestro sistema impulsado por IA analiza su perfil frente a las tendencias consulares actuales.",
+        "devMode": "Modo Dev: Probar Generación de PDF"
+    },
+    "Chat": {
+        "title": "Asistente Consular",
+        "secureId": "Sistema Automatizado Seguro • ID",
+        "placeholder": "Escriba su respuesta aquí...",
+        "welcome": "Bienvenido al Centro de Procesamiento de Visas de EE. UU. Soy su asistente consular automatizado. Para comenzar su revisión de elegibilidad, dígame: ¿Cuál es su país de ciudadanía?",
+        "error": "Me disculpo, pero actualmente estoy experimentando problemas de conexión. Por favor inténtelo de nuevo más tarde."
+    },
+    "Common": {
+        "secureConnection": "Conexión Segura SSL de 256 bits",
+        "secure": "Seguro",
+        "downloadReport": "Descargar Reporte de Estrategia de Muestra",
+        "generating": "Generando Reporte..."
+    }
+}

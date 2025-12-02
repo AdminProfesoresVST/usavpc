@@ -1,0 +1,20 @@
+{
+    "HomePage": {
+        "title": "Visa Eligibility & Strategy Review",
+        "subtitle": "Complete this preliminary interview to receive your VisaScore™ and a personalized application strategy. Our AI-powered system analyzes your profile against current consular trends.",
+        "devMode": "Dev Mode: Test PDF Generation"
+    },
+    "Chat": {
+        "title": "Consular Assistant",
+        "secureId": "Secure Automated System • ID",
+        "placeholder": "Type your answer here...",
+        "welcome": "Welcome to the US Visa Processing Center. I am your automated consular assistant. To begin your eligibility review, please tell me: What is your country of citizenship?",
+        "error": "I apologize, but I am currently experiencing connection issues. Please try again later."
+    },
+    "Common": {
+        "secureConnection": "Secure 256-bit SSL Connection",
+        "secure": "Secure",
+        "downloadReport": "Download Sample Strategy Report",
+        "generating": "Generating Report..."
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "HomePage": {
+        "title": "Examen d'Éligibilité et de Stratégie de Visa",
+        "subtitle": "Complétez cet entretien préliminaire pour recevoir votre VisaScore™ et une stratégie de demande personnalisée. Notre système alimenté par l'IA analyse votre profil par rapport aux tendances consulaires actuelles.",
+        "devMode": "Mode Dev : Test de Génération PDF"
+    },
+    "Chat": {
+        "title": "Assistant Consulaire",
+        "secureId": "Système Automatisé Sécurisé • ID",
+        "placeholder": "Tapez votre réponse ici...",
+        "welcome": "Bienvenue au Centre de Traitement des Visas Américains. Je suis votre assistant consulaire automatisé. Pour commencer votre examen d'éligibilité, veuillez me dire : Quel est votre pays de citoyenneté ?",
+        "error": "Je m'excuse, mais je rencontre actuellement des problèmes de connexion. Veuillez réessayer plus tard."
+    },
+    "Common": {
+        "secureConnection": "Connexion SSL Sécurisée 256-bit",
+        "secure": "Sécurisé",
+        "downloadReport": "Télécharger l'Exemple de Rapport de Stratégie",
+        "generating": "Génération du Rapport..."
+    }
+}
