@@ -3,23 +3,37 @@ import { DownloadReportButton } from "@/components/pdf/DownloadButton";
 import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 import { useTranslations } from 'next-intl';
 import { ShieldCheck, Clock, FileCheck } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   const t = useTranslations('HomePage');
 
   return (
     <div className="flex flex-col min-h-screen bg-official-grey">
-      {/* Hero Section - Strict Government Style */}
-      <section className="bg-primary text-white py-16 border-b-4 border-accent-gold">
-        <div className="container mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-sm text-sm font-medium mb-6">
+      {/* Hero Section - Strict Government Style with Background Image */}
+      <section className="relative text-white py-20 md:py-32 border-b-4 border-accent-gold overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/bg-hero.png"
+            alt="US Visa Center Building"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          {/* Dark Overlay for Text Readability */}
+          <div className="absolute inset-0 bg-trust-navy/90 mix-blend-multiply" />
+        </div>
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-sm text-sm font-medium mb-6 backdrop-blur-sm border border-white/10">
             <ShieldCheck className="w-4 h-4 text-white" />
             <span className="uppercase tracking-wider text-xs">Official Visa Strategy & Eligibility Assessment</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight drop-shadow-md">
             {t('title')}
           </h1>
-          <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed">
+          <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed drop-shadow-sm">
             {t('subtitle')}
           </p>
 

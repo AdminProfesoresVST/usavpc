@@ -131,3 +131,9 @@
     @apply font-serif font-bold text-primary;
   }
 }
+
+@layer utilities {
+  .bg-trust-navy {
+    background-color: var(--trust-navy);
+  }
+}
