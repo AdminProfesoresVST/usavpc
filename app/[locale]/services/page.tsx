@@ -1,13 +1,23 @@
 import { useTranslations } from 'next-intl';
 import { ShieldCheck, Brain, FileText } from "lucide-react";
+import Image from "next/image";
 
 export default function ServicesPage() {
     const t = useTranslations('Services');
 
     return (
         <div className="flex flex-col min-h-screen bg-official-grey">
-            <section className="bg-trust-navy text-white py-16 border-b-4 border-accent-gold">
-                <div className="container mx-auto px-4 text-center">
+            <section className="relative bg-trust-navy text-white py-16 border-b-4 border-accent-gold overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src="/bg-hero.png"
+                        alt="Background"
+                        fill
+                        className="object-cover object-center opacity-20"
+                        priority
+                    />
+                </div>
+                <div className="container mx-auto px-4 text-center relative z-10">
                     <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t('title')}</h1>
                     <p className="text-lg text-white/80 max-w-2xl mx-auto">{t('subtitle')}</p>
                 </div>
