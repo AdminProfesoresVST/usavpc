@@ -11,18 +11,16 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-official-grey">
       {/* Hero Section - Strict Government Style with Background Image */}
-      <section className="relative text-white py-20 md:py-32 border-b-4 border-accent-gold overflow-hidden">
+      <section className="relative bg-trust-navy text-white py-20 md:py-32 border-b-4 border-accent-gold overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/bg-hero.png"
             alt="US Visa Center Building"
             fill
-            className="object-cover object-center"
+            className="object-cover object-center opacity-40"
             priority
           />
-          {/* Dark Overlay for Text Readability */}
-          <div className="absolute inset-0 bg-trust-navy/90 mix-blend-multiply" />
         </div>
 
         <div className="container mx-auto px-4 text-center relative z-10">
