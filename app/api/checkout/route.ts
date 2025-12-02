@@ -25,6 +25,10 @@ export async function POST(req: Request) {
             mode: 'payment',
             success_url: `${req.headers.get("origin")}/${locale}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${req.headers.get("origin")}/${locale}/?canceled=true`,
+            metadata: {
+                locale,
+                service_type: 'strategy_review'
+            }
         });
 
         return NextResponse.json({ url: session.url });
