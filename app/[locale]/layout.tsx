@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 
 const merriweather = Merriweather({
   variable: "--font-serif",
@@ -38,9 +39,11 @@ export default async function RootLayout({
         className={`${merriweather.variable} ${inter.variable} antialiased font-sans bg-background text-foreground flex flex-col min-h-screen`}
       >
         <NextIntlClientProvider messages={messages}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <AnalyticsProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </AnalyticsProvider>
         </NextIntlClientProvider>
       </body>
     </html>

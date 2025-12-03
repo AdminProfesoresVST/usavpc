@@ -43,9 +43,10 @@ export function Footer() {
                             {t('disclaimerDesc')}
                         </p>
                     </div>
-                    <p className="mt-4 text-center text-xs">
-                        &copy; {new Date().getFullYear()} US Visa Processing Center. All rights reserved.
-                    </p>
+                    <div className="text-sm text-muted-foreground">
+                        © {new Date().getFullYear()} US Visa Processing Center. All rights reserved.
+                        <span className="ml-2 text-xs text-gray-400 font-mono">v1.5.0 (Triage Live)</span>
+                    </div>
                 </div>
             </div>
         </footer>

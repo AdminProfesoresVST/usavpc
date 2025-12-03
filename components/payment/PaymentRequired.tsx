@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export function PaymentRequired({ plan }: { plan: string }) {
+export function PaymentRequired({ plan, locale }: { plan: string; locale: string }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export function PaymentRequired({ plan }: { plan: string }) {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        locale: 'en', // Should get from params or context
+                        locale: locale,
                         plan: plan
                     })
                 });

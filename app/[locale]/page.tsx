@@ -1,9 +1,9 @@
-import { DownloadReportButton } from "@/components/pdf/DownloadButton";
 import { useTranslations } from 'next-intl';
 import { ShieldCheck, Clock, FileCheck } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";
+import { SafeDownloadButton } from "@/components/pdf/SafeDownloadButton";
 
 export default function Home() {
   const t = useTranslations('HomePage');
@@ -76,28 +76,30 @@ export default function Home() {
       <section className="py-16 bg-official-grey">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-8 items-stretch">
-            {/* Option A - DIY */}
-            <div className="bg-white rounded-lg shadow-sm border border-border p-8 flex flex-col">
+            {/* Option A - DIY (De-emphasized) */}
+            <div className="bg-gray-50 rounded-lg shadow-sm border border-border p-8 flex flex-col opacity-80 hover:opacity-100 transition-opacity">
               <h3 className="text-xl font-bold text-trust-navy mb-2">{t('Fork.optionA.title')}</h3>
               <p className="text-muted-foreground mb-6 flex-grow italic">
                 "{t('Fork.optionA.desc')}"
               </p>
-              <div className="text-4xl font-bold text-primary mb-6">{t('Fork.optionA.price')}</div>
+              <div className="text-4xl font-bold text-gray-400 mb-6">{t('Fork.optionA.price')}</div>
               <Link href="/assessment?plan=diy">
                 <Button className="w-full" variant="outline">{t('Fork.optionA.cta')}</Button>
               </Link>
             </div>
 
-            {/* Option B - Full Service */}
-            <div className="bg-trust-navy text-white rounded-lg shadow-lg border border-trust-navy p-8 relative overflow-hidden flex flex-col">
-              <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-xs font-bold px-3 py-1 uppercase tracking-wider">Recommended</div>
-              <h3 className="text-xl font-bold mb-2">{t('Fork.optionB.title')}</h3>
-              <p className="text-white/90 mb-6 flex-grow italic">
+            {/* Option B - Full Service (Highlighted) */}
+            <div className="bg-trust-navy text-white rounded-lg shadow-2xl border-2 border-accent-gold p-8 relative overflow-hidden flex flex-col transform md:-translate-y-4 z-10">
+              <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-xs font-bold px-3 py-1 uppercase tracking-wider shadow-md">
+                Most Popular
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-accent-gold">{t('Fork.optionB.title')}</h3>
+              <p className="text-white/90 mb-6 flex-grow italic text-lg">
                 "{t('Fork.optionB.desc')}"
               </p>
-              <div className="text-4xl font-bold text-accent-gold mb-6">{t('Fork.optionB.price')}</div>
+              <div className="text-5xl font-bold text-white mb-6 drop-shadow-md">{t('Fork.optionB.price')}</div>
               <Link href="/assessment?plan=full">
-                <Button className="w-full bg-white text-[#003366] hover:bg-gray-100 font-bold border-none shadow-md">
+                <Button className="w-full bg-accent-gold hover:bg-accent-gold/90 text-trust-navy font-bold text-lg py-6 shadow-lg border-none">
                   {t('Fork.optionB.cta')}
                 </Button>
               </Link>
@@ -106,10 +108,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 pb-16 text-center">
-        <p className="text-sm text-muted-foreground mb-4">{t('devMode')}</p>
-        <DownloadReportButton />
-      </div>
+
     </div>
   );
 }

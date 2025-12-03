@@ -40,22 +40,27 @@ export async function POST(req: Request) {
         // 3. Create/Update application record
 
         const email = session.customer_details?.email;
+        const userId = session.client_reference_id;
 
         if (email) {
-            // For now, we'll just create a new application record linked to this email
-            // In a real app, we'd handle user auth linking here
+            const serviceType = session.metadata?.service_type || 'diy_strategy';
+            const addons = session.metadata?.addons ? JSON.parse(session.metadata.addons) : [];
 
             const { error } = await supabase
                 .from('applications')
                 .insert({
+                    user_id: userId, // Link to authenticated user if present
                     status: 'paid',
-                    has_strategy_check: true,
-                    ais_account_email: email, // Using this field to store email for now
+                    has_strategy_check: serviceType !== 'simulator',
+                    service_tier: serviceType,
+                    has_insurance_addon: addons.includes('insurance'),
+                    ais_account_email: email,
                     form_data: {
                         stripe_session_id: session.id,
                         amount_total: session.amount_total,
                         currency: session.currency,
-                        metadata: session.metadata
+                        metadata: session.metadata,
+                        addons: addons // Store all addons for reference (radar, simulator)
                     }
                 });
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In to US Visa Processing Center</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f5;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #0f172a;
+            /* Trust Navy */
+            padding: 30px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+            color: #334155;
+        }
+
+        .h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        .p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #475569;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #2563eb;
+            /* Primary Blue */
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+        }
+
+        .footer {
+            background-color: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .secure-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ecfdf5;
+            color: #047857;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Replace with your actual hosted logo URL -->
+            <img src="https://us-visa-processing-center-pwa.netlify.app/logo-white.png" alt="US Visa Processing Center"
+                class="logo" style="color: white; font-size: 20px; font-weight: bold;">
+        </div>
+        <div class="content">
+            <div class="secure-badge">
+                🔒 Secure Login Request
+            </div>
+            <h1 class="h1">Verify Your Identity</h1>
+            <p class="p">
+                We received a request to sign in to the <strong>US Visa Processing Center</strong> with this email
+                address.
+            </p>
+            <p class="p">
+                Click the button below to securely sign in and access your application dashboard.
+            </p>
+
+            <a href="{{ .ConfirmationURL }}" class="button">Sign In to Portal</a>
+
+            <p style="font-size: 14px; color: #64748b;">
+                If you didn't request this link, you can safely ignore this email.
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 US Visa Processing Center. All rights reserved.</p>
+            <p>Secure 256-bit SSL Encryption • Official Document Assistance</p>
+        </div>
+    </div>
+</body>
+
+</html>

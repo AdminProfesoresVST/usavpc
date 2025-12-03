@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, User, Bot } from "lucide-react";
+import { Send, User, Bot, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -14,24 +14,54 @@ interface Message {
     role: "user" | "assistant";
     content: string;
     timestamp: Date;
-    formalVersion?: string;
-    redFlags?: string[];
+    validationResult?: {
+        original: string;
+        interpreted: string;
+        type: string;
+    };
+}
+
+interface QuestionState {
+    field: string;
+    question: string;
+    type: 'text' | 'select' | 'date' | 'boolean';
+    options?: { label: string; value: string }[];
+    context?: string;
 }
 
 export function ChatInterface() {
     const t = useTranslations('Chat');
     const [messages, setMessages] = useState<Message[]>([]);
+    const [currentQuestion, setCurrentQuestion] = useState<QuestionState | null>(null);
+    const [progress, setProgress] = useState(0);
 
+    // Initial load
     useEffect(() => {
-        setMessages([
-            {
-                id: "welcome",
-                role: "assistant",
-                content: t('welcome'),
-                timestamp: new Date(),
-            },
-        ]);
-    }, [t]);
+        const initChat = async () => {
+            try {
+                // Call API with empty answer to get first question
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ answer: null }),
+                });
+                const data = await response.json();
+
+                if (data.nextStep) {
+                    setMessages([{
+                        id: "welcome",
+                        role: "assistant",
+                        content: data.nextStep.question,
+                        timestamp: new Date(),
+                    }]);
+                    setCurrentQuestion(data.nextStep);
+                }
+            } catch (error) {
+                console.error("Init Error:", error);
+            }
+        };
+        initChat();
+    }, []);
 
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -45,27 +75,47 @@ export function ChatInterface() {
         scrollToBottom();
     }, [messages]);
 
-    const handleSend = async () => {
-        if (!input.trim()) return;
+    const startTimeRef = useRef<number>(Date.now());
 
+    // Reset timer when question changes
+    useEffect(() => {
+        if (currentQuestion) {
+            startTimeRef.current = Date.now();
+        }
+    }, [currentQuestion]);
+
+    const handleSend = async (answerOverride?: string) => {
+        const answerToSend = answerOverride || input;
+        if (!answerToSend.trim()) return;
+
+        const duration = Date.now() - startTimeRef.current;
+
+        // Add User Message
         const userMsg: Message = {
             id: Date.now().toString(),
             role: "user",
-            content: input,
+            content: answerToSend, // For display, we might want to show the label if it was a select
             timestamp: new Date(),
         };
 
-        const newMessages = [...messages, userMsg];
-        setMessages(newMessages);
+        // If it was a select, find the label for display
+        if (currentQuestion?.type === 'select' && currentQuestion.options) {
+            const selectedOption = currentQuestion.options.find(o => o.value === answerToSend);
+            if (selectedOption) userMsg.content = selectedOption.label;
+        }
+
+        setMessages(prev => [...prev, userMsg]);
         setInput("");
         setIsTyping(true);
+        setCurrentQuestion(null); // Hide inputs while processing
 
         try {
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    messages: newMessages.map(m => ({ role: m.role, content: m.content }))
+                    answer: answerToSend,
+                    duration: duration // Send time taken in ms
                 }),
             });
 
@@ -73,19 +123,31 @@ export function ChatInterface() {
 
             const data = await response.json();
 
-            const botMsg: Message = {
-                id: (Date.now() + 1).toString(),
-                role: "assistant",
-                content: data.content,
-                timestamp: new Date(),
-                formalVersion: data.formal_version,
-                redFlags: data.red_flags
-            };
+            // Add Assistant Message (Next Question)
+            if (data.nextStep) {
+                const botMsg: Message = {
+                    id: (Date.now() + 1).toString(),
+                    role: "assistant",
+                    content: data.nextStep.question,
+                    timestamp: new Date(),
+                    validationResult: data.validationResult
+                };
+                setMessages(prev => [...prev, botMsg]);
+                setCurrentQuestion(data.nextStep);
+                setProgress(data.progress || 0);
+            } else {
+                // Finished!
+                setMessages(prev => [...prev, {
+                    id: Date.now().toString(),
+                    role: "assistant",
+                    content: "Great! We have collected all the necessary information. Proceeding to review...",
+                    timestamp: new Date()
+                }]);
+            }
 
-            setMessages((prev) => [...prev, botMsg]);
         } catch (error) {
             console.error("Chat Error:", error);
-            setMessages((prev) => [...prev, {
+            setMessages(prev => [...prev, {
                 id: Date.now().toString(),
                 role: "assistant",
                 content: t('error'),
@@ -98,14 +160,24 @@ export function ChatInterface() {
 
     return (
         <Card className="w-full max-w-2xl mx-auto h-[600px] flex flex-col border-border shadow-sm bg-white">
-            <div className="p-4 border-b border-border bg-muted/30">
+            <div className="p-4 border-b border-border bg-muted/30 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full bg-success-green animate-pulse" />
-                    <h2 className="font-serif font-bold text-primary">{t('title')}</h2>
+                    <div>
+                        <h2 className="font-serif font-bold text-primary">{t('title')}</h2>
+                        <p className="text-xs text-muted-foreground">{t('secureId')}</p>
+                    </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                    {t('secureId')}: {Math.random().toString(36).substr(2, 9).toUpperCase()}
-                </p>
+                {/* Progress Indicator */}
+                <div className="flex items-center gap-2">
+                    <div className="text-xs font-mono text-primary">{Math.round(progress)}%</div>
+                    <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-success-green transition-all duration-500"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-official-grey/50">
@@ -150,41 +222,22 @@ export function ChatInterface() {
                                 </div>
                             </motion.div>
 
-                            {/* Magic Mirror & Red Flags (Only for Assistant messages) */}
-                            {msg.role === "assistant" && (
-                                <div className="pl-12 max-w-[85%] space-y-2">
-                                    {/* Formal Version */}
-                                    {msg.formalVersion && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: "auto" }}
-                                            className="bg-official-grey border border-gray-200 rounded-sm p-3 text-xs text-muted-foreground"
-                                        >
-                                            <div className="flex items-center gap-1 mb-1 text-trust-navy font-bold uppercase tracking-wider text-[10px]">
-                                                <span>Formal Record</span>
-                                            </div>
-                                            <p className="italic">"{msg.formalVersion}"</p>
-                                        </motion.div>
-                                    )}
-
-                                    {/* Red Flags */}
-                                    {msg.redFlags && msg.redFlags.length > 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            className="bg-red-50 border border-red-100 rounded-sm p-3 text-xs text-alert-red"
-                                        >
-                                            <div className="flex items-center gap-1 mb-1 font-bold uppercase tracking-wider text-[10px]">
-                                                <span>Risk Factor Detected</span>
-                                            </div>
-                                            <ul className="list-disc list-inside">
-                                                {msg.redFlags.map((flag, idx) => (
-                                                    <li key={idx}>{flag}</li>
-                                                ))}
-                                            </ul>
-                                        </motion.div>
-                                    )}
-                                </div>
+                            {/* Validation Mirror - Only show for complex inputs (not simple booleans) */}
+                            {msg.validationResult && msg.validationResult.type !== 'boolean' && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    className="pl-12 max-w-[85%]"
+                                >
+                                    <div className="bg-blue-50 border border-blue-100 rounded-sm p-3 text-xs text-blue-900">
+                                        <div className="flex items-center gap-1 mb-1 font-bold uppercase tracking-wider text-[10px] text-blue-700">
+                                            <CheckCircle2 size={12} />
+                                            <span>System Interpretation</span>
+                                        </div>
+                                        <p className="italic mb-1">Original: "{msg.validationResult.original}"</p>
+                                        <p className="font-semibold">Formal: "{msg.validationResult.interpreted}"</p>
+                                    </div>
+                                </motion.div>
                             )}
                         </div>
                     ))}
@@ -200,10 +253,13 @@ export function ChatInterface() {
                             <div className="h-8 w-8 rounded-sm flex items-center justify-center shrink-0 bg-white border border-border text-primary">
                                 <Bot size={16} />
                             </div>
-                            <div className="bg-white border border-border p-3 rounded-sm shadow-sm flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" />
+                            <div className="bg-white border border-border p-3 rounded-sm shadow-sm flex items-center gap-3">
+                                <div className="flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" />
+                                </div>
+                                <span className="text-xs text-muted-foreground animate-pulse">Analyzing...</span>
                             </div>
                         </div>
                     </motion.div>
@@ -212,28 +268,43 @@ export function ChatInterface() {
             </div>
 
             <div className="p-4 border-t border-border bg-white">
-                <form
-                    onSubmit={(e: React.FormEvent) => {
-                        e.preventDefault();
-                        handleSend();
-                    }}
-                    className="flex gap-2"
-                >
-                    <Input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder={t('placeholder')}
-                        className="flex-1 bg-input-bg border-input-border focus-visible:ring-focus-ring"
-                        disabled={isTyping}
-                    />
-                    <Button
-                        type="submit"
-                        disabled={!input.trim() || isTyping}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-wide font-semibold"
+                {currentQuestion?.type === 'select' && currentQuestion.options ? (
+                    <div className="flex flex-wrap gap-2 justify-end">
+                        {currentQuestion.options.map((option) => (
+                            <Button
+                                key={option.value}
+                                onClick={() => handleSend(option.value)}
+                                variant="outline"
+                                className="border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+                            >
+                                {option.label}
+                            </Button>
+                        ))}
+                    </div>
+                ) : (
+                    <form
+                        onSubmit={(e: React.FormEvent) => {
+                            e.preventDefault();
+                            handleSend();
+                        }}
+                        className="flex gap-2"
                     >
-                        <Send size={16} />
-                    </Button>
-                </form>
+                        <Input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder={t('placeholder')}
+                            className="flex-1 bg-input-bg border-input-border focus-visible:ring-focus-ring"
+                            disabled={isTyping || !currentQuestion}
+                        />
+                        <Button
+                            type="submit"
+                            disabled={!input.trim() || isTyping || !currentQuestion}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-wide font-semibold"
+                        >
+                            <Send size={16} />
+                        </Button>
+                    </form>
+                )}
             </div>
         </Card>
     );

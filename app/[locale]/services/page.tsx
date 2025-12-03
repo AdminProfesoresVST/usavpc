@@ -1,15 +1,16 @@
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, Brain, FileText, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Brain, FileText, CheckCircle2, AlertTriangle } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";
+import { FullServiceCheckoutButton } from "@/components/services/FullServiceCheckoutButton";
 
 export default function ServicesPage() {
-    const t = useTranslations('HomePage'); // Using HomePage translations for Fork for now
+    const t = useTranslations('Services');
 
     return (
         <div className="flex flex-col min-h-screen bg-official-grey">
-            <section className="relative bg-trust-navy text-white py-16 border-b-4 border-accent-gold overflow-hidden">
+            <section className="relative bg-trust-navy text-white py-20 border-b-4 border-accent-gold overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <Image
                         src="/bg-hero.png"
@@ -19,49 +20,118 @@ export default function ServicesPage() {
                         priority
                     />
                 </div>
-                <div className="container mx-auto px-4 text-center relative z-10">
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">Our Services</h1>
-                    <p className="text-lg text-white/80 max-w-2xl mx-auto">Choose the level of assistance that fits your needs.</p>
+                <div className="container mx-auto px-4 text-center relative z-10 max-w-4xl">
+                    <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight">{t('title')}</h1>
+                    <p className="text-xl font-medium text-white/90 mb-6 leading-relaxed">{t('subtitle')}</p>
+                    <p className="text-lg text-white/80 leading-relaxed font-light">{t('description')}</p>
                 </div>
             </section>
 
-            <section className="container mx-auto px-4 py-12">
-                <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-5xl mx-auto">
+            <section className="container mx-auto px-4 py-16">
+                <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto">
                     {/* Option A - DIY */}
-                    <div className="bg-white rounded-lg shadow-sm border border-border p-8 flex flex-col transform transition hover:-translate-y-1 hover:shadow-md">
-                        <h3 className="text-xl font-bold text-trust-navy mb-2">{t('Fork.optionA.title')}</h3>
-                        <p className="text-muted-foreground mb-6 flex-grow italic">
-                            "{t('Fork.optionA.desc')}"
-                        </p>
-                        <ul className="space-y-3 mb-8 text-sm text-gray-600">
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-5 h-5 text-gray-400 shrink-0" /> Basic Eligibility Check</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-5 h-5 text-gray-400 shrink-0" /> Standard Form Access</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-5 h-5 text-gray-400 shrink-0" /> No Strategy Report</li>
+                    <div className="bg-white rounded-lg shadow-md border border-border p-8 flex flex-col transform transition hover:-translate-y-1 hover:shadow-xl relative">
+                        <div className="mb-6">
+                            <h3 className="text-2xl font-serif font-bold text-trust-navy mb-2">{t('OptionA.title')}</h3>
+                            <p className="text-sm font-bold text-accent-gold uppercase tracking-wider mb-4">{t('OptionA.subtitle')}</p>
+                            <p className="text-muted-foreground italic mb-6 border-l-4 border-gray-200 pl-4">
+                                "{t('OptionA.desc')}"
+                            </p>
+                        </div>
+
+                        <ul className="space-y-4 mb-8 text-sm text-gray-700 flex-grow">
+                            <li className="flex items-start gap-3">
+                                <Brain className="w-5 h-5 text-trust-navy shrink-0 mt-0.5" />
+                                <span>{t('OptionA.feature1')}</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <AlertTriangle className="w-5 h-5 text-trust-navy shrink-0 mt-0.5" />
+                                <span>{t('OptionA.feature2')}</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <FileText className="w-5 h-5 text-trust-navy shrink-0 mt-0.5" />
+                                <span>{t('OptionA.feature3')}</span>
+                            </li>
                         </ul>
-                        <div className="text-4xl font-bold text-primary mb-6">{t('Fork.optionA.price')}</div>
-                        <Link href="/assessment?plan=diy">
-                            <Button className="w-full" variant="outline">{t('Fork.optionA.cta')}</Button>
-                        </Link>
+
+                        <div className="mt-auto">
+                            <div className="text-4xl font-bold text-primary mb-2">{t('OptionA.price')}</div>
+                            <p className="text-xs text-red-500 font-medium mb-6">{t('OptionA.note')}</p>
+                            <Link href="/assessment?plan=diy">
+                                <Button className="w-full py-6 text-lg" variant="outline">{t('OptionA.cta')}</Button>
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Option B - Full Service */}
-                    <div className="bg-trust-navy text-white rounded-lg shadow-lg border border-trust-navy p-8 relative overflow-hidden flex flex-col transform transition hover:-translate-y-1 hover:shadow-xl">
-                        <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-xs font-bold px-3 py-1 uppercase tracking-wider">Recommended</div>
-                        <h3 className="text-xl font-bold mb-2">{t('Fork.optionB.title')}</h3>
-                        <p className="text-white/90 mb-6 flex-grow italic">
-                            "{t('Fork.optionB.desc')}"
-                        </p>
-                        <ul className="space-y-3 mb-8 text-sm text-white/80">
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-5 h-5 text-accent-gold shrink-0" /> <strong>VisaScore™</strong> Strategy Report</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-5 h-5 text-accent-gold shrink-0" /> Expert Review & Error Check</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 className="w-5 h-5 text-accent-gold shrink-0" /> Interview Preparation Guide</li>
+                    <div className="bg-trust-navy text-white rounded-lg shadow-2xl border-2 border-accent-gold p-8 relative overflow-hidden flex flex-col transform transition hover:-translate-y-1 hover:shadow-3xl">
+                        <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-xs font-bold px-4 py-1.5 uppercase tracking-wider shadow-sm">
+                            {t('OptionB.recommended')}
+                        </div>
+
+                        <div className="mb-6">
+                            <h3 className="text-2xl font-serif font-bold mb-2">{t('OptionB.title')}</h3>
+                            <p className="text-sm font-bold text-accent-gold uppercase tracking-wider mb-4">{t('OptionB.subtitle')}</p>
+                            <p className="text-white/90 italic mb-6 border-l-4 border-accent-gold/50 pl-4">
+                                "{t('OptionB.desc')}"
+                            </p>
+                        </div>
+
+                        <ul className="space-y-4 mb-8 text-sm text-white/90 flex-grow">
+                            <li className="flex items-start gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-accent-gold shrink-0 mt-0.5" />
+                                <span>{t('OptionB.feature1')}</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-accent-gold shrink-0 mt-0.5" />
+                                <span>{t('OptionB.feature2')}</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-accent-gold shrink-0 mt-0.5" />
+                                <span>{t('OptionB.feature3')}</span>
+                            </li>
                         </ul>
-                        <div className="text-4xl font-bold text-accent-gold mb-6">{t('Fork.optionB.price')}</div>
-                        <Link href="/assessment?plan=full">
-                            <Button className="w-full bg-white text-[#003366] hover:bg-gray-100 font-bold border-none shadow-md">
-                                {t('Fork.optionB.cta')}
-                            </Button>
-                        </Link>
+
+                        <div className="mt-auto">
+                            <div className="text-4xl font-bold text-accent-gold mb-6">{t('OptionB.price')}</div>
+                            <FullServiceCheckoutButton
+                                label={t('OptionB.cta')}
+                                price={t('OptionB.price')}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Option C - Simulator */}
+                    <div className="bg-white rounded-lg shadow-md border border-border p-8 flex flex-col transform transition hover:-translate-y-1 hover:shadow-xl relative md:col-span-2 lg:col-span-1">
+                        <div className="mb-6">
+                            <h3 className="text-2xl font-serif font-bold text-trust-navy mb-2">{t('OptionC.title')}</h3>
+                            <p className="text-sm font-bold text-accent-gold uppercase tracking-wider mb-4">{t('OptionC.subtitle')}</p>
+                            <p className="text-muted-foreground italic mb-6 border-l-4 border-gray-200 pl-4">
+                                "{t('OptionC.desc')}"
+                            </p>
+                        </div>
+
+                        <ul className="space-y-4 mb-8 text-sm text-gray-700 flex-grow">
+                            <li className="flex items-start gap-3">
+                                <Brain className="w-5 h-5 text-trust-navy shrink-0 mt-0.5" />
+                                <span>{t('OptionC.feature1')}</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <ShieldCheck className="w-5 h-5 text-trust-navy shrink-0 mt-0.5" />
+                                <span>{t('OptionC.feature2')}</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <FileText className="w-5 h-5 text-trust-navy shrink-0 mt-0.5" />
+                                <span>{t('OptionC.feature3')}</span>
+                            </li>
+                        </ul>
+
+                        <div className="mt-auto">
+                            <div className="text-4xl font-bold text-primary mb-2">{t('OptionC.price')}</div>
+                            <Link href="/assessment?plan=simulator">
+                                <Button className="w-full py-6 text-lg" variant="outline">{t('OptionC.cta')}</Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>

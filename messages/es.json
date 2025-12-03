@@ -123,14 +123,31 @@
         }
     },
     "Services": {
-        "title": "Nuestros Servicios",
-        "subtitle": "Herramientas avanzadas impulsadas por IA para agilizar su proceso de solicitud de visa de EE. UU.",
-        "analysisTitle": "Análisis de Elegibilidad con IA",
-        "analysisDesc": "Nuestro algoritmo patentado evalúa su perfil frente a miles de casos exitosos para determinar su probabilidad de aprobación.",
-        "strategyTitle": "Estrategia Personalizada",
-        "strategyDesc": "Reciba un informe PDF personalizado con recomendaciones específicas para fortalecer su solicitud antes de su entrevista.",
-        "documentTitle": "Pre-chequeo de Documentos",
-        "documentDesc": "Identifique documentación faltante o débil que podría llevar a retrasos en el procesamiento administrativo."
+        "title": "Soluciones de Gestión Segura para Visas de EE.UU.",
+        "subtitle": "El proceso de solicitud de visa de EE.UU. (DS-160) es riguroso; un solo error técnico o inconsistencia puede derivar en retrasos o negaciones. USVPC cierra la brecha entre la ansiedad del solicitante y una presentación exitosa.",
+        "description": "Utilizamos tecnología propia de análisis de riesgo por IA combinada con revisión humana profesional para asegurar que su solicitud cumpla con la normativa, sea consistente y estratégicamente sólida antes de llegar a un Oficial Consular. Seleccione el nivel de asistencia que mejor se adapte a sus necesidades, desde auditorías de diagnóstico previas a la presentación, hasta un procesamiento integral de principio a fin.",
+        "OptionA": {
+            "title": "Auditoría de Estrategia y VisaCheck (Solo Diagnóstico)",
+            "subtitle": "Evaluación profesional previa a la presentación para solicitantes autónomos.",
+            "desc": "No presente su solicitud a ciegas. El formulario oficial del gobierno no le advierte si sus respuestas levantarán \"banderas rojas\" durante la entrevista consular. Este servicio es una herramienta de diagnóstico profesional diseñada para solicitantes que planean presentar el formulario DS-160 por su cuenta, pero requieren una validación estratégica experta de antemano.",
+            "feature1": "Análisis de Riesgo \"VisaScore\" Personalizado",
+            "feature2": "Identificación de Posibles Banderas Rojas",
+            "feature3": "Plan de Acción Correctiva",
+            "price": "$39",
+            "cta": "Obtener Reporte de Estrategia",
+            "note": "Nota: Este servicio NO incluye la presentación oficial del formulario DS-160."
+        },
+        "OptionB": {
+            "title": "Servicio de Procesamiento Completo (Integral)",
+            "subtitle": "Gestión exhaustiva desde la captura de datos hasta la presentación oficial.",
+            "desc": "La solución completa para su total tranquilidad. Eliminamos la fricción técnica, las barreras del idioma y el estrés de lidiar con complejos portales gubernamentales. Nuestro equipo gestiona todo el ciclo de vida de su solicitud DS-160, asegurando precisión absoluta desde la entrada de datos inicial hasta la presentación oficial final.",
+            "feature1": "Entrevista Digital Guiada (Simplificada)",
+            "feature2": "Validación de Datos y Fotos en Tiempo Real",
+            "feature3": "Presentación Segura ante el Dept. de Estado (CEAC)",
+            "price": "$99",
+            "cta": "Iniciar Servicio Completo",
+            "recommended": "Recomendado"
+        }
     },
     "About": {
         "title": "Sobre Nosotros",
@@ -155,5 +172,46 @@
         "title": "Contactar Soporte",
         "desc": "¿Necesita ayuda? Nuestro equipo de soporte está aquí para ayudarle con cualquier problema técnico relacionado con su evaluación o informe.",
         "email": "soporte@usvisaprocessingcenter.com"
+    },
+    "Login": {
+        "title": "Ingreso al Portal de Clientes",
+        "subtitle": "Acceso seguro al estado de su solicitud y documentos.",
+        "emailLabel": "Correo Electrónico",
+        "submitBtn": "Enviar Enlace Mágico",
+        "sendingBtn": "Enviando...",
+        "success": "¡Revise su correo para el enlace de acceso!",
+        "noAccount": "¿No tiene una cuenta?",
+        "createAccount": "Crear Cuenta"
+    },
+    "Register": {
+        "title": "Crear Nueva Cuenta",
+        "subtitle": "Comience su solicitud de visa hoy.",
+        "nameLabel": "Nombre Completo",
+        "emailLabel": "Correo Electrónico",
+        "submitBtn": "Registrarse",
+        "loginLink": "¿Ya tiene una cuenta? Ingrese aquí"
+    },
+    "AuthError": {
+        "title": "Error de Autenticación",
+        "desc": "El enlace de acceso ha expirado o es inválido.",
+        "retryBtn": "Intentar de Nuevo"
+    },
+    "Upsell": {
+        "title": "Maximice sus Posibilidades de Aprobación",
+        "subtitle": "La mayoría de los solicitantes añaden estas protecciones para asegurar el éxito.",
+        "radar": {
+            "title": "Radar de Citas Prioritarias",
+            "desc": "Consiga una cita meses antes. Monitoreamos 24/7 por cancelaciones."
+        },
+        "insurance": {
+            "title": "Escudo de Garantía 365",
+            "desc": "Si se la niegan, reprocesamos su solicitud GRATIS por un año."
+        },
+        "simulator": {
+            "title": "Simulador de Entrevista IA",
+            "desc": "Práctica ilimitada con nuestro Cónsul Virtual. (Oferta Especial)"
+        },
+        "cta": "Proceder al Pago",
+        "secure": "Encriptación SSL de 256 bits Segura"
     }
 }

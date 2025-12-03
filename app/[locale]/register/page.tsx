@@ -8,22 +8,30 @@ import { Card } from "@/components/ui/card";
 import { useTranslations } from 'next-intl';
 import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
+import { useSearchParams } from "next/navigation";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const supabase = createClient();
-    // const t = useTranslations('Register'); // TODO: Add Register translations
+    // const t = useTranslations('Register'); 
+
+    const searchParams = useSearchParams(); // Import this
+    const next = searchParams.get('next');
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
+        const redirectTo = next
+            ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+            : `${window.location.origin}/auth/callback`;
+
         const { error } = await supabase.auth.signInWithOtp({
             email,
             options: {
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: redirectTo,
                 shouldCreateUser: true,
             },
         });
@@ -81,7 +89,10 @@ export default function RegisterPage() {
                     </form>
                     <div className="mt-6 text-center text-sm">
                         <span className="text-muted-foreground">Already have an account? </span>
-                        <Link href="/login" className="text-primary font-semibold hover:underline">
+                        <Link
+                            href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}
+                            className="text-primary font-semibold hover:underline"
+                        >
                             Login
                         </Link>
                     </div>

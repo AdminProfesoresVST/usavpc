@@ -133,14 +133,41 @@
         }
     },
     "Services": {
-        "title": "Our Services",
-        "subtitle": "Advanced AI-powered tools to streamline your US Visa application process.",
-        "analysisTitle": "AI Eligibility Analysis",
-        "analysisDesc": "Our proprietary algorithm evaluates your profile against thousands of successful cases to determine your approval probability.",
-        "strategyTitle": "Personalized Strategy",
-        "strategyDesc": "Receive a custom PDF report with specific recommendations to strengthen your application before your interview.",
-        "documentTitle": "Document Pre-Check",
-        "documentDesc": "Identify missing or weak documentation that could lead to administrative processing delays."
+        "title": "Secure Application Management Solutions for U.S. Visas",
+        "subtitle": "The U.S. visa application process (DS-160) is exacting; a single technical error or inconsistency can lead to delays or denials. USVPC bridges the gap between applicant anxiety and successful submission.",
+        "description": "We leverage proprietary AI risk-analysis technology combined with professional human review to ensure your application is compliant, consistent, and strategically sound before it reaches a Consular Officer. Select the level of assistance that best suits your needs, from diagnostic pre-filing audits to comprehensive, end-to-end processing.",
+        "OptionA": {
+            "title": "VisaCheck & Strategy Audit (Diagnostic Only)",
+            "subtitle": "Professional pre-filing assessment for self-applicants.",
+            "desc": "Don't file blindly. The official government form does not warn you if your answers will raise \"red flags\" during the consular interview. This service is a professional diagnostic tool designed for applicants who plan to file the DS-160 on their own but require expert strategic validation beforehand.",
+            "feature1": "Personalized \"VisaScore\" Risk Analysis",
+            "feature2": "Identification of Potential Red Flags",
+            "feature3": "Corrective Action Plan",
+            "price": "$39",
+            "cta": "Get Strategy Report",
+            "note": "Note: This service does NOT include the official filing of the DS-160 form."
+        },
+        "OptionB": {
+            "title": "Full Processing Service (End-to-End)",
+            "subtitle": "Comprehensive management from data entry to official submission.",
+            "desc": "The complete solution for total peace of mind. We eliminate the technical friction, language barriers, and stress of dealing with complex government portals. Our team manages the entire lifecycle of your DS-160 application, ensuring absolute precision from initial data entry to the final official submission.",
+            "feature1": "Guided Digital Interview (Simplified)",
+            "feature2": "Real-time Data & Photo Validation",
+            "feature3": "Secure Filing with Dept. of State (CEAC)",
+            "price": "$99",
+            "cta": "Start Full Service",
+            "recommended": "Recommended"
+        },
+        "OptionC": {
+            "title": "AI Interview Simulator (The Anti-Panic)",
+            "subtitle": "Practice with a Virtual Consul before the real deal.",
+            "desc": "Already have your application filed? Don't let nerves ruin your chances. Practice unlimited times with our AI Consul that mimics the real interview style and gives you instant feedback on your answers.",
+            "feature1": "Voice-Enabled Virtual Consul",
+            "feature2": "Unlimited Practice Sessions (30 Days)",
+            "feature3": "Instant Confidence Feedback",
+            "price": "$29",
+            "cta": "Start Simulator"
+        }
     },
     "About": {
         "title": "About Us",
@@ -155,5 +182,33 @@
         "title": "Contact Support",
         "desc": "Need assistance? Our support team is here to help with any technical issues regarding your assessment or report.",
         "email": "support@usvisaprocessingcenter.com"
+    },
+    "Login": {
+        "title": "Client Portal Login",
+        "subtitle": "Secure access to your application status and documents.",
+        "emailLabel": "Email Address",
+        "submitBtn": "Send Magic Link",
+        "sendingBtn": "Sending Link...",
+        "success": "Check your email for the login link!",
+        "noAccount": "Don't have an account?",
+        "createAccount": "Create Account"
+    },
+    "Upsell": {
+        "title": "Maximize Your Approval Chances",
+        "subtitle": "Most applicants add these protections to ensure success.",
+        "radar": {
+            "title": "Priority Appointment Radar",
+            "desc": "Get an appointment months earlier. We monitor 24/7 for cancellations."
+        },
+        "insurance": {
+            "title": "Refusal Guard 365",
+            "desc": "If denied, we re-process your application for FREE for one year."
+        },
+        "simulator": {
+            "title": "AI Interview Simulator",
+            "desc": "Unlimited practice with our Virtual Consul. (Special Offer)"
+        },
+        "cta": "Proceed to Checkout",
+        "secure": "Secure 256-bit SSL Encryption"
     }
 }

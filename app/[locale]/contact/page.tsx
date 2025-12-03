@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Mail } from "lucide-react";
 import Image from "next/image";
+import { ContactForm } from "@/components/contact/ContactForm";
 
 export default function ContactPage() {
     const t = useTranslations('Contact');
@@ -30,12 +31,8 @@ export default function ContactPage() {
                     <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                         {t('desc')}
                     </p>
-                    <a
-                        href={`mailto:${t('email')}`}
-                        className="inline-flex items-center justify-center px-8 py-3 bg-primary text-white font-bold rounded-sm hover:bg-primary/90 transition-colors"
-                    >
-                        {t('email')}
-                    </a>
+
+                    <ContactForm />
                 </div>
             </section>
         </div>
