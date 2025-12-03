@@ -365,14 +365,12 @@ function calculateProgress(payload: DS160Payload): number {
         data.personal.given_names,
         data.personal.dob,
         data.personal.marital_status,
+        data.personal.nationality,
+        data.contact?.phone_primary,
+        data.contact?.email_address,
+        data.passport?.passport_number,
+
         // Triage Fields
-        payload.primary_occupation, // Saved at root level for triage? No, saved in payload root by triage logic? 
-        // Wait, triage logic saves to `primary_occupation` in root of payload?
-        // Let's check where we save. We save to `currentStep.field`.
-        // Triage fields are `primary_occupation`, `monthly_income`, `marital_status`, `triage_has_children`, `triage_property`.
-        // These are likely at the root of `ds160_payload` or `ds160_data` depending on the field key.
-        // The field keys in migration were `primary_occupation` etc.
-        // So we check those.
         payload.primary_occupation,
         payload.monthly_income,
         payload.triage_has_children,
@@ -381,7 +379,10 @@ function calculateProgress(payload: DS160Payload): number {
         data.travel.purpose_code,
         data.travel.paying_entity,
         data.work_history.current_job?.employer_name,
-        data.security_questions?.q1
+
+        // Security
+        data.security_questions?.security_health,
+        data.security_questions?.security_criminal
     ];
 
     filled = requiredFields.filter(f => f && f.toString().length > 0).length;

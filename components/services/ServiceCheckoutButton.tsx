@@ -5,13 +5,25 @@ import { Button } from "@/components/ui/button";
 import { UpsellModal } from "./UpsellModal";
 import { useRouter } from "next/navigation";
 import { useLocale } from 'next-intl';
+import { cn } from "@/lib/utils";
 
-interface FullServiceCheckoutButtonProps {
+interface ServiceCheckoutButtonProps {
     label: string;
-    price: string;
+    price: string; // Display price string (e.g. "$39")
+    basePriceNumeric: number; // Numeric price for calculation (e.g. 39)
+    plan: 'diy' | 'full' | 'simulator';
+    className?: string;
+    variant?: 'default' | 'featured' | 'outline';
 }
 
-export function FullServiceCheckoutButton({ label, price }: FullServiceCheckoutButtonProps) {
+export function ServiceCheckoutButton({
+    label,
+    price,
+    basePriceNumeric,
+    plan,
+    className,
+    variant = 'default'
+}: ServiceCheckoutButtonProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -26,7 +38,7 @@ export function FullServiceCheckoutButton({ label, price }: FullServiceCheckoutB
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    plan: 'full',
+                    plan,
                     locale,
                     addons
                 }),
@@ -35,10 +47,15 @@ export function FullServiceCheckoutButton({ label, price }: FullServiceCheckoutB
             const { url } = await response.json();
             if (url) {
                 window.location.href = url;
+            } else {
+                // Fallback if no URL returned (e.g. free plan or error)
+                router.push(`/${locale}/assessment?plan=${plan}`);
             }
         } catch (error) {
             console.error("Checkout error:", error);
             setIsLoading(false);
+            // Fallback on error
+            router.push(`/${locale}/assessment?plan=${plan}`);
         }
     };
 
@@ -46,16 +63,26 @@ export function FullServiceCheckoutButton({ label, price }: FullServiceCheckoutB
         <>
             <Button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-white text-[#003366] hover:bg-gray-100 font-bold border-none shadow-lg py-6 text-lg"
+                className={cn(
+                    "w-full font-bold shadow-md py-6 text-lg",
+                    variant === 'featured'
+                        ? "bg-accent-gold hover:bg-accent-gold/90 text-trust-navy border-none"
+                        : variant === 'outline'
+                            ? "bg-white hover:bg-gray-50 text-trust-navy border border-input"
+                            : "bg-primary text-white hover:bg-primary/90",
+                    className
+                )}
+                disabled={isLoading}
             >
-                {label}
+                {isLoading ? "Processing..." : label}
             </Button>
 
             <UpsellModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onProceed={handleProceed}
-                basePrice={99}
+                basePrice={basePriceNumeric}
+                currentPlan={plan}
             />
         </>
     );

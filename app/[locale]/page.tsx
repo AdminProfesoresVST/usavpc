@@ -4,9 +4,11 @@ import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { SafeDownloadButton } from "@/components/pdf/SafeDownloadButton";
+import { ServiceCard } from "@/components/services/ServiceCard";
+import { ServiceCheckoutButton } from "@/components/services/ServiceCheckoutButton";
 
 export default function Home() {
-  const t = useTranslations('HomePage');
+  const t = useTranslations();
 
   return (
     <div className="flex flex-col min-h-screen bg-official-grey">
@@ -29,16 +31,16 @@ export default function Home() {
             <span className="uppercase tracking-wider text-xs text-white">Official Visa Assistance</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight drop-shadow-md text-white">
-            {t('title')}
+            {t('HomePage.title')}
           </h1>
           <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed drop-shadow-sm">
-            {t('subtitle')}
+            {t('HomePage.subtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/services">
               <Button size="lg" className="bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-6 text-lg shadow-lg transform transition hover:scale-105">
-                {t('cta')}
+                {t('HomePage.cta')}
               </Button>
             </Link>
           </div>
@@ -55,55 +57,96 @@ export default function Home() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-serif font-bold text-lg mb-2">{t('Trust.encryption')}</h3>
+            <h3 className="font-serif font-bold text-lg mb-2">{t('HomePage.Trust.encryption')}</h3>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border border-border">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Clock className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-serif font-bold text-lg mb-2">{t('Trust.speed')}</h3>
+            <h3 className="font-serif font-bold text-lg mb-2">{t('HomePage.Trust.speed')}</h3>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border border-border">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileCheck className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-serif font-bold text-lg mb-2">{t('Trust.ai')}</h3>
+            <h3 className="font-serif font-bold text-lg mb-2">{t('HomePage.Trust.ai')}</h3>
           </div>
         </div>
       </section>
 
       {/* Service Fork (The Bifurcation) */}
       <section className="py-16 bg-official-grey">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-8 items-stretch">
-            {/* Option A - DIY (De-emphasized) */}
-            <div className="bg-gray-50 rounded-lg shadow-sm border border-border p-8 flex flex-col opacity-80 hover:opacity-100 transition-opacity">
-              <h3 className="text-xl font-bold text-trust-navy mb-2">{t('Fork.optionA.title')}</h3>
-              <p className="text-muted-foreground mb-6 flex-grow italic">
-                "{t('Fork.optionA.desc')}"
-              </p>
-              <div className="text-4xl font-bold text-gray-400 mb-6">{t('Fork.optionA.price')}</div>
-              <Link href="/assessment?plan=diy">
-                <Button className="w-full" variant="outline">{t('Fork.optionA.cta')}</Button>
-              </Link>
-            </div>
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid md:grid-cols-3 gap-6 items-stretch">
+            {/* Option A - DIY */}
+            <ServiceCard
+              title={t('Services.OptionA.title')}
+              subtitle={t('Services.OptionA.subtitle')}
+              description={t('Services.OptionA.desc')}
+              price={t('Services.OptionA.price')}
+              features={[
+                t('Services.OptionA.feature1'),
+                t('Services.OptionA.feature2'),
+                t('Services.OptionA.feature3')
+              ]}
+              customCta={
+                <ServiceCheckoutButton
+                  label={t('Services.OptionA.cta')}
+                  price={t('Services.OptionA.price')}
+                  basePriceNumeric={39}
+                  plan="diy"
+                  variant="outline"
+                />
+              }
+              note={t('Services.OptionA.note')}
+            />
 
-            {/* Option B - Full Service (Highlighted) */}
-            <div className="bg-trust-navy text-white rounded-lg shadow-2xl border-2 border-accent-gold p-8 relative overflow-hidden flex flex-col transform md:-translate-y-4 z-10">
-              <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-xs font-bold px-3 py-1 uppercase tracking-wider shadow-md">
-                Most Popular
-              </div>
-              <h3 className="text-2xl font-bold mb-2 text-accent-gold">{t('Fork.optionB.title')}</h3>
-              <p className="text-white/90 mb-6 flex-grow italic text-lg">
-                "{t('Fork.optionB.desc')}"
-              </p>
-              <div className="text-5xl font-bold text-white mb-6 drop-shadow-md">{t('Fork.optionB.price')}</div>
-              <Link href="/assessment?plan=full">
-                <Button className="w-full bg-accent-gold hover:bg-accent-gold/90 text-trust-navy font-bold text-lg py-6 shadow-lg border-none">
-                  {t('Fork.optionB.cta')}
-                </Button>
-              </Link>
-            </div>
+            {/* Option B - Full Service */}
+            <ServiceCard
+              variant="featured"
+              isRecommended={true}
+              title={t('Services.OptionB.title')}
+              subtitle={t('Services.OptionB.subtitle')}
+              description={t('Services.OptionB.desc')}
+              price={t('Services.OptionB.price')}
+              features={[
+                t('Services.OptionB.feature1'),
+                t('Services.OptionB.feature2'),
+                t('Services.OptionB.feature3')
+              ]}
+              customCta={
+                <ServiceCheckoutButton
+                  label={t('Services.OptionB.cta')}
+                  price={t('Services.OptionB.price')}
+                  basePriceNumeric={99}
+                  plan="full"
+                  variant="featured"
+                />
+              }
+            />
+
+            {/* Option C - Simulator */}
+            <ServiceCard
+              variant="simulator"
+              title={t('Services.OptionC.title')}
+              subtitle={t('Services.OptionC.subtitle')}
+              description={t('Services.OptionC.desc')}
+              price={t('Services.OptionC.price')}
+              features={[
+                t('Services.OptionC.feature1'),
+                t('Services.OptionC.feature2'),
+                t('Services.OptionC.feature3')
+              ]}
+              customCta={
+                <ServiceCheckoutButton
+                  label={t('Services.OptionC.cta')}
+                  price={t('Services.OptionC.price')}
+                  basePriceNumeric={29}
+                  plan="simulator"
+                  variant="outline"
+                />
+              }
+            />
           </div>
         </div>
       </section>

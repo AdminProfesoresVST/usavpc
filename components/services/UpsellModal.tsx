@@ -12,13 +12,20 @@ interface UpsellModalProps {
     onClose: () => void;
     onProceed: (addons: string[]) => void;
     basePrice: number;
+    currentPlan?: string;
 }
 
-export function UpsellModal({ isOpen, onClose, onProceed, basePrice }: UpsellModalProps) {
+export function UpsellModal({ isOpen, onClose, onProceed, basePrice, currentPlan }: UpsellModalProps) {
     const t = useTranslations('Upsell');
-    const [selectedAddons, setSelectedAddons] = useState<string[]>(['radar', 'insurance', 'simulator']); // Default all selected (Aggressive sales)
+    // Default selection: Radar and Insurance. Exclude Simulator if currentPlan is simulator.
+    const defaultAddons = ['radar', 'insurance'];
+    if (currentPlan !== 'simulator') {
+        defaultAddons.push('simulator');
+    }
 
-    const addons = [
+    const [selectedAddons, setSelectedAddons] = useState<string[]>(defaultAddons);
+
+    const allAddons = [
         {
             id: 'radar',
             title: t('radar.title'),
@@ -42,6 +49,12 @@ export function UpsellModal({ isOpen, onClose, onProceed, basePrice }: UpsellMod
             desc: t('simulator.desc')
         }
     ];
+
+    // Filter out addons that are already part of the main plan
+    const addons = allAddons.filter(addon => {
+        if (currentPlan === 'simulator' && addon.id === 'simulator') return false;
+        return true;
+    });
 
     // Track Modal Open
     useEffect(() => {
