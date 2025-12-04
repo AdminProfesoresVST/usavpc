@@ -147,6 +147,16 @@
             "price": "$99",
             "cta": "Iniciar Servicio Completo",
             "recommended": "Recomendado"
+        },
+        "OptionC": {
+            "title": "Simulador de Entrevista IA (Anti-Pánico)",
+            "subtitle": "Practique con un Cónsul Virtual antes de la entrevista real.",
+            "desc": "¿Ya presentó su solicitud? No deje que los nervios arruinen sus posibilidades. Practique ilimitadamente con nuestro Cónsul IA que imita el estilo real de la entrevista y le da retroalimentación instantánea.",
+            "feature1": "Cónsul Virtual con Voz",
+            "feature2": "Sesiones de Práctica Ilimitadas (30 Días)",
+            "feature3": "Retroalimentación de Confianza Instantánea",
+            "price": "$29",
+            "cta": "Iniciar Simulador"
         }
     },
     "About": {

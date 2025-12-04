@@ -43,7 +43,7 @@ export function MobileServices() {
                                 basePriceNumeric={99}
                                 plan="full"
                                 variant="featured"
-                                className="bg-white text-trust-navy hover:bg-white/90 px-8 h-12 rounded-full text-base font-bold shadow-lg transform active:scale-95 transition-all w-auto min-w-[140px]"
+                                className="bg-white !text-trust-navy hover:bg-white/90 px-8 h-12 rounded-xl text-base font-bold shadow-lg transform active:scale-95 transition-all w-auto min-w-[140px]"
                             />
                         </div>
                     </div>
@@ -71,7 +71,7 @@ export function MobileServices() {
                         basePriceNumeric={39}
                         plan="diy"
                         variant="outline"
-                        className="w-full border-2 border-trust-navy text-trust-navy bg-white hover:bg-gray-50 h-12 rounded-full text-base font-bold transition-colors"
+                        className="w-full border-2 border-trust-navy text-trust-navy bg-white hover:bg-gray-50 h-12 rounded-xl text-base font-bold transition-colors"
                     />
                 </div>
 
@@ -97,7 +97,7 @@ export function MobileServices() {
                         basePriceNumeric={29}
                         plan="simulator"
                         variant="outline"
-                        className="w-full border-2 border-trust-navy text-trust-navy bg-white hover:bg-gray-50 h-12 rounded-full text-base font-bold transition-colors"
+                        className="w-full border-2 border-trust-navy text-trust-navy bg-white hover:bg-gray-50 h-12 rounded-xl text-base font-bold transition-colors"
                     />
                 </div>
             </div>
