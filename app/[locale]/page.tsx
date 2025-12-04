@@ -8,58 +8,63 @@ import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceCheckoutButton } from "@/components/services/ServiceCheckoutButton";
 import { TrustSection } from "@/components/landing/TrustSection";
 
+import { MobileHome } from "@/components/mobile/MobileHome";
+
 export default function Home() {
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col min-h-screen bg-official-grey">
-      {/* Hero Section - Strict Government Style with Background Image */}
-      <section className="relative bg-trust-navy text-white py-12 md:py-32 border-b-4 border-accent-gold overflow-hidden">
-        {/* Background Image - Hidden on Mobile for cleaner app look */}
-        <div className="absolute inset-0 z-0 hidden md:block">
-          <Image
-            src="/bg-hero.png"
-            alt="US Visa Center Building"
-            fill
-            className="object-cover object-center opacity-40"
-            priority
-          />
-        </div>
+    <>
+      {/* Mobile App Experience */}
+      <div className="md:hidden">
+        <MobileHome />
+      </div>
 
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-xs font-medium mb-4 backdrop-blur-sm border border-white/10">
-            <ShieldCheck className="w-3 h-3 text-white" />
-            <span className="uppercase tracking-wider text-[10px] text-white">Official Visa Assistance</span>
+      {/* Desktop Web Experience */}
+      <div className="hidden md:flex flex-col min-h-screen bg-official-grey">
+        {/* Hero Section - Strict Government Style with Background Image */}
+        <section className="relative bg-trust-navy text-white py-32 border-b-4 border-accent-gold overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/bg-hero.png"
+              alt="US Visa Center Building"
+              fill
+              className="object-cover object-center opacity-40"
+              priority
+            />
           </div>
-          <h1 className="text-2xl md:text-5xl font-serif font-bold mb-4 tracking-tight drop-shadow-md text-white leading-tight">
-            {t('HomePage.title')}
-          </h1>
-          <p className="text-sm md:text-lg text-white/90 max-w-3xl mx-auto mb-6 font-light leading-relaxed drop-shadow-sm px-4">
-            {t('HomePage.subtitle')}
-          </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/services" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-6 text-lg shadow-lg transform transition hover:scale-105 rounded-xl">
-                {t('HomePage.cta')}
-              </Button>
-            </Link>
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-sm text-sm font-medium mb-6 backdrop-blur-sm border border-white/10">
+              <ShieldCheck className="w-4 h-4 text-white" />
+              <span className="uppercase tracking-wider text-xs text-white">Official Visa Assistance</span>
+            </div>
+            <h1 className="text-5xl font-serif font-bold mb-6 tracking-tight drop-shadow-md text-white">
+              {t('HomePage.title')}
+            </h1>
+            <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed drop-shadow-sm">
+              {t('HomePage.subtitle')}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/services">
+                <Button size="lg" className="bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-6 text-lg shadow-lg transform transition hover:scale-105">
+                  {t('HomePage.cta')}
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Main Content Area - Removed Chatbot, now just Trust Indicators */}
+        {/* Trust Indicators */}
+        <TrustSection />
 
-      {/* Trust Indicators */}
-      <TrustSection />
-
-      {/* Service Fork (The Bifurcation) */}
-      <section className="py-16 bg-official-grey">
-        <div className="container mx-auto px-4 max-w-6xl">
-          {/* Mobile: Horizontal Scroll / Desktop: Grid */}
-          <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-            {/* Option A - DIY */}
-            <div className="min-w-[85vw] md:min-w-0 snap-center">
+        {/* Service Fork (The Bifurcation) */}
+        <section className="py-16 bg-official-grey">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="grid md:grid-cols-3 gap-6 items-stretch">
+              {/* Option A - DIY */}
               <ServiceCard
                 title={t('Services.OptionA.title')}
                 subtitle={t('Services.OptionA.subtitle')}
@@ -81,10 +86,8 @@ export default function Home() {
                 }
                 note={t('Services.OptionA.note')}
               />
-            </div>
 
-            {/* Option B - Full Service */}
-            <div className="min-w-[85vw] md:min-w-0 snap-center">
+              {/* Option B - Full Service */}
               <ServiceCard
                 variant="featured"
                 isRecommended={true}
@@ -107,10 +110,8 @@ export default function Home() {
                   />
                 }
               />
-            </div>
 
-            {/* Option C - Simulator */}
-            <div className="min-w-[85vw] md:min-w-0 snap-center">
+              {/* Option C - Simulator */}
               <ServiceCard
                 variant="simulator"
                 title={t('Services.OptionC.title')}
@@ -134,10 +135,8 @@ export default function Home() {
               />
             </div>
           </div>
-        </div>
-      </section>
-
-
-    </div>
+        </section>
+      </div>
+    </>
   );
 }
