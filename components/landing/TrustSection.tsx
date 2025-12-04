@@ -10,23 +10,23 @@ export function TrustSection() {
         {
             key: 'encryption',
             icon: ShieldCheck,
-            color: "text-blue-600",
+            color: "text-trust-navy",
             bg: "bg-blue-50",
-            border: "group-hover:border-blue-200"
+            border: "group-hover:border-trust-navy/20"
         },
         {
             key: 'speed',
             icon: Zap, // Changed from Clock to Zap for "Speed"
-            color: "text-amber-500",
+            color: "text-accent-gold",
             bg: "bg-amber-50",
-            border: "group-hover:border-amber-200"
+            border: "group-hover:border-accent-gold/20"
         },
         {
             key: 'ai',
             icon: BrainCircuit, // Changed from FileCheck to Brain for "AI"
-            color: "text-purple-600",
-            bg: "bg-purple-50",
-            border: "group-hover:border-purple-200"
+            color: "text-success-green",
+            bg: "bg-green-50",
+            border: "group-hover:border-success-green/20"
         }
     ];
 
