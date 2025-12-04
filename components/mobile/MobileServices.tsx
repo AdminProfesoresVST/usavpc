@@ -35,24 +35,24 @@ export function MobileServices() {
                         <h2 className="text-xl font-bold mb-1">{t('OptionB.title')}</h2>
                         <p className="text-white/80 text-xs mb-4">{t('OptionB.subtitle')}</p>
 
-                        <div className="space-y-2 mb-6">
+                        <div className="space-y-3 mb-6">
                             {[t('OptionB.feature1'), t('OptionB.feature2'), t('OptionB.feature3')].map((feature, i) => (
-                                <div key={i} className="flex items-center gap-2">
-                                    <CheckCircle2 className="w-4 h-4 text-success-green shrink-0" />
-                                    <span className="text-sm font-light">{feature}</span>
+                                <div key={i} className="flex items-center gap-3">
+                                    <CheckCircle2 className="w-5 h-5 text-success-green shrink-0" />
+                                    <span className="text-sm font-medium text-white/90">{feature}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
-                            <div className="text-2xl font-bold">{t('OptionB.price')}</div>
+                        <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/10">
+                            <div className="text-3xl font-bold text-white">{t('OptionB.price')}</div>
                             <ServiceCheckoutButton
-                                label="Select"
+                                label="Select Plan"
                                 price={t('OptionB.price')}
                                 basePriceNumeric={99}
                                 plan="full"
                                 variant="featured"
-                                className="bg-white text-trust-navy hover:bg-white/90 px-6 h-10 rounded-xl text-sm font-bold"
+                                className="bg-white text-trust-navy hover:bg-white/90 px-8 h-12 rounded-xl text-base font-bold shadow-lg transform active:scale-95 transition-all"
                             />
                         </div>
                     </div>
@@ -69,24 +69,24 @@ export function MobileServices() {
                     <h2 className="text-lg font-bold text-gray-900 mb-1">{t('OptionA.title')}</h2>
                     <p className="text-gray-500 text-xs mb-4">{t('OptionA.subtitle')}</p>
 
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-3 mb-6">
                         {[t('OptionA.feature1'), t('OptionA.feature2'), t('OptionA.feature3')].map((feature, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-gray-300 shrink-0" />
-                                <span className="text-sm text-gray-600">{feature}</span>
+                            <div key={i} className="flex items-center gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-gray-400 shrink-0" />
+                                <span className="text-sm font-medium text-gray-700">{feature}</span>
                             </div>
                         ))}
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
-                        <div className="text-xl font-bold text-gray-900">{t('OptionA.price')}</div>
+                    <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
+                        <div className="text-2xl font-bold text-gray-900">{t('OptionA.price')}</div>
                         <ServiceCheckoutButton
-                            label="Select"
+                            label="Select Plan"
                             price={t('OptionA.price')}
                             basePriceNumeric={39}
                             plan="diy"
                             variant="outline"
-                            className="border-gray-200 text-gray-900 hover:bg-gray-50 px-6 h-10 rounded-xl text-sm font-bold"
+                            className="border-2 border-gray-200 text-gray-900 bg-gray-50 hover:bg-gray-100 px-8 h-12 rounded-xl text-base font-bold transition-colors"
                         />
                     </div>
                 </div>
@@ -102,28 +102,29 @@ export function MobileServices() {
                     <h2 className="text-lg font-bold text-gray-900 mb-1">{t('OptionC.title')}</h2>
                     <p className="text-gray-500 text-xs mb-4">{t('OptionC.subtitle')}</p>
 
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-3 mb-6">
                         {[t('OptionC.feature1'), t('OptionC.feature2'), t('OptionC.feature3')].map((feature, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-gray-300 shrink-0" />
-                                <span className="text-sm text-gray-600">{feature}</span>
+                            <div key={i} className="flex items-center gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-gray-400 shrink-0" />
+                                <span className="text-sm font-medium text-gray-700">{feature}</span>
                             </div>
                         ))}
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
-                        <div className="text-xl font-bold text-gray-900">{t('OptionC.price')}</div>
+                    <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
+                        <div className="text-2xl font-bold text-gray-900">{t('OptionC.price')}</div>
                         <ServiceCheckoutButton
-                            label="Select"
+                            label="Select Plan"
                             price={t('OptionC.price')}
                             basePriceNumeric={29}
                             plan="simulator"
                             variant="outline"
-                            className="border-gray-200 text-gray-900 hover:bg-gray-50 px-6 h-10 rounded-xl text-sm font-bold"
+                            className="border-2 border-gray-200 text-gray-900 bg-gray-50 hover:bg-gray-100 px-8 h-12 rounded-xl text-base font-bold transition-colors"
                         />
                     </div>
                 </div>
             </div>
         </div>
+
     );
 }
