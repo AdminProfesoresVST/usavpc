@@ -33,7 +33,6 @@ export function MobileHome() {
                 {/* Primary Action Card */}
                 <div className="bg-trust-navy rounded-3xl p-6 text-white shadow-xl shadow-trust-navy/20 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent-gold/20 rounded-full -ml-12 -mb-12 blur-xl"></div>
 
                     <div className="relative z-10">
                         <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-[10px] font-medium mb-4 border border-white/20">
@@ -68,8 +67,8 @@ export function MobileHome() {
                     </Link>
 
                     <Link href="/services" className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 active:scale-95 transition-transform">
-                        <div className="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center mb-3">
-                            <Zap className="w-5 h-5 text-accent-gold" />
+                        <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                            <Zap className="w-5 h-5 text-trust-navy" />
                         </div>
                         <h3 className="font-bold text-gray-900 text-sm">Express</h3>
                         <p className="text-xs text-gray-500 mt-1">24h Processing</p>
@@ -98,8 +97,8 @@ export function MobileHome() {
 
                         <Link href="/services?plan=diy" className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-                                    <BrainCircuit className="w-5 h-5 text-success-green" />
+                                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center">
+                                    <BrainCircuit className="w-5 h-5 text-trust-navy" />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-sm text-gray-900">DIY Audit</h4>
@@ -111,8 +110,8 @@ export function MobileHome() {
 
                         <Link href="/services?plan=simulator" className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
-                                    <PlayCircle className="w-5 h-5 text-purple-600" />
+                                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center">
+                                    <PlayCircle className="w-5 h-5 text-trust-navy" />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-sm text-gray-900">Interview Sim</h4>

@@ -68,7 +68,7 @@ export function ServiceCheckoutButton({
                     "w-full font-bold shadow-md py-6 text-lg transition-all duration-200",
                     // Base styles based on variant prop
                     variant === 'featured'
-                        ? "bg-accent-gold hover:bg-accent-gold/90 text-trust-navy"
+                        ? "bg-white hover:bg-gray-50 text-trust-navy shadow-lg"
                         : variant === 'outline'
                             ? "bg-white hover:bg-gray-50 text-trust-navy border-2 border-trust-navy"
                             : "bg-trust-navy text-white hover:bg-trust-navy/90",

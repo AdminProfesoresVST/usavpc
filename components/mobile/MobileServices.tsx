@@ -26,10 +26,10 @@ export function MobileServices() {
 
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="bg-accent-gold text-trust-navy text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                            <div className="bg-white/10 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">
                                 Recommended
                             </div>
-                            <ShieldCheck className="w-6 h-6 text-accent-gold" />
+                            <ShieldCheck className="w-6 h-6 text-white" />
                         </div>
 
                         <h2 className="text-2xl font-bold mb-2">{t('OptionB.title')}</h2>
@@ -53,8 +53,8 @@ export function MobileServices() {
                 <div className="bg-white rounded-[2rem] p-6 shadow-lg shadow-gray-100/50 border border-gray-100/50">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center">
-                                <BrainCircuit className="w-6 h-6 text-success-green" />
+                            <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center">
+                                <BrainCircuit className="w-6 h-6 text-trust-navy" />
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold text-gray-900">{t('OptionA.title')}</h2>
@@ -79,7 +79,7 @@ export function MobileServices() {
                 <div className="bg-white rounded-[2rem] p-6 shadow-lg shadow-gray-100/50 border border-gray-100/50">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center">
+                            <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center">
                                 <PlayCircle className="w-6 h-6 text-trust-navy" />
                             </div>
                             <div>
