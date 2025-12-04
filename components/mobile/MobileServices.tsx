@@ -58,7 +58,7 @@ export function MobileServices() {
                             <ShieldCheck className="w-6 h-6 text-white" />
                         </div>
 
-                        <h2 className="text-2xl font-bold mb-2">{t('OptionB.title')}</h2>
+                        <h2 className="text-2xl font-bold mb-2 text-white">{t('OptionB.title')}</h2>
                         <p className="text-white/80 text-sm mb-6 leading-relaxed">{t('OptionB.subtitle')}</p>
 
                         <div className="flex items-center justify-between mt-4">

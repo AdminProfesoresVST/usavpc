@@ -40,7 +40,7 @@ export function MobileHome() {
                             <span>SECURE & ENCRYPTED</span>
                         </div>
 
-                        <h2 className="text-2xl font-bold mb-2 leading-tight">
+                        <h2 className="text-2xl font-bold mb-2 leading-tight text-white">
                             Start Your Visa Application
                         </h2>
                         <p className="text-white/80 text-sm mb-6 leading-relaxed">
