@@ -1,34 +1,32 @@
 "use client";
 
 import { Link } from "@/src/i18n/routing";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { Home, Briefcase, Activity, Menu } from "lucide-react";
+import { Home, Briefcase, Activity, Settings } from "lucide-react";
+import { SettingsMenu } from "./SettingsMenu";
 
 export function MobileNav() {
+    const t = useTranslations();
     const pathname = usePathname();
 
     const isActive = (path: string) => pathname === path || pathname?.startsWith(`${path}/`);
 
     const navItems = [
         {
-            label: "Home",
+            label: t('Common.nav.home'),
             href: "/",
             icon: Home
         },
         {
-            label: "Services",
+            label: t('Common.nav.services'),
             href: "/services",
             icon: Briefcase
         },
         {
-            label: "Status",
+            label: t('Common.nav.status'),
             href: "/dashboard",
             icon: Activity
-        },
-        {
-            label: "Contact",
-            href: "/contact",
-            icon: Menu // Keeping Menu icon as it often serves as a 'More' or 'Help' entry point, but label should be clear.
         }
     ];
 
@@ -51,6 +49,16 @@ export function MobileNav() {
                         </Link>
                     );
                 })}
+
+                {/* Settings Menu Item */}
+                <SettingsMenu>
+                    <button
+                        className="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 hover:text-gray-600"
+                    >
+                        <Settings className="w-6 h-6" strokeWidth={2} />
+                        <span className="text-[10px] font-medium">{t('Common.nav.settings')}</span>
+                    </button>
+                </SettingsMenu>
             </div>
         </div>
     );

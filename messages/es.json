@@ -105,7 +105,13 @@
             "about": "Nosotros",
             "contact": "Contacto",
             "start": "Iniciar Evaluación",
-            "login": "Ingresar"
+            "login": "Ingresar",
+            "status": "Estado",
+            "settings": "Ajustes"
+        },
+        "Mobile": {
+            "title": "Centro de Procesamiento de Visas",
+            "subtitle": "Asistencia Profesional de Solicitudes"
         },
         "pricing": {
             "title": "Precios Simples y Transparentes",
@@ -243,5 +249,14 @@
         },
         "cta": "Proceder al Pago",
         "secure": "Encriptación SSL de 256 bits Segura"
+    },
+    "Settings": {
+        "title": "Configuración",
+        "subtitle": "Gestiona tu cuenta y preferencias.",
+        "profile": "Mi Perfil",
+        "privacy": "Política de Privacidad",
+        "terms": "Términos de Servicio",
+        "refund": "Política de Reembolso",
+        "logout": "Cerrar Sesión"
     }
 }
