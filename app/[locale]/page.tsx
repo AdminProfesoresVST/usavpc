@@ -9,6 +9,7 @@ import { ServiceCheckoutButton } from "@/components/services/ServiceCheckoutButt
 import { TrustSection } from "@/components/landing/TrustSection";
 
 import { MobileHome } from "@/components/mobile/MobileHome";
+import { SafeInterviewGuideButton } from "@/components/pdf/SafeInterviewGuideButton";
 
 export default function Home() {
   const t = useTranslations();
@@ -59,6 +60,19 @@ export default function Home() {
 
         {/* Trust Indicators */}
         <TrustSection />
+
+        {/* Free Resources Section */}
+        <section className="py-12 bg-white border-b border-gray-100">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl font-bold text-trust-navy mb-4">Recursos Gratuitos</h2>
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+              Queremos que tenga éxito. Descargue nuestra guía oficial de preparación para la entrevista sin costo alguno.
+            </p>
+            <div className="flex justify-center">
+              <SafeInterviewGuideButton />
+            </div>
+          </div>
+        </section>
 
         {/* Service Fork (The Bifurcation) */}
         <section className="py-16 bg-official-grey">
