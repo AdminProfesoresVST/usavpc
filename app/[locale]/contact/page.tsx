@@ -19,7 +19,7 @@ export default function ContactPage() {
                     />
                 </div>
                 <div className="container mx-auto px-4 text-center relative z-10">
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t('title')}</h1>
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-white">{t('title')}</h1>
                 </div>
             </section>
 

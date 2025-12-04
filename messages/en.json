@@ -143,9 +143,9 @@
         }
     },
     "Services": {
-        "title": "Secure Application Management Solutions for U.S. Visas",
-        "subtitle": "The U.S. visa application process (DS-160) is exacting; a single technical error or inconsistency can lead to delays or denials. USVPC bridges the gap between applicant anxiety and successful submission.",
-        "description": "We leverage proprietary AI risk-analysis technology combined with professional human review to ensure your application is compliant, consistent, and strategically sound before it reaches a Consular Officer. Select the level of assistance that best suits your needs, from diagnostic pre-filing audits to comprehensive, end-to-end processing.",
+        "title": "Secure Application Management",
+        "subtitle": "Professional DS-160 assistance to prevent delays and denials. We bridge the gap between applicant anxiety and successful submission.",
+        "description": "",
         "OptionA": {
             "title": "VisaCheck & Strategy Audit (Diagnostic Only)",
             "subtitle": "Professional pre-filing assessment for self-applicants.",
