@@ -37,7 +37,7 @@ export function Header() {
                 </nav>
 
                 <div className="flex items-center gap-4">
-                    <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 px-3 py-1.5 rounded-sm border border-white/10">
+                    <div className="hidden lg:flex items-center gap-2 text-sm font-medium text-white/90 bg-white/10 px-3 py-1.5 rounded-sm border border-white/10">
                         <Lock className="h-3 w-3" />
                         <span>{t('secure')}</span>
                     </div>

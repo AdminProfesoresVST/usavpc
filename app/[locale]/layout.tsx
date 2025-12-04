@@ -3,6 +3,7 @@ import { Merriweather, Inter } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
@@ -21,6 +22,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "US Visa Processing Center",
   description: "Secure US Visa Processing Application",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "USVPC",
+  },
 };
 
 export default async function RootLayout({
@@ -41,8 +48,9 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AnalyticsProvider>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pb-16 md:pb-0">{children}</main>
             <Footer />
+            <MobileNav />
           </AnalyticsProvider>
         </NextIntlClientProvider>
       </body>
