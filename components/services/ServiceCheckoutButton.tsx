@@ -11,7 +11,7 @@ interface ServiceCheckoutButtonProps {
     label: string;
     price: string; // Display price string (e.g. "$39")
     basePriceNumeric: number; // Numeric price for calculation (e.g. 39)
-    plan: 'diy' | 'full' | 'simulator';
+    plan: 'diy' | 'full' | 'simulator' | 'appointment';
     className?: string;
     variant?: 'default' | 'featured' | 'outline';
 }
