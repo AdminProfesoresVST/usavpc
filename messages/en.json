@@ -5,9 +5,19 @@
         "cta": "Check Eligibility / Start",
         "devMode": "Dev Mode: Test PDF Generation",
         "Trust": {
-            "encryption": "Bank-level Encryption",
-            "ai": "AI Error Detection",
-            "speed": "24h Processing"
+            "title": "Why Applicants Trust USVPC",
+            "encryption": {
+                "title": "Bank-Level Security",
+                "desc": "Your data is protected by AES-256 encryption, the same standard used by major financial institutions."
+            },
+            "ai": {
+                "title": "Smart Error Detection",
+                "desc": "Our proprietary AI scans your application for 50+ common errors that lead to visa rejections."
+            },
+            "speed": {
+                "title": "24h Rapid Review",
+                "desc": "Get a comprehensive analysis of your profile within 24 hours. No waiting weeks for answers."
+            }
         },
         "Fork": {
             "optionA": {

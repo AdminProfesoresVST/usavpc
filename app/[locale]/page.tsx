@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SafeDownloadButton } from "@/components/pdf/SafeDownloadButton";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceCheckoutButton } from "@/components/services/ServiceCheckoutButton";
+import { TrustSection } from "@/components/landing/TrustSection";
 
 export default function Home() {
   const t = useTranslations();
@@ -50,29 +51,7 @@ export default function Home() {
       {/* Main Content Area - Removed Chatbot, now just Trust Indicators */}
 
       {/* Trust Indicators */}
-      {/* Trust Indicators */}
-      <section className="container mx-auto px-4 py-12 mb-12">
-        <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-border">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ShieldCheck className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="font-serif font-bold text-lg mb-2">{t('HomePage.Trust.encryption')}</h3>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-border">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Clock className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="font-serif font-bold text-lg mb-2">{t('HomePage.Trust.speed')}</h3>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-border">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileCheck className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="font-serif font-bold text-lg mb-2">{t('HomePage.Trust.ai')}</h3>
-          </div>
-        </div>
-      </section>
+      <TrustSection />
 
       {/* Service Fork (The Bifurcation) */}
       <section className="py-16 bg-official-grey">
