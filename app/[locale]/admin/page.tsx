@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { KanbanBoard } from "@/components/admin/KanbanBoard";
 import { Badge } from "@/components/ui/badge";
 import { KnowledgeBase } from "@/components/admin/KnowledgeBase";
+import { StrategyReport } from "@/components/admin/StrategyReport";
 
 export default async function AdminDashboard() {
     const cookieStore = await cookies();
@@ -20,8 +21,6 @@ export default async function AdminDashboard() {
     );
 
     // Fetch applications with user email
-    // Note: This assumes a public.users table exists and is linked. 
-    // If not, we might need to adjust or just show IDs.
     const { data: applications, error } = await supabase
         .from("applications")
         .select(`
@@ -37,7 +36,7 @@ export default async function AdminDashboard() {
     }
 
     return (
-        <div className="h-[calc(100vh-64px)] flex flex-col p-6 bg-gray-50">
+        <div className="h-[calc(100vh-64px)] flex flex-col p-6 bg-gray-50 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Mission Control</h1>
@@ -51,10 +50,11 @@ export default async function AdminDashboard() {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 space-y-8 pb-10">
                 <KanbanBoard applications={applications || []} />
+                <StrategyReport />
+                <KnowledgeBase />
             </div>
-            <KnowledgeBase />
         </div>
     );
 }
