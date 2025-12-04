@@ -118,9 +118,13 @@ export const InterviewGuidePDF = () => (
         <Page size="A4" style={styles.page}>
             {/* Professional Header (Letterhead) */}
             <View style={styles.headerBackground}>
-                <View>
-                    <Text style={styles.headerTitle}>US Visa Processing Center</Text>
-                    <Text style={styles.headerSubtitle}>Departamento de Preparación Consular</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                    {/* Logo */}
+                    <Image src="/logo.png" style={{ width: 40, height: 40, marginRight: 10 }} />
+                    <View>
+                        <Text style={styles.headerTitle}>US Visa Processing Center</Text>
+                        <Text style={styles.headerSubtitle}>Departamento de Preparación Consular</Text>
+                    </View>
                 </View>
                 <View style={{ alignItems: "flex-end" }}>
                     <Text style={{ color: "white", fontSize: 10, fontWeight: "bold" }}>GUÍA OFICIAL</Text>
@@ -147,6 +151,11 @@ export const InterviewGuidePDF = () => (
                     Su apariencia comunica respeto por el proceso y seriedad en sus intenciones. El objetivo es proyectar
                     estabilidad, profesionalismo y confianza. No es necesario vestir de gala, pero sí de manera formal ("Business Casual").
                 </Text>
+
+                {/* Dress Code Image */}
+                <View style={{ alignItems: "center", marginVertical: 10 }}>
+                    <Image src="/interview-dress-code.png" style={{ width: 250, height: 150, borderRadius: 4 }} />
+                </View>
 
                 <View style={styles.bulletContainer}>
                     <View style={styles.bulletItem}>
@@ -181,6 +190,11 @@ export const InterviewGuidePDF = () => (
                     El orden demuestra preparación. Lleve sus documentos en una carpeta transparente o un folder clasificatorio,
                     ordenados de la siguiente manera para entregarlos rápidamente si el oficial los solicita:
                 </Text>
+
+                {/* Documents Image */}
+                <View style={{ alignItems: "center", marginVertical: 10 }}>
+                    <Image src="/interview-documents.png" style={{ width: 250, height: 150, borderRadius: 4 }} />
+                </View>
 
                 <View style={styles.bulletContainer}>
                     <View style={styles.bulletItem}>
