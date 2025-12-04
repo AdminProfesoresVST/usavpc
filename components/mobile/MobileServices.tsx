@@ -86,7 +86,7 @@ export function MobileServices() {
                             basePriceNumeric={39}
                             plan="diy"
                             variant="outline"
-                            className="border-2 border-success-green text-success-green bg-green-50/50 hover:bg-green-50 px-8 h-12 rounded-xl text-base font-bold transition-colors"
+                            className="border-2 border-trust-navy text-trust-navy bg-white hover:bg-gray-50 px-8 h-12 rounded-xl text-base font-bold transition-colors"
                         />
                     </div>
                 </div>
@@ -94,8 +94,8 @@ export function MobileServices() {
                 {/* Simulator Option */}
                 <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center">
-                            <PlayCircle className="w-5 h-5 text-purple-600" />
+                        <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center">
+                            <PlayCircle className="w-5 h-5 text-trust-navy" />
                         </div>
                     </div>
 
@@ -119,7 +119,7 @@ export function MobileServices() {
                             basePriceNumeric={29}
                             plan="simulator"
                             variant="outline"
-                            className="border-2 border-purple-600 text-purple-600 bg-purple-50/50 hover:bg-purple-50 px-8 h-12 rounded-xl text-base font-bold transition-colors"
+                            className="border-2 border-trust-navy text-trust-navy bg-white hover:bg-gray-50 px-8 h-12 rounded-xl text-base font-bold transition-colors"
                         />
                     </div>
                 </div>
