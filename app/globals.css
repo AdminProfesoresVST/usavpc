@@ -136,4 +136,16 @@
   .bg-trust-navy {
     background-color: var(--trust-navy);
   }
+
+  /* Strict Contrast Enforcement Classes */
+  .btn-primary {
+    @apply text-white hover:opacity-90;
+    background-color: var(--trust-navy);
+  }
+
+  .btn-secondary {
+    @apply bg-white border-2 hover:bg-gray-50;
+    color: var(--trust-navy);
+    border-color: var(--trust-navy);
+  }
 }
