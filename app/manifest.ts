@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
     return {
         name: 'US Visa Processing Center',
-        short_name: 'USVPC',
+        short_name: 'USAVPC',
         description: 'Secure US Visa Application Management',
         start_url: '/',
         display: 'standalone',

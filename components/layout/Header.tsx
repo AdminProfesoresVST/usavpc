@@ -25,7 +25,7 @@ export function Header() {
                         US Visa Processing Center
                     </span>
                     <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-white/90 transition-colors md:hidden">
-                        USVPC
+                        USAVPC
                     </span>
                 </Link>
 
