@@ -26,9 +26,9 @@ export function MobileNav() {
             icon: Activity
         },
         {
-            label: "Menu",
-            href: "/contact", // Temporary mapping for Menu until we have a full menu
-            icon: Menu
+            label: "Contact",
+            href: "/contact",
+            icon: Menu // Keeping Menu icon as it often serves as a 'More' or 'Help' entry point, but label should be clear.
         }
     ];
 

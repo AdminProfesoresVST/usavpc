@@ -31,8 +31,8 @@ export function Footer() {
                     <div>
                         <h4 className="mb-4 font-bold text-foreground">Contact</h4>
                         <ul className="space-y-2">
-                            <li>support@usvisaprocessingcenter.com</li>
-                            <li>1-800-VISA-HELP</li>
+                            <li>{t('contactEmail')}</li>
+                            <li>{t('contactPhone')}</li>
                         </ul>
                     </div>
                 </div>
