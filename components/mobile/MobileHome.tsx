@@ -25,7 +25,7 @@ export function MobileHome() {
                     US Visa Center
                 </h1>
                 <p className="text-sm text-gray-500 mt-1">
-                    Official Application Assistance
+                    Professional Application Assistance
                 </p>
             </div>
 

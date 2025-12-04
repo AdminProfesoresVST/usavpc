@@ -88,10 +88,10 @@
         }
     },
     "Chat": {
-        "title": "Asistente Consular",
+        "title": "Asistente de Visas",
         "secureId": "Sistema Automatizado Seguro • ID",
         "placeholder": "Escriba su respuesta aquí...",
-        "welcome": "Bienvenido al Centro de Procesamiento de Visas de EE. UU. Soy su asistente consular automatizado. Para comenzar su revisión de elegibilidad, dígame: ¿Cuál es su país de ciudadanía?",
+        "welcome": "Bienvenido al Centro de Procesamiento de Visas de EE. UU. Soy su asistente virtual automatizado. Para comenzar su revisión de elegibilidad, dígame: ¿Cuál es su país de ciudadanía?",
         "error": "Me disculpo, pero actualmente estoy experimentando problemas de conexión. Por favor inténtelo de nuevo más tarde."
     },
     "Common": {
