@@ -5,9 +5,19 @@
         "cta": "Comprobar Elegibilidad / Iniciar",
         "devMode": "Modo Dev: Probar Generación de PDF",
         "Trust": {
-            "encryption": "Encriptación Bancaria",
-            "ai": "Detección de Errores con IA",
-            "speed": "Procesamiento en 24h"
+            "title": "Por qué elegirnos",
+            "encryption": {
+                "title": "Encriptación Bancaria",
+                "desc": "Sus datos están protegidos con seguridad de nivel militar (AES-256)."
+            },
+            "ai": {
+                "title": "Detección de Errores con IA",
+                "desc": "Nuestra tecnología revisa cada respuesta para evitar rechazos por errores técnicos."
+            },
+            "speed": {
+                "title": "Procesamiento en 24h",
+                "desc": "Iniciamos su trámite el mismo día. Sin esperas innecesarias."
+            }
         },
         "Fork": {
             "optionA": {

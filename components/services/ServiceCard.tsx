@@ -40,8 +40,8 @@ export function ServiceCard({
             // Sizing: Reduced padding from p-8 to p-6
             "p-6",
             isFeatured
-                ? "bg-trust-navy text-white shadow-2xl border-2 border-accent-gold transform md:-translate-y-2 z-10"
-                : "bg-white text-trust-navy shadow-md border border-border hover:shadow-lg"
+                ? "bg-trust-navy text-white shadow-2xl border-2 border-white/10 transform md:-translate-y-2 z-10"
+                : "bg-white text-trust-navy shadow-md border border-gray-100 hover:shadow-lg"
         )}>
             {isRecommended && (
                 <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-[10px] font-bold px-3 py-1 uppercase tracking-wider shadow-sm rounded-bl-lg">
@@ -51,20 +51,20 @@ export function ServiceCard({
 
             <div className="mb-4">
                 <h3 className={cn(
-                    "font-serif font-bold mb-1 leading-tight",
-                    isFeatured ? "text-xl text-accent-gold" : "text-lg text-trust-navy"
+                    "font-sans font-bold mb-1 leading-tight",
+                    isFeatured ? "text-xl text-white" : "text-lg text-trust-navy"
                 )}>
                     {title}
                 </h3>
                 <p className={cn(
                     "text-xs font-bold uppercase tracking-wider mb-3",
-                    isFeatured ? "text-white/80" : "text-accent-gold"
+                    isFeatured ? "text-white/80" : "text-gray-500"
                 )}>
                     {subtitle}
                 </p>
                 <p className={cn(
                     "italic text-sm border-l-2 pl-3 leading-relaxed",
-                    isFeatured ? "text-white/90 border-accent-gold/50" : "text-muted-foreground border-gray-200"
+                    isFeatured ? "text-white/90 border-white/30" : "text-gray-600 border-gray-200"
                 )}>
                     "{description}"
                 </p>
@@ -74,7 +74,7 @@ export function ServiceCard({
                 {features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                         {isFeatured ? (
-                            <CheckCircle2 className="w-4 h-4 text-accent-gold shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
                         ) : (
                             <div className="w-4 h-4 shrink-0 mt-0.5 text-trust-navy">
                                 {idx === 0 && <Brain size={16} />}
