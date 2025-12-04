@@ -86,7 +86,7 @@ export function MobileServices() {
                             basePriceNumeric={39}
                             plan="diy"
                             variant="outline"
-                            className="border-2 border-gray-200 text-gray-900 bg-gray-50 hover:bg-gray-100 px-8 h-12 rounded-xl text-base font-bold transition-colors"
+                            className="border-2 border-success-green text-success-green bg-green-50/50 hover:bg-green-50 px-8 h-12 rounded-xl text-base font-bold transition-colors"
                         />
                     </div>
                 </div>
@@ -119,7 +119,7 @@ export function MobileServices() {
                             basePriceNumeric={29}
                             plan="simulator"
                             variant="outline"
-                            className="border-2 border-gray-200 text-gray-900 bg-gray-50 hover:bg-gray-100 px-8 h-12 rounded-xl text-base font-bold transition-colors"
+                            className="border-2 border-purple-600 text-purple-600 bg-purple-50/50 hover:bg-purple-50 px-8 h-12 rounded-xl text-base font-bold transition-colors"
                         />
                     </div>
                 </div>
