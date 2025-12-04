@@ -34,7 +34,7 @@ export function TrustSection() {
         <section className="py-24 bg-gradient-to-b from-white to-slate-50/50">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16 max-w-2xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-trust-navy mb-4">
+                    <h2 className="text-3xl md:text-4xl font-sans font-bold text-trust-navy mb-4">
                         {t('title')}
                     </h2>
                     <div className="h-1 w-20 bg-accent-gold mx-auto rounded-full"></div>

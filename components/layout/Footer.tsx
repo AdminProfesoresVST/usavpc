@@ -7,7 +7,7 @@ export function Footer() {
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                     <div>
-                        <h3 className="mb-4 font-serif font-bold text-primary">US Visa Processing Center</h3>
+                        <span className="font-sans font-bold text-xl tracking-tight text-white">US Visa Processing Center</span>
                         <p className="mb-4">
                             Professional assistance for your B1/B2 visa application. Secure, accurate, and efficient processing.
                         </p>

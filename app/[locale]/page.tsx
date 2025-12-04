@@ -40,7 +40,7 @@ export default function Home() {
               <ShieldCheck className="w-4 h-4 text-white" />
               <span className="uppercase tracking-wider text-xs text-white">Official Visa Assistance</span>
             </div>
-            <h1 className="text-5xl font-serif font-bold mb-6 tracking-tight drop-shadow-md text-white">
+            <h1 className="text-5xl font-sans font-bold mb-6 tracking-tight drop-shadow-md text-white">
               {t('HomePage.title')}
             </h1>
             <p className="text-lg text-white/90 max-w-3xl mx-auto mb-8 font-light leading-relaxed drop-shadow-sm">
