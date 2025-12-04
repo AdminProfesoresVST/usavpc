@@ -11,8 +11,10 @@ import {
     BrainCircuit,
     ChevronRight,
     PlayCircle,
-    Briefcase
+    Briefcase,
+    Download
 } from "lucide-react";
+import { SafeInterviewGuideButton } from "@/components/pdf/SafeInterviewGuideButton";
 
 export function MobileHome() {
     const t = useTranslations();
@@ -73,6 +75,25 @@ export function MobileHome() {
                         <h3 className="font-bold text-gray-900 text-sm">Express</h3>
                         <p className="text-xs text-gray-500 mt-1">24h Processing</p>
                     </Link>
+                </div>
+
+                {/* Free Resources Card */}
+                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
+                            <Download className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-gray-900">Recursos Gratuitos</h3>
+                            <p className="text-xs text-gray-500">Guía de Entrevista</p>
+                        </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                        Descargue nuestra guía oficial de preparación para la entrevista sin costo.
+                    </p>
+                    <div className="w-full">
+                        <SafeInterviewGuideButton />
+                    </div>
                 </div>
 
                 {/* Services List (App Menu Style) */}
