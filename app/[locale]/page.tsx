@@ -18,8 +18,8 @@ export default function Home() {
         <MobileHome />
       </div>
 
-      {/* Desktop Web Experience (Senior Dashboard Grid Layout) */}
-      <div className="hidden md:grid h-[100dvh] w-full overflow-hidden bg-official-grey grid-rows-[35%_1fr_auto]">
+      {/* Desktop Web Experience (Senior Dashboard Standard Layout) */}
+      <div className="hidden md:flex min-h-screen w-full bg-official-grey flex-col">
         {/* Row 1: Hero */}
         <section className="relative w-full flex-none flex items-center justify-center bg-trust-navy text-white border-b-4 border-accent-gold overflow-hidden">
           {/* Background Image */}
@@ -50,8 +50,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Row 2: Services Grid (Centers itself in available space) */}
-        <section className="w-full bg-gray-50 flex items-center justify-center overflow-hidden min-h-0 relative">
+        {/* Row 2: Services Grid (Natural Height) */}
+        <section className="w-full bg-gray-50 flex items-center justify-center relative py-12 flex-1">
           {/* Architectural element */}
           <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-gray-100/50 to-transparent pointer-events-none"></div>
 

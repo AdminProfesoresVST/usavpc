@@ -39,7 +39,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col h-[100dvh] overflow-hidden`}
+        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col min-h-screen`}
       >
         <NextIntlClientProvider messages={messages}>
           <AnalyticsProvider>

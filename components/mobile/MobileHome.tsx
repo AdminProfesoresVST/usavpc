@@ -23,9 +23,9 @@ export function MobileHome() {
     const t = useTranslations();
 
     return (
-        <div className="h-[100dvh] w-full bg-official-grey text-trust-navy overflow-hidden flex flex-col font-sans">
-            {/* 1. App Header (Fixed Height) */}
-            <header className="h-14 bg-white px-5 flex items-center justify-between shadow-sm shrink-0 z-20">
+        <div className="min-h-screen w-full bg-official-grey text-trust-navy flex flex-col font-sans">
+            {/* 1. App Header (Sticky) */}
+            <header className="sticky top-0 h-14 bg-white px-5 flex items-center justify-between shadow-sm shrink-0 z-50">
                 <div>
                     <h1 className="text-base font-black text-trust-navy leading-none tracking-tight">
                         {t('Common.Mobile.title')}
@@ -40,8 +40,8 @@ export function MobileHome() {
                 <MobileMenu />
             </header>
 
-            {/* 2. Main Dashboard (Grid Layout) - Takes all remaining height */}
-            <main className="flex-1 p-3 grid grid-rows-[auto_1fr] gap-3 min-h-0">
+            {/* 2. Main Content (Scrollable) */}
+            <main className="flex-1 p-3 flex flex-col gap-3">
 
                 {/* A. Hero / Action Area (Compact, High Impact) */}
                 <section className="bg-trust-navy rounded-2xl p-5 text-white shadow-lg relative overflow-hidden flex flex-col justify-center shrink-0 min-h-[140px]">
