@@ -51,19 +51,19 @@ export function ServiceCard({
 
             <div className="mb-4">
                 <h3 className={cn(
-                    "font-sans font-bold mb-1 leading-tight",
+                    "font-sans font-extrabold mb-1 leading-tight",
                     isFeatured ? "text-xl text-white" : "text-lg text-trust-navy"
                 )}>
                     {title}
                 </h3>
                 <p className={cn(
-                    "text-xs font-bold uppercase tracking-wider mb-3",
+                    "text-xs font-semibold uppercase tracking-wider mb-3",
                     isFeatured ? "text-white/80" : "text-gray-500"
                 )}>
                     {subtitle}
                 </p>
                 <p className={cn(
-                    "italic text-sm border-l-2 pl-3 leading-relaxed",
+                    "italic text-sm font-light border-l-2 pl-3 leading-relaxed",
                     isFeatured ? "text-white/90 border-white/30" : "text-gray-600 border-gray-200"
                 )}>
                     "{description}"

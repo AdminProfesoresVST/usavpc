@@ -32,7 +32,7 @@ export default function ServicesPage() {
                     </div>
                     <div className="container mx-auto px-4 text-center relative z-10 max-w-4xl">
                         <h1 className="text-3xl md:text-5xl font-serif font-bold mb-6 tracking-tight text-white">{t('title')}</h1>
-                        <p className="text-xl md:text-2xl font-medium text-white/90 mb-0 leading-relaxed max-w-2xl mx-auto">{t('subtitle')}</p>
+                        <p className="text-xl md:text-2xl font-light text-white/90 mb-0 leading-relaxed max-w-2xl mx-auto">{t('subtitle')}</p>
                     </div>
                 </section>
 
