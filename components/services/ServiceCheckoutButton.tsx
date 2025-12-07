@@ -32,7 +32,8 @@ export function ServiceCheckoutButton({
     const handleProceed = async (addons: string[]) => {
         setIsLoading(true);
         try {
-            const response = await fetch('/api/checkout', {
+            // New Flow: Service First. Create Draft Application.
+            const response = await fetch('/api/applications/draft', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,18 +45,32 @@ export function ServiceCheckoutButton({
                 }),
             });
 
-            const { url } = await response.json();
-            if (url) {
-                window.location.href = url;
-            } else {
-                // Fallback if no URL returned (e.g. free plan or error)
-                router.push(`/${locale}/assessment?plan=${plan}`);
+            if (response.status === 401) {
+                // Not logged in -> Redirect to Register
+                // We want them to come back to services page or assessment?
+                // Probably services page or directly to assessment after login if we could.
+                // For now, let's allow them to register and then they can click start again.
+                // Or better, pass ?next=/assessment?plan=...
+                router.push(`/${locale}/register?next=/${locale}/assessment?plan=${plan}`);
+                return;
             }
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Success -> Go to Assessment
+                router.push(`/${locale}/assessment`);
+            } else {
+                // Error
+                console.error("Draft Creation Error:", data.error);
+                // Fallback or show toast
+            }
+
         } catch (error) {
-            console.error("Checkout error:", error);
+            console.error("Application Start Error:", error);
+            // Fallback?
+        } finally {
             setIsLoading(false);
-            // Fallback on error
-            router.push(`/${locale}/assessment?plan=${plan}`);
         }
     };
 

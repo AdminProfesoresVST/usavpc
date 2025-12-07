@@ -29,7 +29,7 @@ interface QuestionState {
     context?: string;
 }
 
-export function ChatInterface() {
+export function ChatInterface({ onComplete }: { onComplete?: () => void }) {
     const t = useTranslations('Chat');
     const locale = useLocale();
     const [messages, setMessages] = useState<Message[]>([]);
@@ -145,6 +145,13 @@ export function ChatInterface() {
                     content: t('finalMessage'),
                     timestamp: new Date()
                 }]);
+
+                // Trigger completion callback
+                if (onComplete) {
+                    setTimeout(() => {
+                        onComplete();
+                    }, 2000);
+                }
             }
 
         } catch (error) {

@@ -225,7 +225,12 @@
         "refusalGuardActive": "Escudo de Rechazo Activo",
         "priorityRadarActive": "Radar Prioritario Activo",
         "aiSimulator": "Simulador de Entrevista IA",
-        "launchSimulator": "Iniciar Simulador"
+        "launchSimulator": "Iniciar Simulador",
+        "paymentGate": {
+            "title": "Solicitud Lista",
+            "description": "El análisis de su perfil está completo. Proceda con el pago para desbloquear su reporte de estrategia personalizado y descargar su archivo DS-160 validado.",
+            "button": "Pagar {price} para Desbloquear"
+        }
     },
     "Contact": {
         "title": "Contactar Soporte",

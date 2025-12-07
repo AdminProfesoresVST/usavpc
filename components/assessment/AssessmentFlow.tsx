@@ -8,6 +8,8 @@ import { Decision } from "@/components/onboarding/Decision";
 import { useTranslations } from 'next-intl';
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useLocale } from 'next-intl';
 
 type AssessmentStep = 'ocr' | 'triage' | 'decision' | 'chat';
 
@@ -15,10 +17,17 @@ export function AssessmentFlow() {
     const t = useTranslations('Chat');
     const [step, setStep] = useState<AssessmentStep>('ocr');
     const [triageAnswers, setTriageAnswers] = useState<any>({});
+    const router = useRouter();
+    const locale = useLocale();
 
     const handleTriageComplete = (answers: any) => {
         setTriageAnswers(answers);
         setStep('decision');
+    };
+
+    const handleChatComplete = () => {
+        // Redirect to dashboard where Payment Gate will be waiting
+        router.push(`/${locale}/dashboard`);
     };
 
     return (
@@ -79,7 +88,7 @@ export function AssessmentFlow() {
                                 exit={{ opacity: 0, y: -20 }}
                             >
                                 <h1 className="text-2xl font-serif font-bold mb-6 text-white">{t('title')}</h1>
-                                <ChatInterface />
+                                <ChatInterface onComplete={handleChatComplete} />
                             </motion.div>
                         )}
                     </AnimatePresence>

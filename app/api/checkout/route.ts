@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
     try {
-        const { locale, plan, addons = [] } = await req.json();
+        const { locale, plan, addons = [], applicationId } = await req.json();
 
         let priceAmount = 3900; // Default DIY
         let productName = 'US Visa Strategy Review (DIY)';
@@ -94,6 +94,7 @@ export async function POST(req: Request) {
             client_reference_id: user?.id, // Link to User
             metadata: {
                 locale,
+                application_id: applicationId, // Pass App ID for Webhook
                 service_type: plan === 'full' ? 'full_service' : plan === 'simulator' ? 'simulator' : 'diy_strategy',
                 addons: JSON.stringify(addons) // Store addons in metadata for webhook
             }

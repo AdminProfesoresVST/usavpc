@@ -113,7 +113,12 @@
         "refusalGuardActive": "Refusal Guard Active",
         "priorityRadarActive": "Priority Radar Active",
         "aiSimulator": "AI Interview Simulator",
-        "launchSimulator": "Launch Simulator"
+        "launchSimulator": "Launch Simulator",
+        "paymentGate": {
+            "title": "Application Ready",
+            "description": "Your profile analysis is complete. Proceed with payment to unlock your personalized strategy report and download your valid DS-160 file.",
+            "button": "Pay {price} to Unlock"
+        }
     },
     "Chat": {
         "title": "Consular Assistant",

@@ -46,29 +46,88 @@ export async function POST(req: Request) {
         if (email) {
             const serviceType = session.metadata?.service_type || 'diy_strategy';
             const addons = session.metadata?.addons ? JSON.parse(session.metadata.addons) : [];
+            const applicationId = session.metadata?.application_id; // Check for explicit ID
 
-            const { error } = await supabase
-                .from('applications')
-                .insert({
-                    user_id: userId, // Link to authenticated user if present
-                    status: 'paid',
-                    has_strategy_check: serviceType !== 'simulator',
-                    service_tier: serviceType,
-                    has_insurance_addon: addons.includes('insurance'),
-                    ais_account_email: email,
-                    form_data: {
-                        stripe_session_id: session.id,
-                        amount_total: session.amount_total,
-                        currency: session.currency,
-                        metadata: session.metadata,
-                        addons: addons // Store all addons for reference (radar, simulator)
-                    }
-                });
+            let updateError = null;
 
-            if (error) {
-                console.error('Supabase Error:', error);
+            if (applicationId) {
+                // Explicit update
+                const { error } = await supabase
+                    .from('applications')
+                    .update({
+                        status: 'paid',
+                        payment_status: 'paid', // Explicit payment status
+                        has_strategy_check: serviceType !== 'simulator',
+                        service_tier: serviceType,
+                        has_insurance_addon: addons.includes('insurance'),
+                        form_data: { // Merge or overwrite? Ideally merge but for now overwrite payment info is fine
+                            stripe_session_id: session.id,
+                            amount_total: session.amount_total,
+                            currency: session.currency,
+                            metadata: session.metadata,
+                            addons: addons
+                        }
+                    })
+                    .eq('id', applicationId);
+                updateError = error;
+            } else {
+                // Fallback: Find by User ID or Email
+                // Try to find existing 'draft' or 'unpaid' application
+                let { data: existingApp } = await supabase
+                    .from('applications')
+                    .select('id')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (existingApp) {
+                    const { error } = await supabase
+                        .from('applications')
+                        .update({
+                            status: 'paid',
+                            payment_status: 'paid',
+                            has_strategy_check: serviceType !== 'simulator',
+                            service_tier: serviceType,
+                            has_insurance_addon: addons.includes('insurance'),
+                            form_data: {
+                                stripe_session_id: session.id,
+                                amount_total: session.amount_total,
+                                currency: session.currency,
+                                metadata: session.metadata,
+                                addons: addons
+                            }
+                        })
+                        .eq('id', existingApp.id);
+                    updateError = error;
+                } else {
+                    // Insert New (Legacy behavior)
+                    const { error } = await supabase
+                        .from('applications')
+                        .insert({
+                            user_id: userId,
+                            status: 'paid',
+                            payment_status: 'paid',
+                            has_strategy_check: serviceType !== 'simulator',
+                            service_tier: serviceType,
+                            has_insurance_addon: addons.includes('insurance'),
+                            ais_account_email: email,
+                            form_data: {
+                                stripe_session_id: session.id,
+                                amount_total: session.amount_total,
+                                currency: session.currency,
+                                metadata: session.metadata,
+                                addons: addons
+                            }
+                        });
+                    updateError = error;
+                }
+            }
+
+            if (updateError) {
+                console.error('Supabase Error:', updateError);
                 return new NextResponse('Error updating database', { status: 500 });
             }
+
+
         }
     }
 

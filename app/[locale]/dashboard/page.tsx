@@ -10,6 +10,8 @@ import { ExtensionDataButton } from "@/components/dashboard/ExtensionDataButton"
 import { InterviewSimulator } from "@/components/dashboard/InterviewSimulator";
 import { getTranslations } from 'next-intl/server';
 
+import { PaymentGate } from "@/components/dashboard/PaymentGate";
+
 export default async function DashboardPage() {
     const t = await getTranslations('Dashboard');
     const cookieStore = await cookies();
@@ -49,6 +51,18 @@ export default async function DashboardPage() {
     if (application?.status === 'ready') currentStep = 4;
     if (application?.has_strategy_check) currentStep = 2; // At least step 2 if strategy check is done
 
+    // Payment Gate Logic
+    const isPaid = application?.payment_status === 'paid';
+    const plan = application?.service_tier || 'diy';
+
+    // Price Mapping (Should match pricing config/constants)
+    const prices: Record<string, string> = {
+        'diy': '$39',
+        'full': '$99',
+        'simulator': '$29'
+    };
+    const displayPrice = prices[plan] || '$39';
+
     return (
         <div className="container mx-auto px-4 py-12">
             <h1 className="text-3xl font-serif font-bold text-trust-navy mb-2">
@@ -67,7 +81,17 @@ export default async function DashboardPage() {
                 )}
             </div>
 
-            {application?.service_tier !== 'simulator' && (
+            {!isPaid && application && (
+                <div className="mb-8 fade-in-up">
+                    <PaymentGate
+                        applicationId={application.id}
+                        plan={plan}
+                        price={displayPrice}
+                    />
+                </div>
+            )}
+
+            {isPaid && application?.service_tier !== 'simulator' && (
                 <div className="grid gap-6 md:grid-cols-2">
                     <Card className="p-6 bg-white border-border shadow-sm">
                         <h2 className="text-xl font-bold mb-4">{t('applicationDetails')}</h2>
