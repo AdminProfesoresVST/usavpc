@@ -269,7 +269,8 @@
         "placeholder": "name@example.com",
         "loginLink": "Already have an account? Login here",
         "alreadyHaveAccount": "Already have an account? ",
-        "loginBtn": "Login"
+        "loginBtn": "Login",
+        "googleBtn": "Sign up with Google"
     },
     "AuthError": {
         "title": "Authentication Error",

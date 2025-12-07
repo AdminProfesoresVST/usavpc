@@ -238,7 +238,8 @@
         "sendingBtn": "发送链接...",
         "success": "检查您的电子邮件以获取登录链接！",
         "noAccount": "还没有账号？",
-        "createAccount": "创建账号"
+        "createAccount": "创建账号",
+        "googleBtn": "使用 Google 登录"
     },
     "Register": {
         "title": "创建新账号",
@@ -251,7 +252,8 @@
         "placeholder": "name@example.com",
         "loginLink": "已经有账号？在这里登录",
         "alreadyHaveAccount": "已经有账号？ ",
-        "loginBtn": "登录"
+        "loginBtn": "登录",
+        "googleBtn": "使用 Google 注册"
     },
     "AuthError": {
         "title": "认证错误",

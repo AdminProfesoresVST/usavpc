@@ -238,7 +238,8 @@
         "sendingBtn": "लिंक भेजा जा रहा है...",
         "success": "लॉगिन लिंक के लिए अपना ईमेल चेक करें!",
         "noAccount": "क्या आपके पास खाता नहीं है?",
-        "createAccount": "खाता बनाएं"
+        "createAccount": "खाता बनाएं",
+        "googleBtn": "Google के साथ साइन इन करें"
     },
     "Register": {
         "title": "नया खाता बनाएँ",
@@ -251,7 +252,8 @@
         "placeholder": "name@example.com",
         "loginLink": "क्या पहले से ही एक खाता है? यहाँ लॉग इन करें",
         "alreadyHaveAccount": "क्या पहले से ही एक खाता है? ",
-        "loginBtn": "लॉग इन करें"
+        "loginBtn": "लॉग इन करें",
+        "googleBtn": "Google के साथ साइन अप करें"
     },
     "AuthError": {
         "title": "प्रमाणीकरण त्रुटि",

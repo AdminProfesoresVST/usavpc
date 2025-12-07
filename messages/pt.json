@@ -238,7 +238,8 @@
         "sendingBtn": "Enviando Link...",
         "success": "Verifique seu email para o link de login!",
         "noAccount": "Não tem uma conta?",
-        "createAccount": "Criar Conta"
+        "createAccount": "Criar Conta",
+        "googleBtn": "Entrar com Google"
     },
     "Register": {
         "title": "Criar Nova Conta",
@@ -251,7 +252,8 @@
         "placeholder": "nome@exemplo.com",
         "loginLink": "Já tem uma conta? Faça login aqui",
         "alreadyHaveAccount": "Já tem uma conta? ",
-        "loginBtn": "Entrar"
+        "loginBtn": "Entrar",
+        "googleBtn": "Cadastrar com Google"
     },
     "AuthError": {
         "title": "Erro de Autenticação",
