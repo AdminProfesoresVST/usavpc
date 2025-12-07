@@ -23,8 +23,8 @@ export default function Home() {
 
       {/* Desktop Web Experience */}
       <div className="hidden md:flex flex-col min-h-screen bg-official-grey">
-        {/* Hero Section - Strict Government Style with Background Image */}
-        <section className="relative bg-trust-navy text-white py-32 border-b-4 border-accent-gold overflow-hidden">
+        {/* Hero Section - Compact & Dense */}
+        <section className="relative bg-trust-navy text-white py-12 border-b-2 border-accent-gold overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -37,20 +37,20 @@ export default function Home() {
           </div>
 
           <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-sm text-sm font-medium mb-6 backdrop-blur-sm border border-white/10">
-              <ShieldCheck className="w-4 h-4 text-white" />
-              <span className="uppercase tracking-wider text-xs text-white">Professional Visa Assistance</span>
+            <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-0.5 rounded-sm text-sm font-medium mb-4 backdrop-blur-sm border border-white/10">
+              <ShieldCheck className="w-3 h-3 text-white" />
+              <span className="uppercase tracking-wider text-[10px] text-white">Professional Visa Assistance</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-sans font-bold mb-6 tracking-tight drop-shadow-md text-white">
+            <h1 className="text-4xl md:text-5xl font-sans font-extrabold mb-3 tracking-tight drop-shadow-md text-white">
               {t('HomePage.title')}
             </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8 font-light leading-relaxed drop-shadow-sm">
+            <p className="text-lg text-white/90 max-w-xl mx-auto mb-5 font-light leading-snug drop-shadow-sm">
               {t('HomePage.subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Link href="/services">
-                <Button size="lg" className="bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-6 text-lg shadow-lg transform transition hover:scale-105">
+                <Button size="lg" className="bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-4 text-lg shadow-md transform transition hover:scale-105">
                   {t('HomePage.cta')}
                 </Button>
               </Link>
@@ -62,10 +62,10 @@ export default function Home() {
         <TrustSection />
 
         {/* Free Resources Section */}
-        <section className="py-12 bg-white border-b border-gray-100">
+        <section className="py-6 bg-white border-b border-gray-100">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl font-bold text-trust-navy mb-4">{t('HomePage.FreeResources.title')}</h2>
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            <h2 className="text-xl font-bold text-trust-navy mb-2">{t('HomePage.FreeResources.title')}</h2>
+            <p className="text-sm text-gray-600 mb-4 max-w-xl mx-auto">
               {t('HomePage.FreeResources.desc')}
             </p>
             <div className="flex justify-center">
@@ -75,7 +75,7 @@ export default function Home() {
         </section>
 
         {/* Service Fork (The Bifurcation) */}
-        <section className="py-16 bg-official-grey">
+        <section className="py-8 bg-official-grey">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="grid md:grid-cols-3 gap-6 items-stretch">
               {/* Option A - DIY */}

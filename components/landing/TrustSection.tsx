@@ -31,37 +31,35 @@ export function TrustSection() {
     ];
 
     return (
-        <section className="py-24 bg-gradient-to-b from-white to-slate-50/50">
+        <section className="py-8 bg-gradient-to-b from-white to-slate-50/50">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16 max-w-2xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl font-sans font-bold text-trust-navy mb-4">
+                <div className="text-center mb-6 max-w-2xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-sans font-bold text-trust-navy mb-2">
                         {t('title')}
                     </h2>
-                    <div className="h-1 w-20 bg-accent-gold mx-auto rounded-full"></div>
+                    <div className="h-1 w-12 bg-accent-gold mx-auto rounded-full"></div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-3 gap-4">
                     {features.map((feature) => {
                         const Icon = feature.icon;
                         return (
                             <div
                                 key={feature.key}
-                                className={`group relative bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 ${feature.border} top-0 hover:-top-2`}
+                                className={`group relative bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 ${feature.border}`}
                             >
-                                <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                                    <Icon className={`w-8 h-8 ${feature.color}`} />
+                                <div className="flex items-center gap-4 mb-3">
+                                    <div className={`w-10 h-10 ${feature.bg} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                        <Icon className={`w-5 h-5 ${feature.color}`} />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-gray-900">
+                                        {t(`${feature.key}.title`)}
+                                    </h3>
                                 </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                                    {t(`${feature.key}.title`)}
-                                </h3>
-
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-sm text-gray-600 leading-snug">
                                     {t(`${feature.key}.desc`)}
                                 </p>
-
-                                {/* Decorative background element */}
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-slate-50 to-transparent rounded-tr-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                         );
                     })}

@@ -20,37 +20,37 @@ export function MobileHome() {
     const t = useTranslations();
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50 pb-24">
+        <div className="flex flex-col min-h-screen bg-gray-50 pb-12">
             {/* App Header */}
-            <div className="bg-white px-6 pt-12 pb-6 border-b border-gray-100 sticky top-0 z-10">
-                <h1 className="text-2xl font-bold text-trust-navy">
+            <div className="bg-white px-4 py-4 border-b border-gray-100 sticky top-0 z-10">
+                <h1 className="text-xl font-bold text-trust-navy">
                     {t('Common.Mobile.title')}
                 </h1>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-xs text-gray-500">
                     {t('Common.Mobile.subtitle')}
                 </p>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-4 space-y-4">
                 {/* Primary Action Card */}
-                <div className="bg-trust-navy rounded-3xl p-6 text-white shadow-xl shadow-trust-navy/20 relative overflow-hidden group">
+                <div className="bg-trust-navy rounded-2xl p-5 text-white shadow-lg shadow-trust-navy/20 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
 
                     <div className="relative z-10">
-                        <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-[10px] font-medium mb-4 border border-white/20">
+                        <div className="inline-flex items-center gap-2 bg-white/10 px-2 py-0.5 rounded-full text-[9px] font-medium mb-3 border border-white/20">
                             <ShieldCheck className="w-3 h-3" />
                             <span>SECURE & ENCRYPTED</span>
                         </div>
 
-                        <h2 className="text-2xl font-bold mb-2 leading-tight text-white">
+                        <h2 className="text-xl font-bold mb-1 leading-tight text-white">
                             Start Your Visa Application
                         </h2>
-                        <p className="text-white/80 text-sm mb-6 leading-relaxed">
+                        <p className="text-white/80 text-xs mb-4 leading-relaxed">
                             Complete your DS-160 with AI assistance and expert review.
                         </p>
 
                         <Link href="/services" className="block">
-                            <Button className="w-full bg-white text-trust-navy hover:bg-white/90 font-bold h-12 rounded-xl shadow-sm">
+                            <Button className="w-full bg-white text-trust-navy hover:bg-white/90 font-bold h-10 rounded-xl shadow-sm text-sm">
                                 Check Eligibility
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
