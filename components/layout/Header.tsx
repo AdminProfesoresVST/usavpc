@@ -41,7 +41,7 @@ export function Header() {
                 {/* 2. Desktop Navigation (Hidden on Mobile) */}
                 <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-white/90 mx-4">
                     <Link href="/" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.home')}</Link>
-                    <Link href="/services" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.services')}</Link>
+                    <Link href="/#services" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.services')}</Link>
                     <Link href="/dashboard" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.dashboard')}</Link>
                     <Link href="/contact" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.contact')}</Link>
                 </nav>

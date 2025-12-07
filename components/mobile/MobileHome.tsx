@@ -16,11 +16,45 @@ import {
     Download
 } from "lucide-react";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { useRouter } from "next/navigation";
+import { useLocale } from 'next-intl';
+import { useState } from "react";
 
 // ... imports ...
 
 export function MobileHome() {
     const t = useTranslations();
+    const router = useRouter();
+    const locale = useLocale();
+    const [isProcessing, setIsProcessing] = useState<string | null>(null);
+
+    const handlePlanSelect = async (plan: string) => {
+        setIsProcessing(plan);
+        try {
+            const response = await fetch('/api/applications/draft', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ plan, locale }),
+            });
+
+            if (response.status === 401) {
+                // Not logged in -> Register/Login with next param
+                router.push(`/${locale}/login?next=/${locale}/assessment?plan=${plan}`);
+                return;
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                router.push(`/${locale}/assessment`);
+            } else {
+                console.error("Draft Error:", data.error);
+                setIsProcessing(null);
+            }
+        } catch (e) {
+            console.error(e);
+            setIsProcessing(null);
+        }
+    };
 
     return (
         <div className="min-h-screen w-full bg-official-grey text-trust-navy flex flex-col font-sans">
@@ -85,30 +119,35 @@ export function MobileHome() {
                 </section>
 
                 {/* B. Services Grid (3 Equal Cards) */}
-                <section className="grid grid-rows-[auto_1fr] gap-2 min-h-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <section id="services" className="grid grid-rows-[auto_1fr] gap-2 min-h-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-left">
                     <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
                         <h3 className="font-extrabold text-[10px] text-gray-400 uppercase tracking-widest">Select Packet</h3>
-                        <Link href="/services" className="text-[10px] text-trust-navy font-bold hover:underline">Compare Plans</Link>
+                        <button onClick={() => {
+                            const servicesSection = document.getElementById('services');
+                            if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
+                        }} className="text-[10px] text-trust-navy font-bold hover:underline">Compare Plans</button>
                     </div>
 
                     <div className="p-2 grid grid-rows-3 gap-2 min-h-0">
                         {/* Card 01 - Full Service */}
-                        <Link href="/services?plan=full" className="relative bg-gray-50 hover:bg-blue-50 border border-transparent hover:border-blue-100 rounded-xl p-3 flex items-center justify-between transition-all group overflow-hidden">
+                        <div onClick={() => handlePlanSelect('full')} className="relative bg-gray-50 hover:bg-blue-50 border border-transparent hover:border-blue-100 rounded-xl p-3 flex items-center justify-between transition-all group overflow-hidden cursor-pointer active:scale-98">
+                            {isProcessing === 'full' && <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center"><div className="w-5 h-5 border-2 border-trust-navy border-t-transparent rounded-full animate-spin"></div></div>}
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-trust-navy rounded-l-xl"></div>
                             <div className="flex items-center gap-3 ml-2">
                                 <div className="text-trust-navy font-black text-lg w-6">01</div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">Full Concierge</h4>
+                                    <h4 className="font-bold text-sm text-trust-navy leading-tight">Full Concierge</h4>
                                     <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">We file everything for you</p>
                                 </div>
                             </div>
                             <div className="text-right">
                                 <span className="font-black text-trust-navy text-sm block">$99</span>
                             </div>
-                        </Link>
+                        </div>
 
                         {/* Card 02 - DIY */}
-                        <Link href="/services?plan=diy" className="bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-3 flex items-center justify-between transition-all group">
+                        <div onClick={() => handlePlanSelect('diy')} className="bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-3 flex items-center justify-between transition-all group cursor-pointer active:scale-98 relative">
+                            {isProcessing === 'diy' && <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center"><div className="w-5 h-5 border-2 border-trust-navy border-t-transparent rounded-full animate-spin"></div></div>}
                             <div className="flex items-center gap-3 ml-1">
                                 <div className="text-gray-300 font-black text-lg w-6 group-hover:text-gray-400 transition-colors">02</div>
                                 <div>
@@ -117,10 +156,11 @@ export function MobileHome() {
                                 </div>
                             </div>
                             <span className="font-bold text-gray-600 text-sm">$39</span>
-                        </Link>
+                        </div>
 
                         {/* Card 03 - Simulator */}
-                        <Link href="/services?plan=simulator" className="bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-3 flex items-center justify-between transition-all group">
+                        <div onClick={() => handlePlanSelect('simulator')} className="bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-3 flex items-center justify-between transition-all group cursor-pointer active:scale-98 relative">
+                            {isProcessing === 'simulator' && <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center"><div className="w-5 h-5 border-2 border-trust-navy border-t-transparent rounded-full animate-spin"></div></div>}
                             <div className="flex items-center gap-3 ml-1">
                                 <div className="text-gray-300 font-black text-lg w-6 group-hover:text-gray-400 transition-colors">03</div>
                                 <div>
@@ -129,7 +169,7 @@ export function MobileHome() {
                                 </div>
                             </div>
                             <span className="font-bold text-gray-600 text-sm">$29</span>
-                        </Link>
+                        </div>
                     </div>
                 </section>
             </main>

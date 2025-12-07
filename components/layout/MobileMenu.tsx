@@ -36,7 +36,7 @@ export function MobileMenu({ className }: { className?: string }) {
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
-                    <Link href="/services" className="flex items-center gap-2 cursor-pointer">
+                    <Link href="/#services" className="flex items-center gap-2 cursor-pointer">
                         <Briefcase className="h-4 w-4" />
                         <span>{t('Common.Nav.services')}</span>
                     </Link>
