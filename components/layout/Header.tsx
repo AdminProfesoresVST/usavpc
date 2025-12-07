@@ -16,12 +16,12 @@ export function Header() {
                 Mobile: h-14, Logo + Hamburger
                 Desktop: h-20, Logo + Text + Nav
             */}
-            <div className="container mx-auto flex items-center justify-between px-4 lg:px-6 h-20">
+            <div className="container mx-auto flex items-center justify-between px-4 xl:px-6 h-20">
 
                 {/* 1. Logo Section */}
                 <Link href="/" className="flex items-center gap-3 group shrink-0">
                     {/* Logo: consistent size or slightly adapted */}
-                    <div className="relative h-12 w-12 lg:h-16 lg:w-16 overflow-hidden transition-transform group-hover:scale-105">
+                    <div className="relative h-12 w-12 xl:h-16 xl:w-16 overflow-hidden transition-transform group-hover:scale-105">
                         <Image
                             src="/logo.png"
                             alt="US Visa Processing Center Logo"
@@ -32,7 +32,7 @@ export function Header() {
 
                     {/* Desktop & Mobile Text: Visible Always */}
                     <div className="flex flex-col justify-center">
-                        <span className="font-serif text-sm lg:text-lg xl:text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors leading-tight">
+                        <span className="font-serif text-sm xl:text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors leading-tight">
                             US Visa Processing Center
                         </span>
                     </div>

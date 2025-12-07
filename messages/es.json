@@ -121,7 +121,27 @@
         },
         "Mobile": {
             "title": "Centro de Procesamiento de Visas",
-            "subtitle": "Asistencia Profesional de Solicitudes"
+            "subtitle": "Asistencia Profesional de Solicitudes",
+            "officialService": "Servicio Oficial",
+            "heroTitle": "Visa USA",
+            "heroSubtitle": "Aplicación Asistida por IA",
+            "startApplication": "Comenzar Nueva Solicitud",
+            "selectPacket": "Seleccionar Paquete",
+            "comparePlans": "Comparar Planes",
+            "Plans": {
+                "full": {
+                    "title": "Concierge Completo",
+                    "desc": "Nosotros tramitamos todo"
+                },
+                "diy": {
+                    "title": "Auditoría DIY",
+                    "desc": "Revisión de IA y Reporte"
+                },
+                "simulator": {
+                    "title": "Simulador",
+                    "desc": "Práctica de Entrevista"
+                }
+            }
         },
         "pricing": {
             "title": "Precios Simples y Transparentes",

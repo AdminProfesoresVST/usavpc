@@ -80,13 +80,13 @@ export function MobileHome() {
                         <div className="flex items-start justify-between">
                             <div>
                                 <div className="inline-flex items-center gap-1.5 bg-white/10 px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wide font-bold mb-2 border border-white/20 text-accent-gold">
-                                    <ShieldCheck className="w-3 h-3" /> Official Service
+                                    <ShieldCheck className="w-3 h-3" /> {t('Common.Mobile.officialService')}
                                 </div>
                                 <h2 className="text-2xl font-black leading-none mb-1 text-white tracking-tight">
-                                    Visa USA
+                                    {t('Common.Mobile.heroTitle')}
                                 </h2>
                                 <p className="text-white/70 text-xs font-medium leading-snug">
-                                    AI-Assisted Application
+                                    {t('Common.Mobile.heroSubtitle')}
                                 </p>
                             </div>
                         </div>
@@ -96,7 +96,7 @@ export function MobileHome() {
                             if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
                         }} className="mt-3 w-full cursor-pointer">
                             <Button className="w-full bg-white text-trust-navy hover:bg-gray-100 font-bold h-10 rounded-xl text-sm shadow-xl transition-all active:scale-95 flex items-center justify-between px-4 pointer-events-none">
-                                <span>Start New Application</span>
+                                <span>{t('Common.Mobile.startApplication')}</span>
                                 <div className="bg-trust-navy/10 rounded-full p-1">
                                     <ArrowRight className="w-4 h-4 text-trust-navy" />
                                 </div>
@@ -108,11 +108,11 @@ export function MobileHome() {
                 {/* B. Services Grid (3 Equal Cards) */}
                 <section id="services" className="grid grid-rows-[auto_1fr] gap-2 min-h-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-left">
                     <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                        <h3 className="font-extrabold text-[10px] text-gray-400 uppercase tracking-widest">Select Packet</h3>
+                        <h3 className="font-extrabold text-[10px] text-gray-400 uppercase tracking-widest">{t('Common.Mobile.selectPacket')}</h3>
                         <button onClick={() => {
                             const servicesSection = document.getElementById('services');
                             if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
-                        }} className="text-[10px] text-trust-navy font-bold hover:underline">Compare Plans</button>
+                        }} className="text-[10px] text-trust-navy font-bold hover:underline">{t('Common.Mobile.comparePlans')}</button>
                     </div>
 
                     <div className="p-2 grid grid-rows-3 gap-2 min-h-0">
@@ -123,8 +123,8 @@ export function MobileHome() {
                             <div className="flex items-center gap-3 ml-2">
                                 <div className="text-trust-navy font-black text-lg w-6">01</div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-trust-navy leading-tight">Full Concierge</h4>
-                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">We file everything for you</p>
+                                    <h4 className="font-bold text-sm text-trust-navy leading-tight">{t('Common.Mobile.Plans.full.title')}</h4>
+                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">{t('Common.Mobile.Plans.full.desc')}</p>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -138,8 +138,8 @@ export function MobileHome() {
                             <div className="flex items-center gap-3 ml-1">
                                 <div className="text-gray-300 font-black text-lg w-6 group-hover:text-gray-400 transition-colors">02</div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">DIY Audit</h4>
-                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">AI Check & Report</p>
+                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">{t('Common.Mobile.Plans.diy.title')}</h4>
+                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">{t('Common.Mobile.Plans.diy.desc')}</p>
                                 </div>
                             </div>
                             <span className="font-bold text-gray-600 text-sm">$39</span>
@@ -151,8 +151,8 @@ export function MobileHome() {
                             <div className="flex items-center gap-3 ml-1">
                                 <div className="text-gray-300 font-black text-lg w-6 group-hover:text-gray-400 transition-colors">03</div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">Simulator</h4>
-                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">Interview Practice</p>
+                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">{t('Common.Mobile.Plans.simulator.title')}</h4>
+                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">{t('Common.Mobile.Plans.simulator.desc')}</p>
                                 </div>
                             </div>
                             <span className="font-bold text-gray-600 text-sm">$29</span>
