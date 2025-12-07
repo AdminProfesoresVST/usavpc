@@ -20,129 +20,91 @@ export function MobileHome() {
     const t = useTranslations();
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50 pb-12">
-            {/* App Header */}
-            <div className="bg-white px-4 py-4 border-b border-gray-100 sticky top-0 z-10">
-                <h1 className="text-xl font-bold text-trust-navy">
+        <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-50 overflow-hidden">
+            {/* App Header (Sticky) */}
+            <div className="bg-white px-4 py-3 border-b border-gray-100 flex-none z-20">
+                <h1 className="text-lg font-bold text-trust-navy">
                     {t('Common.Mobile.title')}
                 </h1>
-                <p className="text-xs text-gray-500">
-                    {t('Common.Mobile.subtitle')}
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                    Official Application Center
                 </p>
             </div>
 
-            <div className="p-4 space-y-4">
-                {/* Primary Action Card */}
-                <div className="bg-trust-navy rounded-2xl p-5 text-white shadow-lg shadow-trust-navy/20 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-
+            {/* Scrollable Content Area within 100vh */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-20">
+                {/* Hero Card (Compact) */}
+                <div className="bg-trust-navy rounded-2xl p-4 text-white shadow-lg relative overflow-hidden group shrink-0">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12 blur-xl"></div>
                     <div className="relative z-10">
-                        <div className="inline-flex items-center gap-2 bg-white/10 px-2 py-0.5 rounded-full text-[9px] font-medium mb-3 border border-white/20">
-                            <ShieldCheck className="w-3 h-3" />
-                            <span>SECURE & ENCRYPTED</span>
-                        </div>
-
-                        <h2 className="text-xl font-bold mb-1 leading-tight text-white">
-                            Start Your Visa Application
+                        <h2 className="text-lg font-bold mb-1 leading-tight text-white">
+                            Start Application
                         </h2>
-                        <p className="text-white/80 text-xs mb-4 leading-relaxed">
-                            Complete your DS-160 with AI assistance and expert review.
+                        <p className="text-white/70 text-xs mb-3">
+                            AI-Powered DS-160 Assistance
                         </p>
-
                         <Link href="/services" className="block">
-                            <Button className="w-full bg-white text-trust-navy hover:bg-white/90 font-bold h-10 rounded-xl shadow-sm text-sm">
-                                Check Eligibility
-                                <ArrowRight className="w-4 h-4 ml-2" />
+                            <Button className="w-full bg-white text-trust-navy hover:bg-white/90 font-bold h-9 rounded-lg text-xs shadow-sm">
+                                Check Eligibility <ArrowRight className="w-3 h-3 ml-2" />
                             </Button>
                         </Link>
                     </div>
                 </div>
 
-                {/* Quick Actions Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                    <Link href="/dashboard" className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 active:scale-95 transition-transform">
-                        <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center mb-3">
-                            <FileText className="w-5 h-5 text-trust-navy" />
-                        </div>
-                        <h3 className="font-bold text-gray-900 text-sm">My Status</h3>
-                        <p className="text-xs text-gray-500 mt-1">Track application</p>
-                    </Link>
+                {/* Services List (Compact) */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden shrink-0">
+                    <div className="px-4 py-2 border-b border-gray-50 bg-gray-50/50">
+                        <h3 className="font-bold text-xs text-gray-500 uppercase tracking-wider">Select Service</h3>
+                    </div>
+                    <div className="divide-y divide-gray-50">
+                        <Link href="/services?plan=full" className="flex items-center justify-between p-3 active:bg-blue-50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-trust-navy/10 rounded-lg flex items-center justify-center text-trust-navy font-bold text-xs">01</div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-gray-900">Full Service</h4>
+                                    <p className="text-[10px] text-gray-500">We do everything for you</p>
+                                </div>
+                            </div>
+                            <span className="font-bold text-trust-navy text-sm">$99</span>
+                        </Link>
 
-                    <Link href="/services" className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 active:scale-95 transition-transform">
-                        <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center mb-3">
-                            <Zap className="w-5 h-5 text-trust-navy" />
-                        </div>
-                        <h3 className="font-bold text-gray-900 text-sm">Express</h3>
-                        <p className="text-xs text-gray-500 mt-1">24h Processing</p>
-                    </Link>
+                        <Link href="/services?plan=diy" className="flex items-center justify-between p-3 active:bg-blue-50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 font-bold text-xs">02</div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-gray-900">DIY Audit</h4>
+                                    <p className="text-[10px] text-gray-500">AI Risk Check</p>
+                                </div>
+                            </div>
+                            <span className="font-bold text-trust-navy text-sm">$39</span>
+                        </Link>
+
+                        <Link href="/services?plan=simulator" className="flex items-center justify-between p-3 active:bg-blue-50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 font-bold text-xs">03</div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-gray-900">Interview Sim</h4>
+                                    <p className="text-[10px] text-gray-500">Practice with AI</p>
+                                </div>
+                            </div>
+                            <span className="font-bold text-trust-navy text-sm">$29</span>
+                        </Link>
+                    </div>
                 </div>
 
-                {/* Free Resources Card */}
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
-                            <Download className="w-5 h-5 text-green-600" />
+                {/* Quick Status */}
+                <Link href="/dashboard" className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between active:scale-95 transition-transform">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
+                            <FileText className="w-4 h-4 text-trust-navy" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900">Recursos Gratuitos</h3>
-                            <p className="text-xs text-gray-500">Guía de Entrevista</p>
+                            <h3 className="font-bold text-gray-900 text-xs">Check Status</h3>
+                            <p className="text-[10px] text-gray-500">Track application</p>
                         </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                        Descargue nuestra guía oficial de preparación para la entrevista sin costo.
-                    </p>
-                    <div className="w-full">
-                        <SafeInterviewGuideButton />
-                    </div>
-                </div>
-
-                {/* Services List (App Menu Style) */}
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="p-4 border-b border-gray-50">
-                        <h3 className="font-bold text-gray-900">Available Services</h3>
-                    </div>
-
-                    <div className="divide-y divide-gray-50">
-                        <Link href="/services?plan=full" className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-trust-navy/5 rounded-xl flex items-center justify-center">
-                                    <Briefcase className="w-5 h-5 text-trust-navy" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-sm text-gray-900">Full Service</h4>
-                                    <p className="text-xs text-gray-500">End-to-end management</p>
-                                </div>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-gray-300" />
-                        </Link>
-
-                        <Link href="/services?plan=diy" className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center">
-                                    <BrainCircuit className="w-5 h-5 text-trust-navy" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-sm text-gray-900">DIY Audit</h4>
-                                    <p className="text-xs text-gray-500">AI Risk Analysis</p>
-                                </div>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-gray-300" />
-                        </Link>
-
-                        <Link href="/services?plan=simulator" className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center">
-                                    <PlayCircle className="w-5 h-5 text-trust-navy" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-sm text-gray-900">Interview Sim</h4>
-                                    <p className="text-xs text-gray-500">Practice with AI</p>
-                                </div>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-gray-300" />
-                        </Link>
-                    </div>
-                </div>
+                    <ChevronRight className="w-4 h-4 text-gray-300" />
+                </Link>
             </div>
         </div>
     );

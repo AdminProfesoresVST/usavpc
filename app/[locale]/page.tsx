@@ -1,13 +1,10 @@
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, Clock, FileCheck } from "lucide-react";
+import { ShieldCheck, Clock, FileCheck, Zap, BrainCircuit } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { SafeDownloadButton } from "@/components/pdf/SafeDownloadButton";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ServiceCheckoutButton } from "@/components/services/ServiceCheckoutButton";
-import { TrustSection } from "@/components/landing/TrustSection";
-
 import { MobileHome } from "@/components/mobile/MobileHome";
 import { SafeInterviewGuideButton } from "@/components/pdf/SafeInterviewGuideButton";
 
@@ -16,138 +13,97 @@ export default function Home() {
 
   return (
     <>
-      {/* Mobile App Experience */}
-      <div className="md:hidden">
+      {/* Mobile App Experience (Using new Zero Scroll Mobile Component) */}
+      <div className="md:hidden h-screen overflow-hidden">
         <MobileHome />
       </div>
 
-      {/* Desktop Web Experience */}
-      <div className="hidden md:flex flex-col min-h-screen bg-official-grey">
-        {/* Hero Section - Compact & Dense */}
-        <section className="relative bg-trust-navy text-white py-12 border-b-2 border-accent-gold overflow-hidden">
+      {/* Desktop Web Experience (Zero Scroll Dashboard Layout) */}
+      <div className="hidden md:flex flex-col h-[calc(100vh-64px)] overflow-hidden bg-official-grey">
+        {/* Top Section: Hero (35% height) */}
+        <section className="relative h-[35%] flex items-center justify-center bg-trust-navy text-white border-b-4 border-accent-gold overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/bg-hero.png"
               alt="US Visa Center Building"
               fill
-              className="object-cover object-center opacity-40"
+              className="object-cover object-center opacity-30"
               priority
             />
           </div>
 
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-0.5 rounded-sm text-sm font-medium mb-4 backdrop-blur-sm border border-white/10">
-              <ShieldCheck className="w-3 h-3 text-white" />
-              <span className="uppercase tracking-wider text-[10px] text-white">Professional Visa Assistance</span>
+          <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-0.5 rounded-full text-[10px] uppercase tracking-widest font-bold mb-3 border border-white/20 text-accent-gold">
+              <ShieldCheck className="w-3 h-3" />
+              <span>Official Visa Assistance</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-sans font-extrabold mb-3 tracking-tight drop-shadow-md text-white">
+            <h1 className="text-4xl lg:text-5xl font-sans font-extrabold mb-2 tracking-tight drop-shadow-lg text-center">
               {t('HomePage.title')}
             </h1>
-            <p className="text-lg text-white/90 max-w-xl mx-auto mb-5 font-light leading-snug drop-shadow-sm">
+            <p className="text-lg text-white/80 max-w-2xl text-center font-light leading-snug">
               {t('HomePage.subtitle')}
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-              <Link href="/services">
-                <Button size="lg" className="bg-success-green hover:bg-success-green/90 text-white font-bold px-8 py-4 text-lg shadow-md transform transition hover:scale-105">
-                  {t('HomePage.cta')}
-                </Button>
-              </Link>
-            </div>
           </div>
         </section>
 
-        {/* Trust Indicators */}
-        <TrustSection />
+        {/* Middle Section: Services Grid (Remaining Height) */}
+        <section className="flex-1 bg-gray-50 p-6 flex items-center justify-center">
+          <div className="w-full max-w-7xl grid grid-cols-3 gap-6 h-[90%] items-center">
+            {/* Option A */}
+            <ServiceCard
+              stepNumber="01"
+              title={t('Services.OptionA.title')}
+              subtitle={t('Services.OptionA.subtitle')}
+              description={t('Services.OptionA.desc')}
+              price={t('Services.OptionA.price')}
+              features={[t('Services.OptionA.feature1'), t('Services.OptionA.feature2'), t('Services.OptionA.feature3')]}
+              customCta={
+                <ServiceCheckoutButton label={t('Services.OptionA.cta')} price={t('Services.OptionA.price')} basePriceNumeric={39} plan="diy" variant="outline" />
+              }
+              note={t('Services.OptionA.note')}
+            />
 
-        {/* Free Resources Section */}
-        <section className="py-6 bg-white border-b border-gray-100">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-xl font-bold text-trust-navy mb-2">{t('HomePage.FreeResources.title')}</h2>
-            <p className="text-sm text-gray-600 mb-4 max-w-xl mx-auto">
-              {t('HomePage.FreeResources.desc')}
-            </p>
-            <div className="flex justify-center">
-              <SafeInterviewGuideButton />
-            </div>
+            {/* Option B (Featured) */}
+            <ServiceCard
+              stepNumber="02"
+              variant="featured"
+              isRecommended={true}
+              title={t('Services.OptionB.title')}
+              subtitle={t('Services.OptionB.subtitle')}
+              description={t('Services.OptionB.desc')}
+              price={t('Services.OptionB.price')}
+              features={[t('Services.OptionB.feature1'), t('Services.OptionB.feature2'), t('Services.OptionB.feature3')]}
+              customCta={
+                <ServiceCheckoutButton label={t('Services.OptionB.cta')} price={t('Services.OptionB.price')} basePriceNumeric={99} plan="full" variant="featured" />
+              }
+            />
+
+            {/* Option C */}
+            <ServiceCard
+              stepNumber="03"
+              variant="simulator"
+              title={t('Services.OptionC.title')}
+              subtitle={t('Services.OptionC.subtitle')}
+              description={t('Services.OptionC.desc')}
+              price={t('Services.OptionC.price')}
+              features={[t('Services.OptionC.feature1'), t('Services.OptionC.feature2'), t('Services.OptionC.feature3')]}
+              customCta={
+                <ServiceCheckoutButton label={t('Services.OptionC.cta')} price={t('Services.OptionC.price')} basePriceNumeric={29} plan="simulator" variant="outline" />
+              }
+            />
           </div>
         </section>
 
-        {/* Service Fork (The Bifurcation) */}
-        <section className="py-8 bg-official-grey">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="grid md:grid-cols-3 gap-6 items-stretch">
-              {/* Option A - DIY */}
-              <ServiceCard
-                title={t('Services.OptionA.title')}
-                subtitle={t('Services.OptionA.subtitle')}
-                description={t('Services.OptionA.desc')}
-                price={t('Services.OptionA.price')}
-                features={[
-                  t('Services.OptionA.feature1'),
-                  t('Services.OptionA.feature2'),
-                  t('Services.OptionA.feature3')
-                ]}
-                customCta={
-                  <ServiceCheckoutButton
-                    label={t('Services.OptionA.cta')}
-                    price={t('Services.OptionA.price')}
-                    basePriceNumeric={39}
-                    plan="diy"
-                    variant="outline"
-                  />
-                }
-                note={t('Services.OptionA.note')}
-              />
-
-              {/* Option B - Full Service */}
-              <ServiceCard
-                variant="featured"
-                isRecommended={true}
-                title={t('Services.OptionB.title')}
-                subtitle={t('Services.OptionB.subtitle')}
-                description={t('Services.OptionB.desc')}
-                price={t('Services.OptionB.price')}
-                features={[
-                  t('Services.OptionB.feature1'),
-                  t('Services.OptionB.feature2'),
-                  t('Services.OptionB.feature3')
-                ]}
-                customCta={
-                  <ServiceCheckoutButton
-                    label={t('Services.OptionB.cta')}
-                    price={t('Services.OptionB.price')}
-                    basePriceNumeric={99}
-                    plan="full"
-                    variant="featured"
-                  />
-                }
-              />
-
-              {/* Option C - Simulator */}
-              <ServiceCard
-                variant="simulator"
-                title={t('Services.OptionC.title')}
-                subtitle={t('Services.OptionC.subtitle')}
-                description={t('Services.OptionC.desc')}
-                price={t('Services.OptionC.price')}
-                features={[
-                  t('Services.OptionC.feature1'),
-                  t('Services.OptionC.feature2'),
-                  t('Services.OptionC.feature3')
-                ]}
-                customCta={
-                  <ServiceCheckoutButton
-                    label={t('Services.OptionC.cta')}
-                    price={t('Services.OptionC.price')}
-                    basePriceNumeric={29}
-                    plan="simulator"
-                    variant="outline"
-                  />
-                }
-              />
-            </div>
+        {/* Bottom Bar: Status / Trust (Minimal) */}
+        <section className="h-12 bg-white border-t border-gray-200 flex items-center px-6 justify-between text-xs text-gray-500">
+          <div className="flex gap-6">
+            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3 h-3 text-trust-navy" /> 256-bit Encryption</span>
+            <span className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-accent-gold" /> 24h Processing</span>
+            <span className="flex items-center gap-1.5"><BrainCircuit className="w-3 h-3 text-success-green" /> AI Approved</span>
+          </div>
+          <div className="flex gap-4">
+            <SafeInterviewGuideButton variant="link" size="sm" className="h-auto p-0 text-[10px]" />
           </div>
         </section>
       </div>
