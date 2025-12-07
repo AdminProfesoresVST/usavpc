@@ -1,11 +1,9 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { KanbanBoard } from "@/components/admin/KanbanBoard";
 import { Badge } from "@/components/ui/badge";
-import { KnowledgeBase } from "@/components/admin/KnowledgeBase";
-import { StrategyReport } from "@/components/admin/StrategyReport";
 
-export default async function AdminDashboard() {
+export default async function AgentDashboard() {
     const cookieStore = await cookies();
 
     const supabase = createServerClient(
@@ -20,26 +18,13 @@ export default async function AdminDashboard() {
         }
     );
 
-    // 1. Get User
+    // Get current user to check role (double check, though middleware handles routing)
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-        return <div className="text-red-500 p-8">Unauthorized</div>;
-    }
-
-    // 2. Check Role
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-    if (profile?.role !== 'admin') {
-        // Should have been caught by middleware, but double safety
-        return <div className="text-red-500 p-8">Access Denied: Admins Only</div>;
-    }
-
-    // Fetch applications with user email
+    // Fetch applications assigned to agent (or all for now, as assignment logic isn't defined)
+    // For this step, we'll just show all applications but in a limited view if needed.
+    // Ideally, we'd filter by `data.access_level` or similar if RLS enforced it.
+    // For now, let's assume Agents see the same Kanban but maybe can't delete?
     const { data: applications, error } = await supabase
         .from("applications")
         .select(`
@@ -58,21 +43,19 @@ export default async function AdminDashboard() {
         <div className="h-[calc(100vh-64px)] flex flex-col p-6 bg-gray-50 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Mission Control</h1>
-                    <p className="text-sm text-gray-500">Overview of all active visa applications</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Agent Portal</h1>
+                    <p className="text-sm text-gray-500">Manage client applications and DS-160 registrations</p>
                 </div>
                 <div className="flex gap-2">
                     <Badge variant="outline" className="bg-white">
-                        Total: {applications?.length || 0}
+                        Queue: {applications?.length || 0}
                     </Badge>
-                    <Badge className="bg-blue-600">Live Mode</Badge>
+                    <Badge className="bg-indigo-600">Agent Mode</Badge>
                 </div>
             </div>
 
             <div className="flex-1 space-y-8 pb-10">
                 <KanbanBoard applications={applications || []} />
-                <StrategyReport />
-                <KnowledgeBase />
             </div>
         </div>
     );

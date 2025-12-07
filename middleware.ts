@@ -1,47 +1,96 @@
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './src/i18n/routing';
 import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from "@supabase/ssr";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
     const response = intlMiddleware(request);
 
-    // Capture Client Intelligence Headers
+    // 1. Setup Supabase Client
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                get(name: string) {
+                    return request.cookies.get(name)?.value;
+                },
+                set(name: string, value: string, options: any) {
+                    request.cookies.set({ name, value, ...options });
+                    response.cookies.set({ name, value, ...options });
+                },
+                remove(name: string, options: any) {
+                    request.cookies.set({ name, value: '', ...options });
+                    response.cookies.set({ name, value: '', ...options });
+                },
+            },
+        }
+    );
+
+    // 2. Refresh Session
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // 3. Client Intelligence (Preserve existing logic)
     const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
     const userAgent = request.headers.get('user-agent') || 'Unknown';
     const country = request.headers.get('x-vercel-ip-country') || 'Unknown';
     const city = request.headers.get('x-vercel-ip-city') || 'Unknown';
-
-    // Pass them to the backend via response headers (for server components)
-    // Note: In Next.js middleware, modifying request headers for downstream is done by returning a response with request headers
-    // But here we are returning the intl response.
-    // We can set headers on the response object, but that goes to the client.
-    // To pass to Server Components, we usually use `request.headers` mutation if we were continuing.
-    // But since we return `response`, we should set headers on it? No, that's for the browser.
-    // Actually, for API routes, they read the request headers directly.
-    // Vercel already populates x-forwarded-for, etc.
-    // So we don't strictly *need* to do anything here unless we want to normalize them or store them in a cookie for client-side access.
-
-    // Let's store them in a cookie so the Client Side (and Server Actions) can easily access "Session Info"
     response.cookies.set('x-client-geo', JSON.stringify({ ip, country, city }), { httpOnly: true, sameSite: 'lax' });
 
-    // Capture Traffic Source (Referrer & UTMs)
     const url = new URL(request.url);
     const utmSource = url.searchParams.get('utm_source');
     const utmMedium = url.searchParams.get('utm_medium');
     const utmCampaign = url.searchParams.get('utm_campaign');
     const referrer = request.headers.get('referer');
-
-    // Only set if present to avoid overwriting existing session data with empty values
     if (utmSource || utmMedium || utmCampaign || (referrer && !referrer.includes(request.nextUrl.hostname))) {
-        const trafficData = {
-            utm_source: utmSource,
-            utm_medium: utmMedium,
-            utm_campaign: utmCampaign,
-            referrer: referrer
-        };
+        const trafficData = { utm_source: utmSource, utm_medium: utmMedium, utm_campaign: utmCampaign, referrer: referrer };
         response.cookies.set('x-traffic-source', JSON.stringify(trafficData), { httpOnly: true, sameSite: 'lax' });
+    }
+
+    // 4. Role-Based Routing
+    // Only check if user is logged in
+    if (user) {
+        // Fetch User Role
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+
+        const role = profile?.role || 'client';
+        const pathname = request.nextUrl.pathname;
+
+        // Extract locale to preserve it
+        const locale = pathname.split('/')[1] || 'es'; // default implication
+
+        // Protect Admin Routes
+        if (pathname.includes('/admin') && role !== 'admin') {
+            return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+        }
+
+        // Protect Agent Routes
+        if (pathname.includes('/agent') && role !== 'agent' && role !== 'admin') {
+            return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+        }
+
+        // Redirect Logged-in Users from Landing Page to their specific Dashboard
+        // (Optional: can be annoying if they want to read info, let's just do specific dashboard redirections if they try to go to generic dashboard)
+        if (pathname.endsWith('/dashboard')) {
+            if (role === 'admin') {
+                // Admin goes to admin dashboard
+                if (!pathname.includes('/admin')) {
+                    return NextResponse.redirect(new URL(`/${locale}/admin`, request.url));
+                }
+            } else if (role === 'agent') {
+                // Agent goes to agent dashboard
+                if (!pathname.includes('/agent')) {
+                    return NextResponse.redirect(new URL(`/${locale}/agent`, request.url));
+                }
+            }
+            // Client stays on /dashboard
+        }
     }
 
     return response;
