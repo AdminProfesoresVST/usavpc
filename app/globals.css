@@ -117,14 +117,8 @@
 
   html,
   body {
-    height: 100dvh;
-    /* Dynamic viewport height for mobile */
-    overflow: hidden;
-    /* NUCLEAR OPTION: No global scroll */
-    margin: 0;
-    padding: 0;
-    overscroll-behavior: none;
-    /* Prevent bounce */
+    /* Reverting forced hidden overflow. 
+        We will achieve no-scroll by sizing content correctly. */
   }
 
   :root {

@@ -103,7 +103,7 @@ export default function Home() {
             <span className="flex items-center gap-1.5"><BrainCircuit className="w-3 h-3 text-success-green" /> AI Approved</span>
           </div>
           <div className="flex gap-4 items-center">
-            <span className="font-bold text-accent-gold">v1.5.2 (Fix Scroll)</span>
+            <span className="font-bold text-accent-gold">v1.5.3 (Redesign)</span>
           </div>
         </section>
       </div>
