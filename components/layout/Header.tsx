@@ -11,26 +11,24 @@ export function Header() {
 
     return (
         <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md">
-            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-                {/* 1. Logo Section */}
-                <Link href="/" className="flex items-center gap-3">
-                    <div className="relative h-10 w-10 overflow-hidden bg-white rounded-full p-1">
+            <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+                {/* 1. Logo Section (Reverted to Original) */}
+                <Link href="/" className="flex items-center gap-4 group">
+                    <div className="relative h-16 w-16 overflow-hidden transition-transform group-hover:scale-105">
                         <Image
                             src="/logo.png"
-                            alt="US Visa Logo"
-                            width={40}
-                            height={40}
+                            alt="US Visa Processing Center Logo"
+                            width={64}
+                            height={64}
                             className="object-contain"
                         />
                     </div>
-                    <div className="flex flex-col">
-                        <span className="font-sans text-lg font-bold leading-none tracking-tight text-white">
-                            USAVPC
-                        </span>
-                        <span className="text-[10px] text-white/70 font-medium uppercase tracking-wider hidden md:block">
-                            Official Application Center
-                        </span>
-                    </div>
+                    <span className="font-serif text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors hidden md:inline-block">
+                        US Visa Processing Center
+                    </span>
+                    <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-white/90 transition-colors md:hidden">
+                        USAVPC
+                    </span>
                 </Link>
 
                 {/* 2. Desktop Navigation (Hidden on Mobile) */}
