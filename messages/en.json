@@ -208,15 +208,29 @@
         }
     },
     "About": {
-        "title": "About Us",
+        "title": "US Visa Processing Center",
+        "description": "Professional assistance for your B1/B2 visa application. Secure, accurate, and efficient processing.",
+        "servicesTitle": "Services",
+        "servicesList": {
+            "eligibility": "Eligibility Review",
+            "full": "Full Processing",
+            "interview": "Interview Preparation"
+        },
+        "legalTitle": "Legal",
+        "legalList": {
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Service",
+            "refund": "Refund Policy"
+        },
+        "contactTitle": "Contact",
+        "contactEmail": "support@usvisaprocessingcenter.com",
+        "contactPhone": "+1 (800) VISA-HELP",
         "missionTitle": "Our Mission",
         "missionDesc": "To democratize access to professional visa consulting through technology, providing accurate and accessible guidance to applicants worldwide.",
         "securityTitle": "Security First",
         "securityDesc": "We use bank-level 256-bit encryption to protect your personal data. Your information is never shared with third parties.",
         "disclaimerTitle": "Important Disclaimer",
-        "disclaimerDesc": "IMPORTANT LEGAL NOTICE: US Visa Processing Center (USAVPC) is a private, non-governmental technology and document assistance service. We are NOT affiliated with, endorsed by, or associated in any way with the United States Department of State, an Embassy, or any government agency. Our services are strictly limited to assisting with the preparation, review, and logistical management of the DS-160 application. We do not issue visas, nor can we influence the outcome of any consular decision. Visa approval is never guaranteed and rests solely at the discretion of the interviewing U.S. Consular Officer. Fee Disclosure: Our service fees are charged for professional assistance, AI analysis, and technological tools. These fees are in addition to the mandatory government application fees (e.g., the $185 MRV Fee), which must be paid separately by the applicant. Applicants may choose to file their application directly on their own, without our assistance or fees, at the official government website: https://ceac.state.gov.",
-        "contactEmail": "support@usvisaprocessingcenter.com",
-        "contactPhone": "1-800-VISA-HELP"
+        "disclaimerDesc": "IMPORTANT LEGAL NOTICE: US Visa Processing Center (USAVPC) is a private, non-governmental technology and document assistance service. We are NOT affiliated with, endorsed by, or associated in any way with the United States Department of State, an Embassy, or any government agency. Our services are strictly limited to assisting with the preparation, review, and logistical management of the DS-160 application. We do not issue visas, nor can we influence the outcome of any consular decision. Visa approval is never guaranteed and rests solely at the discretion of the interviewing U.S. Consular Officer. Fee Disclosure: Our service fees are charged for professional assistance, AI analysis, and technological tools. These fees are in addition to the mandatory government application fees (e.g., the $185 MRV Fee), which must be paid separately by the applicant. Applicants may choose to file their application directly on their own, without our assistance or fees, at the official government website: https://ceac.state.gov."
     },
     "Contact": {
         "title": "Contact Support",

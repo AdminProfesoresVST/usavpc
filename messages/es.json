@@ -195,7 +195,23 @@
         }
     },
     "About": {
-        "title": "Sobre Nosotros",
+        "title": "Centro de Procesamiento de Visas de EE.UU.",
+        "description": "Asistencia profesional para su solicitud de visa B1/B2. Procesamiento seguro, preciso y eficiente.",
+        "servicesTitle": "Servicios",
+        "servicesList": {
+            "eligibility": "Revisión de Elegibilidad",
+            "full": "Procesamiento Completo",
+            "interview": "Preparación de Entrevista"
+        },
+        "legalTitle": "Legal",
+        "legalList": {
+            "privacy": "Política de Privacidad",
+            "terms": "Términos de Servicio",
+            "refund": "Política de Reembolso"
+        },
+        "contactTitle": "Contacto",
+        "contactEmail": "soporte@usvisaprocessingcenter.com",
+        "contactPhone": "+1 (555) 123-4567",
         "missionTitle": "Nuestra Misión",
         "missionDesc": "Democratizar el acceso a la consultoría profesional de visas a través de la tecnología, brindando orientación precisa y accesible a los solicitantes de todo el mundo.",
         "securityTitle": "Seguridad Primero",

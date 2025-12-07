@@ -7,29 +7,29 @@ export function Footer() {
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                     <div>
-                        <span className="font-sans font-bold text-xl tracking-tight text-white">US Visa Processing Center</span>
+                        <span className="font-sans font-bold text-xl tracking-tight text-white">{t('title')}</span>
                         <p className="mb-4">
-                            Professional assistance for your B1/B2 visa application. Secure, accurate, and efficient processing.
+                            {t('description')}
                         </p>
                     </div>
                     <div>
-                        <h4 className="mb-4 font-bold text-foreground">Services</h4>
+                        <h4 className="mb-4 font-bold text-foreground">{t('servicesTitle')}</h4>
                         <ul className="space-y-2">
-                            <li>Eligibility Review</li>
-                            <li>Full Processing</li>
-                            <li>Interview Preparation</li>
+                            <li>{t('servicesList.eligibility')}</li>
+                            <li>{t('servicesList.full')}</li>
+                            <li>{t('servicesList.interview')}</li>
                         </ul>
                     </div>
                     <div>
-                        <h4 className="mb-4 font-bold text-foreground">Legal</h4>
+                        <h4 className="mb-4 font-bold text-foreground">{t('legalTitle')}</h4>
                         <ul className="space-y-2">
-                            <li>Privacy Policy</li>
-                            <li>Terms of Service</li>
-                            <li>Refund Policy</li>
+                            <li>{t('legalList.privacy')}</li>
+                            <li>{t('legalList.terms')}</li>
+                            <li>{t('legalList.refund')}</li>
                         </ul>
                     </div>
                     <div>
-                        <h4 className="mb-4 font-bold text-foreground">Contact</h4>
+                        <h4 className="mb-4 font-bold text-foreground">{t('contactTitle')}</h4>
                         <ul className="space-y-2">
                             <li>{t('contactEmail')}</li>
                             <li>{t('contactPhone')}</li>
