@@ -152,7 +152,7 @@
         "subtitle": "Evite errores técnicos que causan rechazos. Auditoría experta y validación previa.",
         "description": "Tecnología IA + Revisión Humana para una solicitud perfecta.",
         "OptionA": {
-            "title": "1. Verificar si puedo aplicar",
+            "title": "Verificar si puedo aplicar",
             "subtitle": "Antes de pagar nada, revisamos si cumples los requisitos.",
             "desc": "No pierdas tu dinero. Respondemos la duda más importante: ¿Tengo oportunidad de que me den la visa? Te decimos la verdad antes de que empieces.",
             "feature1": "Revisión Rápida de Perfil",
@@ -163,7 +163,7 @@
             "note": "Paso 1: Saber si puedes."
         },
         "OptionB": {
-            "title": "2. Llenar Formulario de Visa",
+            "title": "Llenar Formulario de Visa",
             "subtitle": "Nosotros llenamos los papeles por ti. Sin errores.",
             "desc": "El formulario es largo y complicado. Si te equivocas, te niegan la visa. Nosotros lo llenamos contigo, paso a paso, en español y revisamos todo.",
             "feature1": "Llenado en Español",

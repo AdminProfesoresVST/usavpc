@@ -16,6 +16,7 @@ interface ServiceCardProps {
     variant?: 'default' | 'featured' | 'simulator';
     isRecommended?: boolean;
     note?: string;
+    stepNumber?: string; // New Prop for "01", "02", etc.
 }
 
 export function ServiceCard({
@@ -30,26 +31,37 @@ export function ServiceCard({
     customCta,
     variant = 'default',
     isRecommended = false,
-    note
+    note,
+    stepNumber
 }: ServiceCardProps) {
     const isFeatured = variant === 'featured';
 
     return (
         <div className={cn(
-            "rounded-lg flex flex-col relative transition-all duration-300",
+            "rounded-lg flex flex-col relative transition-all duration-300 overflow-hidden group",
             // Sizing: Reduced padding from p-8 to p-6
             "p-6",
             isFeatured
                 ? "bg-trust-navy text-white shadow-2xl border-2 border-white/10 transform md:-translate-y-2 z-10"
                 : "bg-white text-trust-navy shadow-md border border-gray-100 hover:shadow-lg"
         )}>
+            {/* Modern "Big Number" Background */}
+            {stepNumber && (
+                <div className={cn(
+                    "absolute -top-6 -right-4 text-[120px] font-sans font-black leading-none opacity-5 select-none pointer-events-none transition-transform duration-500 group-hover:scale-110",
+                    isFeatured ? "text-white opacity-10" : "text-trust-navy"
+                )}>
+                    {stepNumber}
+                </div>
+            )}
+
             {isRecommended && (
-                <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-[10px] font-bold px-3 py-1 uppercase tracking-wider shadow-sm rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-accent-gold text-trust-navy text-[10px] font-bold px-3 py-1 uppercase tracking-wider shadow-sm rounded-bl-lg z-20">
                     Recommended
                 </div>
             )}
 
-            <div className="mb-4">
+            <div className="mb-4 relative z-10">
                 <h3 className={cn(
                     "font-sans font-extrabold mb-1 leading-tight",
                     isFeatured ? "text-xl text-white" : "text-lg text-trust-navy"
@@ -70,7 +82,7 @@ export function ServiceCard({
                 </p>
             </div>
 
-            <ul className="space-y-2 mb-6 text-sm flex-grow">
+            <ul className="space-y-2 mb-6 text-sm flex-grow relative z-10">
                 {features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                         {isFeatured ? (
@@ -89,7 +101,7 @@ export function ServiceCard({
                 ))}
             </ul>
 
-            <div className="mt-auto">
+            <div className="mt-auto relative z-10">
                 <div className={cn(
                     "font-bold mb-1",
                     isFeatured ? "text-3xl text-white" : "text-2xl text-primary"

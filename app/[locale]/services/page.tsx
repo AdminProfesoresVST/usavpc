@@ -40,6 +40,7 @@ export default function ServicesPage() {
                     <div className="grid md:grid-cols-3 gap-6 items-stretch max-w-6xl mx-auto">
                         {/* Option A - DIY */}
                         <ServiceCard
+                            stepNumber="01"
                             title={t('OptionA.title')}
                             subtitle={t('OptionA.subtitle')}
                             description={t('OptionA.desc')}
@@ -63,6 +64,7 @@ export default function ServicesPage() {
 
                         {/* Option B - Full Service */}
                         <ServiceCard
+                            stepNumber="02"
                             variant="featured"
                             isRecommended={true}
                             title={t('OptionB.title')}
@@ -87,6 +89,7 @@ export default function ServicesPage() {
 
                         {/* Option C - Simulator */}
                         <ServiceCard
+                            stepNumber="03"
                             variant="simulator"
                             title={t('OptionC.title')}
                             subtitle={t('OptionC.subtitle')}
