@@ -85,6 +85,7 @@ export async function POST(req: Request) {
         const { data: { user } } = await supabase.auth.getUser();
 
         // Create Checkout Sessions from body params.
+        const stripe = getStripe();
         const session = await stripe.checkout.sessions.create({
             line_items: line_items,
             mode: 'payment',
