@@ -119,6 +119,15 @@
             "status": "Estado",
             "settings": "Ajustes"
         },
+        "Menu": {
+            "mainMenu": "Menú Principal",
+            "account": "Mi Cuenta"
+        },
+        "Roles": {
+            "applicant": "Solicitante",
+            "admin": "Administrador",
+            "agent": "Agente"
+        },
         "Mobile": {
             "title": "Centro de Procesamiento de Visas",
             "subtitle": "Asistencia Profesional de Solicitudes",
