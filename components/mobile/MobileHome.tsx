@@ -58,23 +58,7 @@ export function MobileHome() {
 
     return (
         <div className="min-h-screen w-full bg-official-grey text-trust-navy flex flex-col font-sans">
-            {/* 1. App Header (Sticky) */}
-            <header className="sticky top-0 h-20 bg-white px-5 flex items-center justify-between shadow-sm shrink-0 z-50 transition-all">
-                <div>
-                    <h1 className="text-lg font-black text-trust-navy leading-none tracking-tight">
-                        {t('Common.Mobile.title')}
-                    </h1>
-                    <div className="flex items-center gap-1.5 mt-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
-                            System Online
-                        </p>
-                    </div>
-                </div>
-                <MobileMenu />
-            </header>
-
-            {/* 2. Main Content (Scrollable) */}
+            {/* 1. Main Content (Scrollable) */}
             <main className="flex-1 p-3 flex flex-col gap-3">
 
                 {/* A. Hero / Action Area (Compact, High Impact) */}
