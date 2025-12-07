@@ -60,7 +60,7 @@ export function Header() {
 
                     {/* Mobile Hamburger (Visible only on mobile) */}
                     <div className="lg:hidden">
-                        <MobileMenu />
+                        <MobileMenu className="text-white hover:bg-white/10" />
                     </div>
                 </div>
             </div>

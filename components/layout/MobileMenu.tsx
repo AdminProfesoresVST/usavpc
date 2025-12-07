@@ -13,13 +13,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Menu, Home, Briefcase, FileText, Phone, LogIn } from "lucide-react";
 
-export function MobileMenu() {
+export function MobileMenu({ className }: { className?: string }) {
     const t = useTranslations();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-10 w-10 text-trust-navy hover:bg-gray-100">
+                <Button variant="ghost" size="icon" className={`h-10 w-10 hover:bg-white/10 ${className || 'text-trust-navy hover:bg-gray-100'}`}>
                     <Menu className="h-6 w-6" />
                     <span className="sr-only">Open menu</span>
                 </Button>
