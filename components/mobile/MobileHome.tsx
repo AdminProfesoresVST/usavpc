@@ -107,14 +107,17 @@ export function MobileHome() {
                             </div>
                         </div>
 
-                        <Link href="/services" className="mt-3 w-full">
-                            <Button className="w-full bg-white text-trust-navy hover:bg-gray-100 font-bold h-10 rounded-xl text-sm shadow-xl transition-all active:scale-95 flex items-center justify-between px-4">
+                        <div onClick={() => {
+                            const servicesSection = document.getElementById('services');
+                            if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
+                        }} className="mt-3 w-full cursor-pointer">
+                            <Button className="w-full bg-white text-trust-navy hover:bg-gray-100 font-bold h-10 rounded-xl text-sm shadow-xl transition-all active:scale-95 flex items-center justify-between px-4 pointer-events-none">
                                 <span>Start New Application</span>
                                 <div className="bg-trust-navy/10 rounded-full p-1">
                                     <ArrowRight className="w-4 h-4 text-trust-navy" />
                                 </div>
                             </Button>
-                        </Link>
+                        </div>
                     </div>
                 </section>
 
