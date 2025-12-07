@@ -148,9 +148,9 @@
         }
     },
     "Services": {
-        "title": "Soluciones de Gestión Segura para Visas de EE.UU.",
-        "subtitle": "El proceso de solicitud de visa de EE.UU. (DS-160) es riguroso; un solo error técnico o inconsistencia puede derivar en retrasos o negaciones. USAVPC cierra la brecha entre la ansiedad del solicitante y una presentación exitosa.",
-        "description": "Utilizamos tecnología propia de análisis de riesgo por IA combinada con revisión humana profesional para asegurar que su solicitud cumpla con la normativa, sea consistente y estratégicamente sólida antes de llegar a un Oficial Consular. Seleccione el nivel de asistencia que mejor se adapte a sus necesidades, desde auditorías de diagnóstico previas a la presentación, hasta un procesamiento integral de principio a fin.",
+        "title": "Soluciones de Gestión Segura",
+        "subtitle": "Evite errores técnicos que causan rechazos. Auditoría experta y validación previa.",
+        "description": "Tecnología IA + Revisión Humana para una solicitud perfecta.",
         "OptionA": {
             "title": "1. Verificar si puedo aplicar",
             "subtitle": "Antes de pagar nada, revisamos si cumples los requisitos.",

@@ -137,6 +137,10 @@
     background-color: var(--trust-navy);
   }
 
+  .text-trust-navy {
+    color: var(--trust-navy);
+  }
+
   /* Strict Contrast Enforcement Classes */
   .btn-primary {
     @apply text-white hover:opacity-90;
