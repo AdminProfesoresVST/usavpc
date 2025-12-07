@@ -19,6 +19,10 @@
                 "desc": "Get a comprehensive analysis of your profile within 24 hours. No waiting weeks for answers."
             }
         },
+        "FreeResources": {
+            "title": "Free Resources",
+            "desc": "We want you to succeed. Download our official interview preparation guide at no cost."
+        },
         "Fork": {
             "optionA": {
                 "title": "Do It Yourself",

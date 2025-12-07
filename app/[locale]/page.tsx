@@ -64,9 +64,9 @@ export default function Home() {
         {/* Free Resources Section */}
         <section className="py-12 bg-white border-b border-gray-100">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl font-bold text-trust-navy mb-4">Recursos Gratuitos</h2>
+            <h2 className="text-2xl font-bold text-trust-navy mb-4">{t('FreeResources.title')}</h2>
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              Queremos que tenga éxito. Descargue nuestra guía oficial de preparación para la entrevista sin costo alguno.
+              {t('FreeResources.desc')}
             </p>
             <div className="flex justify-center">
               <SafeInterviewGuideButton />

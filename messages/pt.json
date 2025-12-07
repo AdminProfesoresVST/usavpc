@@ -19,6 +19,10 @@
                 "desc": "Obtenha uma análise abrangente do seu perfil em 24 horas. Sem esperar semanas por respostas."
             }
         },
+        "FreeResources": {
+            "title": "Recursos Gratuitos",
+            "desc": "Queremos que você tenha sucesso. Baixe nosso guia oficial de preparação para entrevistas sem custo."
+        },
         "Fork": {
             "optionA": {
                 "title": "Faça Você Mesmo",

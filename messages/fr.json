@@ -19,6 +19,10 @@
                 "desc": "Obtenez une analyse complète de votre profil sous 24 heures. Pas besoin d'attendre des semaines pour des réponses."
             }
         },
+        "FreeResources": {
+            "title": "Ressources Gratuites",
+            "desc": "Nous voulons que vous réussissiez. Téléchargez notre guide officiel de préparation à l'entretien sans frais."
+        },
         "Fork": {
             "optionA": {
                 "title": "Faites-le Vous-même",

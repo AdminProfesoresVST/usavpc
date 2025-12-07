@@ -32,8 +32,9 @@ export function LanguageSelector() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white w-auto px-2 gap-2">
                     <Globe className="h-5 w-5" />
+                    <span className="font-bold text-sm">{locale.toUpperCase()}</span>
                     <span className="sr-only">Switch Language</span>
                 </Button>
             </DropdownMenuTrigger>

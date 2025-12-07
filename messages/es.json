@@ -19,6 +19,10 @@
                 "desc": "Iniciamos su trámite el mismo día. Sin esperas innecesarias."
             }
         },
+        "FreeResources": {
+            "title": "Recursos Gratuitos",
+            "desc": "Queremos que tenga éxito. Descargue nuestra guía oficial de preparación para la entrevista sin costo alguno."
+        },
         "Fork": {
             "optionA": {
                 "title": "Hágalo Usted Mismo",
