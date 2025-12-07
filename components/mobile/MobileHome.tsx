@@ -25,9 +25,9 @@ export function MobileHome() {
     return (
         <div className="min-h-screen w-full bg-official-grey text-trust-navy flex flex-col font-sans">
             {/* 1. App Header (Sticky) */}
-            <header className="sticky top-0 h-14 bg-white px-5 flex items-center justify-between shadow-sm shrink-0 z-50">
+            <header className="sticky top-0 h-20 bg-white px-5 flex items-center justify-between shadow-sm shrink-0 z-50 transition-all">
                 <div>
-                    <h1 className="text-base font-black text-trust-navy leading-none tracking-tight">
+                    <h1 className="text-lg font-black text-trust-navy leading-none tracking-tight">
                         {t('Common.Mobile.title')}
                     </h1>
                     <div className="flex items-center gap-1.5 mt-1">
