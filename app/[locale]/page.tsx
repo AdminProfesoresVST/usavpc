@@ -33,7 +33,7 @@ export default function Home() {
               priority
             />
             {/* Subtle gradient to ensure text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-trust-navy/90 to-trust-navy/40"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-trust-navy/95 via-trust-navy/80 to-trust-navy/60"></div>
           </div>
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
@@ -41,7 +41,7 @@ export default function Home() {
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Official Visa Assistance</span>
             </div>
-            <h1 className="text-4xl lg:text-5xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight">
+            <h1 className="text-4xl lg:text-6xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight text-white">
               {t('HomePage.title')}
             </h1>
             <p className="text-lg text-white/90 max-w-3xl text-center font-light leading-relaxed">

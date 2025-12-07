@@ -40,10 +40,10 @@ export function Header() {
 
                 {/* 2. Desktop Navigation (Hidden on Mobile) */}
                 <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-white/90">
-                    <Link href="/" className="hover:text-accent-gold transition-colors">{t('Nav.home')}</Link>
-                    <Link href="/services" className="hover:text-accent-gold transition-colors">{t('Nav.services')}</Link>
-                    <Link href="/dashboard" className="hover:text-accent-gold transition-colors">{t('Nav.dashboard')}</Link>
-                    <Link href="/contact" className="hover:text-accent-gold transition-colors">{t('Nav.contact')}</Link>
+                    <Link href="/" className="hover:text-accent-gold transition-colors">{t('nav.home')}</Link>
+                    <Link href="/services" className="hover:text-accent-gold transition-colors">{t('nav.services')}</Link>
+                    <Link href="/dashboard" className="hover:text-accent-gold transition-colors">{t('nav.dashboard')}</Link>
+                    <Link href="/contact" className="hover:text-accent-gold transition-colors">{t('nav.contact')}</Link>
                 </nav>
 
                 {/* 3. Actions & Mobile Menu */}
@@ -54,7 +54,7 @@ export function Header() {
 
                     <Link href="/login" className="hidden lg:block">
                         <Button variant="outline" className="text-trust-navy bg-white hover:bg-white/90 font-bold border-none h-9 text-xs">
-                            {t('Nav.login')}
+                            {t('nav.login')}
                         </Button>
                     </Link>
 
