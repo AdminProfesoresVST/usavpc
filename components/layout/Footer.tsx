@@ -45,7 +45,7 @@ export function Footer() {
                     </div>
                     <div className="text-sm text-muted-foreground">
                         © {new Date().getFullYear()} US Visa Processing Center. All rights reserved.
-                        <span className="ml-2 text-xs text-gray-400 font-mono">v1.5.0 (Triage Live)</span>
+                        <span className="ml-2 text-xs text-accent-gold font-mono font-bold">v1.5.1 (Live Update)</span>
                     </div>
                 </div>
             </div>
