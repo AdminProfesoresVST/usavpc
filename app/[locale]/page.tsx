@@ -18,10 +18,10 @@ export default function Home() {
         <MobileHome />
       </div>
 
-      {/* Desktop Web Experience (Zero Scroll Dashboard Layout) */}
-      <div className="hidden md:flex flex-col h-[100dvh] w-full overflow-hidden bg-official-grey">
-        {/* Top Section: Hero (Reduced to 28%) */}
-        <section className="relative h-[28%] flex-none flex items-center justify-center bg-trust-navy text-white border-b-4 border-accent-gold overflow-hidden">
+      {/* Desktop Web Experience (Senior Dashboard Grid Layout) */}
+      <div className="hidden md:grid h-[100dvh] w-full overflow-hidden bg-official-grey grid-rows-[35%_1fr_auto]">
+        {/* Row 1: Hero */}
+        <section className="relative w-full flex-none flex items-center justify-center bg-trust-navy text-white border-b-4 border-accent-gold overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -34,22 +34,25 @@ export default function Home() {
           </div>
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
-            <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-0.5 rounded-full text-[10px] uppercase tracking-widest font-bold mb-2 border border-white/20 text-accent-gold invisible lg:visible">
-              <ShieldCheck className="w-3 h-3" />
+            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-full text-xs uppercase tracking-widest font-bold mb-4 border border-white/20 text-accent-gold invisible lg:visible">
+              <ShieldCheck className="w-3.5 h-3.5" />
               <span>Official Visa Assistance</span>
             </div>
-            <h1 className="text-3xl lg:text-4xl font-sans font-extrabold mb-2 tracking-tight drop-shadow-lg text-center leading-tight">
+            <h1 className="text-4xl lg:text-6xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight">
               {t('HomePage.title')}
             </h1>
-            <p className="text-sm lg:text-base text-white/80 max-w-2xl text-center font-light leading-snug">
+            <p className="text-lg text-white/90 max-w-3xl text-center font-light leading-relaxed">
               {t('HomePage.subtitle')}
             </p>
           </div>
         </section>
 
-        {/* Middle Section: Services Grid (Expanded) */}
-        <section className="flex-1 bg-gray-50 p-4 flex items-center justify-center overflow-hidden min-h-0">
-          <div className="w-full max-w-6xl grid grid-cols-3 gap-6 h-full items-center">
+        {/* Row 2: Services Grid (Centers itself in available space) */}
+        <section className="w-full bg-gray-50 flex items-center justify-center overflow-hidden min-h-0 relative">
+          {/* Architectural element */}
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-gray-100/50 to-transparent pointer-events-none"></div>
+
+          <div className="w-full max-w-7xl grid grid-cols-3 gap-8 px-8 h-[85%] items-center">
             {/* Option A */}
             <ServiceCard
               stepNumber="01"
@@ -59,7 +62,7 @@ export default function Home() {
               price={t('Services.OptionA.price')}
               features={[t('Services.OptionA.feature1'), t('Services.OptionA.feature2'), t('Services.OptionA.feature3')]}
               customCta={
-                <ServiceCheckoutButton label={t('Services.OptionA.cta')} price={t('Services.OptionA.price')} basePriceNumeric={39} plan="diy" variant="outline" className="py-3 text-sm" />
+                <ServiceCheckoutButton label={t('Services.OptionA.cta')} price={t('Services.OptionA.price')} basePriceNumeric={39} plan="diy" variant="outline" className="py-3" />
               }
               note={t('Services.OptionA.note')}
             />
@@ -75,7 +78,7 @@ export default function Home() {
               price={t('Services.OptionB.price')}
               features={[t('Services.OptionB.feature1'), t('Services.OptionB.feature2'), t('Services.OptionB.feature3')]}
               customCta={
-                <ServiceCheckoutButton label={t('Services.OptionB.cta')} price={t('Services.OptionB.price')} basePriceNumeric={99} plan="full" variant="featured" className="py-4 text-base" />
+                <ServiceCheckoutButton label={t('Services.OptionB.cta')} price={t('Services.OptionB.price')} basePriceNumeric={99} plan="full" variant="featured" className="py-5 text-lg" />
               }
             />
 
@@ -89,21 +92,21 @@ export default function Home() {
               price={t('Services.OptionC.price')}
               features={[t('Services.OptionC.feature1'), t('Services.OptionC.feature2'), t('Services.OptionC.feature3')]}
               customCta={
-                <ServiceCheckoutButton label={t('Services.OptionC.cta')} price={t('Services.OptionC.price')} basePriceNumeric={29} plan="simulator" variant="outline" className="py-3 text-sm" />
+                <ServiceCheckoutButton label={t('Services.OptionC.cta')} price={t('Services.OptionC.price')} basePriceNumeric={29} plan="simulator" variant="outline" className="py-3" />
               }
             />
           </div>
         </section>
 
-        {/* Bottom Bar */}
-        <section className="h-10 bg-white border-t border-gray-200 flex-none flex items-center px-6 justify-between text-[10px] text-gray-500">
-          <div className="flex gap-6">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3 h-3 text-trust-navy" /> 256-bit Encryption</span>
-            <span className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-accent-gold" /> 24h Processing</span>
-            <span className="flex items-center gap-1.5"><BrainCircuit className="w-3 h-3 text-success-green" /> AI Approved</span>
+        {/* Row 3: Bottom Bar */}
+        <section className="h-12 bg-white border-t border-gray-200 flex-none flex items-center px-8 justify-between text-xs text-gray-500 z-20 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.05)]">
+          <div className="flex gap-8">
+            <span className="flex items-center gap-2 font-medium tracking-wide"><ShieldCheck className="w-4 h-4 text-trust-navy" /> 256-bit Encryption</span>
+            <span className="flex items-center gap-2 font-medium tracking-wide"><Zap className="w-4 h-4 text-accent-gold" /> 24h Processing</span>
+            <span className="flex items-center gap-2 font-medium tracking-wide"><BrainCircuit className="w-4 h-4 text-success-green" /> AI Approved</span>
           </div>
           <div className="flex gap-4 items-center">
-            <span className="font-bold text-accent-gold">v1.5.4 (Hyper Compact)</span>
+            <span className="font-mono font-bold text-accent-gold tracking-wider">v1.5.5</span>
           </div>
         </section>
       </div>
