@@ -10,24 +10,29 @@ export function Header() {
     const t = useTranslations('Common');
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md">
-            <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-                {/* 1. Logo Section (Reverted to Original) */}
-                <Link href="/" className="flex items-center gap-4 group">
-                    <div className="relative h-16 w-16 overflow-hidden transition-transform group-hover:scale-105">
+        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300">
+            {/* 
+                STRICT 2-SIZE SYSTEM
+                Mobile: h-14, Logo + Hamburger
+                Desktop: h-20, Logo + Text + Nav
+            */}
+            <div className="container mx-auto flex items-center justify-between px-4 md:px-6 h-14 md:h-20">
+
+                {/* 1. Logo Section */}
+                <Link href="/" className="flex items-center gap-3 group">
+                    {/* Mobile Logo: Smaller (h-10) */}
+                    <div className="relative h-9 w-9 md:h-16 md:w-16 overflow-hidden transition-transform group-hover:scale-105">
                         <Image
                             src="/logo.png"
                             alt="US Visa Processing Center Logo"
-                            width={64}
-                            height={64}
+                            fill
                             className="object-contain"
                         />
                     </div>
+
+                    {/* Desktop Text ONLY. Hidden on Mobile to avoid "USAVPC" or overflow issues. */}
                     <span className="font-serif text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors hidden md:inline-block">
                         US Visa Processing Center
-                    </span>
-                    <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-white/90 transition-colors md:hidden">
-                        USAVPC
                     </span>
                 </Link>
 
