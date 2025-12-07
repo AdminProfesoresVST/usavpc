@@ -14,7 +14,9 @@ import {
     Briefcase,
     Download
 } from "lucide-react";
-import { SafeInterviewGuideButton } from "@/components/pdf/SafeInterviewGuideButton";
+import { MobileMenu } from "@/components/layout/MobileMenu";
+
+// ... imports ...
 
 export function MobileHome() {
     const t = useTranslations();
@@ -34,9 +36,7 @@ export function MobileHome() {
                         </p>
                     </div>
                 </div>
-                <div className="bg-trust-navy text-white text-[10px] font-bold px-2 py-1 rounded">
-                    MENU
-                </div>
+                <MobileMenu />
             </header>
 
             {/* 2. Main Dashboard (Grid Layout) - Takes all remaining height */}
