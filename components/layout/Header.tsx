@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
-    const t = useTranslations('Common');
+    const t = useTranslations();
 
     return (
         <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300">
@@ -39,11 +39,11 @@ export function Header() {
                 </Link>
 
                 {/* 2. Desktop Navigation (Hidden on Mobile) */}
-                <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-white/90">
-                    <Link href="/" className="hover:text-accent-gold transition-colors">{t('nav.home')}</Link>
-                    <Link href="/services" className="hover:text-accent-gold transition-colors">{t('nav.services')}</Link>
-                    <Link href="/dashboard" className="hover:text-accent-gold transition-colors">{t('nav.dashboard')}</Link>
-                    <Link href="/contact" className="hover:text-accent-gold transition-colors">{t('nav.contact')}</Link>
+                <nav className="hidden lg:flex items-center gap-10 text-sm font-medium text-white/90 mr-8">
+                    <Link href="/" className="hover:text-accent-gold transition-colors">{t('Common.nav.home')}</Link>
+                    <Link href="/services" className="hover:text-accent-gold transition-colors">{t('Common.nav.services')}</Link>
+                    <Link href="/dashboard" className="hover:text-accent-gold transition-colors">{t('Common.nav.dashboard')}</Link>
+                    <Link href="/contact" className="hover:text-accent-gold transition-colors">{t('Common.nav.contact')}</Link>
                 </nav>
 
                 {/* 3. Actions & Mobile Menu */}
@@ -54,7 +54,7 @@ export function Header() {
 
                     <Link href="/login" className="hidden lg:block">
                         <Button variant="outline" className="text-trust-navy bg-white hover:bg-white/90 font-bold border-none h-9 text-xs">
-                            {t('nav.login')}
+                            {t('Common.nav.login')}
                         </Button>
                     </Link>
 
