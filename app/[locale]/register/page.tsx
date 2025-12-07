@@ -131,5 +131,6 @@ export default function RegisterPage() {
                     </Link>
                 </div>
             </Card>
-            );
+        </div>
+    );
 }
