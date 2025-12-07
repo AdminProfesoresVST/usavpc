@@ -39,13 +39,19 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col min-h-screen`}
+        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col h-[100dvh] overflow-hidden`}
       >
         <NextIntlClientProvider messages={messages}>
           <AnalyticsProvider>
+            {/* Header stays top */}
             <Header />
-            <main className="flex-1 pb-16 md:pb-0">{children}</main>
-            <Footer />
+
+            {/* Main takes remaining space, absolutely no scroll allowed on container */}
+            <main className="flex-1 relative overflow-hidden flex flex-col">
+              {children}
+            </main>
+
+            {/* Mobile Nav fixed at bottom */}
             <MobileNav />
           </AnalyticsProvider>
         </NextIntlClientProvider>

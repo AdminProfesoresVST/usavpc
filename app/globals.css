@@ -114,7 +114,20 @@
 }
 
 @layer base {
-  * {
+
+  html,
+  body {
+    height: 100dvh;
+    /* Dynamic viewport height for mobile */
+    overflow: hidden;
+    /* NUCLEAR OPTION: No global scroll */
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    /* Prevent bounce */
+  }
+
+  :root {
     @apply border-border outline-ring/50;
   }
 

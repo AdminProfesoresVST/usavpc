@@ -20,21 +20,21 @@ export function MobileHome() {
     const t = useTranslations();
 
     return (
-        <div className="flex flex-col h-[calc(100vh-60px)] bg-gray-50 overflow-hidden">
+        <div className="flex flex-col h-full bg-gray-50 overflow-hidden">
             {/* App Header (Sticky) */}
             <div className="bg-white px-4 py-3 border-b border-gray-100 flex-none z-20">
                 <h1 className="text-lg font-bold text-trust-navy">
                     {t('Common.Mobile.title')}
                 </h1>
                 <p className="text-[10px] text-gray-400 uppercase tracking-wider">
-                    Official Application Center
+                    Official Application Center v1.5.2
                 </p>
             </div>
 
-            {/* Scrollable Content Area within 100vh */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-20">
+            {/* Scrollable Content Area: Internal Scroll ONLY, NOT Page Scroll */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {/* Hero Card (Compact) */}
-                <div className="bg-trust-navy rounded-2xl p-4 text-white shadow-lg relative overflow-hidden group shrink-0">
+                <div className="bg-trust-navy rounded-xl p-4 text-white shadow-lg relative overflow-hidden group shrink-0">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12 blur-xl"></div>
                     <div className="relative z-10">
                         <h2 className="text-lg font-bold mb-1 leading-tight text-white">
@@ -52,7 +52,7 @@ export function MobileHome() {
                 </div>
 
                 {/* Services List (Compact) */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden shrink-0">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden shrink-0">
                     <div className="px-4 py-2 border-b border-gray-50 bg-gray-50/50">
                         <h3 className="font-bold text-xs text-gray-500 uppercase tracking-wider">Select Service</h3>
                     </div>
