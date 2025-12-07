@@ -10,7 +10,7 @@ export function Header() {
     const t = useTranslations();
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300 lg:hidden">
+        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300 xl:hidden">
             {/* 
                 STRICT 2-SIZE SYSTEM
                 Mobile: h-14, Logo + Hamburger
@@ -39,7 +39,7 @@ export function Header() {
                 </Link>
 
                 {/* 2. Desktop Navigation (Hidden on Mobile) */}
-                <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-white/90 mx-4">
+                <nav className="hidden xl:flex items-center gap-6 xl:gap-8 text-sm font-medium text-white/90 mx-4">
                     <Link href="/" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.home')}</Link>
                     <Link href="/#services" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.services')}</Link>
                     <Link href="/dashboard" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.dashboard')}</Link>
@@ -48,18 +48,18 @@ export function Header() {
 
                 {/* 3. Actions & Mobile Menu */}
                 <div className="flex items-center gap-4 shrink-0">
-                    <div className="hidden lg:block">
+                    <div className="hidden xl:block">
                         <LanguageSelector />
                     </div>
 
-                    <Link href="/login" className="hidden lg:block">
+                    <Link href="/login" className="hidden xl:block">
                         <Button variant="outline" className="text-trust-navy bg-white hover:bg-white/90 font-bold border-none h-9 text-xs whitespace-nowrap">
                             {t('Common.nav.login')}
                         </Button>
                     </Link>
 
-                    {/* Mobile Hamburger (Visible only on mobile) */}
-                    <div className="lg:hidden">
+                    {/* Mobile Hamburger (Visible only on mobile/tablet up to xl) */}
+                    <div className="xl:hidden">
                         <MobileMenu className="text-white hover:bg-white/10" />
                     </div>
                 </div>

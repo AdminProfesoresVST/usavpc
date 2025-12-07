@@ -14,14 +14,14 @@ export default function Home() {
 
   return (
     <>
-      {/* Mobile App Experience (Using new Zero Scroll Mobile Component) */}
-      <div className="lg:hidden h-screen overflow-hidden">
-        <MobileHome />
+      {/* 2. Desktop Block (Visible on Desktop xl+) */}
+      <div className="hidden xl:flex flex-col min-h-screen">
+        <DesktopBlocker />
       </div>
 
-      {/* Desktop Web Experience (Blocked) */}
-      <div className="hidden lg:flex min-h-screen w-full">
-        <DesktopBlocker />
+      {/* 3. Mobile/Tablet App (Hidden on xl+) */}
+      <div className="xl:hidden w-full h-[100dvh]">
+        <MobileHome />
       </div>
     </>
   );
