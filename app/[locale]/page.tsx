@@ -37,11 +37,11 @@ export default function Home() {
           </div>
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
-            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-full text-xs uppercase tracking-widest font-bold mb-4 border border-white/20 text-accent-gold invisible lg:visible">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-full text-xs uppercase tracking-widest font-bold mb-4 border border-white/20 text-accent-gold invisible md:visible">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Official Visa Assistance</span>
             </div>
-            <h1 className="text-4xl lg:text-6xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight">
+            <h1 className="text-4xl md:text-5xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight">
               {t('HomePage.title')}
             </h1>
             <p className="text-lg text-white/90 max-w-3xl text-center font-light leading-relaxed">

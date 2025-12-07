@@ -46,8 +46,8 @@ export default async function RootLayout({
             {/* Header stays top */}
             <Header />
 
-            {/* Main takes remaining space, absolutely no scroll allowed on container */}
-            <main className="flex-1 relative overflow-hidden flex flex-col">
+            {/* Main takes remaining space, scrollable if content overflows */}
+            <main className="flex-1 flex flex-col">
               {children}
             </main>
 
