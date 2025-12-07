@@ -111,6 +111,7 @@
         "nav": {
             "home": "Inicio",
             "services": "Servicios",
+            "dashboard": "Panel",
             "about": "Nosotros",
             "contact": "Contacto",
             "start": "Iniciar Evaluación",
