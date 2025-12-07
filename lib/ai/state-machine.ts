@@ -22,10 +22,12 @@ interface FlowStep {
 export class DS160StateMachine {
     private payload: DS160Payload;
     private supabase: SupabaseClient;
+    private locale: string;
 
-    constructor(payload: DS160Payload, supabase: SupabaseClient) {
+    constructor(payload: DS160Payload, supabase: SupabaseClient, locale: string = 'es') {
         this.payload = payload;
         this.supabase = supabase;
+        this.locale = locale;
     }
 
     public async getNextStep(): Promise<QuestionState | null> {
@@ -43,9 +45,18 @@ export class DS160StateMachine {
         // 2. Iterate and find first missing field
         for (const step of steps) {
             if (this.shouldAsk(step)) {
+                // Determine question based on locale
+                let questionText = step.question_es; // Default fallback matches source of truth
+
+                if (this.locale === 'en' && step.question_en) questionText = step.question_en;
+                else if (this.locale === 'fr' && step.question_fr) questionText = step.question_fr;
+                else if (this.locale === 'cn' && step.question_cn) questionText = step.question_cn;
+                else if (this.locale === 'pt' && step.question_pt) questionText = step.question_pt;
+                else if (this.locale === 'hi' && step.question_hi) questionText = step.question_hi;
+
                 return {
                     field: step.field_key,
-                    question: step.question_es,
+                    question: questionText,
                     type: step.input_type as any,
                     options: step.options,
                     context: step.context

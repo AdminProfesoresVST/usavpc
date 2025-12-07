@@ -92,7 +92,12 @@
         "secureId": "Sistema Automatizado Seguro • ID",
         "placeholder": "Escriba su respuesta aquí...",
         "welcome": "Bienvenido al Centro de Procesamiento de Visas de EE. UU. Soy su asistente virtual automatizado. Para comenzar su revisión de elegibilidad, dígame: ¿Cuál es su país de ciudadanía?",
-        "error": "Me disculpo, pero actualmente estoy experimentando problemas de conexión. Por favor inténtelo de nuevo más tarde."
+        "error": "Me disculpo, pero actualmente estoy experimentando problemas de conexión. Por favor inténtelo de nuevo más tarde.",
+        "systemInterpretation": "Interpretación del Sistema",
+        "original": "Original",
+        "formal": "Formal",
+        "analyzing": "Analizando...",
+        "finalMessage": "¡Genial! Hemos recopilado toda la información necesaria. Procediendo a revisar..."
     },
     "Common": {
         "secureConnection": "Conexión Segura SSL de 256 bits",
@@ -202,12 +207,38 @@
             "validated": "Verificación de Seguridad",
             "queue": "En Cola de Proceso",
             "ready": "Listo para Revisión"
-        }
+        },
+        "liveSession": "Sesión en Vivo",
+        "applicationDetails": "Detalles de la Solicitud",
+        "documentsTools": "Documentos y Herramientas",
+        "statusLabel": "Estado:",
+        "strategyReviewLabel": "Revisión Estratégica:",
+        "statusInProgress": "En Progreso",
+        "statusCompleted": "Completado",
+        "statusPending": "Pendiente",
+        "downloadReady": "Su Reporte de Estrategia VisaScore™ está listo para descargar.",
+        "downloadUnlock": "Complete la revisión de elegibilidad para desbloquear su reporte de estrategia.",
+        "refusalGuardActive": "Escudo de Rechazo Activo",
+        "priorityRadarActive": "Radar Prioritario Activo",
+        "aiSimulator": "Simulador de Entrevista IA",
+        "launchSimulator": "Iniciar Simulador"
     },
     "Contact": {
         "title": "Contactar Soporte",
         "desc": "¿Necesita ayuda? Nuestro equipo de soporte está aquí para ayudarle con cualquier problema técnico relacionado con su evaluación o informe.",
-        "email": "soporte@usvisaprocessingcenter.com"
+        "email": "soporte@usvisaprocessingcenter.com",
+        "nameLabel": "Nombre",
+        "emailLabel": "Correo Electrónico",
+        "subjectLabel": "Asunto",
+        "messageLabel": "Mensaje",
+        "namePlaceholder": "John Doe",
+        "emailPlaceholder": "john@example.com",
+        "subjectPlaceholder": "¿Cómo podemos ayudar?",
+        "messagePlaceholder": "Cuéntenos más sobre su consulta...",
+        "sendButton": "Enviar Mensaje",
+        "sendingButton": "Enviando...",
+        "successMessage": "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.",
+        "errorMessage": "Error al enviar el mensaje. Por favor intente de nuevo."
     },
     "Login": {
         "title": "Ingreso al Portal de Clientes",
@@ -225,7 +256,12 @@
         "nameLabel": "Nombre Completo",
         "emailLabel": "Correo Electrónico",
         "submitBtn": "Registrarse",
-        "loginLink": "¿Ya tiene una cuenta? Ingrese aquí"
+        "signUp": "Registrarse",
+        "creatingAccount": "Creando Cuenta...",
+        "placeholder": "nombre@ejemplo.com",
+        "loginLink": "¿Ya tiene una cuenta? Ingrese aquí",
+        "alreadyHaveAccount": "¿Ya tiene una cuenta? ",
+        "loginBtn": "Ingresar"
     },
     "AuthError": {
         "title": "Error de Autenticación",
@@ -258,5 +294,14 @@
         "terms": "Términos de Servicio",
         "refund": "Política de Reembolso",
         "logout": "Cerrar Sesión"
+    },
+    "Email": {
+        "applicationCompletedSubject": "Sus Datos de Solicitud DS-160 - Centro de Procesamiento de Visas de EE. UU.",
+        "applicationCompletedHeader": "Solicitud Completada",
+        "dearApplicant": "Estimado Solicitante,",
+        "applicationProcessed": "Sus datos de solicitud DS-160 han sido procesados y están listos.",
+        "findAttached": "Encuentre adjunto el PDF que contiene sus datos estructurados.",
+        "bestRegards": "Atentamente,",
+        "companyName": "Centro de Procesamiento de Visas de EE. UU."
     }
 }

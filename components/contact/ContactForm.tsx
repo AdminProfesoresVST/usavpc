@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, Send } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 export function ContactForm() {
     const [loading, setLoading] = useState(false);
@@ -16,6 +17,7 @@ export function ContactForm() {
         subject: "",
         message: ""
     });
+    const t = useTranslations('Contact');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,10 +32,10 @@ export function ContactForm() {
 
             if (!response.ok) throw new Error("Failed to send message");
 
-            toast.success("Message sent successfully! We'll get back to you soon.");
+            toast.success(t('successMessage'));
             setFormData({ name: "", email: "", subject: "", message: "" });
         } catch (error) {
-            toast.error("Failed to send message. Please try again.");
+            toast.error(t('errorMessage'));
         } finally {
             setLoading(false);
         }
@@ -43,22 +45,22 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-6 text-left">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">{t('nameLabel')}</Label>
                     <Input
                         id="name"
                         required
-                        placeholder="John Doe"
+                        placeholder={t('namePlaceholder')}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('emailLabel')}</Label>
                     <Input
                         id="email"
                         type="email"
                         required
-                        placeholder="john@example.com"
+                        placeholder={t('emailPlaceholder')}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
@@ -66,21 +68,21 @@ export function ContactForm() {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="subject">Subject</Label>
+                <Label htmlFor="subject">{t('subjectLabel')}</Label>
                 <Input
                     id="subject"
-                    placeholder="How can we help?"
+                    placeholder={t('subjectPlaceholder')}
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 />
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="message">Message</Label>
+                <Label htmlFor="message">{t('messageLabel')}</Label>
                 <Textarea
                     id="message"
                     required
-                    placeholder="Tell us more about your inquiry..."
+                    placeholder={t('messagePlaceholder')}
                     className="min-h-[150px]"
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -97,7 +99,7 @@ export function ContactForm() {
                 ) : (
                     <Send className="w-5 h-5 mr-2" />
                 )}
-                {loading ? "Sending..." : "Send Message"}
+                {loading ? t('sendingButton') : t('sendButton')}
             </Button>
         </form>
     );

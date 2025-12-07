@@ -1,18 +1,130 @@
 {
     "HomePage": {
-        "title": "Examen d'Éligibilité et de Stratégie de Visa",
-        "subtitle": "Complétez cet entretien préliminaire pour recevoir votre VisaScore™ et une stratégie de demande personnalisée. Notre système alimenté par l'IA analyse votre profil par rapport aux tendances consulaires actuelles.",
-        "devMode": "Mode Dev : Test de Génération PDF"
+        "title": "Gestion Sécurisée de Demande de Visa",
+        "subtitle": "Assistance professionnelle pour votre demande de visa B1/B2. Traitement sécurisé, précis et efficace.",
+        "cta": "Vérifier l'Éligibilité / Commencer",
+        "devMode": "Mode Dev : Test de Génération PDF",
+        "Trust": {
+            "title": "Pourquoi les Candidats Nous Font Confiance",
+            "encryption": {
+                "title": "Sécurité Bancaire",
+                "desc": "Vos données sont protégées par le chiffrement AES-256, la même norme utilisée par les grandes institutions financières."
+            },
+            "ai": {
+                "title": "Détection d'Erreurs Intelligente",
+                "desc": "Notre IA exclusive scanne votre demande pour détecter plus de 50 erreurs courantes qui mènent aux rejets de visa."
+            },
+            "speed": {
+                "title": "Révision Rapide 24h",
+                "desc": "Obtenez une analyse complète de votre profil sous 24 heures. Pas besoin d'attendre des semaines pour des réponses."
+            }
+        },
+        "Fork": {
+            "optionA": {
+                "title": "Faites-le Vous-même",
+                "desc": "Vous allez remplir le formulaire vous-même ? Ne l'envoyez pas à l'aveugle. Utilisez notre système pour auditer votre profil avant de commettre une erreur irréversible.",
+                "price": "39 $",
+                "cta": "Obtenir le Rapport de Stratégie"
+            },
+            "optionB": {
+                "title": "Service Complet",
+                "desc": "Vous ne voulez pas gérer le site gouvernemental ou l'anglais technique ? Nous nous occupons de tout, du début à la fin. Vous répondez simplement à des questions faciles.",
+                "price": "99 $",
+                "cta": "Lancer le Service Complet"
+            }
+        },
+        "OCR": {
+            "title": "Validation d'Identité",
+            "instruction": "Veuillez scanner votre passeport pour vérifier votre identité et récupérer vos détails.",
+            "cameraBtn": "Activer la Caméra",
+            "scanning": "Analyse des fonctionnalités de sécurité...",
+            "success": "Identité Vérifiée",
+            "confirm": "Ces informations sont-elles correctes ?",
+            "fields": {
+                "name": "Nom Complet",
+                "passport": "Numéro de Passeport",
+                "country": "Pays"
+            },
+            "next": "Confirmer & Continuer"
+        },
+        "Triage": {
+            "q1": {
+                "title": "Quel est votre but principal de voyage ?",
+                "options": {
+                    "tourism": "Tourisme / Visite Famille",
+                    "business": "Affaires / Conférence",
+                    "other": "Autre (Travail, Études)"
+                }
+            },
+            "q2": {
+                "title": "Avez-vous déjà essuyé un refus de visa US ?",
+                "options": {
+                    "no": "Non, jamais",
+                    "yes": "Oui, une fois ou plus"
+                }
+            },
+            "q3": {
+                "title": "Quand prévoyez-vous de voyager ?",
+                "options": {
+                    "asap": "Dès que possible",
+                    "months": "Dans 3-6 mois",
+                    "flexible": "Flexible"
+                }
+            }
+        },
+        "Decision": {
+            "analyzing": "Analyse de votre profil...",
+            "result": {
+                "good": "Potentiel d'Approbation Élevé",
+                "complex": "Cas Complexe Détecté"
+            },
+            "upsell": {
+                "title": "Stratégie Recommandée",
+                "desc": "Basé sur votre profil, nous recommandons notre Service Complet pour assurer que tous les détails sont parfaits.",
+                "benefit1": "Revue d'Expert",
+                "benefit2": "Prépa Entretien",
+                "cta": "Continuer vers la Candidature"
+            }
+        }
+    },
+    "Dashboard": {
+        "title": "Statut de la Demande",
+        "welcome": "Bon retour",
+        "Status": {
+            "received": "Demande Reçue",
+            "validated": "Contrôle de Sécurité Réussi",
+            "queue": "En File de Traitement",
+            "ready": "Prêt pour Révision"
+        },
+        "liveSession": "Session Live",
+        "applicationDetails": "Détails de la Demande",
+        "documentsTools": "Documents & Outils",
+        "statusLabel": "Statut:",
+        "strategyReviewLabel": "Revue Stratégique:",
+        "statusInProgress": "En Cours",
+        "statusCompleted": "Terminé",
+        "statusPending": "En Attente",
+        "downloadReady": "Votre Rapport de Stratégie VisaScore™ est prêt à être téléchargé.",
+        "downloadUnlock": "Terminez la revue d'éligibilité pour débloquer votre rapport de stratégie.",
+        "refusalGuardActive": "Garde Refus Actif",
+        "priorityRadarActive": "Radar Prioritaire Actif",
+        "aiSimulator": "Simulateur d'Entretien IA",
+        "launchSimulator": "Lancer le Simulateur"
     },
     "Chat": {
         "title": "Assistant Consulaire",
         "secureId": "Système Automatisé Sécurisé • ID",
         "placeholder": "Tapez votre réponse ici...",
-        "welcome": "Bienvenue au Centre de Traitement des Visas Américains. Je suis votre assistant consulaire automatisé. Pour commencer votre examen d'éligibilité, veuillez me dire : Quel est votre pays de citoyenneté ?",
-        "error": "Je m'excuse, mais je rencontre actuellement des problèmes de connexion. Veuillez réessayer plus tard."
+        "welcome": "Bienvenue au Centre de Traitement des Visas US. Je suis votre assistant consulaire automatisé. Pour commencer votre examen d'éligibilité, veuillez me dire : Quel est votre pays de citoyenneté ?",
+        "error": "Je m'excuse, mais je rencontre actuellement des problèmes de connexion. Veuillez réessayer plus tard.",
+        "systemInterpretation": "Interprétation Système",
+        "original": "Original",
+        "formal": "Formel",
+        "analyzing": "Analyse en cours...",
+        "finalMessage": "Parfait ! Nous avons collecté toutes les informations nécessaires. Nous procédons à l'examen..."
     },
     "Common": {
-        "secureConnection": "Connexion SSL Sécurisée 256 bits",
+        "secureConnection": "Connexion SSL Sécurisée 256-bit",
         "secure": "Sécurisé",
         "downloadReport": "Télécharger un Exemple de Rapport",
         "generating": "Génération du Rapport...",
@@ -38,7 +150,7 @@
             },
             "pro": {
                 "title": "Stratégie Premium",
-                "price": "$49",
+                "price": "49 $",
                 "features": [
                     "Analyse IA Approfondie",
                     "Rapport PDF Personnalisé",
@@ -50,27 +162,132 @@
         }
     },
     "Services": {
-        "title": "Nos Services",
-        "subtitle": "Advanced AI-powered tools to streamline your US Visa application process.",
-        "analysisTitle": "AI Eligibility Analysis",
-        "analysisDesc": "Our proprietary algorithm evaluates your profile against thousands of successful cases to determine your approval probability.",
-        "strategyTitle": "Personalized Strategy",
-        "strategyDesc": "Receive a custom PDF report with specific recommendations to strengthen your application before your interview.",
-        "documentTitle": "Document Pre-Check",
-        "documentDesc": "Identify missing or weak documentation that could lead to administrative processing delays."
+        "title": "Gestion Sécurisée des Candidatures",
+        "subtitle": "Assistance professionnelle DS-160 pour éviter les retards et refus. Nous comblons le fossé entre l'anxiété du candidat et une soumission réussie.",
+        "description": "",
+        "OptionA": {
+            "title": "VisaCheck & Audit Stratégique (Diagnostic Uniquement)",
+            "subtitle": "Évaluation professionnelle pré-dépôt pour les candidats autonomes.",
+            "desc": "Ne déposez pas à l'aveugle. Le formulaire officiel du gouvernement ne vous avertit pas si vos réponses vont lever des \"drapeaux rouges\" lors de l'entretien consulaire. Ce service est un outil de diagnostic professionnel conçu pour les candidats qui prévoient de remplir le DS-160 par eux-mêmes mais nécessitent une validation stratégique d'expert au préalable.",
+            "feature1": "Analyse de Risque \"VisaScore\" Personnalisée",
+            "feature2": "Identification des Drapeaux Rouges Potentiels",
+            "feature3": "Plan d'Action Correctif",
+            "price": "39 $",
+            "cta": "Obtenir le Rapport de Stratégie",
+            "note": "Note : Ce service n'inclut PAS le dépôt officiel du formulaire DS-160."
+        },
+        "OptionB": {
+            "title": "Service de Traitement Complet (Bout en Bout)",
+            "subtitle": "Gestion complète de la saisie des données à la soumission officielle.",
+            "desc": "La solution complète pour une tranquillité d'esprit totale. Nous éliminons la friction technique, les barrières linguistiques et le stress de gérer des portails gouvernementaux complexes. Notre équipe gère l'ensemble du cycle de vie de votre demande DS-160, assurant une précision absolue de la saisie initiale à la soumission officielle finale.",
+            "feature1": "Entretien Numérique Guidé (Simplifié)",
+            "feature2": "Validation des Données & Photos en Temps Réel",
+            "feature3": "Dépôt Sécurisé auprès du Dép. d'État (CEAC)",
+            "price": "99 $",
+            "cta": "Lancer le Service Complet",
+            "recommended": "Recommandé"
+        },
+        "OptionC": {
+            "title": "Simulateur d'Entretien IA (Anti-Panique)",
+            "subtitle": "Entraînez-vous avec un Consul Virtuel avant le vrai rendez-vous.",
+            "desc": "Vous avez déjà déposé votre demande ? Ne laissez pas le stress gâcher vos chances. Entraînez-vous de manière illimitée avec notre Consul IA qui imite le style réel de l'entretien et vous donne un retour instantané sur vos réponses.",
+            "feature1": "Consul Virtuel Activé par la Voix",
+            "feature2": "Sessions d'Entraînement Illimitées (30 Jours)",
+            "feature3": "Retour de Confiance Instantané",
+            "price": "29 $",
+            "cta": "Lancer le Simulateur"
+        }
     },
     "About": {
-        "title": "À Propos",
-        "missionTitle": "Our Mission",
-        "missionDesc": "To democratize access to professional visa consulting through technology, providing accurate and accessible guidance to applicants worldwide.",
-        "securityTitle": "Security First",
-        "securityDesc": "We use bank-level 256-bit encryption to protect your personal data. Your information is never shared with third parties.",
-        "disclaimerTitle": "Important Disclaimer",
-        "disclaimerDesc": "US Visa Processing Center is a private technology company and is NOT affiliated with the United States Department of State or any government agency."
+        "title": "À Propos de Nous",
+        "missionTitle": "Notre Mission",
+        "missionDesc": "Démocratiser l'accès au conseil professionnel en visas grâce à la technologie, en fournissant des conseils précis et accessibles aux candidats du monde entier.",
+        "securityTitle": "Sécurité d'Abord",
+        "securityDesc": "Nous utilisons un chiffrement de niveau bancaire 256-bit pour protéger vos données personnelles. Vos informations ne sont jamais partagées avec des tiers.",
+        "disclaimerTitle": "Avis de Non-Responsabilité Important",
+        "disclaimerDesc": "AVIS LÉGAL IMPORTANT : US Visa Processing Center (USAVPC) est un service privé d'assistance technologique et documentaire, non gouvernemental. Nous ne sommes PAS affiliés, approuvés ou associés de quelque manière que ce soit au Département d'État des États-Unis, à une Ambassade ou à toute agence gouvernementale. Nos services sont strictement limités à l'assistance à la préparation, la révision et la gestion logistique de la demande DS-160. Nous ne délivrons pas de visas et ne pouvons influencer le résultat de toute décision consulaire. L'approbation du visa n'est jamais garantie et repose uniquement à la discrétion de l'Officier Consulaire américain qui mène l'entretien. Divulgation des Frais : Nos frais de service sont facturés pour l'assistance professionnelle, l'analyse IA et les outils technologiques. Ces frais s'ajoutent aux frais de demande gouvernementaux obligatoires (par ex., les frais MRV de 185 $), qui doivent être payés séparément par le candidat. Les candidats peuvent choisir de déposer leur demande directement par eux-mêmes, sans notre assistance ni nos frais, sur le site officiel du gouvernement : https://ceac.state.gov.",
+        "contactEmail": "support@usvisaprocessingcenter.com",
+        "contactPhone": "1-800-VISA-HELP"
     },
     "Contact": {
-        "title": "Contact Support",
-        "desc": "Need assistance? Our support team is here to help with any technical issues regarding your assessment or report.",
-        "email": "support@usvisaprocessingcenter.com"
+        "title": "Contacter le Support",
+        "desc": "Besoin d'aide ? Notre équipe de support est là pour vous aider avec tout problème technique concernant votre évaluation ou rapport.",
+        "email": "support@usvisaprocessingcenter.com",
+        "nameLabel": "Nom",
+        "emailLabel": "Email",
+        "subjectLabel": "Sujet",
+        "messageLabel": "Message",
+        "namePlaceholder": "John Doe",
+        "emailPlaceholder": "john@example.com",
+        "subjectPlaceholder": "Comment pouvons-nous aider ?",
+        "messagePlaceholder": "Dites-nous en plus sur votre demande...",
+        "sendButton": "Envoyer le Message",
+        "sendingButton": "Envoi en cours...",
+        "successMessage": "Message envoyé avec succès ! Nous vous répondrons bientôt.",
+        "errorMessage": "Échec de l'envoi du message. Veuillez réessayer."
+    },
+    "Login": {
+        "title": "Connexion Portail Client",
+        "subtitle": "Accès sécurisé au statut de votre demande et vos documents.",
+        "emailLabel": "Adresse Email",
+        "submitBtn": "Envoyer Lien Magique",
+        "sendingBtn": "Envoi du Lien...",
+        "success": "Vérifiez votre email pour le lien de connexion !",
+        "noAccount": "Pas de compte ?",
+        "createAccount": "Créer un Compte"
+    },
+    "Register": {
+        "title": "Créer un Nouveau Compte",
+        "subtitle": "Commencez votre demande de visa aujourd'hui.",
+        "nameLabel": "Nom Complet",
+        "emailLabel": "Adresse Email",
+        "submitBtn": "S'inscrire",
+        "signUp": "S'inscrire",
+        "creatingAccount": "Création du compte...",
+        "placeholder": "nom@exemple.com",
+        "loginLink": "Vous avez déjà un compte ? Connectez-vous ici",
+        "alreadyHaveAccount": "Vous avez déjà un compte ? ",
+        "loginBtn": "Connexion"
+    },
+    "AuthError": {
+        "title": "Erreur d'Authentification",
+        "desc": "Le lien d'accès a expiré ou est invalide.",
+        "retryBtn": "Réessayer"
+    },
+    "Upsell": {
+        "title": "Maximisez Vos Chances d'Approbation",
+        "subtitle": "La plupart des candidats ajoutent ces protections pour assurer le succès.",
+        "radar": {
+            "title": "Radar de Rendez-vous Prioritaire",
+            "desc": "Obtenez un rendez-vous des mois plus tôt. Nous surveillons 24/7 les annulations."
+        },
+        "insurance": {
+            "title": "Garde Refus 365",
+            "desc": "Si refusé, nous retraitons votre demande GRATUITEMENT pendant un an."
+        },
+        "simulator": {
+            "title": "Simulateur d'Entretien IA",
+            "desc": "Entraînement illimité avec notre Consul Virtuel. (Offre Spéciale)"
+        },
+        "cta": "Procéder au Paiement",
+        "secure": "Chiffrement SSL Sécurisé 256-bit"
+    },
+    "Settings": {
+        "title": "Paramètres",
+        "subtitle": "Gérez votre compte et vos préférences.",
+        "profile": "Mon Profil",
+        "privacy": "Politique de Confidentialité",
+        "terms": "Conditions d'Utilisation",
+        "refund": "Politique de Remboursement",
+        "logout": "Se Déconnecter"
+    },
+    "Email": {
+        "applicationCompletedSubject": "Vos données de demande DS-160 - Centre de traitement des visas américains",
+        "applicationCompletedHeader": "Demande terminée",
+        "dearApplicant": "Cher demandeur,",
+        "applicationProcessed": "Vos données de demande DS-160 ont été traitées et sont prêtes.",
+        "findAttached": "Veuillez trouver ci-joint le PDF contenant vos données structurées.",
+        "bestRegards": "Cordialement,",
+        "companyName": "Centre de traitement des visas américains"
     }
 }

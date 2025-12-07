@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface Message {
     id: string;
@@ -31,6 +31,7 @@ interface QuestionState {
 
 export function ChatInterface() {
     const t = useTranslations('Chat');
+    const locale = useLocale();
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<QuestionState | null>(null);
     const [progress, setProgress] = useState(0);
@@ -115,7 +116,8 @@ export function ChatInterface() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     answer: answerToSend,
-                    duration: duration // Send time taken in ms
+                    duration: duration,
+                    locale: locale
                 }),
             });
 
@@ -140,7 +142,7 @@ export function ChatInterface() {
                 setMessages(prev => [...prev, {
                     id: Date.now().toString(),
                     role: "assistant",
-                    content: "Great! We have collected all the necessary information. Proceeding to review...",
+                    content: t('finalMessage'),
                     timestamp: new Date()
                 }]);
             }
@@ -232,10 +234,10 @@ export function ChatInterface() {
                                     <div className="bg-blue-50 border border-blue-100 rounded-sm p-3 text-xs text-blue-900">
                                         <div className="flex items-center gap-1 mb-1 font-bold uppercase tracking-wider text-[10px] text-blue-700">
                                             <CheckCircle2 size={12} />
-                                            <span>System Interpretation</span>
+                                            <span>{t('systemInterpretation')}</span>
                                         </div>
-                                        <p className="italic mb-1">Original: "{msg.validationResult.original}"</p>
-                                        <p className="font-semibold">Formal: "{msg.validationResult.interpreted}"</p>
+                                        <p className="italic mb-1">{t('original')}: "{msg.validationResult.original}"</p>
+                                        <p className="font-semibold">{t('formal')}: "{msg.validationResult.interpreted}"</p>
                                     </div>
                                 </motion.div>
                             )}
@@ -259,7 +261,7 @@ export function ChatInterface() {
                                     <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
                                     <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" />
                                 </div>
-                                <span className="text-xs text-muted-foreground animate-pulse">Analyzing...</span>
+                                <span className="text-xs text-muted-foreground animate-pulse">{t('analyzing')}</span>
                             </div>
                         </div>
                     </motion.div>

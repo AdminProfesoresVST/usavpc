@@ -37,6 +37,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
+        // 3. Process User Input (if any)
+        const { answer, duration, locale } = await req.json();
+
         // 2. Load Application State
         let { data: application, error: dbError } = await supabase
             .from("applications")
@@ -57,7 +60,8 @@ export async function POST(req: Request) {
                             work_history: { current_job: {}, previous_jobs: [] },
                             security_questions: {}
                         }
-                    }
+                    },
+                    client_metadata: { locale }
                 }])
                 .select()
                 .single();
@@ -67,11 +71,22 @@ export async function POST(req: Request) {
         }
 
         const payload = application.ds160_payload as DS160Payload;
-        const sm = new DS160StateMachine(payload, supabase);
-        const currentStep = await sm.getNextStep();
+        const sm = new DS160StateMachine(payload, supabase, locale); // Pass locale
 
-        // 3. Process User Input (if any)
-        const { answer, duration } = await req.json();
+        // Update locale if changed or missing
+        if (!application.client_metadata || application.client_metadata.locale !== locale) {
+            await supabase
+                .from("applications")
+                .update({
+                    client_metadata: {
+                        ...application.client_metadata,
+                        locale
+                    }
+                })
+                .eq("id", application.id);
+        }
+
+        const currentStep = await sm.getNextStep();
         let validationResult = null;
 
         if (answer && currentStep) {

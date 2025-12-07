@@ -95,14 +95,33 @@
             "validated": "Security Check Passed",
             "queue": "In Processing Queue",
             "ready": "Ready for Review"
-        }
+        },
+        "liveSession": "Live Session",
+        "applicationDetails": "Application Details",
+        "documentsTools": "Documents & Tools",
+        "statusLabel": "Status:",
+        "strategyReviewLabel": "Strategy Review:",
+        "statusInProgress": "In Progress",
+        "statusCompleted": "Completed",
+        "statusPending": "Pending",
+        "downloadReady": "Your VisaScore™ Strategy Report is ready for download.",
+        "downloadUnlock": "Complete the eligibility review to unlock your strategy report.",
+        "refusalGuardActive": "Refusal Guard Active",
+        "priorityRadarActive": "Priority Radar Active",
+        "aiSimulator": "AI Interview Simulator",
+        "launchSimulator": "Launch Simulator"
     },
     "Chat": {
         "title": "Consular Assistant",
         "secureId": "Secure Automated System • ID",
         "placeholder": "Type your answer here...",
         "welcome": "Welcome to the US Visa Processing Center. I am your automated consular assistant. To begin your eligibility review, please tell me: What is your country of citizenship?",
-        "error": "I apologize, but I am currently experiencing connection issues. Please try again later."
+        "error": "I apologize, but I am currently experiencing connection issues. Please try again later.",
+        "systemInterpretation": "System Interpretation",
+        "original": "Original",
+        "formal": "Formal",
+        "analyzing": "Analyzing...",
+        "finalMessage": "Great! We have collected all the necessary information. Proceeding to review..."
     },
     "Common": {
         "secureConnection": "Secure 256-bit SSL Connection",
@@ -192,8 +211,20 @@
     },
     "Contact": {
         "title": "Contact Support",
-        "desc": "Need assistance? Our support team is here to help with any technical issues regarding your assessment or report.",
-        "email": "support@usvisaprocessingcenter.com"
+        "desc": "Need help? Our support team is here to assist with any technical issues regarding your assessment or report.",
+        "email": "support@usvisaprocessingcenter.com",
+        "nameLabel": "Name",
+        "emailLabel": "Email",
+        "subjectLabel": "Subject",
+        "messageLabel": "Message",
+        "namePlaceholder": "John Doe",
+        "emailPlaceholder": "john@example.com",
+        "subjectPlaceholder": "How can we help?",
+        "messagePlaceholder": "Tell us more about your inquiry...",
+        "sendButton": "Send Message",
+        "sendingButton": "Sending...",
+        "successMessage": "Message sent successfully! We'll get back to you soon.",
+        "errorMessage": "Failed to send message. Please try again."
     },
     "Login": {
         "title": "Client Portal Login",
@@ -222,5 +253,41 @@
         },
         "cta": "Proceed to Checkout",
         "secure": "Secure 256-bit SSL Encryption"
+    },
+    "Register": {
+        "title": "Create New Account",
+        "subtitle": "Start your visa application today.",
+        "nameLabel": "Full Name",
+        "emailLabel": "Email Address",
+        "submitBtn": "Register",
+        "signUp": "Sign Up",
+        "creatingAccount": "Creating Account...",
+        "placeholder": "name@example.com",
+        "loginLink": "Already have an account? Login here",
+        "alreadyHaveAccount": "Already have an account? ",
+        "loginBtn": "Login"
+    },
+    "AuthError": {
+        "title": "Authentication Error",
+        "desc": "The access link has expired or is invalid.",
+        "retryBtn": "Try Again"
+    },
+    "Settings": {
+        "title": "Settings",
+        "subtitle": "Manage your account and preferences.",
+        "profile": "My Profile",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "refund": "Refund Policy",
+        "logout": "Log Out"
+    },
+    "Email": {
+        "applicationCompletedSubject": "Your DS-160 Application Data - US Visa Processing Center",
+        "applicationCompletedHeader": "Application Completed",
+        "dearApplicant": "Dear Applicant,",
+        "applicationProcessed": "Your DS-160 application data has been processed and is ready.",
+        "findAttached": "Please find the attached PDF containing your structured data.",
+        "bestRegards": "Best regards,",
+        "companyName": "US Visa Processing Center"
     }
 }

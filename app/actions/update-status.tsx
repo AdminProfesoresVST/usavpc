@@ -52,36 +52,39 @@ export async function updateStatus(applicationId: string, newStatus: string) {
                 .eq("id", applicationId)
                 .single();
 
-            if (appData && appData.users?.email) {
-                // 2. Generate PDF
-                // Note: We import dynamically to avoid build issues if not needed elsewhere
-                const { renderToBuffer } = await import('@react-pdf/renderer');
-                const { DS160Document } = await import('@/components/pdf/DS160Document');
 
-                const pdfBuffer = await renderToBuffer(<DS160Document data={ appData.ds160_payload } />);
+            const locale = appData.client_metadata?.locale || 'es';
+            const { getTranslations } = await import('next-intl/server');
+            const t = await getTranslations({ locale, namespace: 'Email' });
 
-                // 3. Send Email
-                const { sendEmail } = await import('@/lib/email/client');
-                await sendEmail({
-                    to: appData.users.email,
-                    subject: 'Your DS-160 Application Data - US Visa Processing Center',
-                    html: `
-                        <h1>Application Completed</h1>
-                        <p>Dear Applicant,</p>
-                        <p>Your DS-160 application data has been processed and is ready.</p>
-                        <p>Please find the attached PDF containing your structured data.</p>
+            // 2. Generate PDF
+            // Note: We import dynamically to avoid build issues if not needed elsewhere
+            const { renderToBuffer } = await import('@react-pdf/renderer');
+            const { DS160Document } = await import('@/components/pdf/DS160Document');
+
+            const pdfBuffer = await renderToBuffer(<DS160Document data={appData.ds160_payload} />);
+
+            // 3. Send Email
+            const { sendEmail } = await import('@/lib/email/client');
+            await sendEmail({
+                to: appData.users.email,
+                subject: t('applicationCompletedSubject'),
+                html: `
+                        <h1>${t('applicationCompletedHeader')}</h1>
+                        <p>${t('dearApplicant')}</p>
+                        <p>${t('applicationProcessed')}</p>
+                        <p>${t('findAttached')}</p>
                         <br/>
-                        <p>Best regards,</p>
-                        <p>US Visa Processing Center</p>
+                        <p>${t('bestRegards')}</p>
+                        <p>${t('companyName')}</p>
                     `,
-                    attachments: [
-                        {
-                            filename: `DS160_${appData.id}.pdf`,
-                            content: pdfBuffer
-                        }
-                    ]
-                });
-            }
+                attachments: [
+                    {
+                        filename: `DS160_${appData.id}.pdf`,
+                        content: pdfBuffer
+                    }
+                ]
+            });
         } catch (emailError) {
             console.error("Failed to send completion email:", emailError);
             // Don't fail the status update just because email failed, but log it

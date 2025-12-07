@@ -15,7 +15,7 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const supabase = createClient();
-    // const t = useTranslations('Register'); 
+    const t = useTranslations('Register');
 
     const searchParams = useSearchParams(); // Import this
     const next = searchParams.get('next');
@@ -58,18 +58,18 @@ export default function RegisterPage() {
             <div className="container mx-auto px-4 py-16 flex justify-center relative z-10 flex-grow items-center">
                 <Card className="w-full max-w-md p-8 bg-white shadow-lg border-border">
                     <h1 className="text-2xl font-serif font-bold text-primary mb-6 text-center">
-                        Create Account
+                        {t('title')}
                     </h1>
                     <form onSubmit={handleRegister} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-foreground mb-1">
-                                Email Address
+                                {t('emailLabel')}
                             </label>
                             <Input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="name@example.com"
+                                placeholder={t('placeholder')}
                                 required
                                 className="bg-input-bg border-input-border"
                             />
@@ -79,7 +79,7 @@ export default function RegisterPage() {
                             disabled={loading}
                             className="w-full bg-primary text-white uppercase font-semibold"
                         >
-                            {loading ? "Creating Account..." : "Sign Up"}
+                            {loading ? t('creatingAccount') : t('signUp')}
                         </Button>
                         {message && (
                             <p className="text-sm text-center text-muted-foreground mt-4">
@@ -88,12 +88,12 @@ export default function RegisterPage() {
                         )}
                     </form>
                     <div className="mt-6 text-center text-sm">
-                        <span className="text-muted-foreground">Already have an account? </span>
+                        <span className="text-muted-foreground">{t('alreadyHaveAccount')}</span>
                         <Link
                             href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}
                             className="text-primary font-semibold hover:underline"
                         >
-                            Login
+                            {t('loginBtn')}
                         </Link>
                     </div>
                 </Card>
