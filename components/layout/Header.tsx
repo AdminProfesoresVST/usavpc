@@ -10,7 +10,7 @@ export function Header() {
     const t = useTranslations();
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300">
+        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300 lg:hidden">
             {/* 
                 STRICT 2-SIZE SYSTEM
                 Mobile: h-14, Logo + Hamburger
