@@ -14,12 +14,12 @@ export default function Home() {
   return (
     <>
       {/* Mobile App Experience (Using new Zero Scroll Mobile Component) */}
-      <div className="md:hidden h-screen overflow-hidden">
+      <div className="lg:hidden h-screen overflow-hidden">
         <MobileHome />
       </div>
 
       {/* Desktop Web Experience (Senior Dashboard Standard Layout) */}
-      <div className="hidden md:flex min-h-screen w-full bg-official-grey flex-col">
+      <div className="hidden lg:flex min-h-screen w-full bg-official-grey flex-col">
         {/* Row 1: Hero */}
         <section className="relative w-full flex-none flex items-center justify-center bg-trust-navy text-white border-b-4 border-accent-gold overflow-hidden">
           {/* Background Image */}
@@ -37,11 +37,11 @@ export default function Home() {
           </div>
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
-            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-full text-xs uppercase tracking-widest font-bold mb-4 border border-white/20 text-accent-gold invisible md:visible">
+            <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1 rounded-full text-xs uppercase tracking-widest font-bold mb-4 border border-white/20 text-accent-gold invisible lg:visible">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Official Visa Assistance</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight">
+            <h1 className="text-4xl lg:text-5xl font-sans font-black mb-3 tracking-tight drop-shadow-2xl text-center leading-tight">
               {t('HomePage.title')}
             </h1>
             <p className="text-lg text-white/90 max-w-3xl text-center font-light leading-relaxed">
