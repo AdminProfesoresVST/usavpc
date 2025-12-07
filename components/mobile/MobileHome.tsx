@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from "@/src/i18n/routing";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
     ArrowRight,
     FileText,
@@ -44,9 +45,18 @@ export function MobileHome() {
 
                 {/* A. Hero / Action Area (Compact, High Impact) */}
                 <section className="bg-trust-navy rounded-2xl p-5 text-white shadow-lg relative overflow-hidden flex flex-col justify-center shrink-0 min-h-[140px]">
-                    {/* Abstract Background */}
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-accent-gold/10 rounded-full -ml-16 -mb-16 blur-3xl pointer-events-none"></div>
+                    {/* 1. Real Image Background (Added per User Request) */}
+                    <div className="absolute inset-0 z-0">
+                        <Image
+                            src="/bg-hero.png"
+                            alt="US Visa Center"
+                            fill
+                            className="object-cover object-center opacity-20 mixed-blend-overlay"
+                            priority
+                        />
+                        {/* Gradient Overlay for Text Readability */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-trust-navy via-trust-navy/80 to-transparent"></div>
+                    </div>
 
                     <div className="relative z-10 flex flex-col h-full justify-between">
                         <div className="flex items-start justify-between">

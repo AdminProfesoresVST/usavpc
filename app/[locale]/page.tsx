@@ -23,14 +23,17 @@ export default function Home() {
         {/* Row 1: Hero */}
         <section className="relative w-full flex-none flex items-center justify-center bg-trust-navy text-white border-b-4 border-accent-gold overflow-hidden">
           {/* Background Image */}
+          {/* Background Image - Adjusted to not be "giant" */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/bg-hero.png"
               alt="US Visa Center Building"
               fill
-              className="object-cover object-center opacity-30"
+              className="object-cover object-[center_30%] opacity-40 mix-blend-overlay"
               priority
             />
+            {/* Subtle gradient to ensure text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-r from-trust-navy/90 to-trust-navy/40"></div>
           </div>
 
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
