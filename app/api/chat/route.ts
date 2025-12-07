@@ -6,12 +6,15 @@ import { DS160StateMachine } from "@/lib/ai/state-machine";
 import { getSystemPrompt } from "@/lib/ai/prompts";
 import { DS160Payload } from "@/types/ds160";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// OpenAI initialized lazily inside handler to prevent build crashes
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // REMOVED
 
 export async function POST(req: Request) {
     try {
+        const openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+        });
+
         const cookieStore = await cookies();
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
