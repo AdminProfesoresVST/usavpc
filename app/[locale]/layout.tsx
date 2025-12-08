@@ -51,8 +51,7 @@ export default async function RootLayout({
               {children}
             </main>
 
-            {/* Mobile Nav fixed at bottom */}
-            <MobileNav />
+            {/* Mobile Nav removed per user request for single navbar */}
           </AnalyticsProvider>
         </NextIntlClientProvider>
       </body>
