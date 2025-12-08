@@ -15,7 +15,7 @@ type AssessmentStep = 'ocr' | 'triage' | 'decision' | 'chat';
 
 export function AssessmentFlow() {
     const t = useTranslations('Chat');
-    const [step, setStep] = useState<AssessmentStep>('ocr');
+    const [step, setStep] = useState<AssessmentStep>('triage'); // DEBUG: Skip OCR to isolate crash
     const [triageAnswers, setTriageAnswers] = useState<any>({});
     const router = useRouter();
     const locale = useLocale();
