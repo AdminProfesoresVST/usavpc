@@ -31,27 +31,35 @@ export function MobileHome() {
     const handlePlanSelect = async (plan: string) => {
         setIsProcessing(plan);
         try {
+            // Safety timeout: Reset after 10s if stuck
+            const timeoutId = setTimeout(() => setIsProcessing(null), 10000);
+
             const response = await fetch('/api/applications/draft', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ plan, locale }),
             });
 
+            clearTimeout(timeoutId);
+
             if (response.status === 401) {
-                // Not logged in -> Register/Login with next param
-                router.push(`/${locale}/login?next=/${locale}/assessment?plan=${plan}`);
+                // Not logged in -> Hard Redirect to Login
+                window.location.href = `/${locale}/login?next=/${locale}/assessment?plan=${plan}`;
                 return;
             }
 
             const data = await response.json();
             if (data.success) {
-                router.push(`/${locale}/assessment`);
+                // Success -> Hard Redirect to Assessment
+                window.location.href = `/${locale}/assessment`;
             } else {
                 console.error("Draft Error:", data.error);
+                alert("Error: " + (data.error || "Unknown error"));
                 setIsProcessing(null);
             }
         } catch (e) {
             console.error(e);
+            alert("Connection error. Please try again.");
             setIsProcessing(null);
         }
     };
