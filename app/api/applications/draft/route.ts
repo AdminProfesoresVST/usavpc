@@ -22,10 +22,13 @@ export async function POST(req: Request) {
         );
 
         // 1. Auth Check
+        console.log("DraftAPI: Checking Auth...");
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) {
+            console.log("DraftAPI: Unauthorized or no user found.", authError);
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+        console.log("DraftAPI: User found:", user.id);
 
         // 2. Check if application already exists
         const { data: existingApp } = await supabase
@@ -35,6 +38,7 @@ export async function POST(req: Request) {
             .single();
 
         if (existingApp) {
+            console.log("DraftAPI: Application already exists:", existingApp.id);
             // If exists, just update the plan if needed (or do nothing and redirect)
             // Ideally we shouldn't overwrite if they are far along, but for now let's assume restart or continue.
             // We'll just return success.

@@ -31,8 +31,10 @@ export function ServiceCheckoutButton({
 
     const handleProceed = async (addons: string[]) => {
         setIsLoading(true);
+        console.log("ServiceCheckoutButton: Starting checkout process", { plan, addons });
         try {
             // New Flow: Service First. Create Draft Application.
+            console.log("ServiceCheckoutButton: Calling /api/applications/draft");
             const response = await fetch('/api/applications/draft', {
                 method: 'POST',
                 headers: {
@@ -45,30 +47,32 @@ export function ServiceCheckoutButton({
                 }),
             });
 
+            console.log("ServiceCheckoutButton: API Response status:", response.status);
+
             if (response.status === 401) {
                 // Not logged in -> Redirect to Register
-                // We want them to come back to services page or assessment?
-                // Probably services page or directly to assessment after login if we could.
-                // For now, let's allow them to register and then they can click start again.
-                // Or better, pass ?next=/assessment?plan=...
-                router.push(`/${locale}/register?next=/${locale}/assessment?plan=${plan}`);
+                console.log("ServiceCheckoutButton: Unauthorized. Redirecting to register.");
+                // Use window.location.href to force a full page load and ensure redirect happens
+                window.location.href = `/${locale}/register?next=/${locale}/assessment?plan=${plan}`;
                 return;
             }
 
             const data = await response.json();
+            console.log("ServiceCheckoutButton: API Response data:", data);
 
             if (data.success) {
                 // Success -> Go to Assessment
+                console.log("ServiceCheckoutButton: Success. Redirecting to assessment.");
                 router.push(`/${locale}/assessment`);
             } else {
                 // Error
                 console.error("Draft Creation Error:", data.error);
-                // Fallback or show toast
+                alert(`Error creating application: ${data.error}`);
             }
 
         } catch (error) {
             console.error("Application Start Error:", error);
-            // Fallback?
+            alert("An unexpected error occurred. Please try again.");
         } finally {
             setIsLoading(false);
         }
