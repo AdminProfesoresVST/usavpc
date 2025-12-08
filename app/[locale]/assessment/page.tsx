@@ -42,8 +42,29 @@ export default async function AssessmentPage({
         .single();
 
     if (!application) {
-        // No application started -> Redirect to Services to pick a plan
-        redirect(`/${locale}/services`);
+        // If we have a plan in the URL, create the draft application now (Post-Login Flow)
+        const searchParamsValue = await searchParams;
+        const plan = searchParamsValue.plan;
+
+        if (plan) {
+            const { error: createError } = await supabase.from('applications').insert({
+                service_tier: plan,
+                status: 'draft',
+                payment_status: 'unpaid',
+                ais_account_email: user.email,
+                locale: locale // Ensure locale is saved
+            });
+
+            if (createError) {
+                console.error("Auto-creation failed:", createError);
+                // Fallback to home with error
+                redirect(`/${locale}/?error=draft_failed`);
+            }
+            // If success, just proceed to render AssessmentFlow below
+        } else {
+            // No application and no plan -> Go to Home Services section
+            redirect(`/${locale}/#services`);
+        }
     }
 
     // Payment Logic Removed: Service First, Pay Later.
