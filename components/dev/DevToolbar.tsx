@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User, Shield, Briefcase, Power, Check } from "lucide-react";
 
-type DevRole = 'client' | 'admin' | 'agent' | null;
+type DevRole = 'client' | 'admin' | 'agent' | 'client_fresh' | null;
 
 export function DevToolbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +34,7 @@ export function DevToolbar() {
         if (role === 'admin') redirectPath = '/admin';
         else if (role === 'agent') redirectPath = '/agent';
         else if (role === 'client') redirectPath = '/dashboard';
+        else if (role === 'client_fresh') redirectPath = '/';
 
         // Force navigate + reload
         window.location.href = redirectPath;
@@ -99,6 +100,17 @@ export function DevToolbar() {
                                 <span>Agent</span>
                             </div>
                             {currentRole === 'agent' && <Check size={14} />}
+                        </button>
+
+                        <button
+                            onClick={() => setRole('client_fresh')}
+                            className={`w-full flex items-center justify-between p-2 rounded-lg text-sm transition-colors ${currentRole === 'client_fresh' ? 'bg-green-50 text-green-700 border border-green-200' : 'hover:bg-gray-50 text-gray-700'}`}
+                        >
+                            <div className="flex items-center gap-2">
+                                <User size={16} />
+                                <span>New Applicant (Clean)</span>
+                            </div>
+                            {currentRole === 'client_fresh' && <Check size={14} />}
                         </button>
 
                         <div className="border-t pt-2 mt-2">

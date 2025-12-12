@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export type DevUserRole = 'client' | 'admin' | 'agent';
+export type DevUserRole = 'client' | 'admin' | 'agent' | 'client_fresh';
 
 export const DEV_USERS: Record<DevUserRole, { id: string; email: string; role: DevUserRole }> = {
     client: {
@@ -18,6 +18,11 @@ export const DEV_USERS: Record<DevUserRole, { id: string; email: string; role: D
         id: '00000000-0000-0000-0000-000000000003',
         email: 'dev_agent@example.com',
         role: 'agent'
+    },
+    client_fresh: {
+        id: '00000000-0000-0000-0000-000000000004',
+        email: 'dev_fresh@example.com',
+        role: 'client_fresh'
     }
 };
 

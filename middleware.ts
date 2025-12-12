@@ -60,7 +60,9 @@ export default async function middleware(request: NextRequest) {
     if (isDev && devUserRole) {
         // Mock User for Middleware
         currentUser = { id: 'dev-id', role: 'authenticated' } as any;
-        currentRole = devUserRole;
+        // Map 'client_fresh' to 'client' for role checks, OR keep it distinct if we want special routing
+        // For general role checks, 'client_fresh' behaves like 'client'
+        currentRole = devUserRole === 'client_fresh' ? 'client' : devUserRole;
     } else if (user) {
         // Fetch User Role from Real DB
         const { data: profile } = await supabase
@@ -99,6 +101,9 @@ export default async function middleware(request: NextRequest) {
                 if (!pathname.includes('/agent')) {
                     return NextResponse.redirect(new URL(`/${locale}/agent`, request.url));
                 }
+            } else if (currentRole === 'client_fresh') {
+                // client_fresh stays on /dashboard
+                // No redirect needed if already on /dashboard
             }
             // Client stays on /dashboard
         }
