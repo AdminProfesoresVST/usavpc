@@ -55,9 +55,12 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             if (isDev) {
                 extractedName = "ALEXANDER HAMILTON";
                 passportNum = "987654321";
-            } else if (nameMatch) {
+            } else if (nameMatch && passportNumberMatch) {
                 extractedName = (nameMatch[2] + " " + nameMatch[1]).replace(/</g, ' ');
-                passportNum = passportNumberMatch ? passportNumberMatch[0] : "A12345678";
+                passportNum = passportNumberMatch[0];
+            } else {
+                // No valid data found
+                throw new Error("No passport data detected");
             }
 
             setScannedData({
@@ -68,11 +71,8 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
 
         } catch (error) {
             console.error("OCR Error:", error);
-            setScannedData({
-                name: "ERROR READING",
-                passportNumber: "MANUAL ENTRY REQ",
-                country: "UNKNOWN"
-            });
+            setScannedData(null);
+            alert("No valid passport detected. Please use a clear image or try again."); // Simple alert for now, or use a UI state
         } finally {
             setScanning(false);
         }
