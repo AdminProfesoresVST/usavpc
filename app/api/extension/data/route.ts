@@ -29,7 +29,18 @@ export async function GET(req: Request) {
 
         if (targetAppId) {
             // Admin Mode: Fetch specific application
-            // Note: Strict Admin Role check should be enforced here in production
+            // SECURITY: Enforce Strict Admin Role Check
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+
+            if (profile?.role !== 'admin' && profile?.role !== 'agent') {
+                // Return 403 Forbidden if trying to access another user's data without privileges
+                return NextResponse.json({ error: "Forbidden: Insufficient privileges" }, { status: 403 });
+            }
+
             query = query.eq("id", targetAppId);
         } else {
             // User Mode: Fetch own application

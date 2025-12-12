@@ -4,14 +4,36 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- TABLA 1: PERFILES DE USUARIO (Datos fijos)
-CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- ID único
-    email TEXT UNIQUE NOT NULL, -- Login
-    encrypted_password TEXT, -- Hash de seguridad (Managed by Supabase Auth usually, but keeping for reference)
-    phone_number TEXT,
-    passport_photo_url TEXT, -- Link al bucket seguro de Supabase Storage
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- TABLA 1: PERFILES DE USUARIO (Data Sync with Auth)
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE, -- 1:1 Link with Supabase Auth
+    email TEXT, -- Copied from auth.users for easy access
+    role TEXT DEFAULT 'client', -- 'client', 'admin', 'agent', 'client_fresh'
+    first_name TEXT,
+    last_name TEXT,
+    phone TEXT,
+    visa_score_status TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Enable RLS
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Profiles Policies
+CREATE POLICY "Users can view own profile" ON public.profiles
+    FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile" ON public.profiles
+    FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Admins can view all profiles" ON public.profiles
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM public.profiles 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
 
 -- TABLA 2: APLICACIONES (El corazón del sistema)
 CREATE TABLE IF NOT EXISTS applications (
