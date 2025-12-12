@@ -16,8 +16,10 @@ interface Application {
     status: ApplicationStatus;
     created_at: string;
     ds160_payload: DS160Payload;
-    users?: {
+    profiles?: {
         email: string;
+        first_name?: string;
+        last_name?: string;
     };
 }
 
@@ -92,7 +94,7 @@ export function KanbanBoard({ applications: initialApps }: KanbanBoardProps) {
 
                                         <div className="mb-3">
                                             <p className="font-semibold text-sm text-gray-900">
-                                                {app.users?.email || "Unknown User"}
+                                                {app.profiles?.email || "Unknown User"}
                                             </p>
                                             <p className="text-xs text-gray-500">
                                                 {new Date(app.created_at).toLocaleDateString()}

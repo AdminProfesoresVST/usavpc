@@ -29,8 +29,10 @@ export default async function AgentDashboard() {
         .from("applications")
         .select(`
             *,
-            users (
-                email
+            profiles (
+                email,
+                first_name,
+                last_name
             )
         `)
         .order("created_at", { ascending: false });

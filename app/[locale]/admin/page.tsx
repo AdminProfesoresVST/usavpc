@@ -44,8 +44,10 @@ export default async function AdminDashboard() {
         .from("applications")
         .select(`
             *,
-            users (
-                email
+            profiles (
+                email,
+                first_name,
+                last_name
             )
         `)
         .order("created_at", { ascending: false });

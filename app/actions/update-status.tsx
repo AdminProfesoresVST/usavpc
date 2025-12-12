@@ -48,7 +48,7 @@ export async function updateStatus(applicationId: string, newStatus: string) {
             // 1. Fetch full application data
             const { data: appData } = await supabase
                 .from("applications")
-                .select(`*, users (email)`)
+                .select(`*, profiles (email)`)
                 .eq("id", applicationId)
                 .single();
 
@@ -67,7 +67,7 @@ export async function updateStatus(applicationId: string, newStatus: string) {
             // 3. Send Email
             const { sendEmail } = await import('@/lib/email/client');
             await sendEmail({
-                to: appData.users.email,
+                to: appData.profiles.email,
                 subject: t('applicationCompletedSubject'),
                 html: `
                         <h1>${t('applicationCompletedHeader')}</h1>
