@@ -140,6 +140,39 @@
             "start": "Iniciar Avaliação",
             "login": "Entrar"
         },
+        "Menu": {
+            "mainMenu": "Menu Principal",
+            "account": "Minha Conta"
+        },
+        "Roles": {
+            "applicant": "Requerente",
+            "admin": "Admin",
+            "agent": "Agente"
+        },
+        "Mobile": {
+            "title": "Centro de Processamento de Vistos",
+            "subtitle": "Assistência Profissional de Inscrição",
+            "officialService": "Serviço Oficial",
+            "heroTitle": "Visto EUA",
+            "heroSubtitle": "Inscrição Assistida por IA",
+            "startApplication": "Iniciar Nova Inscrição",
+            "selectPacket": "Selecionar Pacote",
+            "comparePlans": "Comparar Planos",
+            "Plans": {
+                "full": {
+                    "title": "Concierge Completo",
+                    "desc": "Nós cuidamos de tudo"
+                },
+                "diy": {
+                    "title": "Auditoria DIY",
+                    "desc": "Revisão e Relatório de IA"
+                },
+                "simulator": {
+                    "title": "Simulador",
+                    "desc": "Prática de Entrevista"
+                }
+            }
+        },
         "pricing": {
             "title": "Preços Simples e Transparentes",
             "subtitle": "Escolha o plano que se adapte às suas necessidades.",
@@ -200,6 +233,16 @@
             "feature3": "Feedback de Confiança Instantâneo",
             "price": "$29",
             "cta": "Iniciar Simulador"
+        },
+        "OptionD": {
+            "title": "3. Solicitar Agendamento Consular",
+            "subtitle": "Apenas se você já preencheu o formulário DS-160.",
+            "desc": "Já tem seu formulário pronto? Ajudamos você a encontrar o agendamento mais rápido possível. Não perca tempo procurando vagas no calendário.",
+            "feature1": "Busca de Agendamento",
+            "feature2": "Alertas de Vagas",
+            "feature3": "Gestão de Calendário",
+            "price": "$49",
+            "cta": "Buscar Agendamento"
         }
     },
     "About": {

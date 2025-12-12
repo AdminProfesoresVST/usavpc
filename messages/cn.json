@@ -140,6 +140,39 @@
             "start": "开始评估",
             "login": "登录"
         },
+        "Menu": {
+            "mainMenu": "主菜单",
+            "account": "我的账户"
+        },
+        "Roles": {
+            "applicant": "申请人",
+            "admin": "管理员",
+            "agent": "代理"
+        },
+        "Mobile": {
+            "title": "签证处理中心",
+            "subtitle": "专业申请协助",
+            "officialService": "官方服务",
+            "heroTitle": "美国签证",
+            "heroSubtitle": "AI 辅助申请",
+            "startApplication": "开始新申请",
+            "selectPacket": "选择套餐",
+            "comparePlans": "比较计划",
+            "Plans": {
+                "full": {
+                    "title": "全程礼宾",
+                    "desc": "我们处理一切"
+                },
+                "diy": {
+                    "title": "DIY 审计",
+                    "desc": "AI 审查与报告"
+                },
+                "simulator": {
+                    "title": "模拟器",
+                    "desc": "面试练习"
+                }
+            }
+        },
         "pricing": {
             "title": "简单透明的定价",
             "subtitle": "选择适合您需求的计划。",
@@ -200,6 +233,16 @@
             "feature3": "即时信心反馈",
             "price": "$29",
             "cta": "启动模拟器"
+        },
+        "OptionD": {
+            "title": "3. 申请领事预约",
+            "subtitle": "仅限您已填写 DS-160 表格的情况。",
+            "desc": "表格已经准备好了？我们帮您寻找尽可能快的预约。不要在日历上浪费时间寻找空位。",
+            "feature1": "预约搜索",
+            "feature2": "空位提醒",
+            "feature3": "日历管理",
+            "price": "$49",
+            "cta": "查找预约"
         }
     },
     "About": {

@@ -145,6 +145,39 @@
             "start": "Start Assessment",
             "login": "Login"
         },
+        "Menu": {
+            "mainMenu": "Main Menu",
+            "account": "My Account"
+        },
+        "Roles": {
+            "applicant": "Applicant",
+            "admin": "Admin",
+            "agent": "Agent"
+        },
+        "Mobile": {
+            "title": "Visa Processing Center",
+            "subtitle": "Professional Application Assistance",
+            "officialService": "Official Service",
+            "heroTitle": "Visa USA",
+            "heroSubtitle": "AI-Assisted Application",
+            "startApplication": "Start New Application",
+            "selectPacket": "Select Package",
+            "comparePlans": "Compare Plans",
+            "Plans": {
+                "full": {
+                    "title": "Full Concierge",
+                    "desc": "We handle everything"
+                },
+                "diy": {
+                    "title": "DIY Audit",
+                    "desc": "AI Review & Report"
+                },
+                "simulator": {
+                    "title": "Simulator",
+                    "desc": "Interview Practice"
+                }
+            }
+        },
         "pricing": {
             "title": "Simple, Transparent Pricing",
             "subtitle": "Choose the plan that fits your needs.",
@@ -205,6 +238,16 @@
             "feature3": "Instant Confidence Feedback",
             "price": "$29",
             "cta": "Start Simulator"
+        },
+        "OptionD": {
+            "title": "3. Request Consular Appointment",
+            "subtitle": "Only if you have already filled out the DS-160 form.",
+            "desc": "Already have your form ready? We help you find the fastest appointment possible. Don't waste time searching for slots in the calendar.",
+            "feature1": "Appointment Search",
+            "feature2": "Slot Alerts",
+            "feature3": "Calendar Management",
+            "price": "$49",
+            "cta": "Find Appointment"
         }
     },
     "About": {

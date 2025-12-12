@@ -140,6 +140,39 @@
             "start": "Commencer l'Évaluation",
             "login": "Connexion"
         },
+        "Menu": {
+            "mainMenu": "Menu Principal",
+            "account": "Mon Compte"
+        },
+        "Roles": {
+            "applicant": "Candidat",
+            "admin": "Administrateur",
+            "agent": "Agent"
+        },
+        "Mobile": {
+            "title": "Centre de Traitement des Visas",
+            "subtitle": "Assistance Professionnelle de Demande",
+            "officialService": "Service Officiel",
+            "heroTitle": "Visa USA",
+            "heroSubtitle": "Candidature Assistée par IA",
+            "startApplication": "Commencer une Nouvelle Demande",
+            "selectPacket": "Sélectionner un Forfait",
+            "comparePlans": "Comparer les Plans",
+            "Plans": {
+                "full": {
+                    "title": "Conciergerie Complète",
+                    "desc": "Nous gérons tout"
+                },
+                "diy": {
+                    "title": "Audit DIY",
+                    "desc": "Revue par IA & Rapport"
+                },
+                "simulator": {
+                    "title": "Simulateur",
+                    "desc": "Pratique d'Entretien"
+                }
+            }
+        },
         "pricing": {
             "title": "Tarification Simple et Transparente",
             "subtitle": "Choisissez le plan qui correspond à vos besoins.",
@@ -200,6 +233,16 @@
             "feature3": "Retour de Confiance Instantané",
             "price": "29 $",
             "cta": "Lancer le Simulateur"
+        },
+        "OptionD": {
+            "title": "3. Demander un Rendez-vous Consulaire",
+            "subtitle": "Seulement si vous avez déjà rempli le formulaire DS-160.",
+            "desc": "Vous avez déjà votre formulaire prêt ? Nous vous aidons à trouver le rendez-vous le plus rapide possible. Ne perdez pas de temps à chercher des créneaux dans le calendrier.",
+            "feature1": "Recherche de Rendez-vous",
+            "feature2": "Alertes de Créneaux",
+            "feature3": "Gestion de Calendrier",
+            "price": "49 $",
+            "cta": "Trouver un Rendez-vous"
         }
     },
     "About": {
