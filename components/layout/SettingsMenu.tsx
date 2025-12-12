@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { User, FileText, Shield, HelpCircle, LogOut, Settings } from "lucide-react";
 import { Link } from "@/src/i18n/routing";
 import { useTranslations } from "next-intl";
+import { LanguageSelector } from "./LanguageSelector";
 
 export function SettingsMenu({ children }: { children: React.ReactNode }) {
     const t = useTranslations();
@@ -80,6 +81,13 @@ export function SettingsMenu({ children }: { children: React.ReactNode }) {
                     })}
 
                     <div className="h-px bg-gray-100 my-2" />
+
+                    <div className="px-4 py-2">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                            {t('Common.Menu.language')}
+                        </p>
+                        <LanguageSelector />
+                    </div>
 
                     <Button variant="ghost" className="w-full justify-start gap-4 p-4 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl h-auto">
                         <div className="p-2 rounded-lg bg-red-50">
