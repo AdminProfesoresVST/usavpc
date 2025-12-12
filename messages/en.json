@@ -302,7 +302,8 @@
         "sendingBtn": "Sending Link...",
         "success": "Check your email for the login link!",
         "noAccount": "Don't have an account?",
-        "createAccount": "Create Account"
+        "createAccount": "Create Account",
+        "googleBtn": "Continue with Google"
     },
     "Upsell": {
         "title": "Maximize Your Approval Chances",

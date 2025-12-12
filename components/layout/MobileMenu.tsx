@@ -48,22 +48,22 @@ export function MobileMenu({ className }: { className?: string }) {
 
                         <Link href="/" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition-colors">
                             <Home className="h-5 w-5 text-trust-navy" />
-                            <span className="font-medium text-sm">{t('Common.Nav.home')}</span>
+                            <span className="font-medium text-sm">{t('Common.nav.home')}</span>
                         </Link>
 
                         <Link href="/#services" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition-colors">
                             <Briefcase className="h-5 w-5 text-trust-navy" />
-                            <span className="font-medium text-sm">{t('Common.Nav.services')}</span>
+                            <span className="font-medium text-sm">{t('Common.nav.services')}</span>
                         </Link>
 
                         <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition-colors">
                             <FileText className="h-5 w-5 text-trust-navy" />
-                            <span className="font-medium text-sm">{t('Common.Nav.dashboard')}</span>
+                            <span className="font-medium text-sm">{t('Common.nav.dashboard')}</span>
                         </Link>
 
                         <Link href="/contact" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition-colors">
                             <Phone className="h-5 w-5 text-trust-navy" />
-                            <span className="font-medium text-sm">{t('Common.Nav.contact')}</span>
+                            <span className="font-medium text-sm">{t('Common.nav.contact')}</span>
                         </Link>
 
                         <div className="px-4 py-2">
@@ -78,7 +78,7 @@ export function MobileMenu({ className }: { className?: string }) {
 
                         <Link href="/login" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-trust-navy font-bold transition-colors">
                             <LogIn className="h-5 w-5" />
-                            <span className="font-medium text-sm">{t('Common.Nav.login')}</span>
+                            <span className="font-medium text-sm">{t('Common.nav.login')}</span>
                         </Link>
                     </nav>
                 </div>

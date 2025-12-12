@@ -28,8 +28,15 @@ export function DevToolbar() {
             document.cookie = `x-dev-user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
         }
         setCurrentRole(role);
-        router.refresh(); // Refresh server components
-        window.location.reload(); // Hard reload to force middleware and auth check updates
+
+        // Determine redirect path
+        let redirectPath = '/';
+        if (role === 'admin') redirectPath = '/admin';
+        else if (role === 'agent') redirectPath = '/agent';
+        else if (role === 'client') redirectPath = '/dashboard';
+
+        // Force navigate + reload
+        window.location.href = redirectPath;
     };
 
     return (
