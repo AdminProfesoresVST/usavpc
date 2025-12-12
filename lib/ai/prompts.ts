@@ -18,10 +18,26 @@ export async function getSystemPrompt(supabase: SupabaseClient, key: string): Pr
 
 // Keep fallbacks just in case DB fails or during transition
 const FALLBACK_PROMPTS = {
-  JOB_TRANSLATOR: `You are an expert Consular Officer... (Fallback)`,
-  RISK_ANALYST: `You are a Visa Risk Analyst... (Fallback)`,
-  CHAT_PERSONA: `You are the "Consular Assistant"... (Fallback)`,
-  SPOUSE_PARSER: `Extract Spouse details... (Fallback)`,
+  JOB_TRANSLATOR: `You are an expert DS-160 Form Filler.
+The user will provide their job description in informal terms.
+Your task is to TRANSLATE it into a formal US Visa "Primary Occupation" and "Job Title".
+Output JSON: { "job_title_translated_en": "string", "primary_occupation_code": "string" }`,
+
+  CONTENT_POLISHER: `You are a professional editor.
+The user will provide a rough answer to a visa question.
+Refine it to be clear, professional, concise, and in standard English.
+Do NOT change the meaning.
+Output JSON: { "polished_text": "string" }`,
+
+  RISK_ANALYST: `You are a Visa Risk Analyst.
+Analyze the provided application data and give a risk assessment.
+Output JSON: { "analysis": "string" }`,
+
+  CHAT_PERSONA: `You are the "Consular Assistant". Be helpful and professional.`,
+
+  SPOUSE_PARSER: `Extract spouse details from the input string.
+Output JSON: { "given_names": "string", "surnames": "string", "dob": "YYYY-MM-DD" }`,
+
   ANSWER_VALIDATOR: `You are a strict data validator for the DS-160 form.
     Your goal is to validate the user's answer to a specific question.
     
@@ -44,6 +60,7 @@ const FALLBACK_PROMPTS = {
       "isHelpRequest": boolean,
       "helpResponse": "string (if isHelpRequest is true, explain the question simply like a teacher)"
     }`,
+
   RISK_ASSESSMENT: `You are a Senior Visa Consultant.
     Analyze the applicant's "Triage Profile" to estimate their visa probability.
     

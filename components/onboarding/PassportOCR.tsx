@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 
 interface PassportOCRProps {
-    onComplete: () => void;
+    onComplete: (data: any) => void;
 }
 
 export function PassportOCR({ onComplete }: PassportOCRProps) {
@@ -48,14 +48,22 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             const nameMatch = text.match(/([A-Z]+)<([A-Z]+)/);
 
             let extractedName = "DETECTED USER";
-            if (nameMatch) {
+            let passportNum = "A12345678";
+
+            // Check for Dev Mode cookie (client-side check)
+            const isDev = document.cookie.includes('x-dev-user=applicant');
+            if (isDev) {
+                extractedName = "ALEXANDER HAMILTON";
+                passportNum = "987654321";
+            } else if (nameMatch) {
                 extractedName = (nameMatch[2] + " " + nameMatch[1]).replace(/</g, ' ');
+                passportNum = passportNumberMatch ? passportNumberMatch[0] : "A12345678";
             }
 
             setScannedData({
                 name: extractedName,
-                passportNumber: passportNumberMatch ? passportNumberMatch[0] : "A12345678",
-                country: "USA (Detected)"
+                passportNumber: passportNum,
+                country: "USA"
             });
 
         } catch (error) {
@@ -107,7 +115,7 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                     </Button>
                     <Button
                         className="flex-1 bg-trust-navy text-white"
-                        onClick={onComplete}
+                        onClick={() => onComplete(scannedData)}
                     >
                         {t('next')}
                     </Button>

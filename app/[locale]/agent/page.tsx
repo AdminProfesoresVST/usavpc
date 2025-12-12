@@ -1,4 +1,4 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { KanbanBoard } from "@/components/admin/KanbanBoard";
 import { Badge } from "@/components/ui/badge";
@@ -6,20 +6,31 @@ import { Badge } from "@/components/ui/badge";
 export default async function AgentDashboard() {
     const cookieStore = await cookies();
 
+    // 1. Get User (Supports Dev Mode)
+    const { getCurrentUser } = await import("@/lib/auth/current-user");
+    const { data: { user } } = await getCurrentUser();
+
+    if (!user) {
+        return <div className="text-red-500 p-8">Unauthorized</div>;
+    }
+
+    // Determine Client Key (Service Role for Dev, Anon for Prod)
+    const isDevUser = user.id.startsWith('00000000-0000-0000-0000-0000000000');
+    const supabaseKey = isDevUser
+        ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+        : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        supabaseKey,
         {
             cookies: {
-                get(name: string) {
-                    return cookieStore.get(name)?.value;
-                },
+                get(name: string) { return cookieStore.get(name)?.value; },
+                set(name: string, value: string, options: CookieOptions) { cookieStore.set({ name, value, ...options }); },
+                remove(name: string, options: CookieOptions) { cookieStore.set({ name, value: "", ...options }); },
             },
         }
     );
-
-    // Get current user to check role (double check, though middleware handles routing)
-    const { data: { user } } = await supabase.auth.getUser();
 
     // Fetch applications assigned to agent (or all for now, as assignment logic isn't defined)
     // For this step, we'll just show all applications but in a limited view if needed.

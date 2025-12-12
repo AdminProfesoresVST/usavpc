@@ -69,20 +69,9 @@ export async function POST(req: Request) {
             }
         }
 
-        // Get User for linking
-        const cookieStore = await cookies();
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                cookies: {
-                    get(name: string) { return cookieStore.get(name)?.value; },
-                    set(name: string, value: string, options: CookieOptions) { cookieStore.set({ name, value, ...options }); },
-                    remove(name: string, options: CookieOptions) { cookieStore.set({ name, value: "", ...options }); },
-                },
-            }
-        );
-        const { data: { user } } = await supabase.auth.getUser();
+        // Get User for linking (Supports Dev Mode)
+        const { getCurrentUser } = await import("@/lib/auth/current-user");
+        const { data: { user } } = await getCurrentUser();
 
         // Create Checkout Sessions from body params.
         const stripe = getStripe();

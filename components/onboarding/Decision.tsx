@@ -15,6 +15,7 @@ interface DecisionProps {
 export function Decision({ answers, onComplete }: DecisionProps) {
     const t = useTranslations('HomePage.Decision');
     const [analyzing, setAnalyzing] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     // Determine if complex case (refusals = yes)
     const isComplex = answers.q2 === 'yes';
@@ -92,27 +93,44 @@ export function Decision({ answers, onComplete }: DecisionProps) {
                 <Button
                     size="lg"
                     className="w-full bg-white text-[#003366] hover:bg-gray-100 font-bold text-lg py-6 shadow-lg transform transition hover:scale-105"
+                    disabled={analyzing || loading}
                     onClick={async () => {
+                        setLoading(true);
+
                         // Trigger Stripe Checkout
                         try {
                             const response = await fetch('/api/checkout', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ locale: 'en' }) // Should use current locale
+                                body: JSON.stringify({
+                                    locale: 'en',
+                                    plan: isComplex ? 'full' : 'diy'
+                                })
                             });
                             const data = await response.json();
                             if (data.url) {
                                 window.location.href = data.url;
+                            } else {
+                                console.error("Checkout Failed", data.error);
+                                onComplete(); // Fallback
                             }
                         } catch (error) {
                             console.error("Checkout Error:", error);
-                            onComplete(); // Fallback to chat if payment fails (or handle error)
+                            onComplete(); // Fallback
+                        } finally {
+                            // setLoading(false); // Don't reset if redirecting
                         }
                     }}
                 >
-                    {t('upsell.cta')}
+                    {loading ? (
+                        <span className="flex items-center">
+                            <span className="animate-spin mr-2">⏳</span> Processing...
+                        </span>
+                    ) : (
+                        t('upsell.cta')
+                    )}
                 </Button>
             </motion.div>
-        </Card>
+        </Card >
     );
 }

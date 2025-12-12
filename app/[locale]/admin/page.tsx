@@ -8,24 +8,31 @@ import { StrategyReport } from "@/components/admin/StrategyReport";
 export default async function AdminDashboard() {
     const cookieStore = await cookies();
 
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                get(name: string) {
-                    return cookieStore.get(name)?.value;
-                },
-            },
-        }
-    );
-
-    // 1. Get User
-    const { data: { user } } = await supabase.auth.getUser();
+    // 1. Get User (Supports Dev Mode)
+    const { getCurrentUser } = await import("@/lib/auth/current-user");
+    const { data: { user } } = await getCurrentUser();
 
     if (!user) {
         return <div className="text-red-500 p-8">Unauthorized</div>;
     }
+
+    // Determine Client Key (Service Role for Dev, Anon for Prod)
+    const isDevUser = user.id.startsWith('00000000-0000-0000-0000-0000000000');
+    const supabaseKey = isDevUser
+        ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+        : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        supabaseKey,
+        {
+            cookies: {
+                get(name: string) { return cookieStore.get(name)?.value; },
+                set(name: string, value: string, options: CookieOptions) { cookieStore.set({ name, value, ...options }); },
+                remove(name: string, options: CookieOptions) { cookieStore.set({ name, value: "", ...options }); },
+            },
+        }
+    );
 
     // 2. Check Role
     const { data: profile } = await supabase

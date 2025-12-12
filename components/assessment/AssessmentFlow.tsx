@@ -17,6 +17,7 @@ export function AssessmentFlow() {
     const t = useTranslations('Chat');
     const [step, setStep] = useState<AssessmentStep>('ocr');
     const [triageAnswers, setTriageAnswers] = useState<any>({});
+    const [ocrData, setOcrData] = useState<any>(null);
     const router = useRouter();
     const locale = useLocale();
 
@@ -51,7 +52,10 @@ export function AssessmentFlow() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                             >
-                                <PassportOCR onComplete={() => setStep('triage')} />
+                                <PassportOCR onComplete={(data) => {
+                                    setOcrData(data);
+                                    setStep('triage');
+                                }} />
                             </motion.div>
                         )}
 
@@ -88,7 +92,10 @@ export function AssessmentFlow() {
                                 exit={{ opacity: 0, y: -20 }}
                             >
                                 <h1 className="text-2xl font-serif font-bold mb-6 text-white">{t('title')}</h1>
-                                <ChatInterface onComplete={handleChatComplete} />
+                                <ChatInterface
+                                    initialData={{ ...ocrData, ...triageAnswers }}
+                                    onComplete={handleChatComplete}
+                                />
                             </motion.div>
                         )}
                     </AnimatePresence>

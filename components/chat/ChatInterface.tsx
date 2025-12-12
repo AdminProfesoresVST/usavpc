@@ -29,7 +29,7 @@ interface QuestionState {
     context?: string;
 }
 
-export function ChatInterface({ onComplete }: { onComplete?: () => void }) {
+export function ChatInterface({ onComplete, initialData }: { onComplete?: () => void, initialData?: any }) {
     const t = useTranslations('Chat');
     const locale = useLocale();
     const [messages, setMessages] = useState<Message[]>([]);
@@ -44,7 +44,7 @@ export function ChatInterface({ onComplete }: { onComplete?: () => void }) {
                 const response = await fetch("/api/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ answer: null }),
+                    body: JSON.stringify({ answer: null, context: initialData }),
                 });
                 const data = await response.json();
 

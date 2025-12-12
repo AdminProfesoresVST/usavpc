@@ -16,29 +16,31 @@ export async function POST(req: Request) {
         });
 
         const cookieStore = await cookies();
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                cookies: {
-                    get(name: string) {
-                        return cookieStore.get(name)?.value;
-                    },
-                    set(name: string, value: string, options: CookieOptions) {
-                        cookieStore.set({ name, value, ...options });
-                    },
-                    remove(name: string, options: CookieOptions) {
-                        cookieStore.set({ name, value: "", ...options });
-                    },
-                },
-            }
-        );
+        // 1. Auth Check (Use getCurrentUser to support Dev Mode)
+        const { getCurrentUser } = await import("@/lib/auth/current-user");
+        const { data: { user }, error: authError } = await getCurrentUser();
 
-        // 1. Auth Check
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+
+        // 2. Setup Supabase Client (Use Service Role for Dev Users to bypass RLS)
+        const isDevUser = user.id.startsWith('00000000-0000-0000-0000-0000000000');
+        const supabaseKey = isDevUser
+            ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+            : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            supabaseKey,
+            {
+                cookies: {
+                    get(name: string) { return cookieStore.get(name)?.value; },
+                    set(name: string, value: string, options: CookieOptions) { cookieStore.set({ name, value, ...options }); },
+                    remove(name: string, options: CookieOptions) { cookieStore.set({ name, value: "", ...options }); },
+                },
+            }
+        );
 
         // 3. Process User Input (if any)
         const { answer, duration, locale } = await req.json();

@@ -31,15 +31,27 @@ export class DS160StateMachine {
     }
 
     public async getNextStep(): Promise<QuestionState | null> {
-        // 1. Fetch Flow Definition (Cached in real app, here we fetch)
-        const { data: steps, error } = await this.supabase
+        // 1. Fetch Flow Definition
+        let steps = [];
+        const { data, error } = await this.supabase
             .from('ai_interview_flow')
             .select('*')
             .order('order_index', { ascending: true });
 
-        if (error || !steps) {
-            console.error("Failed to fetch flow", error);
-            return null;
+        if (error || !data || data.length === 0) {
+            // Fallback to hardcoded flow if DB is empty (Supports Dev Mode without Seed)
+            const { FALLBACK_QUESTIONS } = await import("./questions");
+            steps = FALLBACK_QUESTIONS.map(q => ({
+                field_key: q.field,
+                question_es: q.question,
+                question_en: q.question_en, // Ensure fallback has this
+                input_type: q.input_type,
+                options: q.options,
+                context: q.context,
+                required_logic: (q as any).logic
+            }));
+        } else {
+            steps = data;
         }
 
         // 2. Iterate and find first missing field
@@ -49,10 +61,7 @@ export class DS160StateMachine {
                 let questionText = step.question_es; // Default fallback matches source of truth
 
                 if (this.locale === 'en' && step.question_en) questionText = step.question_en;
-                else if (this.locale === 'fr' && step.question_fr) questionText = step.question_fr;
-                else if (this.locale === 'cn' && step.question_cn) questionText = step.question_cn;
-                else if (this.locale === 'pt' && step.question_pt) questionText = step.question_pt;
-                else if (this.locale === 'hi' && step.question_hi) questionText = step.question_hi;
+                // Add other locales as needed
 
                 return {
                     field: step.field_key,

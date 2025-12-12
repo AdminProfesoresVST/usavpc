@@ -49,7 +49,8 @@
                 "passport": "Passport Number",
                 "country": "Country"
             },
-            "next": "Confirm & Continue"
+            "next": "Confirm & Continue",
+            "button": "Scan Passport"
         },
         "Triage": {
             "q1": {
