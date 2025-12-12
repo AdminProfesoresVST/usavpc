@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Home, Briefcase, FileText, Phone, LogIn } from "lucide-react";
+import { LanguageSelector } from "./LanguageSelector";
 
 export function MobileMenu({ className }: { className?: string }) {
     const t = useTranslations();
@@ -64,6 +65,10 @@ export function MobileMenu({ className }: { className?: string }) {
                             <Phone className="h-5 w-5 text-trust-navy" />
                             <span className="font-medium text-sm">{t('Common.Nav.contact')}</span>
                         </Link>
+
+                        <div className="px-4 py-2">
+                            <LanguageSelector />
+                        </div>
 
                         <div className="my-2 border-t border-gray-100"></div>
 

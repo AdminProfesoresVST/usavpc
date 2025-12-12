@@ -179,6 +179,8 @@
     },
     "Services": {
         "title": "Soluciones de Gestión Segura",
+        "pageTitle": "Seleccionar Plan",
+        "pageSubtitle": "Elija la asistencia adecuada para usted",
         "subtitle": "Evite errores técnicos que causan rechazos. Auditoría experta y validación previa.",
         "description": "Tecnología IA + Revisión Humana para una solicitud perfecta.",
         "OptionA": {

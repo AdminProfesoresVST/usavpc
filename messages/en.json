@@ -204,8 +204,10 @@
         }
     },
     "Services": {
-        "title": "Secure Application Management",
-        "subtitle": "Professional DS-160 assistance to prevent delays and denials.",
+        "title": "Secure Management Solutions",
+        "pageTitle": "Select Plan",
+        "pageSubtitle": "Choose the right assistance for you",
+        "subtitle": "Avoid technical errors that cause rejections. Expert audit and pre-validation.",
         "description": "AI Technology + Human Review for a perfect application.",
         "OptionA": {
             "title": "VisaCheck & Strategy Audit (Diagnostic Only)",

@@ -274,8 +274,10 @@
         "errorMessage": "发送消息失败。请重试。"
     },
     "Login": {
-        "title": "客户门户登录",
-        "subtitle": "安全访问您的申请状态和文件。",
+        "title": "安全管理解决方案",
+        "pageTitle": "选择计划",
+        "pageSubtitle": "选择适合您的协助",
+        "subtitle": "避免导致拒签的技术错误。专家审计和预验证。",
         "emailLabel": "电子邮件地址",
         "submitBtn": "发送魔术链接",
         "sendingBtn": "发送链接...",

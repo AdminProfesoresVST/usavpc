@@ -12,10 +12,10 @@ export function MobileServices() {
             {/* App Header */}
             <div className="bg-white px-6 pt-12 pb-6 border-b border-gray-100 sticky top-0 z-10">
                 <h1 className="text-2xl font-bold text-trust-navy">
-                    Select Plan
+                    {t('pageTitle')}
                 </h1>
                 <p className="text-sm text-gray-500 mt-1">
-                    Choose the right assistance for you
+                    {t('pageSubtitle')}
                 </p>
             </div>
 
