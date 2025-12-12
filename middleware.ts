@@ -50,40 +50,51 @@ export default async function middleware(request: NextRequest) {
     }
 
     // 4. Role-Based Routing
-    // Only check if user is logged in
-    if (user) {
-        // Fetch User Role
+    // Check for Dev Mode Cookie first
+    const isDev = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
+    const devUserRole = request.cookies.get('x-dev-user')?.value;
+
+    let currentUser = user;
+    let currentRole = null;
+
+    if (isDev && devUserRole) {
+        // Mock User for Middleware
+        currentUser = { id: 'dev-id', role: 'authenticated' } as any;
+        currentRole = devUserRole;
+    } else if (user) {
+        // Fetch User Role from Real DB
         const { data: profile } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', user.id)
             .single();
+        currentRole = profile?.role || 'client';
+    }
 
-        const role = profile?.role || 'client';
+    if (currentUser && currentRole) {
         const pathname = request.nextUrl.pathname;
 
         // Extract locale to preserve it
         const locale = pathname.split('/')[1] || 'es'; // default implication
 
         // Protect Admin Routes
-        if (pathname.includes('/admin') && role !== 'admin') {
+        if (pathname.includes('/admin') && currentRole !== 'admin') {
             return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
         }
 
         // Protect Agent Routes
-        if (pathname.includes('/agent') && role !== 'agent' && role !== 'admin') {
+        if (pathname.includes('/agent') && currentRole !== 'agent' && currentRole !== 'admin') {
             return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
         }
 
         // Redirect Logged-in Users from Landing Page to their specific Dashboard
-        // (Optional: can be annoying if they want to read info, let's just do specific dashboard redirections if they try to go to generic dashboard)
         if (pathname.endsWith('/dashboard')) {
-            if (role === 'admin') {
+            if (currentRole === 'admin') {
                 // Admin goes to admin dashboard
                 if (!pathname.includes('/admin')) {
                     return NextResponse.redirect(new URL(`/${locale}/admin`, request.url));
                 }
-            } else if (role === 'agent') {
+            } else if (currentRole === 'agent') {
                 // Agent goes to agent dashboard
                 if (!pathname.includes('/agent')) {
                     return NextResponse.redirect(new URL(`/${locale}/agent`, request.url));

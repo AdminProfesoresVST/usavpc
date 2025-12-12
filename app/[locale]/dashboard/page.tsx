@@ -12,6 +12,8 @@ import { getTranslations } from 'next-intl/server';
 
 import { PaymentGate } from "@/components/dashboard/PaymentGate";
 
+import { getCurrentUser } from "@/lib/auth/current-user";
+
 export default async function DashboardPage() {
     const t = await getTranslations('Dashboard');
     const cookieStore = await cookies();
@@ -29,7 +31,7 @@ export default async function DashboardPage() {
 
     const {
         data: { user },
-    } = await supabase.auth.getUser();
+    } = await getCurrentUser();
 
     if (!user) {
         redirect("/login");

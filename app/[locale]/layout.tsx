@@ -4,6 +4,7 @@ import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { DevToolbar } from "@/components/dev/DevToolbar";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
@@ -53,6 +54,7 @@ export default async function RootLayout({
 
             {/* Mobile Nav fixed at bottom */}
             <MobileNav />
+            <DevToolbar />
           </AnalyticsProvider>
         </NextIntlClientProvider>
       </body>
