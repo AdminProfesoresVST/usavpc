@@ -2,6 +2,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getCurrentUser } from "@/lib/auth/current-user";
 
 export async function POST(req: Request) {
     try {
@@ -9,9 +10,25 @@ export async function POST(req: Request) {
         const { plan, locale } = body;
 
         const cookieStore = await cookies();
+        // 1. Auth Check (Use getCurrentUser to support Dev Mode)
+        console.log("DraftAPI: Checking Auth...");
+        const { data: { user }, error: authError } = await getCurrentUser();
+
+        if (authError || !user) {
+            console.log("DraftAPI: Unauthorized or no user found.", authError);
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        console.log("DraftAPI: User found:", user.id);
+
+        // 2. Setup Supabase Client (Use Service Role for Dev Users to bypass RLS)
+        const isDevUser = user.id.startsWith('00000000-0000-0000-0000-0000000000');
+        const supabaseKey = isDevUser
+            ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+            : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
         const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            supabaseKey,
             {
                 cookies: {
                     get(name: string) {
@@ -20,15 +37,6 @@ export async function POST(req: Request) {
                 },
             }
         );
-
-        // 1. Auth Check
-        console.log("DraftAPI: Checking Auth...");
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError || !user) {
-            console.log("DraftAPI: Unauthorized or no user found.", authError);
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-        console.log("DraftAPI: User found:", user.id);
 
         // 2. Check if application already exists
         const { data: existingApp } = await supabase

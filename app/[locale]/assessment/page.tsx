@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AssessmentFlow } from "@/components/assessment/AssessmentFlow";
+import { getCurrentUser } from "@/lib/auth/current-user";
 
 export default async function AssessmentPage({
     params,
@@ -11,9 +12,17 @@ export default async function AssessmentPage({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const cookieStore = await cookies();
+    const { data: { user } } = await getCurrentUser();
+
+    // 2. Setup Supabase Client (Use Service Role for Dev Users to bypass RLS)
+    const isDevUser = user?.id.startsWith('00000000-0000-0000-0000-0000000000');
+    const supabaseKey = isDevUser
+        ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+        : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        supabaseKey,
         {
             cookies: {
                 get(name: string) {
@@ -22,8 +31,6 @@ export default async function AssessmentPage({
             },
         }
     );
-
-    const { data: { user } } = await supabase.auth.getUser();
 
     const { locale } = await params;
 
