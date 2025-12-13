@@ -228,9 +228,11 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                         )}>
                             <div className="flex items-end gap-2">
                                 {msg.role !== 'user' && (
-                                    <div className="h-7 w-7 rounded-full bg-[#F0F2F5] text-[#003366] flex items-center justify-center text-xs border border-gray-50 shrink-0 mb-1 font-bold">
-                                        AC
-                                    </div>
+                                    <img
+                                        src="https://ui-avatars.com/api/?name=Asistente+Consular&background=F0F2F5&color=003366"
+                                        alt="AC"
+                                        className="w-7 h-7 rounded-full mb-1 border border-gray-50 shrink-0"
+                                    />
                                 )}
 
                                 <motion.div
