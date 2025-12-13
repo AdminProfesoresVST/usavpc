@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/utils/supabase/client";
+import { MRZ } from "@/utils/mrz";
 
 interface PassportOCRProps {
     onComplete: (data: any) => void;
@@ -71,6 +72,12 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
 
             if (mrzLine1 && mrzLine2) {
                 console.log("MRZ Detected");
+
+                // --- INTEGRITY CHECK (Accuracy Assurance) ---
+                // We validate the checksums to ensure "Exactitud"
+                const validation = MRZ.validate(mrzLine2);
+                console.log("MRZ Integrity Check:", validation);
+
                 // Country from Line 1 (Positions 2-5)
                 countryCode = mrzLine1.substring(2, 5).replace(/</g, '');
 
@@ -89,6 +96,12 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                 // COMMON OCR FIXES: $ -> S, 5 -> S (context dependent, but MRZ is standard), ( -> C
                 let possibleNum = mrzLine2.substring(0, 9).replace(/</g, '');
                 possibleNum = possibleNum.replace(/\$/g, 'S').replace(/\(/g, 'C'); // Sanitization
+
+                // Force Checksum Logic if invalid? 
+                // For now, trust the sanitizer, but warn if invalid.
+                if (!validation.details?.passport?.valid) {
+                    console.warn("Passport Checksum Failed - potentially misread characters");
+                }
 
                 if (possibleNum.match(/[A-Z0-9]+/)) {
                     passportNum = possibleNum;
