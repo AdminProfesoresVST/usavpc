@@ -15,9 +15,10 @@ interface Message {
     content: string;
     timestamp: Date;
     validationResult?: {
-        original: string;
-        interpreted: string;
-        type: string;
+        original?: string;
+        interpreted?: string;
+        extractedValue?: string;
+        type?: string;
     };
 }
 
@@ -259,14 +260,20 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                             </div>
 
                             {/* Logic Mirror (Subtle corporate style) */}
-                            {msg.validationResult && msg.validationResult.type !== 'boolean' && (
+                            {msg.validationResult && (msg.validationResult.extractedValue || msg.validationResult.interpreted) && msg.role === 'assistant' && (
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className="px-2"
+                                    className="px-2 mt-1 mb-2"
                                 >
-                                    <div className="bg-yellow-50 text-yellow-800 border-l-2 border-yellow-400 px-2 py-1 text-[11px]">
-                                        Interpreted: <strong>{msg.validationResult.interpreted}</strong>
+                                    <div className="flex flex-col gap-1 ml-8 max-w-[85%]">
+                                        <div className="flex items-center gap-1.5">
+                                            <Sparkles size={12} className="text-blue-500" />
+                                            <span className="text-[10px] uppercase tracking-wider font-bold text-blue-500">IA Procesó:</span>
+                                        </div>
+                                        <div className="bg-blue-50/50 text-blue-900 border-l-2 border-blue-400 px-3 py-2 rounded-r-lg text-xs shadow-sm backdrop-blur-sm">
+                                            {msg.validationResult.extractedValue || msg.validationResult.interpreted}
+                                        </div>
                                     </div>
                                 </motion.div>
                             )}
