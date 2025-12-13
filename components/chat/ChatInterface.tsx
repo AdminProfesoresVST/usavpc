@@ -309,6 +309,7 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                         className="flex gap-2"
                     >
                         <Input
+                            type={currentQuestion?.type === 'date' ? 'date' : 'text'}
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder={t('placeholder')}
