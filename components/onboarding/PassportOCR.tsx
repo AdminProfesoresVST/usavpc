@@ -44,29 +44,71 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             const text = result.data.text;
             console.log("OCR Result:", text);
 
-            const passportNumberMatch = text.match(/[A-Z0-9]{6,9}/);
-            const nameMatch = text.match(/([A-Z]+)<([A-Z]+)/);
+            // MRZ Parsing Logic (Standard 2-line MRZ)
+            const lines = text.split('\n');
+            const mrzLine1 = lines.find(l => l.startsWith('P<'));
+            const mrzLine2Index = lines.findIndex(l => l === mrzLine1) + 1;
+            const mrzLine2 = lines[mrzLine2Index];
 
-            let extractedName = "DETECTED USER";
-            let passportNum = "A12345678";
+            // MRZ Regex Patterns
+            // Line 1: P<CCCSURNAME<<GIVEN<NAMES<<<<<<<
+            // Line 2: PASSPORT#0NATDOB...
 
-            // Check for Dev Mode cookie (client-side check)
+            let extractedName = null;
+            let passportNum = null;
+            let countryCode = "USA"; // Default to USA only if truly unknown, but try to extract.
+
+            if (mrzLine1 && mrzLine2) {
+                console.log("MRZ Detected");
+                // Country from Line 1 (Positions 2-5)
+                countryCode = mrzLine1.substring(2, 5).replace(/</g, '');
+
+                // Name Extraction
+                // P<DOMVILLACAMPA<RECIO<<OSIRIS<SEGUNDO<<<<<<<
+                // Remove 'P<DOM' prefix (5 chars)
+                const namePart = mrzLine1.substring(5);
+                const parts = namePart.split('<<');
+                if (parts.length >= 2) {
+                    const surname = parts[0].replace(/</g, ' ');
+                    const givenName = parts[1].split('<')[0].replace(/</g, ' '); // simplified
+                    extractedName = `${givenName} ${surname}`;
+                }
+
+                // Passport Number from Line 2 (First 9 chars usually, but stop at < if shorter)
+                // SC42608750...
+                const possibleNum = mrzLine2.substring(0, 9).replace(/</g, '');
+                if (possibleNum.match(/[A-Z0-9]+/)) {
+                    passportNum = possibleNum;
+                }
+            }
+
+            // Fallback Logic (if MRZ fails but text is clear)
+            if (!extractedName || !passportNum) {
+                const passportNumberMatch = text.match(/\b[A-Z0-9]{6,9}\b/);
+                // Excluding common false positives like "REPUBLICA" using length/content checks could be complex, 
+                // relying on MRZ is safer. Only strict fallback.
+            }
+
+            // Dev Mode Override
             const isDev = document.cookie.includes('x-dev-user=applicant');
+
             if (isDev) {
                 extractedName = "ALEXANDER HAMILTON";
                 passportNum = "987654321";
-            } else if (nameMatch && passportNumberMatch) {
-                extractedName = (nameMatch[2] + " " + nameMatch[1]).replace(/</g, ' ');
-                passportNum = passportNumberMatch[0];
+                countryCode = "USA";
+            } else if (extractedName && passportNum) {
+                // Formatting
+                extractedName = extractedName.toUpperCase();
+                passportNum = passportNum.toUpperCase();
             } else {
-                // No valid data found
-                throw new Error("No passport data detected");
+                // No valid MRZ or strict data found
+                throw new Error("No valid passport MRZ detected");
             }
 
             setScannedData({
                 name: extractedName,
                 passportNumber: passportNum,
-                country: "USA"
+                country: countryCode
             });
 
         } catch (error) {
