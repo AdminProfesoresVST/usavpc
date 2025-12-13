@@ -139,8 +139,8 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
             if (data.nextStep) {
                 const botMsg: Message = {
                     id: (Date.now() + 1).toString(),
-                    role: "assistant",
-                    content: data.nextStep.question,
+                    role: "assistant", // "system" role isn't used, keep assistant
+                    content: data.response || data.nextStep.question, // SHOW REFUSAL IF PRESENT
                     timestamp: new Date(),
                     validationResult: data.validationResult
                 };

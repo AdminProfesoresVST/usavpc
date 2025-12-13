@@ -153,8 +153,15 @@ export async function POST(req: Request) {
 
             // 1. Strict Validation: Ensure user is answering the question
             const validatorPromptTemplate = await getSystemPrompt(supabase, 'ANSWER_VALIDATOR');
+
+            let queryContext = currentStep.question;
+            if (currentStep.options) {
+                const optionsStr = currentStep.options.map((o: any) => `"${o.label}" (Value: ${o.value})`).join(', ');
+                queryContext += `\nValid Options: [${optionsStr}]`;
+            }
+
             const validatorPrompt = validatorPromptTemplate
-                .replace('{question}', currentStep.question)
+                .replace('{question}', queryContext)
                 .replace('{input}', answer);
 
             const validationCompletion = await openai.chat.completions.create({
@@ -384,8 +391,11 @@ export async function POST(req: Request) {
                 .eq("id", application.id);
         }
 
+        // RE-INSTANTIATE SM WITH UPDATED PAYLOAD TO ENSURE FRESH STATE
+        const smNext = new DS160StateMachine(payload, supabase, locale);
+
         // 4. Get Next Question (after update)
-        const nextStep = await sm.getNextStep();
+        const nextStep = await smNext.getNextStep();
 
         // 5. If Interview Complete, Run Risk Analysis
         let riskAnalysis = null;
