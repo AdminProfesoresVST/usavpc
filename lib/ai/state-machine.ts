@@ -61,7 +61,26 @@ export class DS160StateMachine {
                 let questionText = step.question_es; // Default fallback matches source of truth
 
                 if (this.locale === 'en' && step.question_en) questionText = step.question_en;
-                // Add other locales as needed
+
+                // SMART REPHRASING (The "Facilitator" Touch)
+                // If asking about US SSN for a non-US national, soften it.
+                if (step.field_key.includes('us_ssn') || step.field_key.includes('us_tax_id')) {
+                    const nat = this.getDeepValue(this.payload, 'ds160_data.personal.nationality');
+                    const isUS = nat && (nat.toLowerCase().includes('united states') || nat.toLowerCase().includes('usa') || nat.toLowerCase().includes('eeuu'));
+
+                    if (!isUS) {
+                        // Default assumption for foreigners: they don't have it.
+                        const prefix = this.locale === 'es'
+                            ? "Como ciudadano no estadounidense, esto generalmente no aplica. ¿Tienes un número de Seguro Social de EE.UU.? "
+                            : "As a non-US citizen, this usually doesn't apply. Do you have a US Social Security Number? ";
+
+                        const suffix = this.locale === 'es'
+                            ? "(Si no tienes, responde 'No' y yo pondré 'Does Not Apply')"
+                            : "(If no, just say 'No' and I'll mark 'Does Not Apply')";
+
+                        questionText = prefix + suffix;
+                    }
+                }
 
                 return {
                     field: step.field_key,

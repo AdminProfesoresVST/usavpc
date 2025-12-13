@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, User, Bot, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Languages, MessageSquare, Send, Sparkles, X, PlusCircle, Bot, User } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -64,9 +64,11 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
         initChat();
     }, []);
 
+    const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const startTimeRef = useRef<number>(Date.now());
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,14 +78,22 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
         scrollToBottom();
     }, [messages]);
 
-    const startTimeRef = useRef<number>(Date.now());
-
     // Reset timer when question changes
     useEffect(() => {
         if (currentQuestion) {
             startTimeRef.current = Date.now();
         }
     }, [currentQuestion]);
+
+    // Auto-focus logic
+    useEffect(() => {
+        if (!isTyping && currentQuestion?.type !== 'select') {
+            // Small delay to ensure render is complete
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100);
+        }
+    }, [isTyping, currentQuestion]);
 
     const handleSend = async (answerOverride?: string) => {
         const answerToSend = answerOverride || input;
@@ -95,11 +105,10 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
         const userMsg: Message = {
             id: Date.now().toString(),
             role: "user",
-            content: answerToSend, // For display, we might want to show the label if it was a select
+            content: answerToSend,
             timestamp: new Date(),
         };
 
-        // If it was a select, find the label for display
         if (currentQuestion?.type === 'select' && currentQuestion.options) {
             const selectedOption = currentQuestion.options.find(o => o.value === answerToSend);
             if (selectedOption) userMsg.content = selectedOption.label;
@@ -108,7 +117,7 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
         setMessages(prev => [...prev, userMsg]);
         setInput("");
         setIsTyping(true);
-        setCurrentQuestion(null); // Hide inputs while processing
+        setCurrentQuestion(null);
 
         try {
             const response = await fetch("/api/chat", {
@@ -122,25 +131,16 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                let errorMessage = "Failed to fetch response";
-                try {
-                    const errorJson = JSON.parse(errorText);
-                    errorMessage = errorJson.error || errorJson.message || errorText;
-                } catch {
-                    errorMessage = errorText;
-                }
-                throw new Error(errorMessage);
+                throw new Error("Failed to communicate with AI");
             }
 
             const data = await response.json();
 
-            // Add Assistant Message (Next Question)
             if (data.nextStep) {
                 const botMsg: Message = {
                     id: (Date.now() + 1).toString(),
-                    role: "assistant", // "system" role isn't used, keep assistant
-                    content: data.response || data.nextStep.question, // SHOW REFUSAL IF PRESENT
+                    role: "assistant",
+                    content: data.response || data.nextStep.question,
                     timestamp: new Date(),
                     validationResult: data.validationResult
                 };
@@ -148,7 +148,6 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                 setCurrentQuestion(data.nextStep);
                 setProgress(data.progress || 0);
             } else {
-                // Finished!
                 setMessages(prev => [...prev, {
                     id: Date.now().toString(),
                     role: "assistant",
@@ -156,7 +155,6 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                     timestamp: new Date()
                 }]);
 
-                // Trigger completion callback
                 if (onComplete) {
                     setTimeout(() => {
                         onComplete();
@@ -169,7 +167,7 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
             setMessages(prev => [...prev, {
                 id: Date.now().toString(),
                 role: "assistant",
-                content: `Error: ${error instanceof Error ? error.message : "Unknown Error"}`, // DEBUG MODE: SHOW REAL ERROR
+                content: "I'm having trouble connecting. Please try again.",
                 timestamp: new Date(),
             }]);
         } finally {
@@ -178,83 +176,95 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
     };
 
     return (
-        <Card className="w-full max-w-2xl mx-auto h-[600px] flex flex-col border-border shadow-sm bg-white">
-            <div className="p-4 border-b border-border bg-muted/30 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full bg-success-green animate-pulse" />
+        <Card className="w-full max-w-2xl mx-auto h-[650px] flex flex-col border-none shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden ring-1 ring-black/5">
+            {/* Header */}
+            <div className="p-4 border-b border-gray-100 bg-white/50 flex justify-between items-center backdrop-blur-md sticky top-0 z-10">
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg">
+                            <Bot size={20} />
+                        </div>
+                        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 ring-2 ring-white animate-pulse" />
+                    </div>
                     <div>
-                        <h2 className="font-serif font-bold text-primary">{t('title')}</h2>
-                        <p className="text-xs text-muted-foreground">{t('secureId')}</p>
+                        <h2 className="font-bold text-gray-800 text-lg leading-tight">{t('title')}</h2>
+                        <p className="text-xs text-gray-500 font-medium">{t('secureId')}</p>
                     </div>
                 </div>
-                {/* Progress Indicator */}
-                <div className="flex items-center gap-2">
-                    <div className="text-xs font-mono text-primary">{Math.round(progress)}%</div>
-                    <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+
+                <div className="flex flex-col items-end gap-1">
+                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{Math.round(progress)}% Complete</span>
+                    <div className="w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-success-green transition-all duration-500"
+                            className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-700 ease-out"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-official-grey/50">
+            {/* Chat Area - WhatsApp Corporate Style */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white scroll-smooth relative">
+
+                {/* Minimal Header / Profile Overlay (Optional, matching snippet context) */}
+                <div className="flex flex-col items-center py-6 opacity-60">
+                    <div className="h-20 w-20 bg-[#F0F2F5] rounded-full flex items-center justify-center text-[#2672DE] mb-2 font-bold text-2xl border border-gray-100">
+                        AG
+                    </div>
+                    <h2 className="text-xl font-bold text-[#1F2937]">Asistente Consular</h2>
+                    <p className="text-sm text-gray-500">Soporte Oficial • Trust Navy Corp</p>
+                </div>
+
+                {/* Date Divider (Static for now) */}
+                <div className="flex justify-center my-4">
+                    <span className="text-gray-400 text-[11px] font-medium uppercase tracking-wide">Hoy</span>
+                </div>
+
                 <AnimatePresence initial={false}>
                     {messages.map((msg) => (
-                        <div key={msg.id} className="flex flex-col gap-2">
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className={cn(
-                                    "flex w-full",
-                                    msg.role === "user" ? "justify-end" : "justify-start"
+                        <div key={msg.id} className={cn(
+                            "flex flex-col gap-1 max-w-[85%] w-fit mb-1",
+                            msg.role === "user" ? "ml-auto items-end" : "mr-auto items-start"
+                        )}>
+                            <div className="flex items-end gap-2">
+                                {msg.role !== 'user' && (
+                                    <div className="h-7 w-7 rounded-full bg-[#F0F2F5] text-[#003366] flex items-center justify-center text-xs border border-gray-50 shrink-0 mb-1 font-bold">
+                                        AC
+                                    </div>
                                 )}
-                            >
-                                <div
+
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
                                     className={cn(
-                                        "flex max-w-[80%] gap-2",
-                                        msg.role === "user" ? "flex-row-reverse" : "flex-row"
+                                        "px-4 py-2.5 shadow-sm text-[15px] leading-relaxed relative",
+                                        msg.role === "user"
+                                            ? "bg-[#2672DE] text-white rounded-2xl rounded-br-sm text-left" // Focus Blue
+                                            : "bg-[#F0F2F5] text-[#1F2937] rounded-2xl rounded-bl-sm text-left" // Official Grey
                                     )}
                                 >
-                                    <div
-                                        className={cn(
-                                            "h-8 w-8 rounded-sm flex items-center justify-center shrink-0",
-                                            msg.role === "user" ? "bg-primary text-white" : "bg-white border border-border text-primary"
-                                        )}
-                                    >
-                                        {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
-                                    </div>
-                                    <div
-                                        className={cn(
-                                            "p-3 rounded-sm text-sm shadow-sm",
-                                            msg.role === "user"
-                                                ? "bg-primary text-white"
-                                                : "bg-white border border-border text-foreground"
-                                        )}
-                                    >
-                                        {msg.content}
-                                        <span className="block text-[10px] opacity-70 mt-1 text-right">
-                                            {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    </div>
-                                </div>
-                            </motion.div>
+                                    {msg.content}
 
-                            {/* Validation Mirror - Only show for complex inputs (not simple booleans) */}
+                                    {/* Timestamp inside bubble */}
+                                    <div className={cn(
+                                        "text-[10px] text-right mt-1 opacity-70",
+                                        msg.role === "user" ? "text-blue-100" : "text-gray-500"
+                                    )}>
+                                        {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {msg.role === "user" && <CheckCircle2 size={10} className="inline ml-1" />}
+                                    </div>
+                                </motion.div>
+                            </div>
+
+                            {/* Logic Mirror (Subtle corporate style) */}
                             {msg.validationResult && msg.validationResult.type !== 'boolean' && (
                                 <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    className="pl-12 max-w-[85%]"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="px-2"
                                 >
-                                    <div className="bg-blue-50 border border-blue-100 rounded-sm p-3 text-xs text-blue-900">
-                                        <div className="flex items-center gap-1 mb-1 font-bold uppercase tracking-wider text-[10px] text-blue-700">
-                                            <CheckCircle2 size={12} />
-                                            <span>{t('systemInterpretation')}</span>
-                                        </div>
-                                        <p className="italic mb-1">{t('original')}: "{msg.validationResult.original}"</p>
-                                        <p className="font-semibold">{t('formal')}: "{msg.validationResult.interpreted}"</p>
+                                    <div className="bg-yellow-50 text-yellow-800 border-l-2 border-yellow-400 px-2 py-1 text-[11px]">
+                                        Interpreted: <strong>{msg.validationResult.interpreted}</strong>
                                     </div>
                                 </motion.div>
                             )}
@@ -263,68 +273,55 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                 </AnimatePresence>
 
                 {isTyping && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-start w-full"
-                    >
-                        <div className="flex max-w-[80%] gap-2">
-                            <div className="h-8 w-8 rounded-sm flex items-center justify-center shrink-0 bg-white border border-border text-primary">
-                                <Bot size={16} />
-                            </div>
-                            <div className="bg-white border border-border p-3 rounded-sm shadow-sm flex items-center gap-3">
-                                <div className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" />
-                                </div>
-                                <span className="text-xs text-muted-foreground animate-pulse">{t('analyzing')}</span>
-                            </div>
+                    <div className="flex justify-start w-full pl-9 mb-4">
+                        <div className="bg-[#F0F2F5] px-3 py-2 rounded-2xl rounded-bl-sm inline-flex items-center gap-1 shadow-sm">
+                            <span className="w-1.5 h-1.5 bg-[#003366] rounded-full animate-bounce [animation-delay:-0.3s]" />
+                            <span className="w-1.5 h-1.5 bg-[#003366] rounded-full animate-bounce [animation-delay:-0.15s]" />
+                            <span className="w-1.5 h-1.5 bg-[#003366] rounded-full animate-bounce" />
                         </div>
-                    </motion.div>
+                    </div>
                 )}
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="p-4 border-t border-border bg-white">
-                {currentQuestion?.type === 'select' && currentQuestion.options ? (
-                    <div className="flex flex-wrap gap-2 justify-end">
-                        {currentQuestion.options.map((option) => (
-                            <Button
-                                key={option.value}
-                                onClick={() => handleSend(option.value)}
-                                variant="outline"
-                                className="border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-                            >
-                                {option.label}
-                            </Button>
-                        ))}
-                    </div>
-                ) : (
-                    <form
-                        onSubmit={(e: React.FormEvent) => {
-                            e.preventDefault();
-                            handleSend();
+            {/* Input Area - Corporate Pill Style */}
+            <div className="flex-none bg-white p-2 px-3 flex items-center gap-2 border-t border-gray-50">
+                <button
+                    onClick={() => {
+                        // Reset/Clear Logic or Attach Menu
+                        setInput("");
+                    }}
+                    className="p-2 text-[#2672DE] transition hover:bg-blue-50 rounded-full"
+                >
+                    <PlusCircle size={24} />
+                </button>
+
+                <div className="flex-1 bg-[#F0F2F5] rounded-full flex items-center px-4 py-2 min-h-[44px]">
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend();
+                            }
                         }}
-                        className="flex gap-2"
-                    >
-                        <Input
-                            type={currentQuestion?.type === 'date' ? 'date' : 'text'}
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder={t('placeholder')}
-                            className="flex-1 bg-input-bg border-input-border focus-visible:ring-focus-ring"
-                            disabled={isTyping || !currentQuestion}
-                        />
-                        <Button
-                            type="submit"
-                            disabled={!input.trim() || isTyping || !currentQuestion}
-                            className="bg-primary text-primary-foreground hover:bg-primary/90 uppercase tracking-wide font-semibold"
-                        >
-                            <Send size={16} />
-                        </Button>
-                    </form>
-                )}
+                        placeholder={isTyping ? "Espere..." : (currentQuestion?.type === 'select' ? "Seleccione una opción..." : "Escribe tu respuesta...")}
+                        className="w-full bg-transparent border-none outline-none text-[#1F2937] placeholder-gray-400 text-[15px]"
+                        autoComplete="off"
+                        disabled={isTyping}
+                    />
+                </div>
+
+                <button
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isTyping}
+                    className="p-2 text-[#2672DE] transition-transform active:scale-95 disabled:opacity-50 hover:bg-blue-50 rounded-full"
+                >
+                    <Send size={24} className="fill-current" />
+                </button>
             </div>
         </Card>
     );

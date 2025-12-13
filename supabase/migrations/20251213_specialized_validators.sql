@@ -17,7 +17,8 @@ VALUES
       "refusalMessage": "string",
       "extractedValue": "string",
       "isHelpRequest": boolean,
-      "helpResponse": "string"
+      "helpResponse": "string",
+      "detectedLanguage": "es" | "en" | "other"
     }'),
 
 ('VALIDATOR_PASSPORT', 'Role: DS-160 Passport Expert.
@@ -34,7 +35,8 @@ VALUES
       "refusalMessage": "string",
       "extractedValue": "string",
       "isHelpRequest": boolean,
-      "helpResponse": "string"
+      "helpResponse": "string",
+      "detectedLanguage": "es" | "en" | "other"
     }'),
 
 ('VALIDATOR_TRAVEL', 'Role: DS-160 Travel Planner.
@@ -51,7 +53,8 @@ VALUES
       "refusalMessage": "string",
       "extractedValue": "string",
       "isHelpRequest": boolean,
-      "helpResponse": "string"
+      "helpResponse": "string",
+      "detectedLanguage": "es" | "en" | "other"
     }'),
 
 ('VALIDATOR_WORK', 'Role: DS-160 Career Coach.
@@ -68,7 +71,8 @@ VALUES
       "refusalMessage": "string",
       "extractedValue": "string",
       "isHelpRequest": boolean,
-      "helpResponse": "string"
+      "helpResponse": "string",
+      "detectedLanguage": "es" | "en" | "other"
     }'),
 
 ('VALIDATOR_SECURITY', 'Role: DS-160 Security Officer.
@@ -85,7 +89,8 @@ VALUES
       "refusalMessage": "string",
       "extractedValue": "string",
       "isHelpRequest": boolean,
-      "helpResponse": "string"
+      "helpResponse": "string",
+      "detectedLanguage": "es" | "en" | "other"
     }')
 ON CONFLICT (key) DO UPDATE 
 SET prompt = EXCLUDED.prompt, updated_at = NOW();

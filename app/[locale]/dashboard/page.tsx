@@ -164,6 +164,28 @@ export default async function DashboardPage() {
                     </Card>
                 </div>
             )}
+
+            {/* DS-160 Review Section */}
+            {isPaid && application && (
+                <div className="mt-8">
+                    <DS160ReviewLoader supabase={supabase} payload={application.ds160_payload} />
+                </div>
+            )}
         </div>
     );
+}
+
+// Helper Loader Component to fetch schema (keep main page clean)
+import { SupabaseClient } from "@supabase/supabase-js";
+import { DS160Review } from "@/components/dashboard/DS160Review";
+
+async function DS160ReviewLoader({ supabase, payload }: { supabase: SupabaseClient, payload: any }) {
+    const { data: schema } = await supabase
+        .from('ai_interview_flow')
+        .select('*')
+        .order('order_index', { ascending: true });
+
+    if (!schema) return null;
+
+    return <DS160Review payload={payload} schema={schema} />;
 }

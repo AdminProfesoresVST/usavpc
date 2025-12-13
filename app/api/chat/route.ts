@@ -43,7 +43,9 @@ export async function POST(req: Request) {
         );
 
         // 3. Process User Input (if any)
-        const { answer, duration, locale, context } = await req.json();
+        const body = await req.json();
+        const { answer, duration, context, locale = 'en' } = body;
+        let effectiveLocale = locale;
 
         // 2. Load Application State
         let { data: application, error: dbError } = await supabase
@@ -75,6 +77,12 @@ export async function POST(req: Request) {
             application = newApp;
         }
 
+
+        // AUTO-LOCALE: Restore saved preference
+        if (application?.client_metadata?.prefers_language) {
+            effectiveLocale = application.client_metadata.prefers_language;
+        }
+
         // 2.5: Inject Context Data (OCR + Triage) if provided on first load
         if (context) {
             let updates: any = {};
@@ -96,12 +104,24 @@ export async function POST(req: Request) {
             if (context.givenName) personal.given_names = context.givenName;
             if (context.dob) personal.dob = context.dob;
             if (context.sex) personal.sex = context.sex;
+
+            // Aggressive Nationality Aliases
             if (context.country) personal.nationality = context.country;
+            if (context.nationality) personal.nationality = context.nationality;
+            if (context.citizenship) personal.nationality = context.citizenship;
+            if (context.issuingCountry) personal.nationality = context.issuingCountry;
+
+            // Expanded OCR Mappings (Fix for "Why do you ask what is in passport?")
+            if (context.cityOfBirth || context.placeOfBirth) personal.city_of_birth = context.cityOfBirth || context.placeOfBirth;
+            if (context.stateOfBirth || context.placeOfBirthState) personal.state_of_birth = context.stateOfBirth || context.placeOfBirthState;
+            if (context.countryOfBirth || context.birthCountry) personal.country_of_birth = context.countryOfBirth || context.birthCountry;
 
             // Sync Passport Data from OCR
             const passport = payloadUpdates.ds160_data.passport;
             if (context.passportNumber) passport.passport_number = context.passportNumber;
             if (context.expiration) passport.expiration_date = context.expiration;
+            if (context.issued || context.issuanceDate) passport.issuance_date = context.issued || context.issuanceDate;
+            if (context.authority || context.issuingAuthority) passport.issuance_authority = context.authority || context.issuingAuthority;
 
             // Sync Triage Data (Questions from Triage Flow)
             // Questions usually mapped to q1, q2, q3 etc in variable names
@@ -151,8 +171,15 @@ export async function POST(req: Request) {
                 current[keys[keys.length - 1]] = value;
             };
 
-            // 1. Strict Validation: Ensure user is answering the question
-            const validatorPromptTemplate = await getSystemPrompt(supabase, 'ANSWER_VALIDATOR');
+            // 1. Dynamic Validator Selection (Specialized Experts)
+            let promptKey = 'ANSWER_VALIDATOR';
+            if (currentStep.field.includes('personal') || currentStep.field.includes('spouse') || currentStep.field.includes('contact')) promptKey = 'VALIDATOR_PERSONAL';
+            if (currentStep.field.includes('passport')) promptKey = 'VALIDATOR_PASSPORT';
+            if (currentStep.field.includes('travel') || currentStep.field.includes('purpose')) promptKey = 'VALIDATOR_TRAVEL';
+            if (currentStep.field.includes('work') || currentStep.field.includes('occupation') || currentStep.field.includes('income')) promptKey = 'VALIDATOR_WORK';
+            if (currentStep.field.includes('security')) promptKey = 'VALIDATOR_SECURITY';
+
+            const validatorPromptTemplate = await getSystemPrompt(supabase, promptKey);
 
             let valRes: any = { isValid: false }; // Default
             let bypassAI = false;
@@ -209,6 +236,9 @@ export async function POST(req: Request) {
                     valRes = JSON.parse(validationCompletion.choices[0].message.content || '{}');
                 }
             }
+
+            // AUTO-DETECT LANGUAGE
+            if (valRes.detectedLanguage === 'es') effectiveLocale = 'es';
 
             // Handle Help Request
             if (valRes.isHelpRequest) {
@@ -423,12 +453,18 @@ export async function POST(req: Request) {
             // Save updated payload to DB
             await supabase
                 .from("applications")
-                .update({ ds160_payload: payload })
+                .update({
+                    ds160_payload: payload,
+                    client_metadata: {
+                        ...application.client_metadata,
+                        prefers_language: effectiveLocale
+                    }
+                })
                 .eq("id", application.id);
         }
 
         // RE-INSTANTIATE SM WITH UPDATED PAYLOAD TO ENSURE FRESH STATE
-        const smNext = new DS160StateMachine(payload, supabase, locale);
+        const smNext = new DS160StateMachine(payload, supabase, effectiveLocale);
 
         // 4. Get Next Question (after update)
         const nextStep = await smNext.getNextStep();
