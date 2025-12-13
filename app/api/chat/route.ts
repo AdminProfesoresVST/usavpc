@@ -221,14 +221,15 @@ export async function POST(req: Request) {
                         queryContext += `\nValid Options: [${optionsStr}]`;
                     }
 
-                    const validatorPrompt = validatorPromptTemplate
-                        .replace('{question}', queryContext)
-                        .replace('{input}', answer);
+                    // Construct robust context for the AI
+                    // We don't rely on placeholders in the DB prompt anymore.
+                    // We send the Context/Rules as System, and the actual Data as User.
 
                     const validationCompletion = await openai.chat.completions.create({
                         model: "gpt-4o-mini",
                         messages: [
-                            { role: "system", content: validatorPrompt }
+                            { role: "system", content: validatorPromptTemplate }, // The Rules/Persona
+                            { role: "user", content: `QUESTION CONTEXT:\n${queryContext}\n\nUSER INPUT:\n"${answer}"\n\nValidate and parse this answer.` }
                         ],
                         response_format: { type: "json_object" }
                     });
