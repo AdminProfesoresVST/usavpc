@@ -1,6 +1,6 @@
--- Migration: Update DS-160 Master Flow
--- Description: Replaces the simplified interview flow with the Master Transcription provided by the user.
--- CRITICAL: Uses Nested JSON Keys (ds160_data.section.field) for direct mapping definition.
+-- Migration: Update DS-160 Master Flow (ENHANCED V2)
+-- Description: Replaces the simplified interview flow with the Master Transcription.
+-- NOW INCLUDES: Children, Granular Security Questions, and Extended Travel History.
 
 -- 1. Clean up old "Simplified" questions (excluding Triage and Config)
 DELETE FROM ai_interview_flow 
@@ -74,9 +74,10 @@ INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, 
 ('ds160_data.travel.previous_us_travel_details', 'Proporcione fechas y duración de sus ultimos 5 viajes a EE.UU.', 'Provide details of previous US visits', 'textarea', 'previous_travel', 702, null, '{"field": "ds160_data.travel.previous_us_travel", "operator": "eq", "value": true}'),
 ('ds160_data.travel.us_driver_license', '¿Alguna vez tuvo una licencia de conducir de EE.UU.? Si sí, número y estado.', 'Did you ever hold a US Driver License?', 'text', 'previous_travel', 703, null, null),
 ('ds160_data.travel.previous_visa', '¿Ha tenido alguna vez una visa de EE.UU.?', 'Have you ever been issued a US Visa?', 'boolean', 'previous_travel', 704, null, null),
-('ds160_data.travel.visa_refusals', '¿Alguna vez le han negado una visa, la entrada a EE.UU. o ha retirado su solicitud?', 'Have you ever been refused a US Visa?', 'boolean', 'previous_travel', 705, null, null),
-('ds160_data.travel.visa_refusal_explanation', 'Explique detalladamente los motivos y fechas de la negación.', 'Explain the refusal', 'textarea', 'previous_travel', 706, null, '{"field": "ds160_data.travel.visa_refusals", "operator": "eq", "value": true}'),
-('ds160_data.travel.immigrant_petition', '¿Alguna vez alguien ha presentado una petición de inmigrante (Residencia) en su nombre?', 'Has anyone ever filed an immigrant petition for you?', 'boolean', 'previous_travel', 707, null, null);
+('ds160_data.travel.visa_cancelled', '¿Alguna vez su visa de EE.UU. ha sido cancelada o revocada?', 'Has your US Visa ever been cancelled/revoked?', 'boolean', 'previous_travel', 705, null, null),
+('ds160_data.travel.visa_refusals', '¿Alguna vez le han negado una visa, la entrada a EE.UU. o ha retirado su solicitud?', 'Have you ever been refused a US Visa?', 'boolean', 'previous_travel', 706, null, null),
+('ds160_data.travel.visa_refusal_explanation', 'Explique detalladamente los motivos y fechas de la negación.', 'Explain the refusal', 'textarea', 'previous_travel', 707, null, '{"field": "ds160_data.travel.visa_refusals", "operator": "eq", "value": true}'),
+('ds160_data.travel.immigrant_petition', '¿Alguna vez alguien ha presentado una petición de inmigrante (Residencia) en su nombre?', 'Has anyone ever filed an immigrant petition for you?', 'boolean', 'previous_travel', 708, null, null);
 
 -- SECCIÓN 8: PUNTO DE CONTACTO EN EE.UU.
 INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
@@ -101,8 +102,6 @@ INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, 
 ('ds160_data.family.other_relatives', '¿Tiene algún otro familiar en EE.UU. (Tíos, primos)?', 'Do you have any other relatives in US?', 'boolean', 'family', 910, null, null);
 
 -- SECCIÓN 10: INFORMACIÓN FAMILIAR (CÓNYUGE) - ATOMIC QUESTIONS
--- Note: 'ds160_data.personal.marital_status' comes from Triage/Personal so we use it for logic.
--- Assuming marital_status 'M' (Married) or 'L' (Common Law) trigger these.
 INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
 ('ds160_data.personal.spouse.surnames', '¿Cuáles son los apellidos de tu pareja?', 'Spouse''s Surnames', 'text', 'family', 1001, null, '{"field": "ds160_data.personal.marital_status", "operator": "eq", "value": "M"}'),
 ('ds160_data.personal.spouse.given_names', '¿Cuáles son los nombres de tu pareja?', 'Spouse''s Given Names', 'text', 'family', 1002, null, '{"field": "ds160_data.personal.marital_status", "operator": "eq", "value": "M"}'),
@@ -110,9 +109,12 @@ INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, 
 ('ds160_data.personal.spouse.nationality', 'Nacionalidad de tu pareja:', 'Spouse''s Nationality', 'text', 'family', 1004, null, '{"field": "ds160_data.personal.marital_status", "operator": "eq", "value": "M"}'),
 ('ds160_data.personal.spouse.pob', 'Ciudad/Lugar de Nacimiento de tu pareja:', 'Spouse''s Birth City', 'text', 'family', 1005, null, '{"field": "ds160_data.personal.marital_status", "operator": "eq", "value": "M"}');
 
+-- SECCIÓN 10.5: CHILDREN (New)
+INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
+('ds160_data.family.has_children', '¿Tiene hijos (biológicos, adoptados o hijastros)?', 'Do you have children?', 'boolean', 'family', 1050, null, null),
+('ds160_data.family.children_details', 'Proporcione nombre completo y fecha de nacimiento de cada hijo.', 'List children details', 'textarea', 'family', 1051, null, '{"field": "ds160_data.family.has_children", "operator": "eq", "value": true}');
 
 -- SECCIÓN 11: TRABAJO / EDUCACIÓN / CAPACITACIÓN (ACTUAL)
--- Primary Occupation and Income are in Triage (Order 1, 2)
 INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
 ('ds160_data.work_history.current_job.employer_name', 'Nombre del Empleador Actual o Escuela:', 'Attual Employer/School Name', 'text', 'work_education', 1101, null, null),
 ('ds160_data.work_history.current_job.address', 'Dirección del Empleador/Escuela:', 'Employer Address', 'textarea', 'work_education', 1102, null, null),
@@ -136,11 +138,41 @@ INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, 
 ('ds160_data.security_questions.military_service', '¿Ha servido en el ejército?', 'Military Service?', 'boolean', 'security_misc', 1305, null, null),
 ('ds160_data.security_questions.insurgent_group', '¿Ha sido miembro de algún grupo insurgente o de guerrilla?', 'Insurgent Group Member?', 'boolean', 'security_misc', 1306, null, null);
 
--- SECCIÓN 14: SEGURIDAD Y ANTECEDENTES
--- All Booleans defaulting to No usually, but we must ask.
+-- SECCIÓN 14: SEGURIDAD Y ANTECEDENTES (GRANULAR)
+-- Part 1: Health
 INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
-('ds160_data.security_questions.security_health', 'Salud: ¿Tiene alguna enfermedad transmisible (Tuberculosis) o trastorno mental peligroso? ¿Ha sido adicto a drogas?', 'Health Check', 'boolean', 'security', 1401, null, null),
-('ds160_data.security_questions.security_criminal', 'Criminal: ¿Alguna vez ha sido arrestado, condenado o involucrado en drogas, prostitución, lavado de dinero o trata de personas?', 'Criminal Record', 'boolean', 'security', 1402, null, null),
-('ds160_data.security_questions.security_security', 'Seguridad: ¿Busca participar en espionaje, terrorismo, genocidio, tortura o violencia política?', 'Security Danger', 'boolean', 'security', 1403, null, null),
-('ds160_data.security_questions.security_immigration', 'Inmigración: ¿Alguna vez ha cometido fraude migratorio o ha sido deportado?', 'Immigration Fraud', 'boolean', 'security', 1404, null, null),
-('ds160_data.security_questions.security_other', 'Otros: ¿Ha retenido custodia de un niño ciudadano de EE.UU. ilegalmente?', 'Custody Issues', 'boolean', 'security', 1405, null, null);
+('ds160_data.security_questions.communicable_disease', '¿Tiene alguna enfermedad contagiosa de importancia para la salud pública (Tuberculosis)?', 'Communicable Disease?', 'boolean', 'security', 1401, null, null),
+('ds160_data.security_questions.mental_disorder', '¿Tiene un trastorno mental o físico que represente una amenaza para la seguridad de usted o de otros?', 'Mental Disorder?', 'boolean', 'security', 1402, null, null),
+('ds160_data.security_questions.drug_addict', '¿Es o ha sido adicto a las drogas o abusado de ellas?', 'Drug Addict?', 'boolean', 'security', 1403, null, null);
+
+-- Part 2: Criminal
+INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
+('ds160_data.security_questions.arrested', '¿Alguna vez ha sido arrestado o condenado por algún delito o crimen?', 'Arrested or Convicted?', 'boolean', 'security', 1404, null, null),
+('ds160_data.security_questions.controlled_substances', '¿Alguna vez ha violado alguna ley relacionada con sustancias controladas?', 'Controlled Substances Violation?', 'boolean', 'security', 1405, null, null),
+('ds160_data.security_questions.prostitution', '¿Viene a los EE.UU. para ejercer la prostitución o la ha ejercido en los últimos 10 años?', 'Prostitution?', 'boolean', 'security', 1406, null, null),
+('ds160_data.security_questions.money_laundering', '¿Ha estado involucrado en o busca participar en lavado de dinero?', 'Money Laundering?', 'boolean', 'security', 1407, null, null),
+('ds160_data.security_questions.human_trafficking', '¿Ha cometido o conspirado para cometer delitos de trata de personas?', 'Human Trafficking?', 'boolean', 'security', 1408, null, null),
+('ds160_data.security_questions.human_trafficking_assist', '¿Ha ayudado, instigado o coludido con un traficante de personas severo?', 'Assisted Human Trafficking?', 'boolean', 'security', 1409, null, null),
+('ds160_data.security_questions.human_trafficking_benefit', '¿Es usted cónyuge o hijo de alguien que ha cometido trata de personas y se ha beneficiado de ello?', 'Benefited from Trafficking?', 'boolean', 'security', 1410, null, null);
+
+-- Part 3: Security
+INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
+('ds160_data.security_questions.espionage', '¿Busca participar en espionaje, sabotaje o violaciones de control de exportaciones?', 'Espionage/Sabotage?', 'boolean', 'security', 1411, null, null),
+('ds160_data.security_questions.terrorist_activity', '¿Busca participar en actividades terroristas o ha participado en ellas?', 'Terrorist Activity?', 'boolean', 'security', 1412, null, null),
+('ds160_data.security_questions.terrorist_support', '¿Ha proporcionado apoyo financiero o material a terroristas?', 'Terrorist Support?', 'boolean', 'security', 1413, null, null),
+('ds160_data.security_questions.genocide', '¿Ha ordenado, incitado o participado en genocidio?', 'Genocide?', 'boolean', 'security', 1414, null, null),
+('ds160_data.security_questions.torture', '¿Ha cometido tortura?', 'Torture?', 'boolean', 'security', 1415, null, null),
+('ds160_data.security_questions.political_killings', '¿Ha cometido ejecuciones extrajudiciales o asesinatos políticos?', 'Political Killings?', 'boolean', 'security', 1416, null, null),
+('ds160_data.security_questions.child_soldiers', '¿Ha reclutado o utilizado niños soldados?', 'Child Soldiers?', 'boolean', 'security', 1417, null, null),
+('ds160_data.security_questions.religious_freedom', '¿Ha sido responsable de violaciones severas de la libertad religiosa?', 'Religious Freedom Violation?', 'boolean', 'security', 1418, null, null);
+
+-- Part 4: Immigration Rules
+INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
+('ds160_data.security_questions.immigration_fraud', '¿Alguna vez ha buscado obtener una visa o entrada a EE.UU. mediante fraude?', 'Immigration Fraud?', 'boolean', 'security', 1419, null, null),
+('ds160_data.security_questions.deported', '¿Alguna vez ha sido expulsado o deportado de algún país?', 'Deported?', 'boolean', 'security', 1420, null, null);
+
+-- Part 5: Other
+INSERT INTO ai_interview_flow (field_key, question_es, question_en, input_type, section, order_index, options, required_logic) VALUES
+('ds160_data.security_questions.child_custody', '¿Ha retenido la custodia de un niño ciudadano de EE.UU. fuera de EE.UU. ilegalmente?', 'Child Custody?', 'boolean', 'security', 1421, null, null),
+('ds160_data.security_questions.voting', '¿Ha votado en los Estados Unidos en violación de alguna ley?', 'Illegal Voting?', 'boolean', 'security', 1422, null, null),
+('ds160_data.security_questions.renounce_citizenship', '¿Alguna vez ha renunciado a la ciudadanía estadounidense para evitar impuestos?', 'Renounced Citizenship?', 'boolean', 'security', 1423, null, null);
