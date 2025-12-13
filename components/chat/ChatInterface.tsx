@@ -121,7 +121,17 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                 }),
             });
 
-            if (!response.ok) throw new Error("Failed to fetch response");
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = "Failed to fetch response";
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.error || errorJson.message || errorText;
+                } catch {
+                    errorMessage = errorText;
+                }
+                throw new Error(errorMessage);
+            }
 
             const data = await response.json();
 
@@ -159,7 +169,7 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
             setMessages(prev => [...prev, {
                 id: Date.now().toString(),
                 role: "assistant",
-                content: t('error'),
+                content: `Error: ${error instanceof Error ? error.message : "Unknown Error"}`, // DEBUG MODE: SHOW REAL ERROR
                 timestamp: new Date(),
             }]);
         } finally {
