@@ -60,6 +60,8 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             // Line 2: PASSPORT#0NATDOB...
 
             let extractedName = null;
+            let surname = null;
+            let givenName = null;
             let passportNum = null;
             let countryCode = "USA";
             let dob = null;
@@ -76,8 +78,8 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                 const namePart = mrzLine1.substring(5);
                 const parts = namePart.split('<<');
                 if (parts.length >= 2) {
-                    const surname = parts[0].replace(/</g, ' ');
-                    const givenName = parts[1].split('<')[0].replace(/</g, ' ');
+                    surname = parts[0].replace(/</g, ' ');
+                    givenName = parts[1].split('<')[0].replace(/</g, ' ');
                     extractedName = `${givenName} ${surname}`;
                 }
 
@@ -134,6 +136,8 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             const isDev = document.cookie.includes('x-dev-user=applicant');
 
             if (isDev) {
+                surname = "HAMILTON";
+                givenName = "ALEXANDER";
                 extractedName = "ALEXANDER HAMILTON";
                 passportNum = "987654321";
                 countryCode = "USA";
@@ -143,6 +147,8 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             } else if (extractedName && passportNum) {
                 // Formatting
                 extractedName = extractedName.toUpperCase();
+                surname = surname?.toUpperCase() || "";
+                givenName = givenName?.toUpperCase() || "";
                 passportNum = passportNum.toUpperCase();
             } else {
                 // No valid MRZ or strict data found
@@ -151,6 +157,8 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
 
             setScannedData({
                 name: extractedName,
+                surname,
+                givenName,
                 passportNumber: passportNum,
                 country: countryCode,
                 dob,

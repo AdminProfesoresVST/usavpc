@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         );
 
         // 3. Process User Input (if any)
-        const { answer, duration, locale } = await req.json();
+        const { answer, duration, locale, context } = await req.json();
 
         // 2. Load Application State
         let { data: application, error: dbError } = await supabase
@@ -73,6 +73,51 @@ export async function POST(req: Request) {
 
             if (createError) throw new Error(createError.message);
             application = newApp;
+        }
+
+        // 2.5: Inject Context Data (OCR + Triage) if provided on first load
+        if (context) {
+            let updates: any = {};
+            let payloadUpdates: any = application.ds160_payload || { ds160_data: { personal: {}, travel: {}, work_history: {}, security_questions: {} } };
+
+            // Ensure structure exists
+            if (!payloadUpdates.ds160_data) payloadUpdates.ds160_data = { personal: {} };
+            if (!payloadUpdates.ds160_data.personal) payloadUpdates.ds160_data.personal = {};
+            if (!payloadUpdates.ds160_data.passport) payloadUpdates.ds160_data.passport = {};
+
+            // Passport Image URL Persistence
+            if (context.passport_image_path) {
+                updates.passport_image_url = context.passport_image_path;
+            }
+
+            // Sync Personal Data from OCR
+            const personal = payloadUpdates.ds160_data.personal;
+            if (context.surname) personal.surnames = context.surname;
+            if (context.givenName) personal.given_names = context.givenName;
+            if (context.dob) personal.dob = context.dob;
+            if (context.sex) personal.sex = context.sex;
+            if (context.country) personal.nationality = context.country;
+
+            // Sync Passport Data from OCR
+            const passport = payloadUpdates.ds160_data.passport;
+            if (context.passportNumber) passport.passport_number = context.passportNumber;
+            if (context.expiration) passport.expiration_date = context.expiration;
+
+            // Sync Triage Data (Questions from Triage Flow)
+            // Questions usually mapped to q1, q2, q3 etc in variable names
+            // We'll map them if present.
+            if (context.q1) payloadUpdates.primary_occupation = context.q1;
+            if (context.q2) payloadUpdates.has_refusals = context.q2 === 'yes';
+            // Add more mappings as Triage Flow evolves
+
+            // Perform Update
+            await supabase.from("applications").update({
+                ...updates,
+                ds160_payload: payloadUpdates
+            }).eq("id", application.id);
+
+            // Update local application object so StateMachine sees the new data immediately
+            application = { ...application, ...updates, ds160_payload: payloadUpdates };
         }
 
         const payload = application.ds160_payload as DS160Payload;
