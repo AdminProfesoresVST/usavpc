@@ -182,25 +182,32 @@ export async function POST(req: Request) {
             }
 
             if (!bypassAI) {
-                let queryContext = currentStep.question;
-                if (currentStep.options) {
-                    const optionsStr = currentStep.options.map((o: any) => `"${o.label}" (Value: ${o.value})`).join(', ');
-                    queryContext += `\nValid Options: [${optionsStr}]`;
+                // SPECIAL CONTEXTS: Skip Generic Validation for Complex Parsers
+                if (currentStep.context === 'spouse_parser') {
+                    // Assume valid for now, let the specialized parser handle extraction quality
+                    // We can add specific logic later if parser returns null
+                    valRes = { isValid: true };
+                } else {
+                    let queryContext = currentStep.question;
+                    if (currentStep.options) {
+                        const optionsStr = currentStep.options.map((o: any) => `"${o.label}" (Value: ${o.value})`).join(', ');
+                        queryContext += `\nValid Options: [${optionsStr}]`;
+                    }
+
+                    const validatorPrompt = validatorPromptTemplate
+                        .replace('{question}', queryContext)
+                        .replace('{input}', answer);
+
+                    const validationCompletion = await openai.chat.completions.create({
+                        model: "gpt-4o-mini",
+                        messages: [
+                            { role: "system", content: validatorPrompt }
+                        ],
+                        response_format: { type: "json_object" }
+                    });
+
+                    valRes = JSON.parse(validationCompletion.choices[0].message.content || '{}');
                 }
-
-                const validatorPrompt = validatorPromptTemplate
-                    .replace('{question}', queryContext)
-                    .replace('{input}', answer);
-
-                const validationCompletion = await openai.chat.completions.create({
-                    model: "gpt-4o-mini",
-                    messages: [
-                        { role: "system", content: validatorPrompt }
-                    ],
-                    response_format: { type: "json_object" }
-                });
-
-                valRes = JSON.parse(validationCompletion.choices[0].message.content || '{}');
             }
 
             // Handle Help Request
