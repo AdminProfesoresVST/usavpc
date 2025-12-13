@@ -154,25 +154,54 @@ export async function POST(req: Request) {
             // 1. Strict Validation: Ensure user is answering the question
             const validatorPromptTemplate = await getSystemPrompt(supabase, 'ANSWER_VALIDATOR');
 
-            let queryContext = currentStep.question;
+            let valRes: any = { isValid: false }; // Default
+            let bypassAI = false;
+
+            console.log(`[Chat] Processing Question: ${currentStep.field}, Type: ${currentStep.type}`);
+            console.log(`[Chat] User Answer: ${answer}`);
+
+            // SHORT-CIRCUIT: Exact Match for Select Options
             if (currentStep.options) {
-                const optionsStr = currentStep.options.map((o: any) => `"${o.label}" (Value: ${o.value})`).join(', ');
-                queryContext += `\nValid Options: [${optionsStr}]`;
+                const normalizedAnswer = answer.trim().toLowerCase();
+                const matchedOption = currentStep.options.find((o: any) =>
+                    o.value.toLowerCase() === normalizedAnswer ||
+                    o.label.toLowerCase() === normalizedAnswer
+                );
+
+                if (matchedOption) {
+                    console.log(`[Chat] Short-Circuit Match: ${matchedOption.label} -> ${matchedOption.value}`);
+                    valRes = {
+                        isValid: true,
+                        extractedValue: matchedOption.value,
+                        english_proficiency: null,
+                        sentiment: 'neutral',
+                        isHelpRequest: false
+                    };
+                    bypassAI = true;
+                }
             }
 
-            const validatorPrompt = validatorPromptTemplate
-                .replace('{question}', queryContext)
-                .replace('{input}', answer);
+            if (!bypassAI) {
+                let queryContext = currentStep.question;
+                if (currentStep.options) {
+                    const optionsStr = currentStep.options.map((o: any) => `"${o.label}" (Value: ${o.value})`).join(', ');
+                    queryContext += `\nValid Options: [${optionsStr}]`;
+                }
 
-            const validationCompletion = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
-                messages: [
-                    { role: "system", content: validatorPrompt }
-                ],
-                response_format: { type: "json_object" }
-            });
+                const validatorPrompt = validatorPromptTemplate
+                    .replace('{question}', queryContext)
+                    .replace('{input}', answer);
 
-            const valRes = JSON.parse(validationCompletion.choices[0].message.content || '{}');
+                const validationCompletion = await openai.chat.completions.create({
+                    model: "gpt-4o-mini",
+                    messages: [
+                        { role: "system", content: validatorPrompt }
+                    ],
+                    response_format: { type: "json_object" }
+                });
+
+                valRes = JSON.parse(validationCompletion.choices[0].message.content || '{}');
+            }
 
             // Handle Help Request
             if (valRes.isHelpRequest) {
