@@ -77,8 +77,12 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                 }
 
                 // Line 2 Parsing: PASSPORT#0NATDOB(YYMMDD)CSEX(M/F)EXP(YYMMDD)CPERSONAL#<<<<<<CC
-                // Passport Number: chars 0-9
-                const possibleNum = mrzLine2.substring(0, 9).replace(/</g, '');
+                // Passport Number from Line 2 (First 9 chars usually, but stop at < if shorter)
+                // SC42608750...
+                // COMMON OCR FIXES: $ -> S, 5 -> S (context dependent, but MRZ is standard), ( -> C
+                let possibleNum = mrzLine2.substring(0, 9).replace(/</g, '');
+                possibleNum = possibleNum.replace(/\$/g, 'S').replace(/\(/g, 'C'); // Sanitization
+
                 if (possibleNum.match(/[A-Z0-9]+/)) {
                     passportNum = possibleNum;
                 }
