@@ -56,7 +56,11 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
 
             let extractedName = null;
             let passportNum = null;
-            let countryCode = "USA"; // Default to USA only if truly unknown, but try to extract.
+            let countryCode = "USA";
+            let dob = null;
+            let sex = null;
+            let expiration = null;
+            let personalNumber = null;
 
             if (mrzLine1 && mrzLine2) {
                 console.log("MRZ Detected");
@@ -64,21 +68,49 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                 countryCode = mrzLine1.substring(2, 5).replace(/</g, '');
 
                 // Name Extraction
-                // P<DOMVILLACAMPA<RECIO<<OSIRIS<SEGUNDO<<<<<<<
-                // Remove 'P<DOM' prefix (5 chars)
                 const namePart = mrzLine1.substring(5);
                 const parts = namePart.split('<<');
                 if (parts.length >= 2) {
                     const surname = parts[0].replace(/</g, ' ');
-                    const givenName = parts[1].split('<')[0].replace(/</g, ' '); // simplified
+                    const givenName = parts[1].split('<')[0].replace(/</g, ' ');
                     extractedName = `${givenName} ${surname}`;
                 }
 
-                // Passport Number from Line 2 (First 9 chars usually, but stop at < if shorter)
-                // SC42608750...
+                // Line 2 Parsing: PASSPORT#0NATDOB(YYMMDD)CSEX(M/F)EXP(YYMMDD)CPERSONAL#<<<<<<CC
+                // Passport Number: chars 0-9
                 const possibleNum = mrzLine2.substring(0, 9).replace(/</g, '');
                 if (possibleNum.match(/[A-Z0-9]+/)) {
                     passportNum = possibleNum;
+                }
+
+                // Date of Birth: chars 13-19 (YYMMDD)
+                const dobRaw = mrzLine2.substring(13, 19);
+                if (dobRaw.match(/\d{6}/)) {
+                    const yearInfo = parseInt(dobRaw.substring(0, 2));
+                    const currentYear = new Date().getFullYear() % 100;
+                    const century = yearInfo > currentYear ? "19" : "20";
+                    dob = `${century}${yearInfo}-${dobRaw.substring(2, 4)}-${dobRaw.substring(4, 6)}`;
+                }
+
+                // Sex: char 20
+                const sexRaw = mrzLine2.charAt(20);
+                if (['M', 'F'].includes(sexRaw)) {
+                    sex = sexRaw;
+                }
+
+                // Expiration Date: chars 21-27 (YYMMDD)
+                const expRaw = mrzLine2.substring(21, 27);
+                if (expRaw.match(/\d{6}/)) {
+                    // Expiration is always in the future relative to issue, but let's assume 20xx for now
+                    // Logic: Expiration is usually 20xx unless it's way in the past (expired).
+                    // Simple heuristic: 20 + year
+                    expiration = `20${expRaw.substring(0, 2)}-${expRaw.substring(2, 4)}-${expRaw.substring(4, 6)}`;
+                }
+
+                // Personal Number: chars 28-42 (Optional)
+                const personalRaw = mrzLine2.substring(28, 42).replace(/</g, '');
+                if (personalRaw.length > 0) {
+                    personalNumber = personalRaw;
                 }
             }
 
@@ -96,6 +128,9 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                 extractedName = "ALEXANDER HAMILTON";
                 passportNum = "987654321";
                 countryCode = "USA";
+                dob = "1980-01-11";
+                sex = "M";
+                expiration = "2030-01-01";
             } else if (extractedName && passportNum) {
                 // Formatting
                 extractedName = extractedName.toUpperCase();
@@ -108,7 +143,11 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
             setScannedData({
                 name: extractedName,
                 passportNumber: passportNum,
-                country: countryCode
+                country: countryCode,
+                dob,
+                sex,
+                expiration,
+                personalNumber
             });
 
         } catch (error) {
@@ -139,6 +178,18 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
                     <div className="flex justify-between border-b border-gray-200 pb-2">
                         <span className="text-sm text-gray-500">{t('fields.passport')}</span>
                         <span className="font-mono font-bold text-trust-navy">{scannedData.passportNumber}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <span className="text-sm text-gray-500">Date of Birth</span>
+                        <span className="font-mono font-bold text-trust-navy">{scannedData.dob || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <span className="text-sm text-gray-500">Sex</span>
+                        <span className="font-mono font-bold text-trust-navy">{scannedData.sex || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-gray-200 pb-2">
+                        <span className="text-sm text-gray-500">Expires</span>
+                        <span className="font-mono font-bold text-trust-navy">{scannedData.expiration || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-sm text-gray-500">{t('fields.country')}</span>
