@@ -6,7 +6,7 @@ import { Camera, Upload, CheckCircle2, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/utils/supabase/client";
 
 interface PassportOCRProps {
     onComplete: (data: any) => void;
@@ -20,7 +20,7 @@ export function PassportOCR({ onComplete }: PassportOCRProps) {
     const [progress, setProgress] = useState(0);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
