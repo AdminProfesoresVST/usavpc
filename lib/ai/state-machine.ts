@@ -42,18 +42,10 @@ export class DS160StateMachine {
             .order('order_index', { ascending: true });
 
         if (error || !data || data.length === 0) {
-            // Fallback to hardcoded flow if DB is empty
-            const { FALLBACK_QUESTIONS } = await import("./questions");
-            steps = FALLBACK_QUESTIONS.map((q, index) => ({
-                id: `fallback-${index}`,
-                field_key: q.field,
-                question_es: q.question,
-                question_en: q.question_en,
-                input_type: q.input_type,
-                options: q.options,
-                context: q.context || "",
-                required_logic: (q as any).logic
-            }));
+            // STRICT MODE: NO FALLBACKS allowed per Global Rules.
+            // "The application must not start if the database does not contain the master dataset."
+            console.error("CRITICAL: No interview flow found in DB.");
+            throw new Error("CRITICAL_DATA_MISSING: The 'ai_interview_flow' table is empty. Seeding required.");
         } else {
             steps = data;
         }
