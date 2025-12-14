@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
 import "../globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { DevToolbar } from "@/components/dev/DevToolbar";
 import { NextIntlClientProvider } from 'next-intl';
@@ -40,20 +38,23 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col min-h-screen`}
+        className={`${publicSans.variable} antialiased font-sans bg-[#F0F2F5] text-foreground flex justify-center h-screen overflow-hidden`}
       >
         <NextIntlClientProvider messages={messages}>
           <AnalyticsProvider>
-            {/* Header stays top */}
-            <Header />
 
-            {/* Main takes remaining space, scrollable if content overflows */}
-            <main className="flex-1 flex flex-col">
-              {children}
-            </main>
+            {/* Mobile Frame Container */}
+            <div className="w-full max-w-[420px] bg-white h-full flex flex-col relative shadow-2xl overflow-hidden">
 
-            {/* Mobile Nav fixed at bottom */}
-            <MobileNav />
+              {/* Main Content Area */}
+              <main className="flex-1 flex flex-col overflow-y-auto no-scrollbar relative bg-[#F0F2F5]">
+                {children}
+              </main>
+
+              {/* Mobile Nav fixed at bottom of container */}
+              <MobileNav />
+            </div>
+
             <DevToolbar />
           </AnalyticsProvider>
         </NextIntlClientProvider>
