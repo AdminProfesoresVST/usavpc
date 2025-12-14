@@ -56,132 +56,128 @@ export default async function DashboardPage() {
     const displayPrice = prices[plan] || '$39';
 
     return (
-        <div className="min-h-screen bg-[#F0F2F5] pb-20">
-            {/* Mobile-App Header */}
-            <div className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-10">
-                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-xl font-bold text-[#111827]">{t('title')}</h1>
-                        <p className="text-xs text-gray-400 font-mono mt-0.5 ml-0.5">ID: {application?.id?.slice(0, 8).toUpperCase() || '---'}</p>
-                    </div>
-                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs ring-2 ring-blue-50">
-                        {user.email?.[0].toUpperCase()}
-                    </div>
+        <div className="h-[100dvh] w-full flex flex-col bg-[#F0F2F5] text-[#1F2937] overflow-hidden">
+            {/* 1. App Header (Fixed) */}
+            <header className="shrink-0 bg-white shadow-sm z-30 px-4 py-3 flex justify-between items-center border-b border-gray-100 h-16">
+                <div>
+                    <h1 className="text-lg font-bold text-[#003366] leading-none">{t('title')}</h1>
+                    <p className="text-[10px] text-gray-400 font-mono mt-1">REF: {application?.id?.slice(0, 8).toUpperCase() || '---'}</p>
                 </div>
-            </div>
+                <div className="h-9 w-9 rounded-full bg-[#003366] flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-gray-100">
+                    {user.email?.[0].toUpperCase()}
+                </div>
+            </header>
 
-            <div className="container mx-auto px-4 py-6 space-y-6 max-w-4xl">
+            {/* 2. Scrollable Content Area */}
+            <main className="flex-1 overflow-y-auto w-full p-4 space-y-5 pb-24 scroll-smooth">
 
-                {/* Welcome Pill */}
-                <div className="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse ml-2"></div>
+                {/* Welcome Message */}
+                <div className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                    <span className="relative flex h-3 w-3 ml-1">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
                     <p className="text-sm text-gray-600">
-                        {t('welcome')}, <span className="font-semibold text-gray-900">{user.email?.split('@')[0]}</span>
+                        {t('welcome')}, <span className="font-bold text-[#003366]">{user.email?.split('@')[0]}</span>
                     </p>
                 </div>
 
-                {/* Main Status Card (The Wallet "Balance") */}
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                        <Radar size={120} />
+                {/* Main Status Hub */}
+                <div className="bg-white p-0 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-[#003366] px-4 py-2 flex justify-between items-center">
+                        <span className="text-[10px] uppercase font-bold text-white/90 tracking-widest">Case Status</span>
+                        <Radar className="text-white/20" size={16} />
                     </div>
-
-                    {application?.service_tier === 'simulator' ? (
-                        <InterviewSimulator />
-                    ) : (
-                        <StatusTracker currentStep={currentStep} />
-                    )}
+                    <div className="p-5">
+                        {application?.service_tier === 'simulator' ? (
+                            <InterviewSimulator />
+                        ) : (
+                            <StatusTracker currentStep={currentStep} />
+                        )}
+                    </div>
                 </div>
 
-                {/* Payment / Action Gate */}
+                {/* Payment Gate */}
                 {!isPaid && application && (
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                         <PaymentGate applicationId={application.id} plan={plan} price={displayPrice} />
                     </div>
                 )}
 
-                {/* Application Hub (Grid) */}
+                {/* Action Grid */}
                 {isPaid && application?.service_tier !== 'simulator' && (
                     <div className="grid gap-4 md:grid-cols-2">
 
                         {/* Details Card */}
-                        <Card className="p-5 bg-white border-0 shadow-sm rounded-3xl flex flex-col justify-between h-full hover:shadow-md transition-all duration-300 group">
-                            <div>
-                                <div className="flex items-center gap-2 mb-4 text-gray-500">
-                                    <Brain size={18} />
-                                    <h2 className="text-sm font-semibold uppercase tracking-wider">{t('applicationDetails')}</h2>
+                        <Card className="p-4 bg-white border-0 shadow-sm rounded-2xl">
+                            <div className="flex items-center gap-2 mb-3 text-gray-400">
+                                <Brain size={16} />
+                                <h2 className="text-xs font-bold uppercase tracking-widest">Details</h2>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase">{t('statusLabel')}</span>
+                                    <span className="text-xs font-bold px-2 py-1 rounded bg-[#003366] text-white">
+                                        {application.status || t('statusInProgress')}
+                                    </span>
                                 </div>
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                                        <span className="text-sm text-gray-500">{t('statusLabel')}</span>
-                                        <span className={`text-sm font-bold px-3 py-1 rounded-full ${application.status === 'validated' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                                            }`}>
-                                            {application.status || t('statusInProgress')}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                                        <span className="text-sm text-gray-500">{t('strategyReviewLabel')}</span>
-                                        <div className="flex items-center gap-2">
-                                            {application.has_strategy_check ? (
-                                                <ShieldCheck className="text-green-500" size={16} />
-                                            ) : (
-                                                <div className="h-2 w-2 bg-orange-400 rounded-full animate-ping" />
-                                            )}
-                                            <span className="font-semibold text-sm">
-                                                {application.has_strategy_check ? t('statusCompleted') : t('statusPending')}
-                                            </span>
+                                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase">{t('strategyReviewLabel')}</span>
+                                    {application.has_strategy_check ? (
+                                        <div className="flex items-center gap-1 text-green-700 text-xs font-bold">
+                                            <ShieldCheck size={14} /> Completed
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <div className="flex items-center gap-1 text-orange-600 text-xs font-bold">
+                                            <div className="h-1.5 w-1.5 bg-orange-500 rounded-full animate-pulse" /> Pending
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </Card>
 
-                        {/* Tools Card */}
-                        <Card className="p-5 bg-white border-0 shadow-sm rounded-3xl flex flex-col h-full hover:shadow-md transition-all duration-300">
-                            <div className="flex items-center gap-2 mb-4 text-gray-500">
-                                <Download size={18} />
-                                <h2 className="text-sm font-semibold uppercase tracking-wider">{t('documentsTools')}</h2>
+                        {/* Documents & Tools */}
+                        <Card className="p-4 bg-white border-0 shadow-sm rounded-2xl flex flex-col">
+                            <div className="flex items-center gap-2 mb-3 text-gray-400">
+                                <Download size={16} />
+                                <h2 className="text-xs font-bold uppercase tracking-widest">Documents</h2>
                             </div>
 
-                            <div className="flex-1 flex flex-col justify-center space-y-4">
+                            <div className="flex-1 flex flex-col justify-center gap-3">
                                 {application.has_strategy_check ? (
-                                    <div className="w-full">
-                                        <SafeDownloadButton data={application} />
-                                    </div>
+                                    <SafeDownloadButton data={application} />
                                 ) : (
-                                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 opacity-60">
-                                        <Download className="text-gray-400" />
-                                        <p className="text-xs text-gray-500">{t('downloadUnlock')}</p>
+                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 opacity-50">
+                                        <Download className="text-gray-400" size={16} />
+                                        <p className="text-[10px] text-gray-400 font-semibold uppercase">{t('downloadUnlock')}</p>
                                     </div>
                                 )}
 
-                                {/* Simulator CTA */}
                                 {application.form_data?.addons?.includes('simulator') && (
                                     <Button
                                         variant="outline"
-                                        className="w-full justify-between group-hover:border-blue-200"
+                                        className="w-full justify-between h-9 text-xs border-gray-200"
                                         onClick={() => window.location.href = '/assessment?plan=simulator'}
                                     >
                                         <span className="flex items-center gap-2">
-                                            <Brain size={16} className="text-purple-500" />
+                                            <Brain size={14} className="text-[#003366]" />
                                             {t('launchSimulator')}
                                         </span>
-                                        <ChevronRight size={16} className="text-gray-300" />
+                                        <ChevronRight size={14} className="text-gray-300" />
                                     </Button>
                                 )}
                             </div>
                         </Card>
-
                     </div>
                 )}
 
-                {/* DS-160 Review Data */}
+                {/* Data Review */}
                 {isPaid && application && (
-                    <div className="mt-6 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
                         <DS160ReviewLoader supabase={supabase} payload={application.ds160_payload} />
                     </div>
                 )}
-            </div>
+            </main>
         </div>
     );
 }

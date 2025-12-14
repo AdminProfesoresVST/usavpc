@@ -41,7 +41,7 @@
 }
 
 :root {
-  /* GovTech Palette */
+  /* GovTech Palette - STRICT */
   --trust-navy: #003366;
   --official-grey: #F0F2F5;
   --paper-white: #FFFFFF;
@@ -49,10 +49,8 @@
   --success-green: #1B5E20;
   --accent-gold: #C5A065;
 
-  /* Modern App Palette */
-  --app-blue: #2672DE;
-  --text-dark: #111827;
-  /* Gray 900 for sharper contrast */
+  --text-dark: #1F2937;
+  /* Neutral Gray for text */
 
   --background: var(--official-grey);
   --foreground: var(--text-dark);
@@ -63,7 +61,7 @@
   --popover: var(--paper-white);
   --popover-foreground: var(--text-dark);
 
-  --primary: var(--app-blue);
+  --primary: var(--trust-navy);
   --primary-foreground: #FFFFFF;
 
   --secondary: #E5E7EB;
@@ -80,10 +78,10 @@
 
   --border: #D1D5DB;
   --input: #FAFAFA;
-  --ring: var(--app-blue);
+  --ring: var(--trust-navy);
 
   --radius: 0.75rem;
-  /* Rounded-xl/2xl feel */
+  /* Keeping the rounded look as requested, but colors are strict */
 }
 
 .dark {
