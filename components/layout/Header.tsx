@@ -1,69 +1,45 @@
-import { Menu } from "lucide-react";
+import { ShieldCheck, Menu } from "lucide-react";
 import { Link } from "@/src/i18n/routing";
-import Image from "next/image";
-import { useTranslations } from 'next-intl';
-import { LanguageSelector } from "./LanguageSelector";
-import { Button } from "@/components/ui/button";
-import { MobileMenu } from "./MobileMenu";
 
-export function Header() {
-    const t = useTranslations();
+interface HeaderProps {
+    title?: string;
+    subtitle?: string;
+    progress?: number;
+    collapsed?: boolean;
+}
 
+export function Header({ title, subtitle, progress, collapsed = false }: HeaderProps) {
     return (
-        <header className="sticky top-0 z-50 w-full bg-trust-navy text-white shadow-md transition-all duration-300 xl:hidden">
-            {/* 
-                STRICT 2-SIZE SYSTEM
-                Mobile: h-14, Logo + Hamburger
-                Desktop: h-20, Logo + Text + Nav
-            */}
-            <div className="container mx-auto flex items-center justify-between px-4 xl:px-6 h-20">
-
-                {/* 1. Logo Section */}
-                <Link href="/" className="flex items-center gap-3 group shrink-0">
-                    {/* Logo: consistent size or slightly adapted */}
-                    <div className="relative h-12 w-12 xl:h-16 xl:w-16 overflow-hidden transition-transform group-hover:scale-105">
-                        <Image
-                            src="/logo.png"
-                            alt="US Visa Processing Center Logo"
-                            fill
-                            className="object-contain"
-                        />
+        <header className={`bg-[#003366] text-white pt-10 px-6 shadow-lg flex-none z-20 relative transition-all duration-300 ${collapsed ? 'pb-4 rounded-b-[1.5rem]' : 'pb-6 rounded-b-[2rem]'}`}>
+            <div className={`flex justify-between items-center transition-all ${collapsed ? 'mb-0' : 'mb-4'}`}>
+                <Link href="/" className="flex items-center gap-2">
+                    <div className="bg-white/10 p-1.5 rounded-lg backdrop-blur-sm">
+                        <ShieldCheck className="w-5 h-5 text-white" />
                     </div>
-
-                    {/* Desktop & Mobile Text: Visible Always */}
-                    <div className="flex flex-col justify-center">
-                        <span className="font-serif text-sm xl:text-xl font-bold tracking-tight text-white group-hover:text-white/90 transition-colors leading-tight">
-                            US Visa Processing Center
-                        </span>
-                    </div>
+                    <span className="font-bold tracking-tight text-sm opacity-90">USAVPC Mobile</span>
                 </Link>
-
-                {/* 2. Desktop Navigation (Hidden on Mobile) */}
-                <nav className="hidden xl:flex items-center gap-6 xl:gap-8 text-sm font-medium text-white/90 mx-4">
-                    <Link href="/" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.home')}</Link>
-                    <Link href="/#services" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.services')}</Link>
-                    <Link href="/dashboard" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.dashboard')}</Link>
-                    <Link href="/contact" className="hover:text-accent-gold transition-colors whitespace-nowrap">{t('Common.nav.contact')}</Link>
-                </nav>
-
-                {/* 3. Actions & Mobile Menu */}
-                <div className="flex items-center gap-4 shrink-0">
-                    <div className="hidden xl:block">
-                        <LanguageSelector />
-                    </div>
-
-                    <Link href="/login" className="hidden xl:block">
-                        <Button variant="outline" className="text-trust-navy bg-white hover:bg-white/90 font-bold border-none h-9 text-xs whitespace-nowrap">
-                            {t('Common.nav.login')}
-                        </Button>
-                    </Link>
-
-                    {/* Mobile Hamburger (Visible only on mobile/tablet up to xl) */}
-                    <div className="xl:hidden">
-                        <MobileMenu className="text-white hover:bg-white/10" />
-                    </div>
-                </div>
+                <button className="text-white/80 hover:text-white">
+                    <Menu className="w-6 h-6" />
+                </button>
             </div>
+
+            {/* Dynamic Content */}
+            {!collapsed && (
+                <div className="fade-enter block">
+                    {subtitle && <p className="text-blue-200 text-xs font-medium uppercase tracking-wider mb-1">{subtitle}</p>}
+                    {title && <h1 className="text-xl font-bold">{title}</h1>}
+
+                    {/* Progress Bar */}
+                    {progress !== undefined && (
+                        <div className="mt-4 h-1.5 bg-white/20 rounded-full overflow-hidden w-full max-w-[200px]">
+                            <div
+                                className="h-full bg-[#2672DE] transition-all duration-500 ease-out"
+                                style={{ width: `${progress}%` }}
+                            ></div>
+                        </div>
+                    )}
+                </div>
+            )}
         </header>
     );
 }
