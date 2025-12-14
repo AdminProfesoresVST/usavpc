@@ -6,21 +6,15 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
     ArrowRight,
-    FileText,
     ShieldCheck,
-    Zap,
     BrainCircuit,
     ChevronRight,
-    PlayCircle,
-    Briefcase,
-    Download
+    Star,
+    CheckCircle2
 } from "lucide-react";
-import { MobileMenu } from "@/components/layout/MobileMenu";
 import { useRouter } from "next/navigation";
 import { useLocale } from 'next-intl';
 import { useState } from "react";
-
-// ... imports ...
 
 export function MobileHome() {
     const t = useTranslations();
@@ -31,151 +25,170 @@ export function MobileHome() {
     const handlePlanSelect = async (plan: string) => {
         setIsProcessing(plan);
         try {
-            // Safety timeout: Reset after 10s if stuck
             const timeoutId = setTimeout(() => setIsProcessing(null), 10000);
-
             const response = await fetch('/api/applications/draft', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ plan, locale }),
             });
-
             clearTimeout(timeoutId);
 
             if (response.status === 401) {
-                // Not logged in -> Hard Redirect to Login
                 window.location.href = `/${locale}/login?next=/${locale}/assessment?plan=${plan}`;
                 return;
             }
 
             const data = await response.json();
             if (data.success) {
-                // Success -> Hard Redirect to Assessment
                 window.location.href = `/${locale}/assessment`;
             } else {
-                console.error("Draft Error:", data.error);
                 alert("Error: " + (data.error || "Unknown error"));
                 setIsProcessing(null);
             }
         } catch (e) {
-            console.error(e);
             alert("Connection error. Please try again.");
             setIsProcessing(null);
         }
     };
 
     return (
-        <div className="min-h-screen w-full bg-official-grey text-trust-navy flex flex-col font-sans">
-            {/* 1. Main Content (Scrollable) */}
-            <main className="flex-1 p-3 flex flex-col gap-3">
+        <div className="min-h-screen w-full bg-[#F0F2F5] text-gray-900 flex flex-col font-sans">
+            {/* 1. Main Content */}
+            <main className="flex-1 p-4 flex flex-col gap-5">
 
-                {/* A. Hero / Action Area (Compact, High Impact) */}
-                <section className="bg-trust-navy rounded-2xl p-5 text-white shadow-lg relative overflow-hidden flex flex-col justify-center shrink-0 min-h-[140px]">
-                    {/* 1. Real Image Background (Added per User Request) */}
-                    <div className="absolute inset-0 z-0">
-                        <Image
-                            src="/bg-hero.png"
-                            alt="US Visa Center"
-                            fill
-                            className="object-cover object-center opacity-20 mixed-blend-overlay"
-                            priority
-                        />
-                        {/* Gradient Overlay for Text Readability */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-trust-navy via-trust-navy/80 to-transparent"></div>
+                {/* Header (Logo Area) */}
+                <div className="flex justify-between items-center px-1">
+                    <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                            US
+                        </div>
+                        <span className="font-bold text-lg tracking-tight text-gray-900">Visa Center</span>
+                    </div>
+                    <div className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 bg-green-500 rounded-full animate-pulse" />
+                        Online
+                    </div>
+                </div>
+
+                {/* A. Hero: Modern Gradient Card */}
+                <section className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-[2rem] p-6 text-white shadow-xl relative overflow-hidden min-h-[220px] flex flex-col justify-between">
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+                    <div className="absolute -right-10 -top-10 h-40 w-40 bg-blue-400 rounded-full blur-3xl opacity-30"></div>
+
+                    <div className="relative z-10">
+                        <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] uppercase tracking-wide font-bold mb-3 border border-white/20">
+                            <ShieldCheck className="w-3 h-3 text-white" /> {t('Common.Mobile.officialService') || 'Official Service'}
+                        </div>
+                        <h2 className="text-3xl font-black leading-tight mb-2 tracking-tight">
+                            {t('Common.Mobile.heroTitle')}
+                        </h2>
+                        <p className="text-blue-100 text-sm font-medium leading-relaxed max-w-[90%]">
+                            {t('Common.Mobile.heroSubtitle')}
+                        </p>
                     </div>
 
-                    <div className="relative z-10 flex flex-col h-full justify-between">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <div className="inline-flex items-center gap-1.5 bg-white/10 px-2 py-0.5 rounded-full text-[9px] uppercase tracking-wide font-bold mb-2 border border-white/20 text-accent-gold">
-                                    <ShieldCheck className="w-3 h-3" /> {t('Common.Mobile.officialService')}
-                                </div>
-                                <h2 className="text-2xl font-black leading-none mb-1 text-white tracking-tight">
-                                    {t('Common.Mobile.heroTitle')}
-                                </h2>
-                                <p className="text-white/70 text-xs font-medium leading-snug">
-                                    {t('Common.Mobile.heroSubtitle')}
-                                </p>
+                    <div className="relative z-10 mt-4">
+                        <Button
+                            onClick={() => {
+                                const servicesSection = document.getElementById('services');
+                                if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="w-full bg-white text-blue-700 hover:bg-gray-50 font-bold h-12 rounded-2xl text-sm shadow-lg transition-all active:scale-95 flex items-center justify-between px-5"
+                        >
+                            <span>{t('Common.Mobile.startApplication')}</span>
+                            <div className="bg-blue-50 rounded-full p-1.5">
+                                <ArrowRight className="w-4 h-4 text-blue-600" />
                             </div>
-                        </div>
-
-                        <div onClick={() => {
-                            const servicesSection = document.getElementById('services');
-                            if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
-                        }} className="mt-3 w-full cursor-pointer">
-                            <Button className="w-full bg-white text-trust-navy hover:bg-gray-100 font-bold h-10 rounded-xl text-sm shadow-xl transition-all active:scale-95 flex items-center justify-between px-4 pointer-events-none">
-                                <span>{t('Common.Mobile.startApplication')}</span>
-                                <div className="bg-trust-navy/10 rounded-full p-1">
-                                    <ArrowRight className="w-4 h-4 text-trust-navy" />
-                                </div>
-                            </Button>
-                        </div>
+                        </Button>
                     </div>
                 </section>
 
-                {/* B. Services Grid (3 Equal Cards) */}
-                <section id="services" className="grid grid-rows-[auto_1fr] gap-2 min-h-0 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-left">
-                    <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                        <h3 className="font-extrabold text-[10px] text-gray-400 uppercase tracking-widest">{t('Common.Mobile.selectPacket')}</h3>
-                        <button onClick={() => {
-                            const servicesSection = document.getElementById('services');
-                            if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
-                        }} className="text-[10px] text-trust-navy font-bold hover:underline">{t('Common.Mobile.comparePlans')}</button>
+                {/* Trust Indicators */}
+                <div className="flex justify-center gap-6 text-gray-400">
+                    <div className="flex items-center gap-1.5 grayscale opacity-70">
+                        <div className="flex text-yellow-500"><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /></div>
+                        <span className="text-[10px] font-semibold">4.9/5 TrustScore</span>
+                    </div>
+                </div>
+
+                {/* B. Services Grid */}
+                <section id="services" className="space-y-4">
+                    <div className="flex justify-between items-end px-2">
+                        <h3 className="font-bold text-lg text-gray-900">{t('Common.Mobile.selectPacket') || 'Select Plan'}</h3>
                     </div>
 
-                    <div className="p-2 grid grid-rows-3 gap-2 min-h-0">
-                        {/* Card 01 - Full Service */}
-                        <div onClick={() => handlePlanSelect('full')} className="relative bg-gray-50 hover:bg-blue-50 border border-transparent hover:border-blue-100 rounded-xl p-3 flex items-center justify-between transition-all group overflow-hidden cursor-pointer active:scale-98">
-                            {isProcessing === 'full' && <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center"><div className="w-5 h-5 border-2 border-trust-navy border-t-transparent rounded-full animate-spin"></div></div>}
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-trust-navy rounded-l-xl"></div>
-                            <div className="flex items-center gap-3 ml-2">
-                                <div className="text-trust-navy font-black text-lg w-6">01</div>
-                                <div>
-                                    <h4 className="font-bold text-sm text-trust-navy leading-tight">{t('Common.Mobile.Plans.full.title')}</h4>
-                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">{t('Common.Mobile.Plans.full.desc')}</p>
+                    <div className="grid gap-3">
+                        {/* Card 01 - Full Service (Highlighted) */}
+                        <div onClick={() => handlePlanSelect('full')} className="bg-white rounded-[1.5rem] p-5 shadow-sm border border-blue-100 relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">
+                                RECOMMENDED
+                            </div>
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="h-10 w-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
+                                    <ShieldCheck size={20} />
+                                </div>
+                                <div className="text-right">
+                                    <span className="block text-2xl font-black text-gray-900">$99</span>
+                                    <span className="text-[10px] text-gray-400 font-medium">ONE TIME</span>
                                 </div>
                             </div>
-                            <div className="text-right">
-                                <span className="font-black text-trust-navy text-sm block">$99</span>
-                            </div>
+                            <h4 className="font-bold text-base text-gray-900 mb-1">{t('Common.Mobile.Plans.full.title')}</h4>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('Common.Mobile.Plans.full.desc')}</p>
+                            {isProcessing === 'full' && (
+                                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex items-center justify-center">
+                                    <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                </div>
+                            )}
                         </div>
 
-                        {/* Card 02 - DIY */}
-                        <div onClick={() => handlePlanSelect('diy')} className="bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-3 flex items-center justify-between transition-all group cursor-pointer active:scale-98 relative">
-                            {isProcessing === 'diy' && <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center"><div className="w-5 h-5 border-2 border-trust-navy border-t-transparent rounded-full animate-spin"></div></div>}
-                            <div className="flex items-center gap-3 ml-1">
-                                <div className="text-gray-300 font-black text-lg w-6 group-hover:text-gray-400 transition-colors">02</div>
-                                <div>
-                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">{t('Common.Mobile.Plans.diy.title')}</h4>
-                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">{t('Common.Mobile.Plans.diy.desc')}</p>
+                        {/* Card 02 - Simulator */}
+                        <div onClick={() => handlePlanSelect('simulator')} className="bg-white rounded-[1.5rem] p-5 shadow-sm border border-transparent active:scale-[0.98] transition-transform">
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="h-10 w-10 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
+                                    <BrainCircuit size={20} />
+                                </div>
+                                <div className="text-right">
+                                    <span className="block text-2xl font-black text-gray-900">$29</span>
                                 </div>
                             </div>
-                            <span className="font-bold text-gray-600 text-sm">$39</span>
+                            <h4 className="font-bold text-base text-gray-900 mb-1">{t('Common.Mobile.Plans.simulator.title')}</h4>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('Common.Mobile.Plans.simulator.desc')}</p>
+                            {isProcessing === 'simulator' && (
+                                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex items-center justify-center">
+                                    <div className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                                </div>
+                            )}
                         </div>
 
-                        {/* Card 03 - Simulator */}
-                        <div onClick={() => handlePlanSelect('simulator')} className="bg-white hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-xl p-3 flex items-center justify-between transition-all group cursor-pointer active:scale-98 relative">
-                            {isProcessing === 'simulator' && <div className="absolute inset-0 bg-white/50 z-20 flex items-center justify-center"><div className="w-5 h-5 border-2 border-trust-navy border-t-transparent rounded-full animate-spin"></div></div>}
-                            <div className="flex items-center gap-3 ml-1">
-                                <div className="text-gray-300 font-black text-lg w-6 group-hover:text-gray-400 transition-colors">03</div>
-                                <div>
-                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">{t('Common.Mobile.Plans.simulator.title')}</h4>
-                                    <p className="text-[10px] text-gray-500 font-medium leading-none mt-0.5">{t('Common.Mobile.Plans.simulator.desc')}</p>
+                        {/* Card 03 - DIY */}
+                        <div onClick={() => handlePlanSelect('diy')} className="bg-white rounded-[1.5rem] p-5 shadow-sm border border-transparent active:scale-[0.98] transition-transform opacity-80 hover:opacity-100">
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="h-10 w-10 bg-green-50 rounded-full flex items-center justify-center text-green-600">
+                                    <CheckCircle2 size={20} />
+                                </div>
+                                <div className="text-right">
+                                    <span className="block text-2xl font-black text-gray-900">$39</span>
                                 </div>
                             </div>
-                            <span className="font-bold text-gray-600 text-sm">$29</span>
+                            <h4 className="font-bold text-base text-gray-900 mb-1">{t('Common.Mobile.Plans.diy.title')}</h4>
+                            <p className="text-xs text-gray-500 leading-relaxed">{t('Common.Mobile.Plans.diy.desc')}</p>
+                            {isProcessing === 'diy' && (
+                                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex items-center justify-center">
+                                    <div className="w-6 h-6 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
             </main>
 
-            {/* 3. Footer (Fixed) */}
-            <footer className="h-8 bg-white border-t border-gray-100 flex items-center justify-between px-5 text-[9px] text-gray-400 shrink-0">
-                <div className="flex gap-3">
-                    <span className="flex items-center gap-1 font-medium"><ShieldCheck className="w-2.5 h-2.5 text-trust-navy" /> Encrypted</span>
-                    <span className="flex items-center gap-1 font-medium"><BrainCircuit className="w-2.5 h-2.5 text-trust-navy" /> AI-Powered</span>
+            {/* Footer */}
+            <footer className="py-6 text-center text-[10px] text-gray-300">
+                <p>US Visa Center • Secure Processing</p>
+                <div className="flex justify-center gap-2 mt-1 opacity-50">
+                    <span className="flex items-center gap-1"><ShieldCheck size={8} /> 256-bit SSL</span>
                 </div>
-                <span className="font-mono font-bold text-accent-gold">v1.5.5</span>
             </footer>
         </div>
     );
