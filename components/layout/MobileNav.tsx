@@ -3,7 +3,7 @@
 import { Link } from "@/src/i18n/routing";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { Home, Briefcase, Activity, Settings } from "lucide-react";
+import { Home, Briefcase, Activity, Settings, Plus, MessageSquare, User } from "lucide-react";
 import { SettingsMenu } from "./SettingsMenu";
 
 export function MobileNav() {
@@ -31,35 +31,31 @@ export function MobileNav() {
     ];
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-safe xl:hidden">
-            <div className="flex justify-around items-center h-16">
-                {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const active = isActive(item.href);
+        <nav className="bg-white border-t border-gray-200 px-4 py-2 safe-bottom flex justify-between items-center z-30 flex-none text-[10px] shadow-[0_-4px_15px_-3px_rgba(0,0,0,0.05)]">
+            <Link href="/" className="flex flex-col items-center gap-1 p-2 min-w-[50px] text-[#2672DE] transition-colors rounded-lg active:bg-gray-50">
+                <Home className="w-5 h-5 stroke-[2.5]" />
+                <span className="font-semibold">{t('Common.nav.home')}</span>
+            </Link>
 
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${active ? "text-trust-navy" : "text-gray-400 hover:text-gray-600"
-                                }`}
-                        >
-                            <Icon className={`w-6 h-6 ${active ? "fill-current" : ""}`} strokeWidth={active ? 2.5 : 2} />
-                            <span className="text-[10px] font-medium">{item.label}</span>
-                        </Link>
-                    );
-                })}
+            <Link href="/services" className="flex flex-col items-center gap-1 p-2 min-w-[50px] text-gray-400 hover:text-[#003366] transition-colors rounded-lg active:bg-gray-50">
+                <Briefcase className="w-5 h-5" />
+                <span className="font-medium">{t('Common.nav.services')}</span>
+            </Link>
 
-                {/* Settings Menu Item */}
-                <SettingsMenu>
-                    <button
-                        className="flex flex-col items-center justify-center w-full h-full space-y-1 text-gray-400 hover:text-gray-600"
-                    >
-                        <Settings className="w-6 h-6" strokeWidth={2} />
-                        <span className="text-[10px] font-medium">{t('Common.nav.settings')}</span>
-                    </button>
-                </SettingsMenu>
-            </div>
-        </div>
+            {/* Central Action Button */}
+            <Link href="/assessment" className="bg-[#2672DE] text-white p-2.5 rounded-xl shadow-md active:scale-95 transition-transform mx-1 hover:bg-[#003366]">
+                <Plus className="w-5 h-5 stroke-[3]" />
+            </Link>
+
+            <Link href="/support" className="flex flex-col items-center gap-1 p-2 min-w-[50px] text-gray-400 hover:text-[#003366] transition-colors rounded-lg active:bg-gray-50">
+                <MessageSquare className="w-5 h-5" />
+                <span className="font-medium">{t('Common.nav.status')}</span>
+            </Link>
+
+            <Link href="/profile" className="flex flex-col items-center gap-1 p-2 min-w-[50px] text-gray-400 hover:text-[#003366] transition-colors rounded-lg active:bg-gray-50">
+                <User className="w-5 h-5" />
+                <span className="font-medium">Profile</span>
+            </Link>
+        </nav>
     );
 }
