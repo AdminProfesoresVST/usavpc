@@ -86,9 +86,14 @@ export async function POST(req: Request) {
         // 2.5: Inject Context Data (OCR + Triage) if provided on first load
         if (context) {
             let updates: any = {};
-            let payloadUpdates: any = application.ds160_payload || { ds160_data: { personal: {}, travel: {}, work_history: {}, security_questions: {} } };
+            // STRICT MODE: Payload MUST exist.
+            if (!application.ds160_payload) {
+                console.error("CRITICAL: Application exists but payload is null.", application.id);
+                throw new Error("CRITICAL_DATA_CORRUPTION: Application payload is missing.");
+            }
+            let payloadUpdates: any = application.ds160_payload;
 
-            // Ensure structure exists
+            // Ensure structure exists (This is structure, not data. Allowed to init empty branches)
             if (!payloadUpdates.ds160_data) payloadUpdates.ds160_data = { personal: {} };
             if (!payloadUpdates.ds160_data.personal) payloadUpdates.ds160_data.personal = {};
             if (!payloadUpdates.ds160_data.passport) payloadUpdates.ds160_data.passport = {};
