@@ -51,8 +51,10 @@ export default async function RootLayout({
               {children}
             </main>
 
-            {/* Mobile Nav fixed at bottom */}
-            <MobileNav />
+            {/* Mobile Nav fixed at bottom (Hidden on XL) */}
+            <div className="xl:hidden">
+              <MobileNav />
+            </div>
             <DevToolbar />
           </AnalyticsProvider>
         </NextIntlClientProvider>

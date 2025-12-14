@@ -13,16 +13,8 @@ export default function Home() {
   const t = useTranslations();
 
   return (
-    <>
-      {/* 2. Desktop Block (Visible on Desktop xl+) */}
-      <div className="hidden xl:flex flex-col min-h-screen">
-        <DesktopBlocker />
-      </div>
-
-      {/* 3. Mobile/Tablet App (Hidden on xl+) */}
-      <div className="xl:hidden w-full h-[100dvh]">
-        <MobileHome />
-      </div>
-    </>
+    <div className="w-full min-h-screen">
+      <MobileHome />
+    </div>
   );
 }
