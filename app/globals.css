@@ -48,11 +48,11 @@
   --alert-red: #B71C1C;
   --success-green: #1B5E20;
   --accent-gold: #C5A065;
-  /* Added for official look */
-  --text-dark: #1F2937;
-  --focus-ring: #2672DE;
-  --input-bg: #FAFAFA;
-  --input-border: #D1D5DB;
+
+  /* Modern App Palette */
+  --app-blue: #2672DE;
+  --text-dark: #111827;
+  /* Gray 900 for sharper contrast */
 
   --background: var(--official-grey);
   --foreground: var(--text-dark);
@@ -63,11 +63,10 @@
   --popover: var(--paper-white);
   --popover-foreground: var(--text-dark);
 
-  --primary: var(--trust-navy);
+  --primary: var(--app-blue);
   --primary-foreground: #FFFFFF;
 
   --secondary: #E5E7EB;
-  /* Light grey for secondary actions */
   --secondary-foreground: var(--text-dark);
 
   --muted: #F3F4F6;
@@ -79,13 +78,12 @@
   --destructive: var(--alert-red);
   --destructive-foreground: #FFFFFF;
 
-  --border: var(--input-border);
-  --input: var(--input-bg);
-  /* Using input bg color for input variable */
-  --ring: var(--focus-ring);
+  --border: #D1D5DB;
+  --input: #FAFAFA;
+  --ring: var(--app-blue);
 
-  --radius: 0.125rem;
-  /* 2px rounded-sm */
+  --radius: 0.75rem;
+  /* Rounded-xl/2xl feel */
 }
 
 .dark {

@@ -339,7 +339,16 @@ export async function POST(req: Request) {
                 // We can append it to the NEXT question? Or send it as a separate bubble?
                 // The UI handles one message. Let's prepend it to the next question.
 
-                // 4. Save Answer & Advance
+                // 4. Save Smart Data (Contextual Extraction)
+                // If the AI found other answers in the user's text, save them too.
+                if (valRes.additionalData) {
+                    console.log("[Chat] 🧠 AI found extra context:", valRes.additionalData);
+                    for (const [key, val] of Object.entries(valRes.additionalData)) {
+                        await sm.saveAnswer(user.id, key, val);
+                    }
+                }
+
+                // Save direct answer
                 await sm.saveAnswer(user.id, currentStep.field, valRes.extractedValue || answer);
                 const nextStep = await sm.getNextStep();
 
