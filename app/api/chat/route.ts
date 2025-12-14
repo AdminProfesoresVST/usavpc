@@ -200,6 +200,7 @@ export async function POST(req: Request) {
                     valRes = {
                         isValid: true,
                         extractedValue: matchedOption.value,
+                        displayValue: matchedOption.label,
                         english_proficiency: null,
                         sentiment: 'neutral',
                         isHelpRequest: false
@@ -235,6 +236,11 @@ export async function POST(req: Request) {
                     });
 
                     valRes = JSON.parse(validationCompletion.choices[0].message.content || '{}');
+
+                    // Fallback: If AI didn't provide displayValue, use extractedValue
+                    if (!valRes.displayValue && valRes.extractedValue) {
+                        valRes.displayValue = valRes.extractedValue;
+                    }
                 }
             }
 

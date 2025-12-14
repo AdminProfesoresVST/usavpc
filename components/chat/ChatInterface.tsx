@@ -18,6 +18,7 @@ interface Message {
         original?: string;
         interpreted?: string;
         extractedValue?: string;
+        displayValue?: string;
         type?: string;
     };
 }
@@ -272,7 +273,7 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                                             <span className="text-[10px] uppercase tracking-wider font-bold text-blue-500">IA Procesó:</span>
                                         </div>
                                         <div className="bg-blue-50/50 text-blue-900 border-l-2 border-blue-400 px-3 py-2 rounded-r-lg text-xs shadow-sm backdrop-blur-sm">
-                                            {msg.validationResult.extractedValue || msg.validationResult.interpreted}
+                                            {msg.validationResult.displayValue || msg.validationResult.extractedValue || msg.validationResult.interpreted}
                                         </div>
                                     </div>
                                 </motion.div>
