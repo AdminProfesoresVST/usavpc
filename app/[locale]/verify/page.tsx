@@ -11,11 +11,7 @@ export default function VerifyPage() {
 
     return (
         <div className="flex flex-col h-full bg-[#F0F2F5]">
-            <Header
-                title="Confirmar Datos"
-                subtitle="Paso 3 de 3"
-                progress={90}
-            />
+            <Header />
 
             <div className="fade-enter h-full flex flex-col p-6">
                 <div className="flex flex-col items-center mb-6">

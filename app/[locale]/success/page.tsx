@@ -11,7 +11,7 @@ export default function SuccessPage() {
 
     return (
         <div className="flex flex-col h-full bg-[#F0F2F5]">
-            <Header collapsed />
+            <Header />
 
             <div className="fade-enter flex flex-col items-center h-full pt-4 px-6 overflow-y-auto">
                 {/* Success Badge */}

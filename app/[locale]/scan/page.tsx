@@ -21,11 +21,7 @@ export default function ScanPage() {
 
     return (
         <div className="flex flex-col h-full bg-[#F0F2F5]">
-            <Header
-                title="Verificación"
-                subtitle="Paso 2 de 3"
-                progress={60}
-            />
+            <Header />
 
             <div className="flex flex-col items-center text-center h-full justify-center fade-enter pb-6 px-6">
                 <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative">

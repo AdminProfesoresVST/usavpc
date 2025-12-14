@@ -34,7 +34,7 @@ export function AssessmentFlow() {
 
     return (
         <div className="flex flex-col h-full bg-[#f0f2f5]">
-            <Header collapsed />
+            <Header />
 
             <div className="flex-1 relative z-10 h-full overflow-hidden">
                 <AnimatePresence mode="wait">
