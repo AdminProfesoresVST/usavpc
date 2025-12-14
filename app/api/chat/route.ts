@@ -141,7 +141,7 @@ export async function POST(req: Request) {
         }
 
         const payload = application.ds160_payload as DS160Payload;
-        const sm = new DS160StateMachine(payload, supabase, locale); // Pass locale
+        const sm = new DS160StateMachine(payload, supabase, locale, user.id); // Pass user.id
 
         // Update locale if changed or missing
         if (!application.client_metadata || application.client_metadata.locale !== locale) {
@@ -367,6 +367,63 @@ export async function POST(req: Request) {
             const cleanAnswer = valRes.extractedValue || answer;
 
             // 2. Process Valid Answer
+            // CONFIRMATION LOOP START
+            // Check if we are pending confirmation
+            const pendingConf = application.client_metadata?.confirmation_pending;
+
+            if (pendingConf) {
+                // User is replying to "Is X correct?"
+                const checkerPrompt = await getSystemPrompt(supabase, 'CONFIRMATION_CHECKER');
+                const checkCompletion = await openai.chat.completions.create({
+                    model: "gpt-4o-mini",
+                    messages: [
+                        { role: "system", content: checkerPrompt },
+                        { role: "user", content: `PROPOSAL: "${pendingConf.value}"\nUSER REPLY: "${answer}"` }
+                    ],
+                    response_format: { type: "json_object" }
+                });
+
+                const checkRes = JSON.parse(checkCompletion.choices[0].message.content || '{}');
+
+                if (checkRes.intent === 'CONFIRMED') {
+                    // 1. Clear Pending Flag
+                    await supabase.from("applications").update({
+                        client_metadata: { ...application.client_metadata, confirmation_pending: null }
+                    }).eq("id", application.id);
+
+                    // 2. Advance State (The answer is already saved)
+                    // Just return "Great" and next question
+                    const smNext = new DS160StateMachine(payload, supabase, effectiveLocale, user.id);
+                    const nextStep = await smNext.getNextStep();
+                    return NextResponse.json({
+                        response: effectiveLocale === 'es' ? "Excelente. Continuemos." : "Great. Moving on.",
+                        nextStep,
+                        validationResult: { isValid: true, displayValue: pendingConf.value }
+                    });
+
+                } else {
+                    // 1. REJECTED: Clear the saved value? 
+                    // We must wipe the answer so getNextStep returns the same question again.
+                    setDeepValue(payload, pendingConf.field, null);
+
+                    await supabase.from("applications").update({
+                        ds160_payload: payload,
+                        client_metadata: { ...application.client_metadata, confirmation_pending: null }
+                    }).eq("id", application.id);
+
+                    // 2. Return the SAME question again
+                    return NextResponse.json({
+                        response: effectiveLocale === 'es'
+                            ? "Entendido. Inténtalo de nuevo. Dime con tus propias palabras:"
+                            : "Understood. Let's try again. Tell me in your own words:",
+                        nextStep: currentStep // This will be the same question since we cleared the value
+                    });
+                }
+            }
+            // CONFIRMATION LOOP END
+
+
+            // 2. Process Valid Answer
             if (currentStep.context === 'needs_translation') {
                 // RAG: Search Knowledge Base for context
                 const embeddingResponse = await openai.embeddings.create({
@@ -405,15 +462,31 @@ export async function POST(req: Request) {
                 // Save structured object
                 setDeepValue(payload, currentStep.field, translatedData);
 
-                // Also save metadata for UI mirror
-                validationResult = {
-                    original: answer,
-                    interpreted: translatedData.job_title_translated_en || "Translated",
-                    type: 'job_translation'
-                };
+                // MIRROR LOGIC: STOP and Ask for Confirmation
+                const displayVal = translatedData.job_title_translated_en || "Translated";
 
-            } else if (currentStep.context === 'polish_content') {
-                // AI Processing for General Content Polishing (Duties, Explanations, etc.)
+                await supabase.from("applications").update({
+                    ds160_payload: payload,
+                    client_metadata: {
+                        ...application.client_metadata,
+                        confirmation_pending: { field: currentStep.field, value: displayVal }
+                    }
+                }).eq("id", application.id);
+
+                return NextResponse.json({
+                    response: effectiveLocale === 'es'
+                        ? `He interpretado esto como **"${displayVal}"**. ¿Es correcto para el formulario?`
+                        : `I interpreted this as **"${displayVal}"**. Is this correct for the form?`,
+                    nextStep: null, // Halt flow
+                    validationResult: {
+                        original: answer,
+                        interpreted: displayVal,
+                        type: 'job_translation',
+                        requires_confirmation: true
+                    }
+                });
+
+            } else if (currentStep.context === 'polish_content') { // Same for Polish
                 const prompt = await getSystemPrompt(supabase, 'CONTENT_POLISHER');
                 const finalPrompt = prompt.replace('{question}', currentStep.question);
 
@@ -432,11 +505,28 @@ export async function POST(req: Request) {
                 // Save polished text
                 setDeepValue(payload, currentStep.field, polishedText);
 
-                validationResult = {
-                    original: answer,
-                    interpreted: polishedText,
-                    type: 'content_polish'
-                };
+                // MIRROR LOGIC
+                await supabase.from("applications").update({
+                    ds160_payload: payload,
+                    client_metadata: {
+                        ...application.client_metadata,
+                        confirmation_pending: { field: currentStep.field, value: polishedText }
+                    }
+                }).eq("id", application.id);
+
+                return NextResponse.json({
+                    response: effectiveLocale === 'es'
+                        ? `He mejorado tu respuesta para que suene más profesional:\n\n**"${polishedText}"**\n\n¿Estás de acuerdo?`
+                        : `I polished your answer to sound more professional:\n\n**"${polishedText}"**\n\nDo you agree?`,
+                    nextStep: null, // Halt
+                    validationResult: {
+                        original: answer,
+                        interpreted: polishedText,
+                        type: 'content_polish',
+                        requires_confirmation: true
+                    }
+                });
+
 
             } else if (currentStep.context === 'spouse_parser') {
                 // AI Processing for Spouse Details
@@ -455,65 +545,119 @@ export async function POST(req: Request) {
                 // Save the object to the spouse field
                 setDeepValue(payload, currentStep.field, aiResponse);
 
+                // No confirmation needed for simple factual extraction usually, but explicit user request implies ALL interpretation
+                // Let's keep spouse verification implicit for now unless user complains, or add it.
+                // User said "interpret, analyze, put in best words... give improved answer... user decides".
+                // Spouse name is factual. Duties/Job are interpretative.
+                // We will stick to job/duties for now.
+
+                await supabase.from("applications").update({
+                    ds160_payload: payload,
+                    client_metadata: { ...application.client_metadata }
+                }).eq("id", application.id);
+
                 validationResult = {
                     original: answer,
                     interpreted: `${aiResponse.given_names} ${aiResponse.surnames} (${aiResponse.dob})`,
                     type: 'spouse_extraction'
                 };
 
+            } else if (currentStep.type === 'text' && valRes.displayValue && valRes.displayValue.length > 3 && valRes.displayValue !== answer && valRes.displayValue !== "Does Not Apply") {
+                // UNIVERSAL POLISH & CONFIRM
+                // If the Validator improved the text (and it's not just a standard "N/A" map), verify with user.
+                // Heuristic: If string distance is significant or completely different words.
+                // For now, assume any change in TEXT fields that isn't N/A or simple casing warrants a check if it adds content.
+                // Actually, let's trust the user wants to clear "bad formulations".
+
+                // Normalization for comparison
+                const normAns = answer.trim().toLowerCase();
+                const normDisp = valRes.displayValue.trim().toLowerCase();
+
+                // If it's just casing/trimming, skip confirmation
+                if (normAns === normDisp) {
+                    setDeepValue(payload, currentStep.field, valRes.extractedValue || answer);
+                    await supabase.from("applications").update({
+                        ds160_payload: payload,
+                        client_metadata: { ...application.client_metadata, prefers_language: effectiveLocale }
+                    }).eq("id", application.id);
+                } else {
+                    // Significant Change detected (e.g. "vendo ropa" -> "Retail Sales")
+                    // SAVE PENDING
+                    await supabase.from("applications").update({
+                        ds160_payload: payload, // Don't save the value yet (or save previous) - checking logic
+                        // Actually, we haven't saved the value in payload yet.
+                        client_metadata: {
+                            ...application.client_metadata,
+                            confirmation_pending: { field: currentStep.field, value: valRes.extractedValue } // Save the EXTRACTED value (the good one)
+                        }
+                    }).eq("id", application.id);
+
+                    return NextResponse.json({
+                        response: effectiveLocale === 'es'
+                            ? `He mejorado tu respuesta: **"${valRes.displayValue}"**. ¿Te parece bien?`
+                            : `I improved your answer to: **"${valRes.displayValue}"**. Is this okay?`,
+                        nextStep: null, // Halt flow matches currentStep visually usually, or null
+                        validationResult: {
+                            original: answer,
+                            interpreted: valRes.displayValue,
+                            type: 'universal_polish',
+                            requires_confirmation: true
+                        }
+                    });
+                }
+
             } else {
-                // Direct update
+                // Direct update (No polish needed or simple field)
                 setDeepValue(payload, currentStep.field, cleanAnswer);
+
+                // Normal save logic
+                await supabase
+                    .from("applications")
+                    .update({
+                        ds160_payload: payload,
+                        client_metadata: {
+                            ...application.client_metadata,
+                            prefers_language: effectiveLocale
+                        }
+                    })
+                    .eq("id", application.id);
             }
 
-            // Save updated payload to DB
-            await supabase
-                .from("applications")
-                .update({
-                    ds160_payload: payload,
-                    client_metadata: {
-                        ...application.client_metadata,
-                        prefers_language: effectiveLocale
-                    }
-                })
-                .eq("id", application.id);
-        }
+            // RE-INSTANTIATE SM WITH UPDATED PAYLOAD TO ENSURE FRESH STATE
+            const smNext = new DS160StateMachine(payload, supabase, effectiveLocale, user.id);
 
-        // RE-INSTANTIATE SM WITH UPDATED PAYLOAD TO ENSURE FRESH STATE
-        const smNext = new DS160StateMachine(payload, supabase, effectiveLocale);
+            // 4. Get Next Question (after update)
+            const nextStep = await smNext.getNextStep();
 
-        // 4. Get Next Question (after update)
-        const nextStep = await smNext.getNextStep();
+            // 5. If Interview Complete, Run Risk Analysis
+            let riskAnalysis = null;
+            if (!nextStep) {
+                const riskPrompt = await getSystemPrompt(supabase, 'RISK_ANALYST');
+                const analysisCompletion = await openai.chat.completions.create({
+                    model: "gpt-4o", // Use stronger model for analysis
+                    messages: [
+                        { role: "system", content: riskPrompt },
+                        { role: "user", content: JSON.stringify(payload) }
+                    ],
+                    response_format: { type: "json_object" }
+                });
 
-        // 5. If Interview Complete, Run Risk Analysis
-        let riskAnalysis = null;
-        if (!nextStep) {
-            const riskPrompt = await getSystemPrompt(supabase, 'RISK_ANALYST');
-            const analysisCompletion = await openai.chat.completions.create({
-                model: "gpt-4o", // Use stronger model for analysis
-                messages: [
-                    { role: "system", content: riskPrompt },
-                    { role: "user", content: JSON.stringify(payload) }
-                ],
-                response_format: { type: "json_object" }
+                riskAnalysis = JSON.parse(analysisCompletion.choices[0].message.content || '{}');
+
+                // Save to DB
+                await supabase
+                    .from("applications")
+                    .update({ risk_assessment: riskAnalysis })
+                    .eq("id", application.id);
+            }
+
+            return NextResponse.json({
+                nextStep,
+                validationResult,
+                riskAnalysis, // Return analysis to UI
+                progress: calculateProgress(payload)
             });
-
-            riskAnalysis = JSON.parse(analysisCompletion.choices[0].message.content || '{}');
-
-            // Save to DB
-            await supabase
-                .from("applications")
-                .update({ risk_assessment: riskAnalysis })
-                .eq("id", application.id);
         }
-
-        return NextResponse.json({
-            nextStep,
-            validationResult,
-            riskAnalysis, // Return analysis to UI
-            progress: calculateProgress(payload)
-        });
-
     } catch (error) {
         console.error("Chat API Error:", error);
         return NextResponse.json({

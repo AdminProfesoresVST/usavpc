@@ -17,37 +17,41 @@ interface FlowStep {
     options: any;
     context: string;
     required_logic: { field: string; operator: string; value: any } | null;
+    question_en?: string;
 }
 
 export class DS160StateMachine {
     private payload: DS160Payload;
     private supabase: SupabaseClient;
     private locale: string;
+    private userId: string | null;
 
-    constructor(payload: DS160Payload, supabase: SupabaseClient, locale: string = 'es') {
+    constructor(payload: DS160Payload, supabase: SupabaseClient, locale: string = 'es', userId: string | null = null) {
         this.payload = payload;
         this.supabase = supabase;
         this.locale = locale;
+        this.userId = userId;
     }
 
     public async getNextStep(): Promise<QuestionState | null> {
         // 1. Fetch Flow Definition
-        let steps = [];
+        let steps: FlowStep[] = [];
         const { data, error } = await this.supabase
             .from('ai_interview_flow')
             .select('*')
             .order('order_index', { ascending: true });
 
         if (error || !data || data.length === 0) {
-            // Fallback to hardcoded flow if DB is empty (Supports Dev Mode without Seed)
+            // Fallback to hardcoded flow if DB is empty
             const { FALLBACK_QUESTIONS } = await import("./questions");
-            steps = FALLBACK_QUESTIONS.map(q => ({
+            steps = FALLBACK_QUESTIONS.map((q, index) => ({
+                id: `fallback-${index}`,
                 field_key: q.field,
                 question_es: q.question,
-                question_en: q.question_en, // Ensure fallback has this
+                question_en: q.question_en,
                 input_type: q.input_type,
                 options: q.options,
-                context: q.context,
+                context: q.context || "",
                 required_logic: (q as any).logic
             }));
         } else {
@@ -56,71 +60,95 @@ export class DS160StateMachine {
 
         // 2. Iterate and find first missing field
         for (const step of steps) {
-            if (this.shouldAsk(step)) {
-                // Determine question based on locale
-                let questionText = step.question_es; // Default fallback matches source of truth
+            // A. Check Logic (Skip if logic says so)
+            if (!this.shouldAsk(step)) continue;
 
-                if (this.locale === 'en' && step.question_en) questionText = step.question_en;
+            // B. Check if already answered
+            if (this.isAnswered(step)) continue;
 
-                // SMART REPHRASING (The "Facilitator" Touch)
-                // If asking about US SSN for a non-US national, soften it.
-                if (step.field_key.includes('us_ssn') || step.field_key.includes('us_tax_id')) {
-                    const nat = this.getDeepValue(this.payload, 'ds160_data.personal.nationality');
-                    const isUS = nat && (nat.toLowerCase().includes('united states') || nat.toLowerCase().includes('usa') || nat.toLowerCase().includes('eeuu'));
-
-                    if (!isUS) {
-                        // Default assumption for foreigners: they don't have it.
-                        const prefix = this.locale === 'es'
-                            ? "Como ciudadano no estadounidense, esto generalmente no aplica. ¿Tienes un número de Seguro Social de EE.UU.? "
-                            : "As a non-US citizen, this usually doesn't apply. Do you have a US Social Security Number? ";
-
-                        const suffix = this.locale === 'es'
-                            ? "(Si no tienes, responde 'No' y yo pondré 'Does Not Apply')"
-                            : "(If no, just say 'No' and I'll mark 'Does Not Apply')";
-
-                        questionText = prefix + suffix;
-                    }
-                }
-
-                return {
-                    field: step.field_key,
-                    question: questionText,
-                    type: step.input_type as any,
-                    options: step.options,
-                    context: step.context
-                };
+            // C. SMART DEFAULTS
+            const autoValue = this.getAutoAnswer(step.field_key);
+            if (autoValue !== null && this.userId) {
+                // Auto-save and skip to next iteration
+                await this.saveAnswer(this.userId, step.field_key, autoValue);
+                continue;
             }
+
+            // Determine question based on locale
+            let questionText = step.question_es;
+            if (this.locale === 'en' && step.question_en) questionText = step.question_en;
+
+            // Facilitator Touch (SSN Logic)
+            if (step.field_key.includes('us_ssn') || step.field_key.includes('us_tax_id')) {
+                const nat = this.getDeepValue(this.payload, 'ds160_data.personal.nationality');
+                const isUS = nat && (nat.toLowerCase().includes('united states') || nat.toLowerCase().includes('usa') || nat.toLowerCase().includes('eeuu'));
+                if (!isUS) {
+                    const prefix = this.locale === 'es' ? "Como no-ciudadano, esto suele no aplicar. ¿Tienes SSN de EE.UU.? " : "As non-citizen, usually N/A. Do you have a US SSN? ";
+                    const suffix = this.locale === 'es' ? "(Si no, di 'No')" : "(If not, say 'No')";
+                    questionText = prefix + suffix;
+                }
+            }
+
+            // SMART REPHRASING: Passport Type explanation
+            if (step.field_key.includes('document_type')) {
+                const prefix = this.locale === 'es'
+                    ? "Para la mayoría es 'Regular'. "
+                    : "For most people, it's 'Regular'. ";
+                questionText = prefix + questionText;
+            }
+
+            return {
+                field: step.field_key,
+                question: questionText,
+                type: step.input_type as any,
+                options: step.options,
+                context: step.context
+            };
         }
 
         return null; // All done
     }
 
+    private getAutoAnswer(field: string): any | null {
+        // SMART DEFAULTS REMOVED FOR PASSPORT TYPE (User request: Ask explicitly)
+        // if (field.includes('ds160_data.passport.passport_type')) return 'R';
+
+        // 2. Passport Book Number -> ALWAYS 'Does Not Apply' (Emergency Unblock)
+        // User friction is too high. 99% of cases it is N/A.
+        if (field.includes('passport_book_num') || field.includes('book_number')) {
+            return "Does Not Apply";
+        }
+
+        // 3. Passport Issuer -> Default to Nationality
+        if (field.includes('passport_issuer') || field.includes('issuing_country')) {
+            const nationality = this.getDeepValue(this.payload, 'ds160_data.personal.nationality');
+            if (nationality) return nationality;
+        }
+
+        return null;
+    }
+
     private shouldAsk(step: FlowStep): boolean {
-        // A. Check Logic Conditions (Dependencies)
         if (step.required_logic) {
             const { field, operator, value } = step.required_logic;
             const actualValue = this.getDeepValue(this.payload, field);
-
             if (operator === 'eq' && actualValue !== value) return false;
             if (operator === 'neq' && actualValue === value) return false;
-            // Add more operators as needed
         }
+        return true;
+    }
 
-        // B. Check if already answered
+    private isAnswered(step: FlowStep): boolean {
         const currentValue = this.getDeepValue(this.payload, step.field_key);
 
-        // Special handling for composite fields (like spouse)
         if (step.context === 'spouse_parser') {
-            // Check if spouse object is fully populated
             const spouse = currentValue;
-            if (spouse && spouse.surnames && spouse.given_names && spouse.dob) return false; // Done
-            return true; // Ask
+            if (spouse && spouse.surnames && spouse.given_names && spouse.dob) return true;
+            return false;
         }
 
-        // Standard check: is it null/undefined/empty?
-        if (currentValue === null || currentValue === undefined || currentValue === '') return true;
-
-        return false; // Already answered
+        if (currentValue === null || currentValue === undefined || currentValue === '') return false;
+        return true;
     }
 
     private getDeepValue(obj: any, path: string): any {
