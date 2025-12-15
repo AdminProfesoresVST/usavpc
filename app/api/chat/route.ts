@@ -44,8 +44,72 @@ export async function POST(req: Request) {
 
         // 3. Process User Input (if any)
         const body = await req.json();
-        const { answer, duration, context, locale = 'en' } = body;
+        const { answer, duration, context, locale = 'en', mode = 'standard' } = body;
+
+        console.log(`[API] Chat Request - Mode: ${mode}, Answer: ${answer}`); // DEBUG LOG
+
         let effectiveLocale = locale;
+
+        // ---------------------------------------------------------
+        // SIMULATOR MODE INTERCEPTOR
+        // ---------------------------------------------------------
+        if (mode === 'simulator') {
+            // 1. If it's the INITIAL LOAD (answer is null), Greeting.
+            if (!answer) {
+                return NextResponse.json({
+                    nextStep: {
+                        question: effectiveLocale === 'es'
+                            ? "Buenos días. Soy el oficial consular asignado a su caso. Por favor, entrégueme su pasaporte y dígame el motivo de su viaje."
+                            : "Good morning. I am the consular officer assigned to your case. Please hand me your passport and state the purpose of your trip.",
+                        field: "simulator_intro",
+                        type: "text"
+                    }
+                });
+            }
+
+            // 2. Conversational Handling (Consul Persona)
+            // We need to bypass the strict validator for generic chat, BUT still try to extract data.
+            // We'll use a specific Simulator Prompt that is flexible.
+
+            const simulatorPrompt = `
+                 You are a STRICT US Visa Consul conducting an interview.
+                 You are ALSO a helpful Coach (hidden persona) that critiques the user if they make mistakes.
+                 
+                 Mode: SIMULATOR (Roleplay).
+                 
+                 Current User Input: "${answer}"
+                 
+                 TASK:
+                 1. Analyze the input.
+                 2. If it's a Greeting (like "hola", "hello"), Reply sternly but professionally as a Consul, and RE-ASK the last question (or ask for Purpose).
+                 3. If it's a specific answer (e.g. "Tourism"), evaluate it against the risk profile.
+                 4. OUTPUT format: JSON.
+                 {
+                    "response": "The Consul's verbal response",
+                    "feedback": "Optional coaching tip if they failed",
+                    "action": "CONTINUE" | "RETRY"
+                 }
+             `;
+
+            const simCompletion = await openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                messages: [{ role: "system", content: simulatorPrompt }],
+                response_format: { type: "json_object" }
+            });
+
+            const simRes = JSON.parse(simCompletion.choices[0].message.content || '{}');
+
+            return NextResponse.json({
+                response: simRes.response,
+                nextStep: {
+                    question: simRes.response + (simRes.feedback ? `\n\n💡 *Coach:* ${simRes.feedback}` : ""),
+                    field: "simulator_interaction",
+                    type: "text"
+                }
+            });
+        }
+        // ---------------------------------------------------------
+
 
         // 2. Load Application State
         let { data: application, error: dbError } = await supabase

@@ -190,7 +190,9 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                         <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                     </div>
                     <div>
-                        <h3 className="font-bold text-[#1F2937]">Asistente Consular</h3>
+                        <h3 className="font-bold text-[#1F2937]">
+                            {mode === 'simulator' ? "Oficial Consular (Simulador)" : "Asistente Consular"}
+                        </h3>
                         <p className="text-xs text-gray-500">Sistema Automatizado • ID 4421</p>
                     </div>
                 </div>
