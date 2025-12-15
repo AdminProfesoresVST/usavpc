@@ -51,11 +51,50 @@ export async function POST(req: Request) {
         let effectiveLocale = locale;
 
         // ---------------------------------------------------------
+        // 4. Load Application State (HOISTED)
+        // ---------------------------------------------------------
+        let { data: application, error: dbError } = await supabase
+            .from("applications")
+            .select("*")
+            .eq("user_id", user.id)
+            .single();
+
+        if (dbError && dbError.code === 'PGRST116') {
+            // Create new application if none exists
+            const { data: newApp, error: createError } = await supabase
+                .from("applications")
+                .insert([{
+                    user_id: user.id,
+                    ds160_payload: {
+                        ds160_data: {
+                            personal: {},
+                            travel: {},
+                            work_history: { current_job: {}, previous_jobs: [] },
+                            security_questions: {}
+                        }
+                    },
+                    client_metadata: { locale },
+                    simulator_history: [] // Init history
+                }])
+                .select()
+                .single();
+
+            if (createError) throw new Error(createError.message);
+            application = newApp;
+        }
+
+        // ---------------------------------------------------------
         // SIMULATOR MODE INTERCEPTOR
         // ---------------------------------------------------------
         if (mode === 'simulator') {
+            // 0. Load History from DB (Merge with Client if needed? No, Trust DB)
+            const dbHistory = application.simulator_history || [];
+
             // 1. If it's the INITIAL LOAD (answer is null), Greeting.
             if (!answer) {
+                // Return Greeting (No DB Update needed for Greeting? Or should we save Greeting?)
+                // Usually we don't save System greetings in user history unless we want them to appear in context.
+                // Let's NOT save greeting for now to keep it clean.
                 return NextResponse.json({
                     nextStep: {
                         question: effectiveLocale === 'es'
@@ -146,55 +185,47 @@ export async function POST(req: Request) {
                  }
              `;
 
+            // Construct Messages for AI
+            // Include DB History + Current Answer
+            // NOTE: history from Client Body is ignored in favor of DB, OR we append Input to DB.
+            // If answer exists, append it.
+
+            const effectiveHistory = [...dbHistory];
+            if (answer) {
+                effectiveHistory.push({ role: "user", content: answer });
+            }
+
             const simCompletion = await openai.chat.completions.create({
                 model: "gpt-4o-mini",
-                messages: [{ role: "system", content: simulatorPrompt }],
+                messages: [
+                    { role: "system", content: simulatorPrompt },
+                    ...effectiveHistory.slice(-10) // Feed last 10 messages for context (Context Window Management)
+                ],
                 response_format: { type: "json_object" }
             });
 
             const simRes = JSON.parse(simCompletion.choices[0].message.content || '{}');
+
+            // SAVE INTERACTION TO DB
+            if (answer && simRes.response) {
+                const newHistory = [
+                    ...effectiveHistory,
+                    { role: "assistant", content: simRes.response }
+                ];
+                await supabase.from("applications").update({ simulator_history: newHistory }).eq("id", application.id);
+            }
 
             return NextResponse.json({
                 response: simRes.response,
                 nextStep: {
                     question: simRes.response + (simRes.feedback ? `\n\n💡 *Coach:* ${simRes.feedback}` : ""),
                     field: "simulator_interaction",
-                    type: "text"
+                    type: "text",
+                    history: [] // Client doesn't need to manage history anymore? Or maybe sync it back?
                 }
             });
         }
         // ---------------------------------------------------------
-
-
-        // 2. Load Application State
-        let { data: application, error: dbError } = await supabase
-            .from("applications")
-            .select("*")
-            .eq("user_id", user.id)
-            .single();
-
-        if (dbError && dbError.code === 'PGRST116') {
-            // Create new application if none exists
-            const { data: newApp, error: createError } = await supabase
-                .from("applications")
-                .insert([{
-                    user_id: user.id,
-                    ds160_payload: {
-                        ds160_data: {
-                            personal: {},
-                            travel: {},
-                            work_history: { current_job: {}, previous_jobs: [] },
-                            security_questions: {}
-                        }
-                    },
-                    client_metadata: { locale }
-                }])
-                .select()
-                .single();
-
-            if (createError) throw new Error(createError.message);
-            application = newApp;
-        }
 
 
         // AUTO-LOCALE: Restore saved preference
