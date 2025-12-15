@@ -38,8 +38,6 @@ export function DetailedServicesList() {
                     <h1 className="text-2xl font-bold text-[#003366] tracking-tight">{t('pageTitle')}</h1>
                     <p className="text-sm text-gray-500 font-medium">{t('pageSubtitle')}</p>
                 </div>
-                {/* Version marker updated */}
-                <span className="text-[10px] text-gray-300 font-mono">v-navy-only</span>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -52,7 +50,7 @@ export function DetailedServicesList() {
                     <div className="absolute top-0 inset-x-0 h-1.5 bg-[#003366]" />
 
                     {/* Badge - Professional Tag using NAVY only (No Gold) */}
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-4 right-4 z-10">
                         <div className="bg-[#003366] text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                             <Star size={10} className="text-white fill-white" />
                             <span className="tracking-wide">RECOMMENDED</span>
@@ -60,10 +58,10 @@ export function DetailedServicesList() {
                     </div>
 
                     <div className="p-6 pt-8">
-                        {/* Header Section */}
-                        <div className="flex items-start gap-4 mb-5">
+                        {/* Header Section - Added padding-right to avoid badge overlap */}
+                        <div className="flex items-start gap-4 mb-5 pr-28">
                             {/* Brand Blue Outline/Background */}
-                            <div className="h-12 w-12 bg-[#003366]/5 rounded-lg flex items-center justify-center text-[#003366] border border-[#003366]/10">
+                            <div className="h-12 w-12 bg-[#003366]/5 rounded-lg flex items-center justify-center text-[#003366] border border-[#003366]/10 shrink-0">
                                 <ShieldCheck size={24} strokeWidth={1.5} />
                             </div>
                             <div>
@@ -112,7 +110,7 @@ export function DetailedServicesList() {
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center text-gray-600 shadow-sm">
+                                <div className="h-10 w-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center text-gray-600 shadow-sm shrink-0">
                                     <BrainCircuit size={20} strokeWidth={1.5} />
                                 </div>
                                 <div>
@@ -144,7 +142,7 @@ export function DetailedServicesList() {
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center text-gray-400 shadow-sm">
+                                <div className="h-10 w-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center text-gray-400 shadow-sm shrink-0">
                                     <CheckCircle2 size={20} strokeWidth={1.5} />
                                 </div>
                                 <div>
