@@ -520,6 +520,26 @@ function parsePassportData(text: string): PassportData {
     };
 }
 
+// GARBAGE FILTER (ISO Inspired)
+function isGarbage(text: string): boolean {
+    const t = text.toUpperCase();
+    // 1. Common Labels found in background
+    const labels = [
+        "DATE", "FECHA", "BIRTH", "NACIMIENTO", "EXPEDICION", "ISSUE",
+        "AUTHORITY", "AUTORIDAD", "SEXY", "SEXO", "SEX", "TITULAR",
+        "SURNAME", "GIVEN", "NAME", "NOMBRE", "APELLIDOS", "PASAPORTE", "PASSPORT",
+        "DOMINICANA", "REPUBLICA", "P<"
+    ];
+
+    if (labels.some(label => t.includes(label))) return true;
+
+    // 2. Too short / Special Char Noise
+    if (text.length < 3) return true;
+    if (/^[0-9]+$/.test(text) && text.length < 6) return true; // Random short numbers
+
+    return false;
+}
+
 function extractVIZField(lines: string[], keywords: string[]): string {
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].toUpperCase();
@@ -532,17 +552,15 @@ function extractVIZField(lines: string[], keywords: string[]): string {
             value = value.replace(/SEXO.*/, '').replace(/SEX.*/, '');
             value = value.replace(/[:\.\/]/g, '').trim();
 
-            if (value.length > 2 && !value.includes("SEX")) return value;
+            if (value.length > 2 && !isGarbage(value)) return value;
 
-            // If empty or bad, check Next Lines (Lookahead 2 lines)
-            for (let offset = 1; offset <= 2; offset++) {
+            // If empty or bad, check Next Lines (Lookahead 3 lines now)
+            for (let offset = 1; offset <= 3; offset++) {
                 if (lines[i + offset]) {
                     let nextVal = lines[i + offset].toUpperCase().replace(/[:\.\/]/g, '').trim();
 
-                    // Skip if it looks like another label or noise
-                    if (keywords.some(k => nextVal.includes(k))) continue;
-                    if (nextVal.includes("SEXO") || nextVal.includes("FEM") || nextVal.includes("MASC")) continue;
-                    if (nextVal.length < 3) continue;
+                    // Skip if garbage (labels, noise)
+                    if (isGarbage(nextVal)) continue;
 
                     return nextVal;
                 }
