@@ -221,9 +221,9 @@ export async function POST(req: Request) {
 
             let simRes;
             try {
-                // ATTEMPT: GPT-4o (STABILITY RESTORED - Only one that works consistently)
+                // ATTEMPT: GPT-5-MINI (User Preference Restored)
                 const simCompletion = await openai.chat.completions.create({
-                    model: "gpt-4o",
+                    model: "gpt-5-mini",
                     messages: [
                         { role: "system", content: simulatorPrompt },
                         ...effectiveHistory.slice(-20)
