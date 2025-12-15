@@ -130,7 +130,9 @@ export async function POST(req: Request) {
                  CRITICAL RULE: CHECK HISTORY FIRST.
                  - BEFORE asking a question, check if the User has already answered it (even partially).
                  - If User said "Disney", DO NOT ASK "What is your purpose?". ACCEPT IT and ask "Who are you going with?" (Category 4).
-                 - PROGRESSION: Move through categories. Do not get stuck on Category 2.
+                 - RESILIENCE: I If the user says "Hola" or comes back after an error, DO NOT RESTART. Read the history and CONTNUE where you left off.
+                 - SCAN: Check history for "Job", "Salary", "Time". If present, do not ask again.
+                 - PROGRESSION: Move through categories. Do not get stuck.
 
                  CATEGORÍA 1: ARRAIGO LABORAL Y PROFESIONAL (Job & Ties)
                  - "¿A qué se dedica?" (Opening) -> Purpose: Profile.
