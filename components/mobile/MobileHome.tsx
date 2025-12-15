@@ -118,8 +118,12 @@ export function MobileHome() {
                     </div>
 
                     <div className="flex-1 flex flex-col gap-2 min-h-0">
-                        {/* Card 01 - Full Service (Main Option) - Takes more space */}
-                        <div onClick={() => handlePlanSelect('full')} className="group flex-1 bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative overflow-hidden active:scale-[0.99] transition-all flex flex-col justify-between">
+                        {/* Card 01 - Full Service (Main Option) - STRICT HEIGHT 170px */}
+                        <div
+                            onClick={() => handlePlanSelect('full')}
+                            style={{ height: '170px', minHeight: '170px', maxHeight: '170px' }}
+                            className="group bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative overflow-hidden active:scale-[0.99] transition-all flex flex-col justify-between shrink-0 !h-[170px] !min-h-[170px] !max-h-[170px]"
+                        >
                             <div className="absolute top-0 right-0 bg-[#003366] text-white text-[8px] font-bold px-2 py-0.5 rounded-bl-md tracking-wider">
                                 POPULAR
                             </div>
