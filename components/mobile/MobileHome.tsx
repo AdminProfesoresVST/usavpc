@@ -66,8 +66,8 @@ export function MobileHome() {
             {/* 2. Main Content - Flex Layout to fit, NO SCROLL */}
             <main className="flex-1 flex flex-col p-3 gap-3 overflow-hidden">
 
-                {/* A. Hero: Flexible Height, Minimized whitespace */}
-                <section className="bg-[#003366] rounded-xl p-4 text-white shadow-lg relative overflow-hidden flex flex-col justify-between shrink-0 basis-1/3 min-h-[160px]">
+                {/* A. Hero: Fixed Height 150px */}
+                <section className="bg-[#003366] rounded-xl p-4 text-white shadow-lg relative overflow-hidden flex flex-col justify-between shrink-0 h-[150px]">
                     {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
 
