@@ -28,7 +28,8 @@ export default function ScanPage() {
     const [isScanning, setIsScanning] = useState(false);
     const [status, setStatus] = useState("Esperando imagen...");
     const [scannedData, setScannedData] = useState<PassportData | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const cameraInputRef = useRef<HTMLInputElement>(null);
+    const uploadInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -304,12 +305,19 @@ export default function ScanPage() {
         <div className="flex flex-col h-full bg-[#F0F2F5]">
             <div className="flex flex-col items-center text-center h-full justify-center fade-enter px-6 relative">
 
-                {/* Hidden Input */}
+                {/* Hidden Inputs */}
                 <input
                     type="file"
                     accept="image/*"
                     capture="environment"
-                    ref={fileInputRef}
+                    ref={cameraInputRef}
+                    className="hidden"
+                    onChange={handleFileChange}
+                />
+                <input
+                    type="file"
+                    accept="image/*"
+                    ref={uploadInputRef}
                     className="hidden"
                     onChange={handleFileChange}
                 />
@@ -332,33 +340,42 @@ export default function ScanPage() {
                 <p className="text-sm text-gray-500 mb-8 max-w-[280px] leading-relaxed mx-auto">
                     {isScanning
                         ? status
-                        : "Use su cámara para extraer datos automáticamente. Rápido y seguro."}
+                        : "Elija cómo desea cargar la imagen de su pasaporte."}
                 </p>
 
-                {/* Main Action */}
-                <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isScanning}
-                    className="w-full max-w-xs bg-[#003366] text-white h-12 rounded-lg font-bold shadow-xl shadow-[#003366]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-80 text-sm"
-                >
+                {/* Actions */}
+                <div className="flex flex-col gap-3 w-full max-w-xs transition-all">
                     {isScanning ? (
-                        <>
+                        <div className="w-full bg-[#003366] text-white h-12 rounded-lg font-bold shadow-xl shadow-[#003366]/20 flex items-center justify-center gap-2 opacity-90 cursor-wait">
                             <Loader2 className="w-4 h-4 animate-spin" />
                             <span>{status}</span>
-                        </>
+                        </div>
                     ) : (
                         <>
-                            <Camera className="w-4 h-4" />
-                            <span>Abrir Cámara</span>
+                            <button
+                                onClick={() => cameraInputRef.current?.click()}
+                                className="w-full bg-[#003366] text-white h-12 rounded-lg font-bold shadow-lg shadow-[#003366]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-sm"
+                            >
+                                <Camera className="w-4 h-4" />
+                                <span>Usar Cámara</span>
+                            </button>
+
+                            <button
+                                onClick={() => uploadInputRef.current?.click()}
+                                className="w-full bg-white text-[#003366] border border-gray-200 h-12 rounded-lg font-bold shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-sm hover:bg-gray-50"
+                            >
+                                <Upload className="w-4 h-4" />
+                                <span>Subir Archivo</span>
+                            </button>
                         </>
                     )}
-                </button>
+                </div>
 
                 {/* Footer formats */}
                 {!isScanning && (
                     <div className="mt-8 flex flex-col gap-4">
                         <div className="flex items-center gap-1.5 justify-center text-[10px] uppercase font-bold text-gray-400 tracking-wider">
-                            <Upload size={10} />
+                            <Check size={12} className="text-green-500" />
                             <span>JPG • PNG • HEIC</span>
                         </div>
                     </div>
