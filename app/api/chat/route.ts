@@ -125,7 +125,12 @@ export async function POST(req: Request) {
                  Turns Used: ${currentTurns} / ${MAX_TURNS}.
                  
                  CONSUL KNOWLEDGE BASE (MATRIX OF QUESTIONS):
-                 Use this Matrix to determine your next question. Do not ask random questions. Follow this logic.
+                 Use this Matrix to determine your next question.
+                 
+                 CRITICAL RULE: CHECK HISTORY FIRST.
+                 - BEFORE asking a question, check if the User has already answered it (even partially).
+                 - If User said "Disney", DO NOT ASK "What is your purpose?". ACCEPT IT and ask "Who are you going with?" (Category 4).
+                 - PROGRESSION: Move through categories. Do not get stuck on Category 2.
 
                  CATEGORÍA 1: ARRAIGO LABORAL Y PROFESIONAL (Job & Ties)
                  - "¿A qué se dedica?" (Opening) -> Purpose: Profile.
