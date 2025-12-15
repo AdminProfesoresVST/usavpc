@@ -69,30 +69,92 @@ export default function ScanPage() {
         const lines = text.split('\n');
         let mrzLine2 = "";
 
-        // Basic MRZ Logic
+        // Find MRZ Line 2 (contains dates and numbers)
+        // Look for line starting with Passport Number pattern or just containing many digits and <<
         for (const line of lines) {
-            const cleanLine = line.replace(/\s/g, '');
-            if (cleanLine.length > 30 && /[0-9]/.test(cleanLine) && /<+/.test(cleanLine)) {
+            const cleanLine = line.replace(/\s/g, '').toUpperCase();
+            // Standard TD3 MRZ Line 2 is 44 chars, starts with Passport Number, contains dates
+            // Heuristic: Look for structure with numbers and <
+            if (cleanLine.length >= 30 && /[0-9]{6}/.test(cleanLine) && /<+/.test(cleanLine)) {
+                // Try to identify if this is the second line
+                // Line 2 usually has DOB (6 digits) and Expiry (6 digits)
                 mrzLine2 = cleanLine;
-                break;
+                // If we found a likely candidate, we use it. 
+                // In a perfect world we verify Check Digits, but for now we just extract.
             }
+        }
+
+        let passportNumber = "";
+        let dob = "";
+        let expiry = "";
+        let sex = "";
+        let country = "";
+
+        if (mrzLine2 && mrzLine2.length >= 28) {
+            // TD3 MRZ Line 2 Format:
+            // 0-8:   Passport No
+            // 9:     Check
+            // 10-12: Nationality
+            // 13-18: DOB (YYMMDD)
+            // 19:    Check
+            // 20:    Sex
+            // 21-26: Expiry (YYMMDD)
+
+            passportNumber = mrzLine2.substring(0, 9).replace(/</g, '');
+            country = mrzLine2.substring(10, 13).replace(/</g, '');
+
+            const rawDob = mrzLine2.substring(13, 19);
+            dob = formatDate(rawDob);
+
+            sex = mrzLine2.substring(20, 21).replace(/</g, '');
+
+            const rawExpiry = mrzLine2.substring(21, 27);
+            expiry = formatDate(rawExpiry);
         }
 
         return {
             rawText: text,
-            passportNumber: mrzLine2.substring(0, 9).replace(/</g, '') || "",
-            surname: extractPotentialName(lines, 0),
-            givenNames: extractPotentialName(lines, 1),
-            dob: "1980-01-01",
-            expiry: "2030-01-01",
-            sex: "M",
-            country: "USA"
+            passportNumber: passportNumber || "NO NUM",
+            surname: extractName(lines, 0),
+            givenNames: extractName(lines, 1),
+            dob: dob || "YY-MM-DD",
+            expiry: expiry || "YY-MM-DD",
+            sex: sex || "-",
+            country: country || "USA"
         };
     };
 
-    const extractPotentialName = (lines: string[], index: number) => {
-        const potential = lines.filter(l => l.length > 3 && /^[A-Z\s]+$/.test(l.trim()));
-        return potential[index] ? potential[index].trim() : "";
+    const formatDate = (yymmdd: string) => {
+        if (!yymmdd || yymmdd.length !== 6 || isNaN(Number(yymmdd))) return "";
+        const yy = yymmdd.substring(0, 2);
+        const mm = yymmdd.substring(2, 4);
+        const dd = yymmdd.substring(4, 6);
+
+        // Basic century logic
+        const currentYear = new Date().getFullYear() % 100;
+        const century = Number(yy) > currentYear + 10 ? "19" : "20";
+
+        return `${century}${yy}-${mm}-${dd}`;
+    };
+
+    const extractName = (lines: string[], priority: number) => {
+        // Try to find Line 1 of MRZ: P<USA...
+        const mrzLine1 = lines.find(l => l.replace(/\s/g, '').startsWith('P<'));
+
+        if (mrzLine1) {
+            const clean = mrzLine1.replace(/\s/g, '').toUpperCase();
+            // Format: P<CCC Surname<<Given<Names
+            // Strip P<CCC
+            const namePart = clean.substring(5);
+            const parts = namePart.split('<<');
+
+            if (priority === 0) return parts[0]?.replace(/</g, ' ').trim() || "";
+            if (priority === 1) return parts[1]?.replace(/</g, ' ').trim() || "";
+        }
+
+        // Fallback: Generic uppercase lines
+        const potential = lines.filter(l => l.length > 3 && /^[A-Z\s]+$/.test(l.trim()) && !l.includes('<'));
+        return potential[priority] ? potential[priority].trim() : "";
     };
 
     const handleConfirm = () => {
