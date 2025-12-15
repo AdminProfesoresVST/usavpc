@@ -200,28 +200,55 @@ export async function POST(req: Request) {
 
             // Construct Messages for AI
             // Include DB History + Current Answer
-            // NOTE: history from Client Body is ignored in favor of DB, OR we append Input to DB.
-            // If answer exists, append it.
-
             const effectiveHistory = [...dbHistory];
             if (answer) {
                 effectiveHistory.push({ role: "user", content: answer });
+                // FAIL SAFE 1: PRE-SAVE USER MESSAGE
+                // Save immediately so if AI crashes, we remember what user said.
+                await supabase.from("applications").update({ simulator_history: effectiveHistory }).eq("id", application.id);
             }
 
-            const simCompletion = await openai.chat.completions.create({
-                model: "gpt-5", // USER INSISTS ON GPT-5
-                messages: [
-                    { role: "system", content: simulatorPrompt },
-                    ...effectiveHistory.slice(-20) // Feed last 20 messages for context (Context Window Management)
-                ],
-                response_format: { type: "json_object" }
-            });
+            let simRes;
+            try {
+                // ATTEMPT 1: GPT-5 (User Preference)
+                const simCompletion = await openai.chat.completions.create({
+                    model: "gpt-5",
+                    messages: [
+                        { role: "system", content: simulatorPrompt },
+                        ...effectiveHistory.slice(-20)
+                    ],
+                    response_format: { type: "json_object" }
+                });
+                simRes = JSON.parse(simCompletion.choices[0].message.content || '{}');
+            } catch (error) {
+                console.error("GPT-5 Failed, falling back to GPT-4o", error);
+                // FAIL SAFE 2: FALLBACK TO GPT-4o
+                try {
+                    const fallbackCompletion = await openai.chat.completions.create({
+                        model: "gpt-4o",
+                        messages: [
+                            { role: "system", content: simulatorPrompt },
+                            ...effectiveHistory.slice(-20)
+                        ],
+                        response_format: { type: "json_object" }
+                    });
+                    simRes = JSON.parse(fallbackCompletion.choices[0].message.content || '{}');
+                } catch (finalError) {
+                    // Ultimate Fail: Return friendly error but HISTORY IS SAVED.
+                    return NextResponse.json({
+                        response: "Lo siento, hubo un error de conexión con el consulado. Por favor repita su última respuesta.",
+                        nextStep: {
+                            question: "Lo siento, hubo un error de conexión con el consulado. Por favor repita su última respuesta.",
+                            field: "simulator_interaction",
+                            type: "text"
+                        }
+                    });
+                }
+            }
 
-            const simRes = JSON.parse(simCompletion.choices[0].message.content || '{}');
-
-            // SAVE INTERACTION TO DB
-            if (answer && simRes.response) {
-                const newHistory = [
+            // SAVE AI RESPONSE TO DB
+            if (simRes.response) {
+                const finalHistory = [
                     ...effectiveHistory,
                     { role: "assistant", content: simRes.response }
                 ];
@@ -232,7 +259,7 @@ export async function POST(req: Request) {
                 const newTurns = currentTurns + 1;
 
                 await supabase.from("applications").update({
-                    simulator_history: newHistory,
+                    simulator_history: finalHistory,
                     simulator_score: newScore,
                     simulator_turns: newTurns
                 }).eq("id", application.id);
