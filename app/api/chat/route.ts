@@ -143,9 +143,7 @@ export async function POST(req: Request) {
                  SCAN: Check history for "Job", "Salary", "Time". If present, do not ask again.
                  PROGRESSION: Move through categories. Do not get stuck.
 
-                 CATEGORÍA 1: ARRAIGO LABORAL Y PROFESIONAL (Job & Ties)
-                 - "¿A qué se dedica?" (Opening) -> Purpose: Profile.
-                 - "¿Cuánto tiempo lleva en ese empleo?" (Always) -> Logic: < 2 years is medium risk.
+
                  OBJECTIVE: You are a Consul. Your goal is to gather specific DATA POINTS to determine visa eligibility.
                  
                  CORE PRINCIPLE: INTELLIGENT LISTENING
