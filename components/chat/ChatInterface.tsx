@@ -129,7 +129,8 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                     answer: answerToSend,
                     duration: duration,
                     locale: locale,
-                    mode: mode
+                    mode: mode,
+                    history: messages.map(m => ({ role: m.role, content: m.content }))
                 }),
             });
 

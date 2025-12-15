@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
         // 3. Process User Input (if any)
         const body = await req.json();
-        const { answer, duration, context, locale = 'en', mode = 'standard' } = body;
+        const { answer, duration, context, locale = 'en', mode = 'standard', history = [] } = body;
 
         console.log(`[API] Chat Request - Mode: ${mode}, Answer: ${answer}`); // DEBUG LOG
 
@@ -79,6 +79,9 @@ export async function POST(req: Request) {
                  Current Context: User is applying for a visa.
                  User Input: "${answer}"
                  System Locale: "${locale}" (BUT ADAPT TO USER LANGUAGE).
+                 
+                 HISTORY (Last 5 messages):
+                 ${history.slice(-5).map((h: any) => `${h.role.toUpperCase()}: ${h.content}`).join('\n')}
                  
                  TASK:
                  1. Analyze user input.
