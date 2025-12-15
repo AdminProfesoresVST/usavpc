@@ -209,7 +209,7 @@ export async function POST(req: Request) {
             }
 
             const simCompletion = await openai.chat.completions.create({
-                model: "gpt-5", // USER REQUESTED GPT-5
+                model: "gpt-5.2", // USER STATES GPT-5.2 IS CURRENT
                 messages: [
                     { role: "system", content: simulatorPrompt },
                     ...effectiveHistory.slice(-20) // Feed last 20 messages for context (Context Window Management)
