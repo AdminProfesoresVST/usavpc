@@ -111,17 +111,20 @@
 
 @layer base {
 
-  html,
-  body {
-    /* Reverting forced hidden overflow. 
-        We will achieve no-scroll by sizing content correctly. */
-  }
-
-  :root {
-    @apply border-border outline-ring/50;
+  html {
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   body {
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+    overscroll-behavior: none;
+    position: fixed;
+    /* Strict lock */
     @apply bg-background text-foreground;
   }
 

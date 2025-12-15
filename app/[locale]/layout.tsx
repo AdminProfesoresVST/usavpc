@@ -3,6 +3,7 @@ import { Public_Sans } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { MobileOnlyGuard } from "@/components/layout/MobileOnlyGuard";
 import { DevToolbar } from "@/components/dev/DevToolbar";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -39,7 +40,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col min-h-screen`}
+        className={`${publicSans.variable} antialiased font-sans bg-background text-foreground flex flex-col h-screen overflow-hidden`}
       >
         <NextIntlClientProvider messages={messages}>
           <AnalyticsProvider>
@@ -47,7 +48,7 @@ export default async function RootLayout({
             <Header />
 
             {/* Main takes remaining space, scrollable if content overflows */}
-            <main className="flex-1 flex flex-col">
+            <main className="flex-1 flex flex-col overflow-y-auto no-scrollbar relative w-full h-full">
               {children}
             </main>
 
@@ -55,6 +56,8 @@ export default async function RootLayout({
             <div className="xl:hidden">
               <MobileNav />
             </div>
+
+            <MobileOnlyGuard />
             <DevToolbar />
           </AnalyticsProvider>
         </NextIntlClientProvider>
