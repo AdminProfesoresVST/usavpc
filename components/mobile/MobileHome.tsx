@@ -88,15 +88,16 @@ export function MobileHome() {
                     </div>
 
                     <div className="relative z-10 mt-2">
-                        <Button
-                            onClick={() => router.push(`/${locale}/services`)}
-                            className="w-full bg-white text-[#003366] hover:bg-gray-100 font-bold h-10 rounded-lg text-xs shadow-md transition-all active:scale-95 flex items-center justify-between px-4"
-                        >
-                            <span>{t('Common.Mobile.startApplication')}</span>
-                            <div className="bg-[#003366]/10 rounded-full p-1">
-                                <ArrowRight className="w-3 h-3 text-[#003366]" />
-                            </div>
-                        </Button>
+                        <Link href="/services" className="w-full block">
+                            <Button
+                                className="w-full bg-white text-[#003366] hover:bg-gray-100 font-bold h-10 rounded-lg text-xs shadow-md transition-all active:scale-95 flex items-center justify-between px-4"
+                            >
+                                <span>{t('Common.Mobile.startApplication')}</span>
+                                <div className="bg-[#003366]/10 rounded-full p-1">
+                                    <ArrowRight className="w-3 h-3 text-[#003366]" />
+                                </div>
+                            </Button>
+                        </Link>
                     </div>
                 </section>
 
