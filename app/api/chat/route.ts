@@ -9,6 +9,8 @@ import { DS160Payload } from "@/types/ds160";
 // OpenAI initialized lazily inside handler to prevent build crashes
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // REMOVED
 
+export const maxDuration = 60; // Allow GPT-5 to think longer (Fixes Timeout)
+
 export async function POST(req: Request) {
     try {
         const openai = new OpenAI({
@@ -130,9 +132,16 @@ export async function POST(req: Request) {
                  CRITICAL RULE: CHECK HISTORY FIRST.
                  - BEFORE asking a question, check if the User has already answered it (even partially).
                  - If User said "Disney", DO NOT ASK "What is your purpose?". ACCEPT IT and ask "Who are you going with?" (Category 4).
-                 - RESILIENCE: I If the user says "Hola" or comes back after an error, DO NOT RESTART. Read the history and CONTNUE where you left off.
-                 - SCAN: Check history for "Job", "Salary", "Time". If present, do not ask again.
-                 - PROGRESSION: Move through categories. Do not get stuck.
+                 
+                 RESILIENCE & RESUME PROTOCOL: 
+                 - The user might say "Hola" or "Hello" if the connection dropped.
+                 - IF History shows the User's LAST message was a valid answer (e.g., "40mil", "Profesor"), IGNORE the "Hola".
+                 - TREAT "Hola" as "Please continue".
+                 - DO NOT say "Good morning" or "What do you do?".
+                 - INSTEAD, Say: "Understood (acknowledging the 40mil). Now, [Next Question]".
+                 
+                 SCAN: Check history for "Job", "Salary", "Time". If present, do not ask again.
+                 PROGRESSION: Move through categories. Do not get stuck.
 
                  CATEGORÍA 1: ARRAIGO LABORAL Y PROFESIONAL (Job & Ties)
                  - "¿A qué se dedica?" (Opening) -> Purpose: Profile.
