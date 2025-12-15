@@ -61,24 +61,7 @@ export function MobileHome() {
     };
 
     return (
-        <div className="h-[100dvh] w-full bg-[#F0F2F5] text-[#1F2937] flex flex-col font-sans overflow-hidden">
-
-            {/* 1. Fixed Header (App Shell) - Compact */}
-            <header className="shrink-0 bg-white shadow-sm px-4 py-2 flex justify-between items-center z-10 h-14 border-b border-gray-100">
-                <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 bg-[#003366] rounded-lg flex items-center justify-center text-white font-bold shadow-md">
-                        US
-                    </div>
-                    <div>
-                        <span className="block font-bold text-xs tracking-tight text-[#003366]">Visa Center</span>
-                        <span className="block text-[8px] text-gray-400 font-medium tracking-wider uppercase">Official Processing</span>
-                    </div>
-                </div>
-                <div className="bg-green-50 text-green-800 text-[9px] font-bold px-2 py-0.5 rounded border border-green-100 flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 bg-green-600 rounded-full animate-pulse" />
-                    ONLINE
-                </div>
-            </header>
+        <div className="h-full w-full bg-[#F0F2F5] text-[#1F2937] flex flex-col font-sans overflow-hidden">
 
             {/* 2. Main Content - Flex Layout to fit, NO SCROLL */}
             <main className="flex-1 flex flex-col p-3 gap-3 overflow-hidden">

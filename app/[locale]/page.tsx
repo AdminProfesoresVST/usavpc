@@ -13,7 +13,7 @@ export default function Home() {
   const t = useTranslations();
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full h-full">
       <MobileHome />
     </div>
   );
