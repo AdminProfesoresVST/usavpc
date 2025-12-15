@@ -117,11 +117,6 @@ export async function POST(req: Request) {
                  Mode: SIMULATOR (Roleplay).
                  
                  Current Context: User is applying for a visa.
-                 User Input: "${answer}"
-                 System Locale: "${locale}" (BUT ADAPT TO USER LANGUAGE).
-                 
-                 HISTORY (Last 5 messages):
-                 ${history.slice(-5).map((h: any) => `${h.role.toUpperCase()}: ${h.content}`).join('\n')}
                  
                  CONSUL KNOWLEDGE BASE (MATRIX OF QUESTIONS):
                  Use this Matrix to determine your next question. Do not ask random questions. Follow this logic.
@@ -199,7 +194,7 @@ export async function POST(req: Request) {
                 model: "gpt-4o-mini",
                 messages: [
                     { role: "system", content: simulatorPrompt },
-                    ...effectiveHistory.slice(-10) // Feed last 10 messages for context (Context Window Management)
+                    ...effectiveHistory.slice(-20) // Feed last 20 messages for context (Context Window Management)
                 ],
                 response_format: { type: "json_object" }
             });
