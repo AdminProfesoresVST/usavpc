@@ -210,6 +210,13 @@ export async function POST(req: Request) {
                  OUTPUT format: JSON.
                  {
                     "reasoning": "Explain step-by-step why you chose this. E.g. 'User said Alone, so Question 4 is answered. Moving to Funding.'",
+                    "known_data": { 
+                        "job": "detected_value_or_null", 
+                        "time_in_role": "detected_value_or_null", 
+                        "salary": "detected_value_or_null",
+                        "purpose": "detected_value_or_null",
+                        "payer": "detected_value_or_null"
+                    },
                     "response": "The Consul's verbal response (question) OR Verdict Message.",
                     "feedback": "Optional coaching tip explaining the score change",
                     "score_delta": number,
