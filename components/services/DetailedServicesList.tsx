@@ -38,7 +38,8 @@ export function DetailedServicesList() {
                     <h1 className="text-2xl font-bold text-[#003366] tracking-tight">{t('pageTitle')}</h1>
                     <p className="text-sm text-gray-500 font-medium">{t('pageSubtitle')}</p>
                 </div>
-                <span className="text-[10px] text-gray-300 font-mono">v-final-palette</span>
+                {/* Version marker updated */}
+                <span className="text-[10px] text-gray-300 font-mono">v-navy-only</span>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -50,10 +51,10 @@ export function DetailedServicesList() {
                     {/* Top Accent Line */}
                     <div className="absolute top-0 inset-x-0 h-1.5 bg-[#003366]" />
 
-                    {/* Badge - Professional Tag using BRAND GOLD only */}
+                    {/* Badge - Professional Tag using NAVY only (No Gold) */}
                     <div className="absolute top-4 right-4">
-                        <div className="bg-[#C5A065]/10 border border-[#C5A065]/50 text-[#003366] text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
-                            <Star size={10} className="text-[#C5A065] fill-[#C5A065]" />
+                        <div className="bg-[#003366] text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <Star size={10} className="text-white fill-white" />
                             <span className="tracking-wide">RECOMMENDED</span>
                         </div>
                     </div>
@@ -67,7 +68,7 @@ export function DetailedServicesList() {
                             </div>
                             <div>
                                 <h3 className="font-bold text-xl text-[#003366] leading-tight mb-1">{t('OptionB.title')}</h3>
-                                <div className="text-[#C5A065] text-[11px] font-bold tracking-widest uppercase flex items-center gap-1">
+                                <div className="text-[#003366] text-[11px] font-bold tracking-widest uppercase flex items-center gap-1 opacity-80">
                                     <Sparkles size={11} /> All Inclusive Service
                                 </div>
                             </div>
@@ -107,7 +108,7 @@ export function DetailedServicesList() {
                     {/* 2. SIMULATOR */}
                     <div
                         onClick={() => handleSelect('simulator')}
-                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-gray-300 hover:bg-gray-50"
+                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-[#003366]/50 hover:bg-[#003366]/5"
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -124,13 +125,14 @@ export function DetailedServicesList() {
                         <div className="space-y-2 mb-4 pl-1">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="flex items-start gap-2">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A065] shrink-0 mt-0.5" />
+                                    {/* Removed Gold Check -> Now Navy */}
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#003366] shrink-0 mt-0.5" />
                                     <span className="text-xs font-medium text-gray-600">{t(`OptionC.feature${i}`)}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <Button variant="ghost" className="w-full text-[#003366] font-semibold h-9 hover:bg-[#003366]/5 text-xs justify-start px-0 hover:px-2 transition-all">
+                        <Button variant="ghost" className="w-full text-[#003366] font-semibold h-9 hover:bg-[#003366]/10 text-xs justify-start px-0 hover:px-2 transition-all">
                             {t('OptionC.cta')} <ChevronRight className="w-3 h-3 ml-1" />
                         </Button>
                     </div>
@@ -138,7 +140,7 @@ export function DetailedServicesList() {
                     {/* 3. DIY / AUDIT */}
                     <div
                         onClick={() => handleSelect('diy')}
-                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-gray-300 hover:bg-gray-50 opacity-90"
+                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-[#003366]/50 hover:bg-[#003366]/5 opacity-90"
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -155,13 +157,13 @@ export function DetailedServicesList() {
                         <div className="space-y-2 mb-4 pl-1">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="flex items-start gap-2">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-gray-300 shrink-0 mt-0.5" />
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-gray-400 shrink-0 mt-0.5" />
                                     <span className="text-xs font-medium text-gray-500">{t(`OptionA.feature${i}`)}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <Button variant="ghost" className="w-full text-gray-500 font-semibold h-9 hover:bg-gray-100 hover:text-gray-700 text-xs justify-start px-0 hover:px-2 transition-all">
+                        <Button variant="ghost" className="w-full text-gray-500 font-semibold h-9 hover:bg-gray-100 hover:text-[#003366] text-xs justify-start px-0 hover:px-2 transition-all">
                             {t('OptionA.cta')} <ChevronRight className="w-3 h-3 ml-1" />
                         </Button>
                     </div>
