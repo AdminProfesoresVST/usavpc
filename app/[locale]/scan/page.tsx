@@ -434,8 +434,9 @@ function parsePassportData(text: string): PassportData {
     }
 
     // VIZ EXTRACTION
-    // 1. Issue Date: Allow spaces like 'ENE / JAN'
-    const dateIssuePattern = /\b\d{2}\s+[A-Z]{3,4}\s*\/?[A-Z]{0,4}\s+\d{4}\b/gi;
+    // 1. Issue Date: Allow spaces like 'ENE / JAN' + handle O/0 typos
+    // Pattern: 09 ENE... or O9 ENE...
+    const dateIssuePattern = /\b[0-9O]{2}\s+[A-Z]{3,4}\s*\/?[A-Z]{0,4}\s+[0-9O]{4}\b/gi;
 
     let dateOfIssue = "";
 
@@ -472,10 +473,12 @@ function parsePassportData(text: string): PassportData {
         placeOfBirth = "";
     }
 
-    // Heuristic: "SANTO DOMINGO" fallback
-    if (!placeOfBirth && cleanText.toUpperCase().includes("SANTO DOMINGO")) {
-        placeOfBirth = "SANTO DOMINGO";
-        if (cleanText.toUpperCase().includes("RD")) placeOfBirth += ", RD";
+    // Heuristic: "SANTO DOMINGO" fallback (Looser check)
+    if (!placeOfBirth) {
+        if (cleanText.toUpperCase().includes("SANTO DOMINGO") || cleanText.toUpperCase().includes("SANTO DOM")) {
+            placeOfBirth = "SANTO DOMINGO";
+            if (cleanText.toUpperCase().includes("RD")) placeOfBirth += ", RD";
+        }
     }
 
     // 4. Marital Status
@@ -505,7 +508,7 @@ function extractVIZField(lines: string[], keywords: string[]): string {
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].toUpperCase();
         if (keywords.some(k => line.includes(k))) {
-            // Check same line first
+            // Check Same Line first
             let value = line;
             keywords.forEach(k => value = value.replace(k, ''));
 
@@ -513,14 +516,20 @@ function extractVIZField(lines: string[], keywords: string[]): string {
             value = value.replace(/SEXO.*/, '').replace(/SEX.*/, '');
             value = value.replace(/[:\.\/]/g, '').trim();
 
-            if (value.length > 2) return value;
+            if (value.length > 2 && !value.includes("SEX")) return value;
 
-            // If empty, check Next Line
-            if (lines[i + 1]) {
-                let nextVal = lines[i + 1].toUpperCase().replace(/[:\.\/]/g, '').trim();
-                // Avoid capturing labels as values
-                if (keywords.some(k => nextVal.includes(k))) return "";
-                return nextVal;
+            // If empty or bad, check Next Lines (Lookahead 2 lines)
+            for (let offset = 1; offset <= 2; offset++) {
+                if (lines[i + offset]) {
+                    let nextVal = lines[i + offset].toUpperCase().replace(/[:\.\/]/g, '').trim();
+
+                    // Skip if it looks like another label or noise
+                    if (keywords.some(k => nextVal.includes(k))) continue;
+                    if (nextVal.includes("SEXO") || nextVal.includes("FEM") || nextVal.includes("MASC")) continue;
+                    if (nextVal.length < 3) continue;
+
+                    return nextVal;
+                }
             }
         }
     }
@@ -528,7 +537,10 @@ function extractVIZField(lines: string[], keywords: string[]): string {
 }
 
 function parseSpanishDate(raw: string): string {
-    const parts = raw.match(/(\d{2})\s+([A-Z]+).*\s+(\d{4})/i);
+    // Fix common OCR typos: O -> 0
+    const clean = raw.replace(/O/g, '0').replace(/o/g, '0');
+
+    const parts = clean.match(/(\d{2})\s+([A-Z]+).*\s+(\d{4})/i);
     if (!parts) return "";
 
     const day = parts[1];
