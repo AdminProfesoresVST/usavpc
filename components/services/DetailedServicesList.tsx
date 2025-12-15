@@ -70,7 +70,7 @@ export function DetailedServicesList() {
                     <div className="space-y-2 mb-4">
                         {[1, 2, 3].map(i => (
                             <div key={i} className="flex items-start gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                                <CheckCircle2 className="w-4 h-4 text-[#003366] shrink-0 mt-0.5" />
                                 <span className="text-xs font-medium text-gray-700">{t(`OptionB.feature${i}`)}</span>
                             </div>
                         ))}
@@ -85,7 +85,7 @@ export function DetailedServicesList() {
                 <div onClick={() => handleSelect('simulator')} className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 relative overflow-hidden active:scale-[0.99] transition-all">
                     <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 bg-purple-50 rounded-lg flex items-center justify-center text-purple-700">
+                            <div className="h-10 w-10 bg-gray-50 rounded-lg flex items-center justify-center text-[#003366]">
                                 <BrainCircuit size={20} />
                             </div>
                             <div>
@@ -102,13 +102,13 @@ export function DetailedServicesList() {
                     <div className="space-y-2 mb-4">
                         {[1, 2, 3].map(i => (
                             <div key={i} className="flex items-start gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                                <CheckCircle2 className="w-4 h-4 text-[#C5A065] shrink-0 mt-0.5" />
                                 <span className="text-xs font-medium text-gray-700">{t(`OptionC.feature${i}`)}</span>
                             </div>
                         ))}
                     </div>
 
-                    <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50 font-bold h-11">
+                    <Button variant="outline" className="w-full border-gray-200 text-[#003366] hover:bg-gray-50 font-bold h-11">
                         {t('OptionC.cta')}
                     </Button>
                 </div>
@@ -117,7 +117,7 @@ export function DetailedServicesList() {
                 <div onClick={() => handleSelect('diy')} className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 relative overflow-hidden active:scale-[0.99] transition-all opacity-90 hover:opacity-100">
                     <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 bg-green-50 rounded-lg flex items-center justify-center text-green-700">
+                            <div className="h-10 w-10 bg-gray-50 rounded-lg flex items-center justify-center text-[#003366]">
                                 <CheckCircle2 size={20} />
                             </div>
                             <div>
@@ -134,7 +134,7 @@ export function DetailedServicesList() {
                     <div className="space-y-2 mb-4">
                         {[1, 2, 3].map(i => (
                             <div key={i} className="flex items-start gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                                <CheckCircle2 className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
                                 <span className="text-xs font-medium text-gray-700">{t(`OptionA.feature${i}`)}</span>
                             </div>
                         ))}
