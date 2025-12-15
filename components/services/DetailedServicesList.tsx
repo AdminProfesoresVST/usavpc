@@ -26,7 +26,8 @@ export function DetailedServicesList() {
         setIsProcessing(plan);
         // Simulate navigation delay for feeling of "processing"
         setTimeout(() => {
-            router.push(`/${locale}/assessment?plan=${plan}`);
+            // Updated Flow: Services -> Scan (OCR) -> Verify
+            router.push(`/${locale}/scan?plan=${plan}`);
         }, 150);
     };
 
