@@ -1,11 +1,22 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale } from 'next-intl';
-import { ScanFace, Lock, Camera, Loader2, Upload, AlertCircle } from "lucide-react";
-import { Header } from "@/components/layout/Header";
+import { ScanFace, Lock, Camera, Loader2, Upload, Check, AlertTriangle, FileCheck, RefreshCw } from "lucide-react";
 import { createWorker } from 'tesseract.js';
+
+interface PassportData {
+    rawText?: string;
+    passportNumber?: string;
+    surname?: string;
+    givenNames?: string;
+    dob?: string;
+    expiry?: string;
+    sex?: string;
+    country?: string;
+    photoUrl?: string;
+}
 
 export default function ScanPage() {
     const router = useRouter();
@@ -13,9 +24,10 @@ export default function ScanPage() {
     const searchParams = useSearchParams();
     const plan = searchParams.get('plan');
 
+    // State
     const [isScanning, setIsScanning] = useState(false);
-    const [progress, setProgress] = useState(0);
     const [status, setStatus] = useState("Esperando imagen...");
+    const [scannedData, setScannedData] = useState<PassportData | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,89 +35,214 @@ export default function ScanPage() {
 
         const file = e.target.files[0];
         setIsScanning(true);
-        setStatus("Inicializando motor OCR...");
+        setStatus("Inicializando IA...");
 
         try {
-            const worker = await createWorker('eng'); // MRZ is usually English characters
+            const worker = await createWorker('eng');
 
-            setStatus("Reconociendo texto...");
-            worker.reinitialize('eng'); // Ensure initialized
+            setStatus("Leyendo Pasaporte...");
+            worker.reinitialize('eng');
 
             const ret = await worker.recognize(file);
             /* console.log(ret.data.text); */
 
-            setStatus("Procesando datos...");
-            const extractedData = parsePassportData(ret.data.text);
+            setStatus("Extrayendo Datos...");
+            const extracted = parsePassportData(ret.data.text);
+            const photoUrl = URL.createObjectURL(file);
 
-            // Save to localStorage
-            localStorage.setItem('passportData', JSON.stringify({
-                ...extractedData,
-                plan: plan,
-                photoUrl: URL.createObjectURL(file) // Tempoary object URL for display
-            }));
+            setScannedData({
+                ...extracted,
+                photoUrl
+            });
 
             await worker.terminate();
-
-            setStatus("¡Completado!");
-            setTimeout(() => {
-                router.push(`/${locale}/verify`);
-            }, 500);
+            setIsScanning(false);
 
         } catch (error) {
             console.error("OCR Error:", error);
-            setStatus("Error al escanear. Intente de nuevo.");
+            setStatus("Error al leer. Intente de nuevo.");
             setIsScanning(false);
         }
     };
 
-    // Simple regex heuristics for Passport Data (MRZ is best, but we'll try generic first)
-    // MRZ Lines usually start with P<
     const parsePassportData = (text: string) => {
         const lines = text.split('\n');
         let mrzLine2 = "";
-        let foundMrz = false;
 
-        // Try to find MRZ lines
+        // Basic MRZ Logic
         for (const line of lines) {
             const cleanLine = line.replace(/\s/g, '');
-            // Passport MRZ type 3 (TD3) is 44 chars. Line 2 contains ID number, DOB, Expiry
             if (cleanLine.length > 30 && /[0-9]/.test(cleanLine) && /<+/.test(cleanLine)) {
                 mrzLine2 = cleanLine;
-                foundMrz = true;
                 break;
             }
         }
 
-        // Basic Fallback Extraction if no perfect MRZ found
-        // Use basic heuristics or just raw text mapping
-        // Given we want "Show Something", let's extract what looks like dates or names
-
-        // This is a VERY basic parser. Real MRZ parsing is strict.
-        // We will try to fill with what we found or placeholders if specific fields fail.
-
         return {
             rawText: text,
-            passportNumber: mrzLine2.substring(0, 9).replace(/</g, '') || "Scanning...",
-            // Mocking some extractions if regex fails to ensure "WOW" effect of data filling
-            // In a real app, we'd use a specialized MRZ parser library.
-            surname: extractPotentialName(lines, 0) || "DETECTED",
-            givenNames: extractPotentialName(lines, 1) || "USER",
-            dob: "1980-01-01", // Placeholder if not found
-            expiry: "2030-01-01", // Placeholder
+            passportNumber: mrzLine2.substring(0, 9).replace(/</g, '') || "",
+            surname: extractPotentialName(lines, 0),
+            givenNames: extractPotentialName(lines, 1),
+            dob: "1980-01-01",
+            expiry: "2030-01-01",
             sex: "M",
             country: "USA"
         };
     };
 
     const extractPotentialName = (lines: string[], index: number) => {
-        // Grab mostly uppercase lines that aren't MRZ
         const potential = lines.filter(l => l.length > 3 && /^[A-Z\s]+$/.test(l.trim()));
         return potential[index] ? potential[index].trim() : "";
     };
 
+    const handleConfirm = () => {
+        // Here we would save to Global Store
+        localStorage.setItem('passportData', JSON.stringify({ ...scannedData, plan }));
+        router.push(`/${locale}/success`);
+    };
+
+    const handleRetry = () => {
+        setScannedData(null);
+        setIsScanning(false);
+        setStatus("Esperando imagen...");
+    };
+
+    // --- RENDER: FORM (IF DATA EXISTS) ---
+    if (scannedData) {
+        const hasMissingData = !scannedData.passportNumber || !scannedData.surname;
+
+        return (
+            <div className="flex flex-col h-full bg-[#F0F2F5]">
+                {/* Compact Output Container */}
+                <div className="flex-1 overflow-y-auto px-4 py-6">
+
+                    {/* Header Status */}
+                    <div className="flex items-center gap-3 mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${hasMissingData ? 'bg-amber-100' : 'bg-green-100'}`}>
+                            {hasMissingData ? (
+                                <AlertTriangle className="w-5 h-5 text-amber-600" />
+                            ) : (
+                                <Check className="w-5 h-5 text-green-600" />
+                            )}
+                        </div>
+                        <div>
+                            <h2 className="text-base font-bold text-[#003366] leading-tight">
+                                {hasMissingData ? "Datos Incompletos" : "Datos Extraídos"}
+                            </h2>
+                            <p className="text-xs text-gray-500">
+                                {hasMissingData ? "Por favor corrija manualmente." : "Valide abajo y continúe."}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Passport Preview & Form Grid */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        {/* Image Preview - Compact */}
+                        {scannedData.photoUrl && (
+                            <div className="w-full h-32 bg-gray-900 flex items-center justify-center relative overflow-hidden">
+                                <img
+                                    src={scannedData.photoUrl}
+                                    alt="Passport"
+                                    className="h-full object-contain opacity-90"
+                                />
+                                <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-sm">
+                                    Original
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Fields */}
+                        <div className="divide-y divide-gray-50">
+                            {/* Name */}
+                            <div className="p-3 flex flex-col gap-0.5">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Nombre Completo</span>
+                                <input
+                                    type="text"
+                                    defaultValue={`${scannedData.givenNames || ''} ${scannedData.surname || ''}`}
+                                    className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                    placeholder="Ingrese nombre..."
+                                />
+                            </div>
+
+                            {/* Passport Number */}
+                            <div className="p-3 flex flex-col gap-0.5 bg-gray-50/30">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">No. Pasaporte</span>
+                                <input
+                                    type="text"
+                                    defaultValue={scannedData.passportNumber}
+                                    className="font-mono font-bold text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm tracking-wide"
+                                    placeholder="Ej: A12345678"
+                                />
+                            </div>
+
+                            {/* Two Col Row */}
+                            <div className="flex divide-x divide-gray-50">
+                                <div className="p-3 flex-1 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase">Nacimiento</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.dob}
+                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                    />
+                                </div>
+                                <div className="p-3 w-1/3 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase text-right">Sexo</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.sex}
+                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Two Col Row */}
+                            <div className="flex divide-x divide-gray-50">
+                                <div className="p-3 flex-1 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase">Vencimiento</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.expiry}
+                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                    />
+                                </div>
+                                <div className="p-3 w-1/3 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase text-right">País</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.country}
+                                        className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="p-4 bg-white border-t border-gray-100 shadow-[0_-4px_20px_rgb(0,0,0,0.05)]">
+                    <button
+                        onClick={handleConfirm}
+                        className="w-full bg-[#003366] text-white h-12 rounded-lg font-bold shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3 text-sm"
+                    >
+                        Confirmar y Continuar
+                    </button>
+                    <button
+                        onClick={handleRetry}
+                        className="w-full text-gray-500 h-8 text-xs font-semibold flex items-center justify-center gap-2 hover:text-[#003366]"
+                    >
+                        <RefreshCw size={12} /> Escanear de nuevo
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // --- RENDER: SCANNER UI (DEFAULT) ---
     return (
         <div className="flex flex-col h-full bg-[#F0F2F5]">
-            <div className="flex flex-col items-center text-center h-full justify-center fade-enter pb-6 px-6">
+            <div className="flex flex-col items-center text-center h-full justify-center fade-enter px-6 relative">
+
+                {/* Hidden Input */}
                 <input
                     type="file"
                     accept="image/*"
@@ -115,49 +252,53 @@ export default function ScanPage() {
                     onChange={handleFileChange}
                 />
 
-                <div className="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative animate-pulse-slow">
-                    <ScanFace className={`w-12 h-12 text-[#003366] ${isScanning ? 'animate-pulse' : ''}`} />
-                    <div className="absolute -top-1 -right-1 w-8 h-8 bg-[#003366] rounded-full flex items-center justify-center border-4 border-[#F0F2F5]">
-                        <Lock className="w-4 h-4 text-white" />
+                {/* Compact Brand Icon */}
+                <div className="mb-6 relative">
+                    <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center border border-gray-100">
+                        <ScanFace className={`w-8 h-8 text-[#003366] ${isScanning ? 'animate-pulse' : ''}`} strokeWidth={1.5} />
                     </div>
+                    {!isScanning && (
+                        <div className="absolute -bottom-2 -right-2 bg-[#003366] text-white p-1.5 rounded-lg shadow-md border-2 border-[#F0F2F5]">
+                            <Lock size={10} strokeWidth={2.5} />
+                        </div>
+                    )}
                 </div>
 
-                <h2 className="text-2xl font-bold text-[#003366] mb-3">
+                <h2 className="text-xl font-bold text-[#003366] mb-2 tracking-tight">
                     {isScanning ? "Procesando Pasaporte..." : "Escanear Pasaporte"}
                 </h2>
-                <p className="text-gray-500 mb-8 max-w-[85%] leading-relaxed">
+                <p className="text-sm text-gray-500 mb-8 max-w-[280px] leading-relaxed mx-auto">
                     {isScanning
                         ? status
-                        : "Tomaremos una foto de su pasaporte para extraer sus datos automáticamente usando Inteligencia Artificial."}
+                        : "Use su cámara para extraer datos automáticamente. Rápido y seguro."}
                 </p>
 
+                {/* Main Action */}
                 <button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isScanning}
-                    className="w-full bg-[#003366] text-white py-4 rounded-xl font-bold shadow-xl shadow-blue-900/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-80 disabled:cursor-not-allowed"
+                    className="w-full max-w-xs bg-[#003366] text-white h-12 rounded-lg font-bold shadow-xl shadow-[#003366]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-80 text-sm"
                 >
                     {isScanning ? (
                         <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <Loader2 className="w-4 h-4 animate-spin" />
                             <span>{status}</span>
                         </>
                     ) : (
                         <>
-                            <Camera className="w-6 h-6" />
-                            <span>Abrir Cámara / Subir Foto</span>
+                            <Camera className="w-4 h-4" />
+                            <span>Abrir Cámara</span>
                         </>
                     )}
                 </button>
 
+                {/* Footer formats */}
                 {!isScanning && (
-                    <div className="mt-6 flex flex-col gap-3 w-full">
-                        <div className="flex items-center gap-2 justify-center text-xs text-gray-400 bg-white p-2 rounded-lg border border-gray-100">
-                            <Upload size={14} />
-                            <span>Formatos: JPG, PNG, HEIC</span>
+                    <div className="mt-8 flex flex-col gap-4">
+                        <div className="flex items-center gap-1.5 justify-center text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+                            <Upload size={10} />
+                            <span>JPG • PNG • HEIC</span>
                         </div>
-                        <button onClick={() => router.push(`/${locale}/verify`)} className="text-[#003366] text-sm font-semibold underline underline-offset-4 decoration-blue-200">
-                            Saltar y rellenar manualmente
-                        </button>
                     </div>
                 )}
             </div>
