@@ -33,9 +33,12 @@ export function DetailedServicesList() {
     return (
         <div className="w-full flex flex-col gap-8 pb-12 max-w-xl mx-auto px-1">
             {/* Header / Intro - Left Aligned & Professional */}
-            <div className="space-y-1 text-left mb-2 pl-1">
-                <h1 className="text-2xl font-bold text-[#003366] tracking-tight">{t('pageTitle')}</h1>
-                <p className="text-sm text-gray-500 font-medium">{t('pageSubtitle')}</p>
+            <div className="space-y-1 text-left mb-2 pl-1 flex justify-between items-end">
+                <div>
+                    <h1 className="text-2xl font-bold text-[#003366] tracking-tight">{t('pageTitle')}</h1>
+                    <p className="text-sm text-gray-500 font-medium">{t('pageSubtitle')}</p>
+                </div>
+                <span className="text-[10px] text-gray-300 font-mono">v-final-palette</span>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -47,9 +50,9 @@ export function DetailedServicesList() {
                     {/* Top Accent Line */}
                     <div className="absolute top-0 inset-x-0 h-1.5 bg-[#003366]" />
 
-                    {/* Badge - Professional Tag */}
+                    {/* Badge - Professional Tag using BRAND GOLD only */}
                     <div className="absolute top-4 right-4">
-                        <div className="bg-[#fff9f0] border border-[#C5A065]/30 text-[#003366] text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                        <div className="bg-[#C5A065]/10 border border-[#C5A065]/50 text-[#003366] text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                             <Star size={10} className="text-[#C5A065] fill-[#C5A065]" />
                             <span className="tracking-wide">RECOMMENDED</span>
                         </div>
@@ -58,7 +61,8 @@ export function DetailedServicesList() {
                     <div className="p-6 pt-8">
                         {/* Header Section */}
                         <div className="flex items-start gap-4 mb-5">
-                            <div className="h-12 w-12 bg-blue-50/50 rounded-lg flex items-center justify-center text-[#003366] border border-blue-100">
+                            {/* Brand Blue Outline/Background */}
+                            <div className="h-12 w-12 bg-[#003366]/5 rounded-lg flex items-center justify-center text-[#003366] border border-[#003366]/10">
                                 <ShieldCheck size={24} strokeWidth={1.5} />
                             </div>
                             <div>
@@ -103,7 +107,7 @@ export function DetailedServicesList() {
                     {/* 2. SIMULATOR */}
                     <div
                         onClick={() => handleSelect('simulator')}
-                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-gray-300 hover:bg-gray-50/50"
+                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-gray-300 hover:bg-gray-50"
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -134,7 +138,7 @@ export function DetailedServicesList() {
                     {/* 3. DIY / AUDIT */}
                     <div
                         onClick={() => handleSelect('diy')}
-                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-gray-300 hover:bg-gray-50/50 opacity-90"
+                        className="bg-white rounded-xl p-5 border border-gray-200 active:scale-[0.99] transition-all hover:border-gray-300 hover:bg-gray-50 opacity-90"
                     >
                         <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
