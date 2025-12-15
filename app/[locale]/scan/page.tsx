@@ -428,6 +428,16 @@ function parsePassportData(text: string): PassportData {
             if (optData.length > 3) personalIdNumber = optData;
         }
 
+        // Validate Nationality (avoid 00M garbage)
+        if (nationality.match(/[0-9]/)) {
+            // If Line 2 gave numbers, try Line 1 (P<DOM)
+            if (mrzLine1 && mrzLine1.length > 5) {
+                const nat1 = mrzLine1.substring(2, 5).replace(/</g, '');
+                if (nat1.length === 3 && !nat1.match(/[0-9]/)) {
+                    nationality = nat1;
+                }
+            }
+        }
         country = nationality;
     }
 
@@ -465,18 +475,22 @@ function parsePassportData(text: string): PassportData {
     }
 
     // Fallback search
-    if (!dateOfIssue) {
+    if (!dateOfIssue || dateOfIssue === dob) {
         const allDates = cleanText.match(dateIssuePattern);
-        if (allDates && allDates.length > 0) {
-            dateOfIssue = parseSpanishDate(allDates[0]);
+        if (allDates) {
+            // Find a date that is NOT the DOB
+            const validDate = allDates.find(d => parseSpanishDate(d) !== dob);
+            if (validDate) dateOfIssue = parseSpanishDate(validDate);
         }
     }
+    // Safety: If Issue == DOB, clear it (impossible for adults)
+    if (dateOfIssue === dob) dateOfIssue = "";
 
     // 2. Authority
     let authority = extractVIZField(lines, ["AUTORIDAD", "AUTHORITY", "EXPEDIDO POR", "ISSUING AUTHORITY"]);
 
-    // Fallback for RD ("SEDE CENTRAL")
-    if (!authority && cleanText.toUpperCase().includes("SEDE CENTRAL")) {
+    // Fallback for RD ("SEDE CENTRAL") - FORCE OVERRIDE if found (User prefers this over OCR garbage)
+    if (cleanText.toUpperCase().includes("SEDE CENTRAL")) {
         authority = "SEDE CENTRAL";
     }
     if (authority && authority.length < 3) authority = "";
@@ -486,8 +500,12 @@ function parsePassportData(text: string): PassportData {
     // 3. Place of Birth
     let placeOfBirth = extractVIZField(lines, ["LUGAR DE NACIMIENTO", "PLACE OF BIRTH", "NACIMIENTO"]);
 
-    // Critical Fix: Block "SEXO", "DATE", "FECHA" from being POB
+    // Critical Fix: Block "SEXO", "DATE", "FECHA" or YEARS (19XX/20XX) from being POB
     if (placeOfBirth.includes("SEX") || placeOfBirth.includes("FEM") || placeOfBirth.includes("MASC") || isGarbage(placeOfBirth)) {
+        placeOfBirth = "";
+    }
+    // Block numbers (Years in POB = Scan error, e.g. grabbing DOB line)
+    if (/\d{4}/.test(placeOfBirth)) {
         placeOfBirth = "";
     }
 
