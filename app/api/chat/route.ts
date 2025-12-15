@@ -210,7 +210,7 @@ export async function POST(req: Request) {
 
             let simRes;
             try {
-                // ATTEMPT 1: GPT-5 (User Preference)
+                // ATTEMPT: GPT-5 (User Preference - STRICT)
                 const simCompletion = await openai.chat.completions.create({
                     model: "gpt-5",
                     messages: [
@@ -221,29 +221,16 @@ export async function POST(req: Request) {
                 });
                 simRes = JSON.parse(simCompletion.choices[0].message.content || '{}');
             } catch (error) {
-                console.error("GPT-5 Failed, falling back to GPT-4o", error);
-                // FAIL SAFE 2: FALLBACK TO GPT-4o
-                try {
-                    const fallbackCompletion = await openai.chat.completions.create({
-                        model: "gpt-4o",
-                        messages: [
-                            { role: "system", content: simulatorPrompt },
-                            ...effectiveHistory.slice(-20)
-                        ],
-                        response_format: { type: "json_object" }
-                    });
-                    simRes = JSON.parse(fallbackCompletion.choices[0].message.content || '{}');
-                } catch (finalError) {
-                    // Ultimate Fail: Return friendly error but HISTORY IS SAVED.
-                    return NextResponse.json({
-                        response: "Lo siento, hubo un error de conexión con el consulado. Por favor repita su última respuesta.",
-                        nextStep: {
-                            question: "Lo siento, hubo un error de conexión con el consulado. Por favor repita su última respuesta.",
-                            field: "simulator_interaction",
-                            type: "text"
-                        }
-                    });
-                }
+                console.error("GPT-5 Failed", error);
+                // NO FALLBACK ALLOWED.
+                return NextResponse.json({
+                    response: "Error de conexión con el modelo GPT-5. Por favor intente de nuevo.",
+                    nextStep: {
+                        question: "Error de conexión con el modelo GPT-5 (Strict Mode). Por favor intente de nuevo.",
+                        field: "simulator_interaction",
+                        type: "text"
+                    }
+                });
             }
 
             // SAVE AI RESPONSE TO DB
