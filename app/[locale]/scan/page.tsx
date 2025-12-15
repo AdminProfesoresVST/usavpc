@@ -73,16 +73,22 @@ export default function ScanPage() {
     };
 
     const parsePassportData = (text: string) => {
-        // Sanitize common OCR errors before parsing
-        const cleanText = text.replace(/\$/g, 'S');
+        // Sanitize common OCR errors
+        const cleanText = text.replace(/\$/g, 'S').replace(/\(/g, '<'); // '(' sometimes read as '<'
 
-        const lines = cleanText.split('\n');
+        const lines = cleanText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
         let mrzLine2 = "";
+        let mrzLine1 = "";
 
-        // Find MRZ Line 2 (contains dates and numbers)
+        // Find MRZ Lines
         for (const line of lines) {
             const cleanLine = line.replace(/\s/g, '').toUpperCase();
-            if (cleanLine.length >= 30 && /[0-9]{6}/.test(cleanLine) && /<+/.test(cleanLine)) {
+            // Line 1: P<DOM... or P<USA... (Must contain many <<)
+            if (cleanLine.startsWith('P') && cleanLine.includes('<<') && cleanLine.length > 30) {
+                mrzLine1 = cleanLine;
+            }
+            // Line 2: Number + DOB + Expiry + Digits
+            if (cleanLine.length >= 30 && /[0-9]{6}/.test(cleanLine) && /<+/.test(cleanLine) && !cleanLine.startsWith('P')) {
                 mrzLine2 = cleanLine;
             }
         }
@@ -94,7 +100,10 @@ export default function ScanPage() {
         let country = "";
         let nationality = "";
         let personalIdNumber = "";
+        let surname = "";
+        let givenNames = "";
 
+        // MRZ EXTRACTION (Most Reliable)
         if (mrzLine2 && mrzLine2.length >= 28) {
             passportNumber = mrzLine2.substring(0, 9).replace(/</g, '');
             nationality = mrzLine2.substring(10, 13).replace(/</g, '');
@@ -107,15 +116,64 @@ export default function ScanPage() {
             const rawExpiry = mrzLine2.substring(21, 27);
             expiry = formatDate(rawExpiry);
 
-            // TD3 MRZ: Chars 28-42 are Optional Data (often Personal ID/Cédula)
+            // Optional Data (Chars 28-42) - ID Number in many LatAm passports
             if (mrzLine2.length >= 42) {
-                personalIdNumber = mrzLine2.substring(28, 42).replace(/</g, '');
+                // Heuristic: If meaningful alphanumeric (often numbers in DOM)
+                const optData = mrzLine2.substring(28, 42).replace(/</g, '');
+                if (optData.length > 3) personalIdNumber = optData;
             }
 
             country = nationality;
         }
 
-        // Try to find Marital Status in raw text (Scanning for SOLTERO/CASADO)
+        if (mrzLine1) {
+            // P<DOMSURNAME<<GIVEN<NAMES<<<<
+            const clean = mrzLine1.replace(/\s/g, '').toUpperCase();
+            // Remove 'P', type chars, and country logic if mashed
+            // Usually P<DOM... catch the first '<'
+            const firstJunction = clean.indexOf('<');
+            if (firstJunction > 0) {
+                const namePart = clean.substring(firstJunction + 1); // Skip P<DOM part if roughly found? 
+                // Actually standard is P<CCC...
+                // Let's be safer: Strip leading characters until first letter of Surname
+                // Better: Use the fact that Country is 3 chars. P<CCC
+                const content = clean.substring(5);
+                const parts = content.split('<<');
+                surname = parts[0]?.replace(/</g, ' ').trim() || "";
+                givenNames = parts[1]?.replace(/</g, ' ').trim() || "";
+            }
+        }
+
+        // VIZ EXTRACTION (Visual Inspection Zone - Fallbacks for missing MRZ data)
+        // 1. Issue Date: "Fecha de expedición", "Date of issue", "Emisión"
+        // Pattern: DD MMM/MMM YYYY (09 ENE/JAN 2015)
+        const dateIssuePattern = /\b\d{2}\s+[A-Z]{3,4}\/?[A-Z]{0,3}\s+\d{4}\b/gi;
+        // Search text for date patterns usually in VIZ
+        const datesFound = cleanText.match(dateIssuePattern) || [];
+        // Heuristic: Issue date is usually earlier than Expiry. 
+        // We can parse them and guess.
+
+        let dateOfIssue = "";
+        // Specific scan for labels
+        const issueLine = extractVIZField(lines, ["FECHA DE EXPEDICION", "DATE OF ISSUE", "EMISION"]);
+        if (issueLine) {
+            // Try to find date in that line
+            const match = issueLine.match(dateIssuePattern);
+            if (match) dateOfIssue = parseSpanishDate(match[0]);
+            else dateOfIssue = parseSpanishDate(issueLine); // Try whole line
+        }
+        // Fallback: If we have multiple dates, pick one that isn't DOB or Expiry? Complex.
+        // Let's stick to label scanning first.
+
+        // 2. Authority: "Autoridad", "Authority", "Expedido por"
+        let authority = extractVIZField(lines, ["AUTORIDAD", "AUTHORITY", "EXPEDIDO POR", "ISSUING AUTHORITY"]);
+        // Cleanup authority (remove date/labels if captured)
+        if (authority && authority.length < 3) authority = "";
+
+        // 3. Place of Birth: "Lugar de nacimiento", "Place of birth"
+        let placeOfBirth = extractVIZField(lines, ["LUGAR DE NACIMIENTO", "PLACE OF BIRTH"]);
+
+        // 4. Marital Status
         const maritalStatus = /SOLTERO|SINGLE/i.test(cleanText) ? "SOLTERO/A"
             : /CASADO|MARRIED/i.test(cleanText) ? "CASADO/A"
                 : "";
@@ -123,8 +181,8 @@ export default function ScanPage() {
         return {
             rawText: cleanText,
             passportNumber: passportNumber || "",
-            surname: extractName(lines, 0),
-            givenNames: extractName(lines, 1),
+            surname: surname || extractNameFallback(lines, 0),
+            givenNames: givenNames || extractNameFallback(lines, 1),
             dob: dob || "",
             expiry: expiry || "",
             sex: sex || "-",
@@ -132,10 +190,60 @@ export default function ScanPage() {
             nationality: nationality || "USA",
             personalIdNumber: personalIdNumber,
             maritalStatus: maritalStatus,
-            dateOfIssue: "", // Manual Entry
-            authority: "", // Manual Entry
-            placeOfBirth: "" // Manual Entry
+            dateOfIssue: dateOfIssue,
+            authority: authority,
+            placeOfBirth: placeOfBirth
         };
+    };
+
+    const extractVIZField = (lines: string[], keywords: string[]) => {
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].toUpperCase();
+            if (keywords.some(k => line.includes(k))) {
+                // Value is often on the SAME line after : or on the NEXT line
+                // Check same line first
+                let value = line;
+                keywords.forEach(k => value = value.replace(k, '')); // Remove keyword
+                value = value.replace(/[:\.\/]/g, '').trim(); // Remove Separators
+
+                if (value.length > 2) return value; // Found on same line
+
+                // If empty, check Next Line
+                if (lines[i + 1]) {
+                    return lines[i + 1].replace(/[:\.\/]/g, '').trim();
+                }
+            }
+        }
+        return "";
+    };
+
+    const parseSpanishDate = (raw: string) => {
+        // Format: 09 ENE/JAN 2015 or 09 ENE 2015
+        // Extract parts
+        const parts = raw.match(/(\d{2})\s+([A-Z]+).*\s+(\d{4})/i);
+        if (!parts) return raw; // Return as is if parse fails
+
+        const day = parts[1];
+        const monthRaw = parts[2].toUpperCase().substring(0, 3);
+        const year = parts[3];
+
+        const months: Record<string, string> = {
+            'ENE': '01', 'JAN': '01',
+            'FEB': '02',
+            'MAR': '03',
+            'ABR': '04', 'APR': '04',
+            'MAY': '05',
+            'JUN': '06',
+            'JUL': '07',
+            'AGO': '08', 'AUG': '08',
+            'SEP': '09',
+            'OCT': '10',
+            'NOV': '11',
+            'DIC': '12', 'DEC': '12'
+        };
+
+        const mm = months[monthRaw] || "00";
+        return `${year}-${mm}-${day}`;
     };
 
     const formatDate = (yymmdd: string) => {
@@ -151,20 +259,8 @@ export default function ScanPage() {
         return `${century}${yy}-${mm}-${dd}`;
     };
 
-    const extractName = (lines: string[], priority: number) => {
-        // Try to find Line 1 of MRZ: P<USA...
-        const mrzLine1 = lines.find(l => l.replace(/\s/g, '').startsWith('P<'));
-
-        if (mrzLine1) {
-            const clean = mrzLine1.replace(/\s/g, '').toUpperCase();
-            const namePart = clean.substring(5);
-            const parts = namePart.split('<<');
-
-            if (priority === 0) return parts[0]?.replace(/</g, ' ').trim() || "";
-            if (priority === 1) return parts[1]?.replace(/</g, ' ').trim() || "";
-        }
-
-        // Fallback: Generic uppercase lines
+    const extractNameFallback = (lines: string[], priority: number) => {
+        // Fallback: Generic uppercase lines if MRZ fails
         const potential = lines.filter(l => l.length > 3 && /^[A-Z\s]+$/.test(l.trim()) && !l.includes('<'));
         return potential[priority] ? potential[priority].trim() : "";
     };
