@@ -223,7 +223,7 @@ export async function POST(req: Request) {
             try {
                 // ATTEMPT: GPT-5 (User Preference - STRICT)
                 const simCompletion = await openai.chat.completions.create({
-                    model: "gpt-5",
+                    model: "gpt-5-mini", // USER REQUESTED GPT-5 MINI (For Speed)
                     messages: [
                         { role: "system", content: simulatorPrompt },
                         ...effectiveHistory.slice(-20)
