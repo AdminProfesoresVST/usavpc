@@ -14,7 +14,11 @@ interface PassportData {
     dob?: string;
     expiry?: string;
     sex?: string;
-    country?: string;
+    country?: string; // Issuing Country
+    nationality?: string; // Citizenship
+    dateOfIssue?: string; // Not in MRZ
+    authority?: string; // Not in MRZ
+    placeOfBirth?: string; // Not in MRZ
     photoUrl?: string;
 }
 
@@ -67,7 +71,11 @@ export default function ScanPage() {
     };
 
     const parsePassportData = (text: string) => {
-        const lines = text.split('\n');
+        // Sanitize common OCR errors before parsing
+        // User reported 'S' is often read as '$'
+        const cleanText = text.replace(/\$/g, 'S');
+
+        const lines = cleanText.split('\n');
         let mrzLine2 = "";
 
         // Find MRZ Line 2 (contains dates and numbers)
@@ -90,19 +98,21 @@ export default function ScanPage() {
         let expiry = "";
         let sex = "";
         let country = "";
+        let nationality = "";
 
         if (mrzLine2 && mrzLine2.length >= 28) {
             // TD3 MRZ Line 2 Format:
             // 0-8:   Passport No
             // 9:     Check
-            // 10-12: Nationality
+            // 10-12: Nationality (Citizenship)
             // 13-18: DOB (YYMMDD)
             // 19:    Check
             // 20:    Sex
             // 21-26: Expiry (YYMMDD)
+            // ...
 
             passportNumber = mrzLine2.substring(0, 9).replace(/</g, '');
-            country = mrzLine2.substring(10, 13).replace(/</g, '');
+            nationality = mrzLine2.substring(10, 13).replace(/</g, '');
 
             const rawDob = mrzLine2.substring(13, 19);
             dob = formatDate(rawDob);
@@ -111,17 +121,25 @@ export default function ScanPage() {
 
             const rawExpiry = mrzLine2.substring(21, 27);
             expiry = formatDate(rawExpiry);
+
+            // Country (Issuing State) is usually in Line 1, but extracting from Line 2 (Nationality) is a safe fallback
+            // actually extracting line 1 country is better.
+            country = nationality; // Default to nationality for now as fallback
         }
 
         return {
             rawText: text,
-            passportNumber: passportNumber || "NO NUM",
+            passportNumber: passportNumber || "",
             surname: extractName(lines, 0),
             givenNames: extractName(lines, 1),
-            dob: dob || "YY-MM-DD",
-            expiry: expiry || "YY-MM-DD",
+            dob: dob || "",
+            expiry: expiry || "",
             sex: sex || "-",
-            country: country || "USA"
+            country: country || "USA",
+            nationality: nationality || "USA",
+            dateOfIssue: "", // Manual Entry
+            authority: "", // Manual Entry
+            placeOfBirth: "" // Manual Entry
         };
     };
 
@@ -223,60 +241,96 @@ export default function ScanPage() {
                                     type="text"
                                     defaultValue={`${scannedData.givenNames || ''} ${scannedData.surname || ''}`}
                                     className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
-                                    placeholder="Ingrese nombre..."
+                                    placeholder="Nombre"
                                 />
                             </div>
 
-                            {/* Passport Number */}
-                            <div className="p-3 flex flex-col gap-0.5 bg-gray-50/30">
-                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">No. Pasaporte</span>
-                                <input
-                                    type="text"
-                                    defaultValue={scannedData.passportNumber}
-                                    className="font-mono font-bold text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm tracking-wide"
-                                    placeholder="Ej: A12345678"
-                                />
+                            {/* Passport Number & Nationality */}
+                            <div className="flex divide-x divide-gray-50 bg-gray-50/30">
+                                <div className="p-3 flex-1 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">No. Pasaporte</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.passportNumber}
+                                        className="font-mono font-bold text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm tracking-wide"
+                                        placeholder="Número"
+                                    />
+                                </div>
+                                <div className="p-3 w-1/3 flex flex-col gap-0.5 text-right">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Nacionalidad</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.nationality}
+                                        className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                        placeholder="USA"
+                                    />
+                                </div>
                             </div>
 
-                            {/* Two Col Row */}
+                            {/* Dates Row 1 */}
                             <div className="flex divide-x divide-gray-50">
                                 <div className="p-3 flex-1 flex flex-col gap-0.5">
-                                    <span className="text-[10px] font-semibold text-gray-400 uppercase">Nacimiento</span>
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase">Nacimiento (DOB)</span>
                                     <input
                                         type="text"
                                         defaultValue={scannedData.dob}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                        placeholder="YYYY-MM-DD"
                                     />
                                 </div>
-                                <div className="p-3 w-1/3 flex flex-col gap-0.5">
-                                    <span className="text-[10px] font-semibold text-gray-400 uppercase text-right">Sexo</span>
+                                <div className="p-3 w-1/3 flex flex-col gap-0.5 text-right">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase">Sexo</span>
                                     <input
                                         type="text"
                                         defaultValue={scannedData.sex}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                        placeholder="M/F"
                                     />
                                 </div>
                             </div>
 
-                            {/* Two Col Row */}
+                            {/* Dates Row 2 */}
                             <div className="flex divide-x divide-gray-50">
                                 <div className="p-3 flex-1 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase">Emisión (Issue)</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.dateOfIssue}
+                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                        placeholder="YYYY-MM-DD"
+                                    />
+                                </div>
+                                <div className="p-3 flex-1 flex flex-col gap-0.5 text-right">
                                     <span className="text-[10px] font-semibold text-gray-400 uppercase">Vencimiento</span>
                                     <input
                                         type="text"
                                         defaultValue={scannedData.expiry}
-                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
-                                    />
-                                </div>
-                                <div className="p-3 w-1/3 flex flex-col gap-0.5">
-                                    <span className="text-[10px] font-semibold text-gray-400 uppercase text-right">País</span>
-                                    <input
-                                        type="text"
-                                        defaultValue={scannedData.country}
-                                        className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                        placeholder="YYYY-MM-DD"
                                     />
                                 </div>
                             </div>
+
+                            {/* Extra Info */}
+                            <div className="p-3 flex flex-col gap-0.5">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lugar de Nacimiento</span>
+                                <input
+                                    type="text"
+                                    defaultValue={scannedData.placeOfBirth}
+                                    className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                    placeholder="Ciudad, País"
+                                />
+                            </div>
+                            <div className="p-3 flex flex-col gap-0.5 border-t border-gray-50">
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Autoridad (Authority)</span>
+                                <input
+                                    type="text"
+                                    defaultValue={scannedData.authority}
+                                    className="font-medium text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                    placeholder="Ej: Dept of State"
+                                />
+                            </div>
+
                         </div>
                     </div>
                 </div>
