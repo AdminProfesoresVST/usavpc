@@ -116,22 +116,27 @@ export function MobileHome() {
 
                     <div className="flex-1 flex flex-col gap-2 min-h-0">
                         {/* Card 01 - Full Service (Main Option) - Takes more space */}
-                        <div onClick={() => handlePlanSelect('full')} className="group flex-1 bg-white rounded-xl p-3 shadow-sm border border-gray-100 relative overflow-hidden active:scale-[0.99] transition-all flex flex-col justify-center">
+                        <div onClick={() => handlePlanSelect('full')} className="group flex-1 bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative overflow-hidden active:scale-[0.99] transition-all flex flex-col justify-between">
                             <div className="absolute top-0 right-0 bg-[#003366] text-white text-[8px] font-bold px-2 py-0.5 rounded-bl-md tracking-wider">
                                 POPULAR
                             </div>
-                            <div className="flex justify-between items-center mb-1">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-8 w-8 bg-blue-50 rounded-md flex items-center justify-center text-[#003366]">
-                                        <ShieldCheck size={16} />
+
+                            {/* Top Section: Title & Icon */}
+                            <div>
+                                <div className="flex justify-between items-start mb-2">
+                                    <div className="h-9 w-9 bg-blue-50 rounded-lg flex items-center justify-center text-[#003366]">
+                                        <ShieldCheck size={18} />
                                     </div>
-                                    <h4 className="font-bold text-sm text-gray-900 leading-tight">{t('Common.Mobile.Plans.full.title')}</h4>
+                                    <div className="text-right">
+                                        <span className="block text-2xl font-bold text-gray-900">$99</span>
+                                    </div>
                                 </div>
-                                <div className="text-right">
-                                    <span className="block text-lg font-bold text-gray-900">$99</span>
-                                </div>
+                                <h4 className="font-bold text-base text-gray-900 leading-tight mb-1">{t('Common.Mobile.Plans.full.title')}</h4>
                             </div>
-                            <p className="text-[10px] text-gray-500 leading-tight line-clamp-2 pl-[40px]">{t('Common.Mobile.Plans.full.desc')}</p>
+
+                            {/* Bottom Section: Description */}
+                            <p className="text-xs text-gray-500 leading-relaxed pl-1">{t('Common.Mobile.Plans.full.desc')}</p>
+
                             {isProcessing === 'full' && (
                                 <div className="absolute inset-0 bg-white/90 backdrop-blur-[1px] z-20 flex items-center justify-center">
                                     <div className="w-5 h-5 border-2 border-[#003366] border-t-transparent rounded-full animate-spin" />
