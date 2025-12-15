@@ -136,9 +136,9 @@ export async function POST(req: Request) {
                  RESILIENCE & RESUME PROTOCOL: 
                  - The user might say "Hola" or "Hello" if the connection dropped.
                  - IF History shows the User's LAST message was a valid answer (e.g., "40mil", "Profesor"), IGNORE the "Hola".
-                 - TREAT "Hola" as "Please continue".
-                 - DO NOT say "Good morning" or "What do you do?".
-                 - INSTEAD, Say: "Understood (acknowledging the 40mil). Now, [Next Question]".
+                 - MARK that data as KNOWN.
+                 - SILENTLY acknowledge it and move to the NEXT Data Point.
+                 - DO NOT say "Understood". Just ask the next logical question.
                  
                  SCAN: Check history for "Job", "Salary", "Time". If present, do not ask again.
                  PROGRESSION: Move through categories. Do not get stuck.
@@ -231,9 +231,9 @@ export async function POST(req: Request) {
 
             let simRes;
             try {
-                // ATTEMPT: GPT-5-MINI (User Preference Restored)
+                // ATTEMPT: GPT-4o (STABILITY ENFORCED - Mini is failing)
                 const simCompletion = await openai.chat.completions.create({
-                    model: "gpt-5-mini",
+                    model: "gpt-4o",
                     messages: [
                         { role: "system", content: simulatorPrompt },
                         ...effectiveHistory.slice(-20)
