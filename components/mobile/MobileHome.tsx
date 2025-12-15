@@ -107,7 +107,7 @@ export function MobileHome() {
                 <div className="shrink-0 flex justify-center gap-4 text-gray-400 py-0">
                     <div className="flex items-center gap-1.5 opacity-80">
                         <div className="flex text-[#C5A065]"><Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" /></div>
-                        <span className="text-[9px] font-semibold tracking-wide uppercase">50k+ Trusted</span>
+                        <span className="text-[9px] font-semibold tracking-wide uppercase">50k+ Trusted <span className="text-[7px] text-gray-300 ml-1">v170</span></span>
                     </div>
                 </div>
 
