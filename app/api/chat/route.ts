@@ -190,6 +190,7 @@ export async function POST(req: Request) {
 
                  OUTPUT format: JSON.
                  {
+                    "reasoning": "Explain step-by-step why you chose this. E.g. 'User said Alone, so Question 4 is answered. Moving to Funding.'",
                     "response": "The Consul's verbal response (question) OR Verdict Message.",
                     "feedback": "Optional coaching tip explaining the score change",
                     "score_delta": number,
@@ -208,7 +209,7 @@ export async function POST(req: Request) {
             }
 
             const simCompletion = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
+                model: "gpt-4o", // UPGRADED TO gpt-4o FOR LOGIC REASONING
                 messages: [
                     { role: "system", content: simulatorPrompt },
                     ...effectiveHistory.slice(-20) // Feed last 20 messages for context (Context Window Management)
