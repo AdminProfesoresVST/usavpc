@@ -156,28 +156,28 @@ export async function POST(req: Request) {
                  - "¿Cuál es el motivo principal de su viaje?" (Opening) -> Verify B1/B2 consistency.
                  - "¿A dónde va específicamente? (Ciudad, Hotel)" (Always) -> Vagueness = Risk.
                  - "¿Cuánto tiempo se quedará?" (Always) -> >3 weeks is suspicious.
-                 - "¿Por qué va a [Ciudad X]?" (If non-tourist city) -> Suspect work or family.
-                 - "¿Qué lugares turísticos visitará?" (If "Tourism" and nervous) -> Knowledge check.
-                 - "¿Cuánto dinero lleva?" (Solvency check) -> Logic: $500 for 15 days is Risk.
+                 CATEGORÍA 2: MOTIVO DEL VIAJE (Purpose)
+                 - "¿Cuál es el propósito de su viaje?" (Target: Purpose)
+                 - "¿Qué lugares piensa visitar?" (Target: Itinerary)
 
-                 CATEGORÍA 3: VÍNCULOS FAMILIARES EN EE. UU. (Risk Zone)
-                 - "¿Tiene familiares en los Estados Unidos?" (Always!) -> TRAP QUESTION. Check honesty.
-                 - "¿Quiénes son? ¿Qué estatus legal tienen?" (If yes) -> Undocumented family = High Risk.
-                 - "¿Cómo arregló papeles su familiar?" (If resident) -> Chain migration risk.
-                 - "¿En qué trabaja su familiar allá?" (Job offer risk).
+                 CATEGORÍA 3: TIEMPO DE ESTADÍA (Duration)
+                 - "¿Cuánto tiempo piensa quedarse?" (Target: Duration)
+                 - "¿Cuándo piensa viajar?" (Target: Date)
 
-                 CATEGORÍA 4: ACOMPAÑANTES Y FINANCIAMIENTO (Funding)
-                 - "¿Con quién viaja?" (Always) -> Solo travel is higher risk.
-                 - "¿Quién paga el viaje?" (Students/Low income) -> Third party payer = High Risk.
-                 - "¿A qué se dedica quien paga?" (Source of funds).
+                 CATEGORÍA 4: ACOMPAÑANTES (Companions)
+                 - "¿Con quién viaja?" (Target: Companion. If user said 'Solo', SKIP this.)
+                 - "¿Tiene visa su acompañante?" (If applicable)
+                 - "¿Quién paga el viaje?" (Target: Payer. If user said 'Yo mismo', SKIP this.)
 
-                 CATEGORÍA 5: ARRAIGO FAMILIAR EN PAÍS DE ORIGEN (Ties to Home)
-                 - "¿Es casado/a? ¿Tiene hijos?" (Always) -> Anchors.
-                 - "¿Por qué no viajan ellos?" (Logic test).
-                 - "¿Con quién viven sus hijos?" (Single parents).
+                 CATEGORÍA 5: ARRAIGO FAMILIAR (Family Ties)
+                 - "¿Tiene familiares en Estados Unidos?" (Target: Relatives)
+                 - "¿Quiénes son y dónde viven?" (If yes)
+                 - "¿Es usted casado/a o soltero/a?" (Target: Marital Status)
+                 - "¿Tiene hijos?" (Target: Children)
 
-                 CATEGORÍA 6: HISTORIAL (History)
-                 - "¿Ha viajado a otros países antes?" (New passport) -> Travel history = Trust.
+                 CATEGORÍA 6: FINANCIAMIENTO (Funding - Deep Dive)
+                 - "¿Cuánto dinero lleva para el viaje?" (Target: Cash)
+                 - "¿Dispone de tarjeta de crédito?" (Target: Solvency)t.
                  - "¿Le han negado la visa antes?" (System alert) -> Honesty test.
                  - "¿Cómo se mantuvo en su visita anterior de 5 meses?" (Overstay risk).
 
@@ -221,9 +221,9 @@ export async function POST(req: Request) {
 
             let simRes;
             try {
-                // ATTEMPT: GPT-5 (User Preference - STRICT)
+                // ATTEMPT: GPT-4o (STABILITY RESTORED - Only one that works consistently)
                 const simCompletion = await openai.chat.completions.create({
-                    model: "gpt-5-mini", // USER REQUESTED GPT-5 MINI (For Speed)
+                    model: "gpt-4o",
                     messages: [
                         { role: "system", content: simulatorPrompt },
                         ...effectiveHistory.slice(-20)
