@@ -57,8 +57,6 @@ export default function VerifyPage() {
 
     return (
         <div className="flex flex-col h-full bg-[#F0F2F5]">
-            <Header />
-
             <div className="fade-enter h-full flex flex-col p-6 overflow-y-auto">
                 <div className="flex flex-col items-center mb-6">
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 ${hasMissingData ? 'bg-amber-100' : 'bg-green-100'}`}>

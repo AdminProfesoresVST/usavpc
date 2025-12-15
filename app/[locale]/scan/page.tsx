@@ -105,8 +105,6 @@ export default function ScanPage() {
 
     return (
         <div className="flex flex-col h-full bg-[#F0F2F5]">
-            <Header />
-
             <div className="flex flex-col items-center text-center h-full justify-center fade-enter pb-6 px-6">
                 <input
                     type="file"
@@ -119,7 +117,7 @@ export default function ScanPage() {
 
                 <div className="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative animate-pulse-slow">
                     <ScanFace className={`w-12 h-12 text-[#003366] ${isScanning ? 'animate-pulse' : ''}`} />
-                    <div className="absolute -top-1 -right-1 w-8 h-8 bg-[#C5A065] rounded-full flex items-center justify-center border-4 border-[#F0F2F5]">
+                    <div className="absolute -top-1 -right-1 w-8 h-8 bg-[#003366] rounded-full flex items-center justify-center border-4 border-[#F0F2F5]">
                         <Lock className="w-4 h-4 text-white" />
                     </div>
                 </div>
