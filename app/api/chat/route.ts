@@ -87,8 +87,11 @@ export async function POST(req: Request) {
         // SIMULATOR MODE INTERCEPTOR
         // ---------------------------------------------------------
         if (mode === 'simulator') {
-            // 0. Load History from DB (Merge with Client if needed? No, Trust DB)
+            // 0. Load History, Score, Turns from DB
             const dbHistory = application.simulator_history || [];
+            let currentScore = application.simulator_score ?? 50; // Start at Neutral 50
+            let currentTurns = application.simulator_turns ?? 0;
+            const MAX_TURNS = 10; // Approx 2-5 mins
 
             // 1. If it's the INITIAL LOAD (answer is null), Greeting.
             if (!answer) {
@@ -117,6 +120,9 @@ export async function POST(req: Request) {
                  Mode: SIMULATOR (Roleplay).
                  
                  Current Context: User is applying for a visa.
+                 
+                 Current Score: ${currentScore} / 100 (Threshold: <30 Fail, >70 Pass).
+                 Turns Used: ${currentTurns} / ${MAX_TURNS}.
                  
                  CONSUL KNOWLEDGE BASE (MATRIX OF QUESTIONS):
                  Use this Matrix to determine your next question. Do not ask random questions. Follow this logic.
@@ -165,18 +171,24 @@ export async function POST(req: Request) {
 
                  TASK:
                  1. ANALYZE INPUT: Check if user Answer Matches "Red Flags" in the Matrix.
-                 2. SELECT NEXT QUESTION: Based on the Matrix Logic.
-                    - If "Purpose" is clear -> Move to "Job/Ties".
-                    - If "Job" is clear -> Move to "Funding".
-                    - If "Funding" is clear -> Move to "Family in US".
-                 3. ADAPT TO LANGUAGE: Reply in User's Language.
-                 4. LOOP PREVENTION: If user says "I don't know", ACCEPT IT as a Skeptic, Note the Risk, and PIVOT to next Category.
+                 2. EVALUATE ANSWER: Assign a SCORE DELTA (-10 to +10).
+                    - Bad/Vague Answer ("I don't know") = -10 (Red Flag).
+                    - Good/Strong Answer ("I have a job at X for 5 years") = +5.
+                    - Lie Detected = -20 (Instant Fail).
+                 3. SELECT NEXT QUESTION (if Game Continues).
+                 4. CHECK TERMINATION:
+                    - If Score <= 30 => TERMINATE (DENIED).
+                    - If Score >= 90 => TERMINATE (APPROVED).
+                    - If Turns >= ${MAX_TURNS} => TERMINATE (Verdict based on Score).
+                 5. ADAPT TO LANGUAGE: Reply in User's Language.
+                 6. LOOP PREVENTION: If user says "I don't know", ACCEPT IT as a Skeptic, Note the Risk, and PIVOT to next Category.
 
                  OUTPUT format: JSON.
                  {
-                    "response": "The Consul's verbal response (question)",
-                    "feedback": "Optional coaching tip only if needed (e.g. 'Tip: Be specific about your hotel')",
-                    "action": "CONTINUE"
+                    "response": "The Consul's verbal response (question) OR Verdict Message.",
+                    "feedback": "Optional coaching tip explaining the score change",
+                    "score_delta": number,
+                    "action": "CONTINUE" | "TERMINATE_APPROVED" | "TERMINATE_DENIED"
                  }
              `;
 
@@ -207,16 +219,26 @@ export async function POST(req: Request) {
                     ...effectiveHistory,
                     { role: "assistant", content: simRes.response }
                 ];
-                await supabase.from("applications").update({ simulator_history: newHistory }).eq("id", application.id);
+
+                // Calc New Score/Turns
+                const delta = typeof simRes.score_delta === 'number' ? simRes.score_delta : 0;
+                const newScore = Math.min(100, Math.max(0, currentScore + delta));
+                const newTurns = currentTurns + 1;
+
+                await supabase.from("applications").update({
+                    simulator_history: newHistory,
+                    simulator_score: newScore,
+                    simulator_turns: newTurns
+                }).eq("id", application.id);
             }
 
             return NextResponse.json({
                 response: simRes.response,
                 nextStep: {
-                    question: simRes.response + (simRes.feedback ? `\n\n💡 *Coach:* ${simRes.feedback}` : ""),
+                    question: simRes.response + (simRes.feedback ? `\n\n💡 *Coach:* ${simRes.feedback}` : "") + `\n\n(Score: ${currentScore} -> ${currentScore + (simRes.score_delta || 0)})`,
                     field: "simulator_interaction",
                     type: "text",
-                    history: [] // Client doesn't need to manage history anymore? Or maybe sync it back?
+                    history: []
                 }
             });
         }
