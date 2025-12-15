@@ -480,12 +480,14 @@ function parsePassportData(text: string): PassportData {
         authority = "SEDE CENTRAL";
     }
     if (authority && authority.length < 3) authority = "";
+    // Gatekeeper: Final check for garbage
+    if (isGarbage(authority)) authority = "";
 
     // 3. Place of Birth
     let placeOfBirth = extractVIZField(lines, ["LUGAR DE NACIMIENTO", "PLACE OF BIRTH", "NACIMIENTO"]);
 
-    // Critical Fix: Block "SEXO" or "SEX" from being POB
-    if (placeOfBirth.includes("SEX") || placeOfBirth.includes("FEM") || placeOfBirth.includes("MASC") || placeOfBirth.length < 3) {
+    // Critical Fix: Block "SEXO", "DATE", "FECHA" from being POB
+    if (placeOfBirth.includes("SEX") || placeOfBirth.includes("FEM") || placeOfBirth.includes("MASC") || isGarbage(placeOfBirth)) {
         placeOfBirth = "";
     }
 
@@ -525,10 +527,10 @@ function isGarbage(text: string): boolean {
     const t = text.toUpperCase();
     // 1. Common Labels found in background
     const labels = [
-        "DATE", "FECHA", "BIRTH", "NACIMIENTO", "EXPEDICION", "ISSUE",
+        "DATE", "FECHA", "BIRTH", "NACIMIENTO", "EXPEDICION", "ISSUE", "ISSUS",
         "AUTHORITY", "AUTORIDAD", "SEXY", "SEXO", "SEX", "TITULAR",
         "SURNAME", "GIVEN", "NAME", "NOMBRE", "APELLIDOS", "PASAPORTE", "PASSPORT",
-        "DOMINICANA", "REPUBLICA", "P<"
+        "DOMINICANA", "REPUBLICA", "P<", "MASC", "FEM", "PERSONAL", "NUM", "ID"
     ];
 
     if (labels.some(label => t.includes(label))) return true;
