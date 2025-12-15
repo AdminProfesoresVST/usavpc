@@ -47,7 +47,13 @@ export default async function RootLayout({
             {/* Header stays top */}
             <Header />
 
-            {/* Main takes remaining space, scrollable if content overflows */}
+            {/* 
+              [SCROLL ARCHITECTURE] 
+              Date: 2025-12-15
+              Context: Decoupling document scroll from body. 
+              Enforcement: overflow-y-auto on main, while body is fixed.
+              Netlify Impact: Enables internal scrolling within fixed viewport.
+            */}
             <main className="flex-1 flex flex-col overflow-y-auto no-scrollbar relative w-full h-full">
               {children}
             </main>

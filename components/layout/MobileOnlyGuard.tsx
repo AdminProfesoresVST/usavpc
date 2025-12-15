@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * [CRITICAL COMPONENT] MobileOnlyGuard
+ * Date: 2025-12-15
+ * Context: Enforcing mobile-first architecture by blocking desktop access.
+ * Enforcement: Physical viewport check (<768px).
+ * Netlify Impact: Prevents desktop users from accessing the app in production.
+ * Source of Truth: Window innerWidth.
+ */
+
 import { useEffect, useState } from "react";
 
 export function MobileOnlyGuard() {

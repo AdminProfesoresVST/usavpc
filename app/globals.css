@@ -111,6 +111,13 @@
 
 @layer base {
 
+  /**
+   * [STRICT VIEWPORT LOCK]
+   * Date: 2025-12-15
+   * Context: Locking the body to 100dvh to prevent rubber-banding and ensure native-like feel.
+   * Enforcement: overflow: hidden; overscroll-behavior: none;
+   * Netlify Impact: Global Scroll Lock.
+   */
   html {
     height: 100dvh;
     width: 100vw;
