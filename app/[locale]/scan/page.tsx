@@ -37,7 +37,8 @@ export default function ScanPage() {
     const router = useRouter();
     const locale = useLocale();
     const searchParams = useSearchParams();
-    const plan = searchParams.get("plan");
+    const rawPlan = searchParams.get("plan");
+    const plan = rawPlan ? rawPlan.trim().toLowerCase() : "";
 
     const [isScanning, setIsScanning] = useState(false);
     const [scannedData, setScannedData] = useState<PassportData | null>(null);
@@ -88,9 +89,21 @@ export default function ScanPage() {
     };
 
     const handleConfirm = () => {
-        // Here we would save to Global Store
+        // Save to Global Store
         localStorage.setItem('passportData', JSON.stringify({ ...scannedData, plan }));
-        router.push(`/${locale}/success`);
+
+        // Redirect to specific service page based on 'plan'
+        if (plan === 'simulator') {
+            router.push(`/${locale}/assessment/simulator`);
+        } else if (plan === 'diy') {
+            router.push(`/${locale}/assessment/diy`);
+        } else if (plan === 'full') {
+            router.push(`/${locale}/assessment/full`);
+        } else {
+            // IF plan IS NOT A SERVICE (e.g. 'B1/B2', or empty)
+            // User MUST select a service now.
+            router.push(`/${locale}/services`);
+        }
     };
 
     const handleRetry = () => {
@@ -128,17 +141,19 @@ export default function ScanPage() {
                     </div>
 
                     {/* Passport Preview & Form Grid */}
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        {/* Image Preview - WHITE Background as requested */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+                        {/* Image Preview - Larger & Rounded as requested */}
                         {scannedData.photoUrl && (
-                            <div className="w-full h-32 bg-white flex items-center justify-center relative overflow-hidden border-b border-gray-100">
-                                <img
-                                    src={scannedData.photoUrl}
-                                    alt="Passport"
-                                    className="h-full object-contain"
-                                />
-                                <div className="absolute top-2 right-2 bg-gray-100/80 text-gray-600 text-[10px] px-2 py-0.5 rounded backdrop-blur-sm border border-gray-200">
-                                    Original
+                            <div className="p-4 bg-gray-50 border-b border-gray-100">
+                                <div className="w-full h-48 bg-white flex items-center justify-center relative overflow-hidden rounded-2xl shadow-sm border border-gray-100">
+                                    <img
+                                        src={scannedData.photoUrl}
+                                        alt="Passport"
+                                        className="h-full object-contain"
+                                    />
+                                    <div className="absolute top-2 right-2 bg-gray-900/10 text-gray-600 text-[10px] px-2 py-0.5 rounded backdrop-blur-sm">
+                                        Original
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -151,8 +166,25 @@ export default function ScanPage() {
                                 <input
                                     type="text"
                                     defaultValue={`${scannedData.givenNames || ''} ${scannedData.surname || ''}`}
-                                    className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
-                                    placeholder="Nombre Combero"
+                                    onChange={(e) => {
+                                        // Heuristic: split by last space? No, allow manual fix.
+                                        // Just update surname/givenNames to match what user types? 
+                                        // Or just update a 'fullName' field? 
+                                        // For now, simpler: Update 'givenNames' with full string (easiest refactor)
+                                        // Or better, let's keep separate inputs?
+                                        // The UI shows ONE input.
+                                        // So we save to 'givenNames' + 'surname' is hard.
+                                        // Let's create a 'fullName' state or logic.
+                                        // Actually, let's just make TWO inputs?
+                                        // User request: "Editable".
+                                        // I'll splitting logic: Last word = surname, rest = given.
+                                        const parts = e.target.value.trim().split(" ");
+                                        const newSurname = parts.pop() || "";
+                                        const newGiven = parts.join(" ");
+                                        setScannedData({ ...scannedData, surname: newSurname, givenNames: newGiven });
+                                    }}
+                                    className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-base"
+                                    placeholder="Nombre Completo"
                                 />
                             </div>
 
@@ -163,6 +195,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.passportNumber}
+                                        onChange={(e) => setScannedData({ ...scannedData, passportNumber: e.target.value })}
                                         className="font-mono font-bold text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm tracking-wide"
                                         placeholder="Número"
                                     />
@@ -172,6 +205,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.nationality}
+                                        onChange={(e) => setScannedData({ ...scannedData, nationality: e.target.value })}
                                         className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
                                         placeholder="---"
                                     />
@@ -185,6 +219,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.personalIdNumber}
+                                        onChange={(e) => setScannedData({ ...scannedData, personalIdNumber: e.target.value })}
                                         className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
                                         placeholder="---"
                                     />
@@ -194,6 +229,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.maritalStatus}
+                                        onChange={(e) => setScannedData({ ...scannedData, maritalStatus: e.target.value })}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
                                         placeholder="---"
                                     />
@@ -207,6 +243,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.dob}
+                                        onChange={(e) => setScannedData({ ...scannedData, dob: e.target.value })}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
                                         placeholder="YYYY-MM-DD"
                                     />
@@ -216,6 +253,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.sex}
+                                        onChange={(e) => setScannedData({ ...scannedData, sex: e.target.value })}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
                                         placeholder="M/F"
                                     />
@@ -229,6 +267,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.dateOfIssue}
+                                        onChange={(e) => setScannedData({ ...scannedData, dateOfIssue: e.target.value })}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
                                         placeholder="YYYY-MM-DD"
                                     />
@@ -238,6 +277,7 @@ export default function ScanPage() {
                                     <input
                                         type="text"
                                         defaultValue={scannedData.expiry}
+                                        onChange={(e) => setScannedData({ ...scannedData, expiry: e.target.value })}
                                         className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
                                         placeholder="YYYY-MM-DD"
                                     />
@@ -250,8 +290,10 @@ export default function ScanPage() {
                                 <input
                                     type="text"
                                     defaultValue={scannedData.placeOfBirth}
+                                    onChange={(e) => setScannedData({ ...scannedData, placeOfBirth: e.target.value })}
                                     className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
                                     placeholder="Ciudad, País"
+                                    autoComplete="off"
                                 />
                             </div>
                             <div className="p-3 flex flex-col gap-0.5 border-t border-gray-50">
@@ -259,6 +301,7 @@ export default function ScanPage() {
                                 <input
                                     type="text"
                                     defaultValue={scannedData.authority}
+                                    onChange={(e) => setScannedData({ ...scannedData, authority: e.target.value })}
                                     className="font-medium text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
                                     placeholder="Ej: Dept of State"
                                 />
@@ -274,7 +317,7 @@ export default function ScanPage() {
                         onClick={handleConfirm}
                         className="w-full bg-[#003366] text-white h-12 rounded-lg font-bold shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3 text-sm"
                     >
-                        Confirmar y Continuar
+                        Continuar con Solicitud
                     </button>
                     <button
                         onClick={handleRetry}
@@ -467,7 +510,7 @@ function parsePassportData(text: string): PassportData {
     let dateOfIssue = "";
 
     // Scan specific lines first
-    const issueLine = extractVIZField(lines, ["FECHA DE EXPEDICION", "DATE OF ISSUE", "EMISION"]);
+    const issueLine = extractVIZField(lines, ["FECHA DE EXPEDICION", "DATE OF ISSUE", "EMISION", "DÉLIVRANCE", "DELIVRANCE", "DATE DE DELIVRANCE"]);
     if (issueLine) {
         const match = issueLine.match(dateIssuePattern);
         if (match) dateOfIssue = parseSpanishDate(match[0]);
@@ -487,7 +530,7 @@ function parsePassportData(text: string): PassportData {
     if (dateOfIssue === dob) dateOfIssue = "";
 
     // 2. Authority
-    let authority = extractVIZField(lines, ["AUTORIDAD", "AUTHORITY", "EXPEDIDO POR", "ISSUING AUTHORITY"]);
+    let authority = extractVIZField(lines, ["AUTORIDAD", "AUTHORITY", "EXPEDIDO POR", "ISSUING AUTHORITY", "AUTORITÉ", "AUTORITE"]);
 
     // Fallback for RD ("SEDE CENTRAL") - FORCE OVERRIDE if found (User prefers this over OCR garbage)
     if (cleanText.toUpperCase().includes("SEDE CENTRAL")) {
@@ -498,7 +541,7 @@ function parsePassportData(text: string): PassportData {
     if (isGarbage(authority)) authority = "";
 
     // 3. Place of Birth
-    let placeOfBirth = extractVIZField(lines, ["LUGAR DE NACIMIENTO", "PLACE OF BIRTH", "NACIMIENTO"]);
+    let placeOfBirth = extractVIZField(lines, ["LUGAR DE NACIMIENTO", "PLACE OF BIRTH", "NACIMIENTO", "LIEU DE NAISSANCE", "NAISSANCE"]);
 
     // Critical Fix: Block "SEXO", "DATE", "FECHA" or YEARS (19XX/20XX) from being POB
     if (placeOfBirth.includes("SEX") || placeOfBirth.includes("FEM") || placeOfBirth.includes("MASC") || isGarbage(placeOfBirth)) {
@@ -546,7 +589,7 @@ function isGarbage(text: string): boolean {
     // 1. Common Labels found in background
     const labels = [
         "DATE", "FECHA", "BIRTH", "NACIMIENTO", "EXPEDICION", "ISSUE", "ISSUS",
-        "AUTHORITY", "AUTORIDAD", "SEXY", "SEXO", "SEX", "TITULAR",
+        "AUTHORITY", "AUTORIDAD", "SEXY", "SEXO", "SEX", "TITULAR", "AUTORITE", "NAISSANCE", "DELIVRANCE",
         "SURNAME", "GIVEN", "NAME", "NOMBRE", "APELLIDOS", "PASAPORTE", "PASSPORT",
         "DOMINICANA", "REPUBLICA", "P<", "MASC", "FEM", "PERSONAL", "NUM", "ID"
     ];

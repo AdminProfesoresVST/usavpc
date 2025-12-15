@@ -27,14 +27,16 @@ export function PurposeSelection() {
 
             const data = await response.json();
             if (data.success) {
-                router.push(`/${locale}/scan`);
+                // FORCE FLOW: Purpose -> Services (Select Plan) -> Scan
+                // User requirement: Mandatory Service Selection before Scan.
+                router.push(`/${locale}/services`);
             } else {
                 console.error("Draft creation failed", data.error);
-                router.push(`/${locale}/scan`);
+                router.push(`/${locale}/services`);
             }
         } catch (e) {
             console.error(e);
-            router.push(`/${locale}/scan`);
+            router.push(`/${locale}/services`);
         }
     };
 

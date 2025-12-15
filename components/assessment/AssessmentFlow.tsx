@@ -6,7 +6,7 @@ import { PassportOCR } from "@/components/onboarding/PassportOCR";
 import { Triage } from "@/components/onboarding/Triage";
 import { Decision } from "@/components/onboarding/Decision";
 import { useTranslations } from 'next-intl';
-import { Header } from "@/components/layout/Header";
+// Header removed (handled by Layout)
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ export function AssessmentFlow() {
 
     return (
         <div className="flex flex-col h-full bg-[#f0f2f5]">
-            <Header />
+            {/* Header removed */}
 
             <div className="flex-1 relative z-10 h-full overflow-hidden">
                 <AnimatePresence mode="wait">
