@@ -56,15 +56,21 @@ export default function ScanPage() {
         try {
             const worker = await createWorker('eng');
 
+            // 1. Pre-process Image for better OCR
+            setStatus("Optimizando imagen...");
+            const optimizedImageUrl = await preprocessImage(file);
+
+            // 2. Recognize Text
             setStatus("Leyendo Pasaporte...");
             worker.reinitialize('eng');
 
-            const ret = await worker.recognize(file);
+            // Use optimized image for OCR
+            const ret = await worker.recognize(optimizedImageUrl);
 
             setStatus("Extrayendo Datos...");
             // Use module-level function
             const extracted = parsePassportData(ret.data.text);
-            const photoUrl = URL.createObjectURL(file);
+            const photoUrl = URL.createObjectURL(file); // Keep original for display
 
             setScannedData({
                 ...extracted,
@@ -431,6 +437,16 @@ function parsePassportData(text: string): PassportData {
         const parts = content.split('<<');
         surname = parts[0]?.replace(/</g, ' ').trim() || "";
         givenNames = parts[1]?.replace(/</g, ' ').trim() || "";
+
+        // CLEANING: Fix common "L" artifact prefix (e.g. "L VILLACAMPA")
+        if (surname.match(/^[A-Z]\s+[A-Z]+$/)) {
+            // If single letter followed by space and more letters, remove single letter
+            surname = surname.replace(/^[A-Z]\s+/, '');
+        }
+        // Specifically "L"
+        if (surname.startsWith("L ")) {
+            surname = surname.substring(2);
+        }
     }
 
     // VIZ EXTRACTION
@@ -575,4 +591,70 @@ function formatDate(yymmdd: string): string {
 function extractNameFallback(lines: string[], priority: number): string {
     const potential = lines.filter(l => l.length > 3 && /^[A-Z\s]+$/.test(l.trim()) && !l.includes('<'));
     return potential[priority] ? potential[priority].trim() : "";
+}
+
+// IMAGE PRE-PROCESSING ENGINE
+async function preprocessImage(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                resolve(url); // Fallback to original
+                return;
+            }
+
+            // Resize if too huge (cap at 2000px width to speed up)
+            let width = img.width;
+            let height = img.height;
+            if (width > 2000) {
+                height = Math.round(height * (2000 / width));
+                width = 2000;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Pixel Manipulation (Binarization + Contrast)
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+
+            // Threshold for binarization (128 is standard mid-point)
+            // We can try adaptive or simple high-contrast greyscale
+            for (let i = 0; i < data.length; i += 4) {
+                // Grayscale (Luminance)
+                const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+
+                // Binarization (Black or White)
+                // Threshold 150 helps remove light patterns (security background)
+                const newValue = gray > 145 ? 255 : 0;
+
+                data[i] = newValue;     // R
+                data[i + 1] = newValue; // G
+                data[i + 2] = newValue; // B
+                // Alpha (data[i+3]) remains 255
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            // Return high-quality JPEG
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            resolve(dataUrl);
+
+            // Cleanup
+            URL.revokeObjectURL(url);
+        };
+
+        img.onerror = (err) => {
+            console.error("Image load error", err);
+            resolve(url);
+        };
+
+        img.src = url;
+    });
 }
