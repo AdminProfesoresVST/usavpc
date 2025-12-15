@@ -231,7 +231,15 @@ export async function POST(req: Request) {
                 effectiveHistory.push({ role: "user", content: answer });
                 // FAIL SAFE 1: PRE-SAVE USER MESSAGE
                 // Save immediately so if AI crashes, we remember what user said.
-                await supabase.from("applications").update({ simulator_history: effectiveHistory }).eq("id", application.id);
+                const { error: saveError } = await supabase.from("applications").update({ simulator_history: effectiveHistory }).eq("id", application.id);
+                if (saveError) {
+                    console.error("CRITICAL: Failed to PRE-SAVE User Message", saveError);
+                    // If we can't save history, AI will have Amnesia. ABORT/NOTIFY.
+                    return NextResponse.json({
+                        response: `SYSTEM ERROR (DB): Could not save your answer. Please refresh. (${saveError.message})`,
+                        nextStep: { question: "System Database Error. Reload.", field: "error", type: "text" }
+                    });
+                }
             }
 
             let simRes;
