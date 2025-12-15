@@ -16,6 +16,8 @@ interface PassportData {
     sex?: string;
     country?: string; // Issuing Country
     nationality?: string; // Citizenship
+    personalIdNumber?: string; // Common in LatAm (Cédula, CURP)
+    maritalStatus?: string; // Common in LatAm (Estado Civil)
     dateOfIssue?: string; // Not in MRZ
     authority?: string; // Not in MRZ
     placeOfBirth?: string; // Not in MRZ
@@ -72,24 +74,16 @@ export default function ScanPage() {
 
     const parsePassportData = (text: string) => {
         // Sanitize common OCR errors before parsing
-        // User reported 'S' is often read as '$'
         const cleanText = text.replace(/\$/g, 'S');
 
         const lines = cleanText.split('\n');
         let mrzLine2 = "";
 
         // Find MRZ Line 2 (contains dates and numbers)
-        // Look for line starting with Passport Number pattern or just containing many digits and <<
         for (const line of lines) {
             const cleanLine = line.replace(/\s/g, '').toUpperCase();
-            // Standard TD3 MRZ Line 2 is 44 chars, starts with Passport Number, contains dates
-            // Heuristic: Look for structure with numbers and <
             if (cleanLine.length >= 30 && /[0-9]{6}/.test(cleanLine) && /<+/.test(cleanLine)) {
-                // Try to identify if this is the second line
-                // Line 2 usually has DOB (6 digits) and Expiry (6 digits)
                 mrzLine2 = cleanLine;
-                // If we found a likely candidate, we use it. 
-                // In a perfect world we verify Check Digits, but for now we just extract.
             }
         }
 
@@ -99,18 +93,9 @@ export default function ScanPage() {
         let sex = "";
         let country = "";
         let nationality = "";
+        let personalIdNumber = "";
 
         if (mrzLine2 && mrzLine2.length >= 28) {
-            // TD3 MRZ Line 2 Format:
-            // 0-8:   Passport No
-            // 9:     Check
-            // 10-12: Nationality (Citizenship)
-            // 13-18: DOB (YYMMDD)
-            // 19:    Check
-            // 20:    Sex
-            // 21-26: Expiry (YYMMDD)
-            // ...
-
             passportNumber = mrzLine2.substring(0, 9).replace(/</g, '');
             nationality = mrzLine2.substring(10, 13).replace(/</g, '');
 
@@ -122,13 +107,21 @@ export default function ScanPage() {
             const rawExpiry = mrzLine2.substring(21, 27);
             expiry = formatDate(rawExpiry);
 
-            // Country (Issuing State) is usually in Line 1, but extracting from Line 2 (Nationality) is a safe fallback
-            // actually extracting line 1 country is better.
-            country = nationality; // Default to nationality for now as fallback
+            // TD3 MRZ: Chars 28-42 are Optional Data (often Personal ID/Cédula)
+            if (mrzLine2.length >= 42) {
+                personalIdNumber = mrzLine2.substring(28, 42).replace(/</g, '');
+            }
+
+            country = nationality;
         }
 
+        // Try to find Marital Status in raw text (Scanning for SOLTERO/CASADO)
+        const maritalStatus = /SOLTERO|SINGLE/i.test(cleanText) ? "SOLTERO/A"
+            : /CASADO|MARRIED/i.test(cleanText) ? "CASADO/A"
+                : "";
+
         return {
-            rawText: text,
+            rawText: cleanText,
             passportNumber: passportNumber || "",
             surname: extractName(lines, 0),
             givenNames: extractName(lines, 1),
@@ -137,6 +130,8 @@ export default function ScanPage() {
             sex: sex || "-",
             country: country || "USA",
             nationality: nationality || "USA",
+            personalIdNumber: personalIdNumber,
+            maritalStatus: maritalStatus,
             dateOfIssue: "", // Manual Entry
             authority: "", // Manual Entry
             placeOfBirth: "" // Manual Entry
@@ -162,8 +157,6 @@ export default function ScanPage() {
 
         if (mrzLine1) {
             const clean = mrzLine1.replace(/\s/g, '').toUpperCase();
-            // Format: P<CCC Surname<<Given<Names
-            // Strip P<CCC
             const namePart = clean.substring(5);
             const parts = namePart.split('<<');
 
@@ -218,15 +211,15 @@ export default function ScanPage() {
 
                     {/* Passport Preview & Form Grid */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        {/* Image Preview - Compact */}
+                        {/* Image Preview - WHITE Background as requested */}
                         {scannedData.photoUrl && (
-                            <div className="w-full h-32 bg-gray-900 flex items-center justify-center relative overflow-hidden">
+                            <div className="w-full h-32 bg-white flex items-center justify-center relative overflow-hidden border-b border-gray-100">
                                 <img
                                     src={scannedData.photoUrl}
                                     alt="Passport"
-                                    className="h-full object-contain opacity-90"
+                                    className="h-full object-contain"
                                 />
-                                <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-sm">
+                                <div className="absolute top-2 right-2 bg-gray-100/80 text-gray-600 text-[10px] px-2 py-0.5 rounded backdrop-blur-sm border border-gray-200">
                                     Original
                                 </div>
                             </div>
@@ -241,7 +234,7 @@ export default function ScanPage() {
                                     type="text"
                                     defaultValue={`${scannedData.givenNames || ''} ${scannedData.surname || ''}`}
                                     className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
-                                    placeholder="Nombre"
+                                    placeholder="Nombre Combero"
                                 />
                             </div>
 
@@ -262,7 +255,29 @@ export default function ScanPage() {
                                         type="text"
                                         defaultValue={scannedData.nationality}
                                         className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
-                                        placeholder="USA"
+                                        placeholder="---"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Personal ID (Cédula) & Marital Status - NEW LATAM FIELDS */}
+                            <div className="flex divide-x divide-gray-50">
+                                <div className="p-3 flex-1 flex flex-col gap-0.5">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Cédula / ID Personal</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.personalIdNumber}
+                                        className="font-bold text-[#003366] bg-transparent border-none p-0 focus:ring-0 w-full text-sm"
+                                        placeholder="---"
+                                    />
+                                </div>
+                                <div className="p-3 w-1/3 flex flex-col gap-0.5 text-right">
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Estado Civil</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={scannedData.maritalStatus}
+                                        className="font-medium text-[#1F2937] bg-transparent border-none p-0 focus:ring-0 w-full text-sm text-right"
+                                        placeholder="---"
                                     />
                                 </div>
                             </div>
