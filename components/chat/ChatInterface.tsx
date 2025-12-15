@@ -31,7 +31,7 @@ interface QuestionState {
     context?: string;
 }
 
-export function ChatInterface({ onComplete, initialData }: { onComplete?: () => void, initialData?: any }) {
+export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { onComplete?: () => void, initialData?: any, mode?: string }) {
     const t = useTranslations('Chat');
     const locale = useLocale();
     const [messages, setMessages] = useState<Message[]>([]);
@@ -46,7 +46,7 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                 const response = await fetch("/api/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ answer: null, context: initialData }),
+                    body: JSON.stringify({ answer: null, context: initialData, mode }),
                 });
                 const data = await response.json();
 
@@ -128,7 +128,8 @@ export function ChatInterface({ onComplete, initialData }: { onComplete?: () => 
                 body: JSON.stringify({
                     answer: answerToSend,
                     duration: duration,
-                    locale: locale
+                    locale: locale,
+                    mode: mode
                 }),
             });
 

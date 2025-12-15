@@ -14,7 +14,11 @@ import { useLocale } from 'next-intl';
 
 type AssessmentStep = 'ocr' | 'triage' | 'decision' | 'chat';
 
-export function AssessmentFlow() {
+interface AssessmentFlowProps {
+    mode?: 'standard' | 'simulator' | 'full' | 'diy';
+}
+
+export function AssessmentFlow({ mode = 'standard' }: AssessmentFlowProps) {
     const t = useTranslations('Chat');
     const [step, setStep] = useState<AssessmentStep>('chat');
     const [triageAnswers, setTriageAnswers] = useState<any>({});
@@ -49,6 +53,7 @@ export function AssessmentFlow() {
                             <ChatInterface
                                 initialData={{ ...ocrData, ...triageAnswers }}
                                 onComplete={handleChatComplete}
+                                mode={mode}
                             />
                         </motion.div>
                     )}
