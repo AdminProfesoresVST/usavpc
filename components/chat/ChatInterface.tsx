@@ -1,98 +1,170 @@
-// ... imports
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, CheckCircle2, Languages, MessageSquare, Send, Sparkles, X, PlusCircle, Bot, User } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from 'next-intl';
 import { SimulatorReport } from "./SimulatorReport";
 
-// ... Inside ChatInterface
+interface Message {
+    id: string;
+    role: "user" | "assistant";
+    content: string;
+    timestamp: Date;
+    validationResult?: {
+        original?: string;
+        interpreted?: string;
+        extractedValue?: string;
+        displayValue?: string;
+        type?: string;
+    };
+}
 
-const [isFinished, setIsFinished] = useState(false);
-const [finalStats, setFinalStats] = useState<{ score: number, verdict: "APPROVED" | "DENIED" } | null>(null);
+interface QuestionState {
+    field: string;
+    question: string;
+    type: 'text' | 'select' | 'date' | 'boolean';
+    options?: { label: string; value: string }[];
+    context?: string;
+}
 
-const inputRef = useRef<HTMLInputElement>(null);
-const [input, setInput] = useState("");
-const [isTyping, setIsTyping] = useState(false);
-const messagesEndRef = useRef<HTMLDivElement>(null);
-const startTimeRef = useRef<number>(Date.now());
+export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { onComplete?: () => void, initialData?: any, mode?: string }) {
+    const t = useTranslations('Chat');
+    const locale = useLocale();
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [currentQuestion, setCurrentQuestion] = useState<QuestionState | null>(null);
+    const [progress, setProgress] = useState(0);
 
-const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-};
+    const [isFinished, setIsFinished] = useState(false);
+    const [finalStats, setFinalStats] = useState<{ score: number, verdict: "APPROVED" | "DENIED" } | null>(null);
 
-useEffect(() => {
-    scrollToBottom();
-}, [messages]);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [input, setInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const startTimeRef = useRef<number>(Date.now());
 
-// Reset timer when question changes
-useEffect(() => {
-    if (currentQuestion) {
-        startTimeRef.current = Date.now();
-    }
-}, [currentQuestion]);
+    // Initial load
+    useEffect(() => {
+        const initChat = async () => {
+            try {
+                // Call API with empty answer to get first question
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ answer: null, context: initialData, mode }),
+                });
+                const data = await response.json();
 
-// Auto-focus logic
-useEffect(() => {
-    if (!isTyping && currentQuestion?.type !== 'select') {
-        setTimeout(() => {
-            inputRef.current?.focus();
-        }, 100);
-    }
-}, [isTyping, currentQuestion]);
+                if (data.nextStep) {
+                    setMessages([{
+                        id: "welcome",
+                        role: "assistant",
+                        content: data.nextStep.question,
+                        timestamp: new Date(),
+                    }]);
+                    setCurrentQuestion(data.nextStep);
+                }
+            } catch (error) {
+                console.error("Init Error:", error);
+            }
+        };
+        initChat();
+    }, []);
 
-const handleSend = async (answerOverride?: string) => {
-    const answerToSend = answerOverride || input;
-    if (!answerToSend.trim()) return;
-
-    const duration = Date.now() - startTimeRef.current;
-
-    // Add User Message
-    const userMsg: Message = {
-        id: Date.now().toString(),
-        role: "user",
-        content: answerToSend,
-        timestamp: new Date(),
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    if (currentQuestion?.type === 'select' && currentQuestion.options) {
-        const selectedOption = currentQuestion.options.find(o => o.value === answerToSend);
-        if (selectedOption) userMsg.content = selectedOption.label;
-    }
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
-    setMessages(prev => [...prev, userMsg]);
-    setInput("");
-    setIsTyping(true);
-    setCurrentQuestion(null);
+    // Reset timer when question changes
+    useEffect(() => {
+        if (currentQuestion) {
+            startTimeRef.current = Date.now();
+        }
+    }, [currentQuestion]);
 
-    try {
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                answer: answerToSend,
-                duration: duration,
-                locale: locale,
-                mode: mode,
-                history: messages.map(m => ({ role: m.role, content: m.content }))
-            }),
-        });
+    // Auto-focus logic
+    useEffect(() => {
+        if (!isTyping && currentQuestion?.type !== 'select') {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100);
+        }
+    }, [isTyping, currentQuestion]);
 
-        if (!response.ok) {
-            throw new Error("Failed to communicate with AI");
+    const handleSend = async (answerOverride?: string) => {
+        const answerToSend = answerOverride || input;
+        if (!answerToSend.trim()) return;
+
+        const duration = Date.now() - startTimeRef.current;
+
+        // Add User Message
+        const userMsg: Message = {
+            id: Date.now().toString(),
+            role: "user",
+            content: answerToSend,
+            timestamp: new Date(),
+        };
+
+        if (currentQuestion?.type === 'select' && currentQuestion.options) {
+            const selectedOption = currentQuestion.options.find(o => o.value === answerToSend);
+            if (selectedOption) userMsg.content = selectedOption.label;
         }
 
-        const data = await response.json();
+        setMessages(prev => [...prev, userMsg]);
+        setInput("");
+        setIsTyping(true);
+        setCurrentQuestion(null);
 
-        // Check Termination
-        if (data.meta?.action?.startsWith("TERMINATE")) {
-            setFinalStats({
-                score: data.meta.current_score,
-                verdict: data.meta.action.includes("APPROVED") ? "APPROVED" : "DENIED"
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    answer: answerToSend,
+                    duration: duration,
+                    locale: locale,
+                    mode: mode,
+                    history: messages.map(m => ({ role: m.role, content: m.content }))
+                }),
             });
-            setIsFinished(true);
-        }
 
-        if (data.nextStep && !data.meta?.action?.startsWith("TERMINATE")) {
+            if (!response.ok) {
+                throw new Error("Failed to communicate with AI");
+            }
+
+            const data = await response.json();
+
+            // Update metadata if present (simplified logic)
+            if (data.meta) {
+                // can extend logic here if needed
+            }
+
+            // Check Termination
+            if (data.meta?.action?.startsWith("TERMINATE")) {
+                setFinalStats({
+                    score: data.meta.current_score,
+                    verdict: data.meta.action.includes("APPROVED") ? "APPROVED" : "DENIED"
+                });
+                setIsFinished(true);
+            }
+
+            // Add Assistant Message if NOT terminated (or if we want to show last message)
+            // Ideally we show the last message even if terminated, to explain why.
+            // data.response contains the closing statement.
+
             const botMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: "assistant",
-                content: data.response || data.nextStep.question,
+                content: data.response || data.nextStep?.question || "",
                 timestamp: new Date(),
                 validationResult: {
                     displayValue: data.meta?.score_delta?.toString(),
@@ -100,59 +172,62 @@ const handleSend = async (answerOverride?: string) => {
                 }
             };
             setMessages(prev => [...prev, botMsg]);
-            setCurrentQuestion(data.nextStep);
-            setProgress(data.progress || 0);
+
+            if (data.nextStep && !data.meta?.action?.startsWith("TERMINATE")) {
+                setCurrentQuestion(data.nextStep);
+                setProgress(data.progress || 0);
+            } else {
+                // If terminated, maybe wait 3s then show Report?
+                // For now, immediate switch (controlled by isFinished render)
+                // But we probably want the user to read the last message.
+                // Let's rely on isFinished state.
+                // If isFinished=true, logic below handles it.
+            }
+
+        } catch (error) {
+            console.error("Chat Error:", error);
+            setMessages(prev => [...prev, {
+                id: Date.now().toString(),
+                role: "assistant",
+                content: "Error de conexión. Intente de nuevo.",
+                timestamp: new Date(),
+            }]);
+        } finally {
+            setIsTyping(false);
         }
+    };
 
-    } catch (error) {
-        console.error("Chat Error:", error);
-        setMessages(prev => [...prev, {
-            id: Date.now().toString(),
-            role: "assistant",
-            content: t("errorConnection") || "Error de conexión. Intente de nuevo.",
-            timestamp: new Date(),
-        }]);
-    } finally {
-        setIsTyping(false);
-    }
-};
-
-if (isFinished && finalStats) {
-    // Build Strict Report Items
-    const strictItems = [];
-    for (let i = 0; i < messages.length; i++) {
-        if (messages[i].role === 'user') {
-            const nextBot = messages[i + 1];
-            if (nextBot && nextBot.role === 'assistant' && nextBot.validationResult?.extractedValue) {
-                strictItems.push({
-                    question: messages[i - 1]?.content || "Pregunta Inicial",
-                    answer: messages[i].content,
-                    scoreDelta: parseInt(nextBot.validationResult.displayValue || "0"),
-                    feedback: nextBot.validationResult.extractedValue || "",
-                    scoreTotal: 0
-                });
+    if (isFinished && finalStats) {
+        // Build Strict Report Items
+        const strictItems = [];
+        for (let i = 0; i < messages.length; i++) {
+            if (messages[i].role === 'user') {
+                const nextBot = messages[i + 1];
+                if (nextBot && nextBot.role === 'assistant' && nextBot.validationResult?.extractedValue) {
+                    strictItems.push({
+                        question: messages[i - 1]?.content || "Pregunta Inicial",
+                        answer: messages[i].content,
+                        scoreDelta: parseInt(nextBot.validationResult.displayValue || "0"),
+                        feedback: nextBot.validationResult.extractedValue || "",
+                        scoreTotal: 0
+                    });
+                }
             }
         }
+
+        return (
+            <SimulatorReport
+                items={strictItems}
+                finalScore={finalStats.score}
+                verdict={finalStats.verdict}
+                onRestart={() => window.location.reload()}
+            />
+        );
     }
 
     return (
-        <SimulatorReport
-            items={strictItems}
-            finalScore={finalStats.score}
-            verdict={finalStats.verdict}
-            onRestart={() => window.location.reload()}
-        />
-    );
-}
-
-return (
-    <div className="flex flex-col h-full w-full bg-[#F0F2F5]">
-        {/* ... Existing UI ... */}
-
-
-        return (
         <div className="flex flex-col h-full w-full bg-[#F0F2F5]">
-            {/* Assistant Header (Embedded in flow or sticky?) Template implies embedded */}
+            {/* Assistant Header */}
             <div className="px-4 pt-4 pb-2">
                 <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                     <div className="relative">
@@ -184,7 +259,6 @@ return (
                             "flex flex-col gap-1 max-w-[85%] w-fit mb-1",
                             msg.role === "user" ? "ml-auto items-end" : "mr-auto items-start"
                         )}>
-                            {/* Message Bubbles Logic (same as before) */}
                             <motion.div
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -192,7 +266,7 @@ return (
                                     "px-4 py-2.5 shadow-sm text-[15px] leading-relaxed relative",
                                     msg.role === "user"
                                         ? "bg-[#2672DE] text-white rounded-2xl rounded-br-sm text-left"
-                                        : "bg-white text-[#1F2937] rounded-2xl rounded-bl-sm text-left border border-gray-100" // Updated to White/Border
+                                        : "bg-white text-[#1F2937] rounded-2xl rounded-bl-sm text-left border border-gray-100"
                                 )}
                             >
                                 {msg.content}
@@ -256,5 +330,5 @@ return (
                 </div>
             </div>
         </div>
-        );
+    );
 }
