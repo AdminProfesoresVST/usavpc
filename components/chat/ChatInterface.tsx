@@ -6,71 +6,126 @@ import { SimulatorReport } from "./SimulatorReport";
 const [isFinished, setIsFinished] = useState(false);
 const [finalStats, setFinalStats] = useState<{ score: number, verdict: "APPROVED" | "DENIED" } | null>(null);
 
-// ... handleSend logic
-// Inside: const data = await response.json();
+const inputRef = useRef<HTMLInputElement>(null);
+const [input, setInput] = useState("");
+const [isTyping, setIsTyping] = useState(false);
+const messagesEndRef = useRef<HTMLDivElement>(null);
+const startTimeRef = useRef<number>(Date.now());
 
-if (data.meta) {
-    // Update last message with metadata if available
-    // Only assistant messages have metadata
-}
+const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+};
 
-// Check Termination
-if (data.meta?.action?.startsWith("TERMINATE")) {
-    setFinalStats({
-        score: data.meta.current_score,
-        verdict: data.meta.action.includes("APPROVED") ? "APPROVED" : "DENIED"
-    });
-    setIsFinished(true);
-    // Don't add next question if terminated?
-    // Or add the verdict message?
-}
+useEffect(() => {
+    scrollToBottom();
+}, [messages]);
 
-if (data.nextStep && !data.meta?.action?.startsWith("TERMINATE")) {
-    const botMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: data.response || data.nextStep.question,
+// Reset timer when question changes
+useEffect(() => {
+    if (currentQuestion) {
+        startTimeRef.current = Date.now();
+    }
+}, [currentQuestion]);
+
+// Auto-focus logic
+useEffect(() => {
+    if (!isTyping && currentQuestion?.type !== 'select') {
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 100);
+    }
+}, [isTyping, currentQuestion]);
+
+const handleSend = async (answerOverride?: string) => {
+    const answerToSend = answerOverride || input;
+    if (!answerToSend.trim()) return;
+
+    const duration = Date.now() - startTimeRef.current;
+
+    // Add User Message
+    const userMsg: Message = {
+        id: Date.now().toString(),
+        role: "user",
+        content: answerToSend,
         timestamp: new Date(),
-        validationResult: {
-            // Reuse this field for Simulator Meta
-            displayValue: data.meta?.score_delta?.toString(),
-            extractedValue: data.meta?.feedback
-        }
     };
-    setMessages(prev => [...prev, botMsg]);
-    // ...
-}
-// ...
+
+    if (currentQuestion?.type === 'select' && currentQuestion.options) {
+        const selectedOption = currentQuestion.options.find(o => o.value === answerToSend);
+        if (selectedOption) userMsg.content = selectedOption.label;
+    }
+
+    setMessages(prev => [...prev, userMsg]);
+    setInput("");
+    setIsTyping(true);
+    setCurrentQuestion(null);
+
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                answer: answerToSend,
+                duration: duration,
+                locale: locale,
+                mode: mode,
+                history: messages.map(m => ({ role: m.role, content: m.content }))
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to communicate with AI");
+        }
+
+        const data = await response.json();
+
+        // Check Termination
+        if (data.meta?.action?.startsWith("TERMINATE")) {
+            setFinalStats({
+                score: data.meta.current_score,
+                verdict: data.meta.action.includes("APPROVED") ? "APPROVED" : "DENIED"
+            });
+            setIsFinished(true);
+        }
+
+        if (data.nextStep && !data.meta?.action?.startsWith("TERMINATE")) {
+            const botMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                role: "assistant",
+                content: data.response || data.nextStep.question,
+                timestamp: new Date(),
+                validationResult: {
+                    displayValue: data.meta?.score_delta?.toString(),
+                    extractedValue: data.meta?.feedback
+                }
+            };
+            setMessages(prev => [...prev, botMsg]);
+            setCurrentQuestion(data.nextStep);
+            setProgress(data.progress || 0);
+        }
+
+    } catch (error) {
+        console.error("Chat Error:", error);
+        setMessages(prev => [...prev, {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: t("errorConnection") || "Error de conexión. Intente de nuevo.",
+            timestamp: new Date(),
+        }]);
+    } finally {
+        setIsTyping(false);
+    }
+};
 
 if (isFinished && finalStats) {
-    // Build Report Items from Messages (User -> Assistant Pairs)
-    const reportItems = messages.filter(m => m.role === 'assistant' && m.validationResult?.extractedValue).map((msg, idx) => {
-        // Find preceding user message
-        const msgIndex = messages.findIndex(m => m.id === msg.id);
-        const userMsg = messages[msgIndex - 1]; // Approximate
-        return {
-            question: userMsg ? "Respuesta del Usuario" : "Interacción",
-            answer: userMsg?.content || "...",
-            scoreDelta: parseInt(msg.validationResult?.displayValue || "0"),
-            feedback: msg.validationResult?.extractedValue || "",
-            scoreTotal: 0
-        }
-    });
-
-    // BETTER: Retrieve History from DB? 
-    // For now, Client State is okay MVP.
-    // Actually, logic above relies on Assistant Message having Feedback.
-    // The Feedback is about the PREVIOUS User Answer.
-    // So Assistant Message N has feedback for User Message N-1.
-
+    // Build Strict Report Items
     const strictItems = [];
     for (let i = 0; i < messages.length; i++) {
         if (messages[i].role === 'user') {
-            // Find next assistant message
             const nextBot = messages[i + 1];
             if (nextBot && nextBot.role === 'assistant' && nextBot.validationResult?.extractedValue) {
                 strictItems.push({
-                    question: messages[i - 1]?.content || "Pregunta Inicial", // The question BEFORE user answered
+                    question: messages[i - 1]?.content || "Pregunta Inicial",
                     answer: messages[i].content,
                     scoreDelta: parseInt(nextBot.validationResult.displayValue || "0"),
                     feedback: nextBot.validationResult.extractedValue || "",
