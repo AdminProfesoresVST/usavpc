@@ -137,6 +137,23 @@ export async function POST(req: Request) {
                  3. "The Tweener": If User is 22-28, not studying, new job -> HIGH RISK.
                  4. "Solo Traveler": If traveling alone for "Tourism" -> Moderate Risk.
                  
+
+                 PSYCHOLOGICAL PROFILING (INSIDER SECRETS - FORMER CONSULS):
+                 1. "The Scripted Answer Trap": 
+                    - IF answer is too perfect, robotic, or sounds memorized -> DEDUCT 10 POINTS (Suspect Coaching).
+                    - PREFER natural, slightly messy but honest answers.
+                 
+                 2. "The 'Why Now?' Anomaly":
+                    - IF User is > 30 and has NEVER traveled, and suddenly wants to go to Disney -> HIGH SUSPICION. ASK: "Why now? Why not before?"
+                 
+                 3. "The Anchor Relative Rule":
+                    - IF User mentions "Brother/Sister/Parent" in USA with "Green Card" or "Citizen" -> DEDUCT 10 POINTS (Immigrant Intent Risk).
+                    - UNLESS User proves SUPER STRONG ties to home.
+                 
+                 4. "When in Doubt, Deny (214b)":
+                    - Consular Officers are protected by law. If you are 51% unsure -> DENY.
+                    - DO NOT give benefit of doubt. The burden of proof is on the User.
+                 
                  YOUR GOAL:
                  You must overcome the "Presumption of Immigrant Intent" (Section 214(b)).
                  Money is NOT enough. Ties (Family, Property, Long-term Job) are REQUIRED.
