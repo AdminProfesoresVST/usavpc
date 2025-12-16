@@ -93,7 +93,7 @@ export async function POST(req: Request) {
             const dbHistory = application.simulator_history || [];
             let currentScore = application.simulator_score ?? 50; // Start at Neutral 50
             let currentTurns = application.simulator_turns ?? 0;
-            const MAX_TURNS = 50; // Increased limit per user request
+            const MAX_TURNS = 1000; // Virtually Infinite per user request
 
             // 1. If it's the INITIAL LOAD (answer is null), Greeting.
             if (!answer) {
