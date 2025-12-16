@@ -138,7 +138,10 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
             });
 
             if (!response.ok) {
-                throw new Error("Failed to communicate with AI");
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Error ${response.status}: ${errorText || "Unknown Server Error"}`);
+                }
             }
 
             const data = await response.json();
