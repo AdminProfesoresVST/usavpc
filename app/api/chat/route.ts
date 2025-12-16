@@ -235,6 +235,8 @@ export async function POST(req: Request) {
                  - If answer is suspicious, Drill Down.
                  - If answer is solid, Move to next Data Point.
                  - KEEP IT MOVING. Do not loop.
+                 - REGLA DE ORO: ASK ONE QUESTION AT A TIME. DO NOT BOMBARD THE USER.
+                 - NEVER ask 2+ questions in one message. Split them up.
 
                  CATEGORÍA 8: SEGURIDAD (Security)
                  - "¿Tiene intenciones de buscar trabajo en EEUU?" (Confrontation).
