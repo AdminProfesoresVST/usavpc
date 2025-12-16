@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useTranslations, useLocale } from 'next-intl';
-import { useObject } from '@ai-sdk/react';
+import { experimental_useObject } from '@ai-sdk/react';
 import { simulatorSchema } from '@/lib/ai/simulator-schema';
 import { SimulatorReport } from "./SimulatorReport";
 
@@ -102,7 +102,7 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
         }
     }, [isTyping, currentQuestion]);
 
-    const { object, submit, isLoading: isStreaming, error: streamError } = useObject({
+    const { object, submit, isLoading: isStreaming, error: streamError } = experimental_useObject({
         api: '/api/chat',
         schema: simulatorSchema,
         onFinish: ({ object: finalObj }) => {
