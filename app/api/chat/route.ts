@@ -1,7 +1,9 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { OpenAI } from "openai";
+import { openai } from "@ai-sdk/openai";
+import { streamObject } from "ai";
+import { simulatorSchema } from "@/lib/ai/simulator-schema";
 import { DS160StateMachine } from "@/lib/ai/state-machine";
 import { getSystemPrompt } from "@/lib/ai/prompts";
 import { DS160Payload } from "@/types/ds160";
@@ -13,7 +15,7 @@ export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
 
 export async function POST(req: Request) {
     try {
-        const openai = new OpenAI({
+        const openaiInstance = new OpenAI({ // Renamed to avoid alias conflict
             apiKey: process.env.OPENAI_API_KEY,
         });
 
@@ -118,7 +120,7 @@ export async function POST(req: Request) {
             // We need to bypass the strict validator for generic chat, BUT still try to extract data.
             // We'll use a specific Simulator Prompt that is flexible.
 
-            const simulatorPrompt = `
+            const simulatorPromptContent = `
                  You are a STRICT US Visa Consul conducting an interview.
                  You are ALSO a helpful Coach (hidden persona) that critiques the user if they make mistakes.
                  
@@ -269,7 +271,8 @@ export async function POST(req: Request) {
                     "response": "The Consul's verbal response (question) OR Verdict Message.",
                     "feedback": "Optional coaching tip explaining the score change",
                     "score_delta": number,
-                    "action": "CONTINUE" | "TERMINATE_APPROVED" | "TERMINATE_DENIED"
+                    "action": "CONTINUE" | "TERMINATE_APPROVED" | "TERMINATE_DENIED",
+                    "current_score": number
                  }
              `;
 
@@ -278,110 +281,40 @@ export async function POST(req: Request) {
             const effectiveHistory = [...dbHistory];
             if (answer) {
                 effectiveHistory.push({ role: "user", content: answer });
-                // FAIL SAFE 1: PRE-SAVE USER MESSAGE
-                // Save immediately so if AI crashes, we remember what user said.
-                const { error: saveError } = await supabase.from("applications").update({ simulator_history: effectiveHistory }).eq("id", application.id);
-                if (saveError) {
-                    console.error("CRITICAL: Failed to PRE-SAVE User Message", saveError);
-                    // If we can't save history, AI will have Amnesia. ABORT/NOTIFY.
-                    return NextResponse.json({
-                        response: `SYSTEM ERROR (DB): Could not save your answer. Please refresh. (${saveError.message})`,
-                        nextStep: { question: "System Database Error. Reload.", field: "error", type: "text" }
-                    });
-                }
             }
 
-            let simRes;
-            try {
-                // ATTEMPT: GPT-5-MINI (User Preference FINAL - Prompt logic fixed)
-                const simCompletion = await openai.chat.completions.create({
-                    model: "gpt-5-mini",
-                    messages: [
-                        { role: "system", content: simulatorPrompt },
-                        // SEND FULL HISTORY (GPT-5 Mini has 128k context, 100 turns is tiny).
-                        ...effectiveHistory.map((m: any) => ({ role: m.role, content: m.content }))
-                    ],
-                    response_format: { type: "json_object" },
-                    max_completion_tokens: 4000,
+            const result = streamObject({
+                model: openai('gpt-5-mini'),
+                schema: simulatorSchema,
+                system: simulatorPromptContent,
+                messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content })),
+                maxTokens: 4000, // Use standard maxTokens, sdk maps it
+                onFinish: async ({ object: finalObj }) => {
+                    if (!finalObj) return;
 
-                });
-
-                const content = simCompletion.choices[0].message.content || '{}';
-                try {
-                    simRes = JSON.parse(content);
-                } catch (parseError) {
-                    console.error("JSON PARSE ERROR:", content);
-                    simRes = {
-                        response: "Error interno de formato (IA). Por favor reformule.",
-                        action: "CONTINUE",
-                        score_delta: 0
-                    };
-                }
-            } catch (error) {
-                console.error("GPT-5 Failed", error);
-                return NextResponse.json({
-                    response: `SYSTEM ERROR (DEBUG MODE): ${error instanceof Error ? error.message : JSON.stringify(error)}`,
-                    nextStep: {
-                        question: "System Error. Reload.",
-                        field: "error",
-                        type: "text"
-                    }
-                });
-            }
-
-            // SAVE AI RESPONSE TO DB WITH METADATA
-            if (simRes.response) {
-                const finalHistory = [
-                    ...effectiveHistory,
-                    {
-                        role: "assistant",
-                        content: simRes.response,
-                        // Persist Metadata for Final Report
-                        data: {
-                            score_delta: simRes.score_delta,
-                            feedback: simRes.feedback,
-                            reasoning: simRes.reasoning,
-                            current_score: Math.min(100, Math.max(0, currentScore + (simRes.score_delta || 0)))
+                    const finalHistory = [
+                        ...effectiveHistory,
+                        {
+                            role: "assistant",
+                            content: finalObj.response,
+                            data: {
+                                score_delta: finalObj.score_delta,
+                                feedback: finalObj.feedback,
+                                reasoning: finalObj.reasoning,
+                                current_score: finalObj.current_score
+                            }
                         }
-                    }
-                ];
+                    ];
 
-                const delta = typeof simRes.score_delta === 'number' ? simRes.score_delta : 0;
-                const newScore = Math.min(100, Math.max(0, currentScore + delta));
-                const newTurns = currentTurns + 1;
-
-                await supabase.from("applications").update({
-                    simulator_history: finalHistory,
-                    simulator_score: newScore,
-                    simulator_turns: newTurns
-                }).eq("id", application.id);
-
-                // Return Metadata to Client
-                return NextResponse.json({
-                    response: simRes.response,
-                    meta: {
-                        score_delta: delta,
-                        feedback: simRes.feedback,
-                        current_score: newScore,
-                        action: simRes.action // Pass action to client
-                    },
-                    nextStep: {
-                        question: simRes.response, // (Legacy field for compatibility)
-                        field: "simulator_interaction",
-                        type: "text",
-                    }
-                });
-            }
-
-            return NextResponse.json({
-                response: simRes.response,
-                nextStep: {
-                    question: simRes.response + (simRes.feedback ? `\n\n💡 *Coach:* ${simRes.feedback}` : "") + `\n\n(Score: ${currentScore} -> ${currentScore + (simRes.score_delta || 0)})`,
-                    field: "simulator_interaction",
-                    type: "text",
-                    history: []
+                    await supabase.from("applications").update({
+                        simulator_history: finalHistory,
+                        simulator_score: finalObj.current_score || currentScore, // Use AI's calc or fallback
+                        simulator_turns: currentTurns + 1
+                    }).eq("id", application.id);
                 }
             });
+
+            return result.toTextStreamResponse();
         }
         // ---------------------------------------------------------
 
