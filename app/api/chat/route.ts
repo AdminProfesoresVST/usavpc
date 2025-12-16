@@ -298,8 +298,8 @@ export async function POST(req: Request) {
                     model: "gpt-5-mini",
                     messages: [
                         { role: "system", content: simulatorPrompt },
-                        // SANITIZE HISTORY (Remove metadata fields to please OpenAI)
-                        ...effectiveHistory.slice(-20).map((m: any) => ({ role: m.role, content: m.content }))
+                        // SEND FULL HISTORY (GPT-5 Mini has 128k context, 100 turns is tiny).
+                        ...effectiveHistory.map((m: any) => ({ role: m.role, content: m.content }))
                     ],
                     response_format: { type: "json_object" },
                     max_completion_tokens: 4000,
