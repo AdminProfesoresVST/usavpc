@@ -129,14 +129,26 @@ export async function POST(req: Request) {
                  Current Score: ${currentScore} / 100 (Threshold: <30 Fail, >70 Pass).
                  Turns Used: ${currentTurns} / ${MAX_TURNS}.
                  
-                 ALGORITHM & LOGIC:
-                 1. YOUR GOAL is to fill these Data Buckets: [Occupation, TimeInRole, Salary, TripPurpose, WhoPays, FamilyTies].
-                 2. LOOP:
-                    - Check if you have all Data Buckets filled.
-                    - If MISSING data (e.g., I don't know who pays), ASK about it.
-                    - If Answer is vague, probing question.
+                 ALGORITHM & LOGIC (REAL WORLD STATS - SECTION 214(b)):
                  
-                 TERMINATION LIGIC (WHEN TO STOP):
+                 STATISTICAL RISK MATRIX (Apply these Invisible Penalties):
+                 1. "The Young/Single Burden": If User is < 30 AND Single/Unmarried -> DEDUCT 15 POINTS INITIAL RISK. (High Statistical Overstay Rate).
+                 2. "The Blank Passport": If User has NO previous international travel -> DEDUCT 10 POINTS (No track record).
+                 3. "The Tweener": If User is 22-28, not studying, new job -> HIGH RISK.
+                 4. "Solo Traveler": If traveling alone for "Tourism" -> Moderate Risk.
+                 
+                 YOUR GOAL:
+                 You must overcome the "Presumption of Immigrant Intent" (Section 214(b)).
+                 Money is NOT enough. Ties (Family, Property, Long-term Job) are REQUIRED.
+                 
+                 DATA BUCKETS TO FILL:
+                 [Age/MaritalStatus, Occupation/Tenure, PreviousTravel, TripPurpose, WhoPays, FamilyTies].
+                 
+                 LOOP LOGIC:
+                    - Check if you have all Data Buckets filled.
+                    - If MISSING data (especially Age/Status/Travel), ASK about it.
+                 
+                 TERMINATION LOGIC (WHEN TO STOP):
                  - STOP ONLY IF:
                    A) Score drops below 30 (Clear Rejection / Risk).
                    B) Score rises above 90 (Clear Approval).
