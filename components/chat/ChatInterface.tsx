@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useTranslations, useLocale } from 'next-intl';
-import { useObject } from 'ai/react';
+import { useObject } from '@ai-sdk/react';
 import { simulatorSchema } from '@/lib/ai/simulator-schema';
 import { SimulatorReport } from "./SimulatorReport";
 
