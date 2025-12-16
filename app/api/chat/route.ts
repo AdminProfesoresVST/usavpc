@@ -295,7 +295,7 @@ export async function POST(req: Request) {
                 const simCompletion = await openai.chat.completions.create({
                     model: "gpt-5-mini",
                     messages: [
-                        { role: "system", content: await getSystemPrompt(supabase, effectiveLocale, simulatorPrompt) },
+                        { role: "system", content: simulatorPrompt },
                         // SANITIZE HISTORY (Remove metadata fields to please OpenAI)
                         ...effectiveHistory.slice(-20).map((m: any) => ({ role: m.role, content: m.content }))
                     ],
