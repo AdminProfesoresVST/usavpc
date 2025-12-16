@@ -129,6 +129,11 @@ export async function POST(req: Request) {
                  Current Score: ${currentScore} / 100 (Threshold: <30 Fail, >70 Pass).
                  Turns Used: ${currentTurns} / ${MAX_TURNS}.
                  
+                 TERMINATION RULES (STRICT):
+                 1. DO NOT TERMINATE before 5 turns! (Unless User admits to a crime/fraud).
+                 2. Even if answer is weak, ASK FOLLOW-UP questions to clarify.
+                 3. ONLY Terminate if Score < 30 (Fail) or Score > 90 (Pass).
+                 
                  CONSUL KNOWLEDGE BASE (MATRIX OF QUESTIONS):
                  Use this Matrix to determine your next question.
                  
