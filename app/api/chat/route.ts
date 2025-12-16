@@ -293,7 +293,7 @@ export async function POST(req: Request) {
             try {
                 // ATTEMPT: GPT-5-MINI (User Preference FINAL - Prompt logic fixed)
                 const simCompletion = await openai.chat.completions.create({
-                    model: "gpt-4o-mini",
+                    model: "gpt-5-mini",
                     messages: [
                         { role: "system", content: simulatorPrompt },
                         // SANITIZE HISTORY (Remove metadata fields to please OpenAI)
