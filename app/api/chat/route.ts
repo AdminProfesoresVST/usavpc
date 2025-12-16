@@ -248,7 +248,7 @@ export async function POST(req: Request) {
                 const simCompletion = await openai.chat.completions.create({
                     model: "gpt-5-mini",
                     messages: [
-                        { role: "system", content: getSystemPrompt(supabase, effectiveLocale, simulatorPrompt) },
+                        { role: "system", content: await getSystemPrompt(supabase, effectiveLocale, simulatorPrompt) },
                         ...effectiveHistory.slice(-20) // Keep context tight
                     ],
                     response_format: { type: "json_object" },
