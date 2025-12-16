@@ -1,185 +1,101 @@
-"use client";
+// ... imports
+import { SimulatorReport } from "./SimulatorReport";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Languages, MessageSquare, Send, Sparkles, X, PlusCircle, Bot, User } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { useTranslations, useLocale } from 'next-intl';
+// ... Inside ChatInterface
 
-interface Message {
-    id: string;
-    role: "user" | "assistant";
-    content: string;
-    timestamp: Date;
-    validationResult?: {
-        original?: string;
-        interpreted?: string;
-        extractedValue?: string;
-        displayValue?: string;
-        type?: string;
+const [isFinished, setIsFinished] = useState(false);
+const [finalStats, setFinalStats] = useState<{ score: number, verdict: "APPROVED" | "DENIED" } | null>(null);
+
+// ... handleSend logic
+// Inside: const data = await response.json();
+
+if (data.meta) {
+    // Update last message with metadata if available
+    // Only assistant messages have metadata
+}
+
+// Check Termination
+if (data.meta?.action?.startsWith("TERMINATE")) {
+    setFinalStats({
+        score: data.meta.current_score,
+        verdict: data.meta.action.includes("APPROVED") ? "APPROVED" : "DENIED"
+    });
+    setIsFinished(true);
+    // Don't add next question if terminated?
+    // Or add the verdict message?
+}
+
+if (data.nextStep && !data.meta?.action?.startsWith("TERMINATE")) {
+    const botMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: data.response || data.nextStep.question,
+        timestamp: new Date(),
+        validationResult: {
+            // Reuse this field for Simulator Meta
+            displayValue: data.meta?.score_delta?.toString(),
+            extractedValue: data.meta?.feedback
+        }
     };
+    setMessages(prev => [...prev, botMsg]);
+    // ...
 }
+// ...
 
-interface QuestionState {
-    field: string;
-    question: string;
-    type: 'text' | 'select' | 'date' | 'boolean';
-    options?: { label: string; value: string }[];
-    context?: string;
-}
+if (isFinished && finalStats) {
+    // Build Report Items from Messages (User -> Assistant Pairs)
+    const reportItems = messages.filter(m => m.role === 'assistant' && m.validationResult?.extractedValue).map((msg, idx) => {
+        // Find preceding user message
+        const msgIndex = messages.findIndex(m => m.id === msg.id);
+        const userMsg = messages[msgIndex - 1]; // Approximate
+        return {
+            question: userMsg ? "Respuesta del Usuario" : "Interacción",
+            answer: userMsg?.content || "...",
+            scoreDelta: parseInt(msg.validationResult?.displayValue || "0"),
+            feedback: msg.validationResult?.extractedValue || "",
+            scoreTotal: 0
+        }
+    });
 
-export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { onComplete?: () => void, initialData?: any, mode?: string }) {
-    const t = useTranslations('Chat');
-    const locale = useLocale();
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [currentQuestion, setCurrentQuestion] = useState<QuestionState | null>(null);
-    const [progress, setProgress] = useState(0);
+    // BETTER: Retrieve History from DB? 
+    // For now, Client State is okay MVP.
+    // Actually, logic above relies on Assistant Message having Feedback.
+    // The Feedback is about the PREVIOUS User Answer.
+    // So Assistant Message N has feedback for User Message N-1.
 
-    // Initial load
-    useEffect(() => {
-        const initChat = async () => {
-            try {
-                // Call API with empty answer to get first question
-                const response = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ answer: null, context: initialData, mode }),
+    const strictItems = [];
+    for (let i = 0; i < messages.length; i++) {
+        if (messages[i].role === 'user') {
+            // Find next assistant message
+            const nextBot = messages[i + 1];
+            if (nextBot && nextBot.role === 'assistant' && nextBot.validationResult?.extractedValue) {
+                strictItems.push({
+                    question: messages[i - 1]?.content || "Pregunta Inicial", // The question BEFORE user answered
+                    answer: messages[i].content,
+                    scoreDelta: parseInt(nextBot.validationResult.displayValue || "0"),
+                    feedback: nextBot.validationResult.extractedValue || "",
+                    scoreTotal: 0
                 });
-                const data = await response.json();
-
-                if (data.nextStep) {
-                    setMessages([{
-                        id: "welcome",
-                        role: "assistant",
-                        content: data.nextStep.question,
-                        timestamp: new Date(),
-                    }]);
-                    setCurrentQuestion(data.nextStep);
-                }
-            } catch (error) {
-                console.error("Init Error:", error);
             }
-        };
-        initChat();
-    }, []);
-
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [input, setInput] = useState("");
-    const [isTyping, setIsTyping] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-    const startTimeRef = useRef<number>(Date.now());
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-
-    // Reset timer when question changes
-    useEffect(() => {
-        if (currentQuestion) {
-            startTimeRef.current = Date.now();
         }
-    }, [currentQuestion]);
-
-    // Auto-focus logic
-    useEffect(() => {
-        if (!isTyping && currentQuestion?.type !== 'select') {
-            // Small delay to ensure render is complete
-            setTimeout(() => {
-                inputRef.current?.focus();
-            }, 100);
-        }
-    }, [isTyping, currentQuestion]);
-
-    const handleSend = async (answerOverride?: string) => {
-        const answerToSend = answerOverride || input;
-        if (!answerToSend.trim()) return;
-
-        const duration = Date.now() - startTimeRef.current;
-
-        // Add User Message
-        const userMsg: Message = {
-            id: Date.now().toString(),
-            role: "user",
-            content: answerToSend,
-            timestamp: new Date(),
-        };
-
-        if (currentQuestion?.type === 'select' && currentQuestion.options) {
-            const selectedOption = currentQuestion.options.find(o => o.value === answerToSend);
-            if (selectedOption) userMsg.content = selectedOption.label;
-        }
-
-        setMessages(prev => [...prev, userMsg]);
-        setInput("");
-        setIsTyping(true);
-        setCurrentQuestion(null);
-
-        try {
-            const response = await fetch("/api/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    answer: answerToSend,
-                    duration: duration,
-                    locale: locale,
-                    mode: mode,
-                    history: messages.map(m => ({ role: m.role, content: m.content }))
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to communicate with AI");
-            }
-
-            const data = await response.json();
-
-            if (data.nextStep) {
-                const botMsg: Message = {
-                    id: (Date.now() + 1).toString(),
-                    role: "assistant",
-                    content: data.response || data.nextStep.question,
-                    timestamp: new Date(),
-                    validationResult: data.validationResult
-                };
-                setMessages(prev => [...prev, botMsg]);
-                setCurrentQuestion(data.nextStep);
-                setProgress(data.progress || 0);
-            } else {
-                setMessages(prev => [...prev, {
-                    id: Date.now().toString(),
-                    role: "assistant",
-                    content: t('finalMessage'),
-                    timestamp: new Date()
-                }]);
-
-                if (onComplete) {
-                    setTimeout(() => {
-                        onComplete();
-                    }, 2000);
-                }
-            }
-
-        } catch (error) {
-            console.error("Chat Error:", error);
-            setMessages(prev => [...prev, {
-                id: Date.now().toString(),
-                role: "assistant",
-                content: "I'm having trouble connecting. Please try again.",
-                timestamp: new Date(),
-            }]);
-        } finally {
-            setIsTyping(false);
-        }
-    };
+    }
 
     return (
+        <SimulatorReport
+            items={strictItems}
+            finalScore={finalStats.score}
+            verdict={finalStats.verdict}
+            onRestart={() => window.location.reload()}
+        />
+    );
+}
+
+return (
+    <div className="flex flex-col h-full w-full bg-[#F0F2F5]">
+        {/* ... Existing UI ... */}
+
+
+        return (
         <div className="flex flex-col h-full w-full bg-[#F0F2F5]">
             {/* Assistant Header (Embedded in flow or sticky?) Template implies embedded */}
             <div className="px-4 pt-4 pb-2">
@@ -285,5 +201,5 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                 </div>
             </div>
         </div>
-    );
+        );
 }

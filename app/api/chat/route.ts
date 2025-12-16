@@ -252,10 +252,11 @@ export async function POST(req: Request) {
                     model: "gpt-5-mini",
                     messages: [
                         { role: "system", content: await getSystemPrompt(supabase, effectiveLocale, simulatorPrompt) },
-                        ...effectiveHistory.slice(-20) // Keep context tight
+                        // SANITIZE HISTORY (Remove metadata fields to please OpenAI)
+                        ...effectiveHistory.slice(-20).map((m: any) => ({ role: m.role, content: m.content }))
                     ],
                     response_format: { type: "json_object" },
-                    max_tokens: 4000, // Explicitly allow long responses (Prevents truncation crash)
+                    max_tokens: 4000,
                     temperature: 0.7
                 });
 
@@ -264,34 +265,41 @@ export async function POST(req: Request) {
                     simRes = JSON.parse(content);
                 } catch (parseError) {
                     console.error("JSON PARSE ERROR:", content);
-                    // Fallback to avoid crash
                     simRes = {
-                        response: "Error interno de formato (IA). Por favor reformule su última respuesta.",
+                        response: "Error interno de formato (IA). Por favor reformule.",
                         action: "CONTINUE",
                         score_delta: 0
                     };
                 }
             } catch (error) {
                 console.error("GPT-5 Failed", error);
-                // NO FALLBACK ALLOWED.
                 return NextResponse.json({
-                    response: "Error de conexión con el modelo GPT-5. Por favor intente de nuevo.",
+                    response: "Error de conexión. Intente de nuevo.",
                     nextStep: {
-                        question: "Error de conexión con el modelo GPT-5 (Strict Mode). Por favor intente de nuevo.",
-                        field: "simulator_interaction",
+                        question: "Error de conexión.",
+                        field: "error",
                         type: "text"
                     }
                 });
             }
 
-            // SAVE AI RESPONSE TO DB
+            // SAVE AI RESPONSE TO DB WITH METADATA
             if (simRes.response) {
                 const finalHistory = [
                     ...effectiveHistory,
-                    { role: "assistant", content: simRes.response }
+                    {
+                        role: "assistant",
+                        content: simRes.response,
+                        // Persist Metadata for Final Report
+                        data: {
+                            score_delta: simRes.score_delta,
+                            feedback: simRes.feedback,
+                            reasoning: simRes.reasoning,
+                            current_score: Math.min(100, Math.max(0, currentScore + (simRes.score_delta || 0)))
+                        }
+                    }
                 ];
 
-                // Calc New Score/Turns
                 const delta = typeof simRes.score_delta === 'number' ? simRes.score_delta : 0;
                 const newScore = Math.min(100, Math.max(0, currentScore + delta));
                 const newTurns = currentTurns + 1;
@@ -301,6 +309,22 @@ export async function POST(req: Request) {
                     simulator_score: newScore,
                     simulator_turns: newTurns
                 }).eq("id", application.id);
+
+                // Return Metadata to Client
+                return NextResponse.json({
+                    response: simRes.response,
+                    meta: {
+                        score_delta: delta,
+                        feedback: simRes.feedback,
+                        current_score: newScore,
+                        action: simRes.action // Pass action to client
+                    },
+                    nextStep: {
+                        question: simRes.response, // (Legacy field for compatibility)
+                        field: "simulator_interaction",
+                        type: "text",
+                    }
+                });
             }
 
             return NextResponse.json({
