@@ -97,14 +97,17 @@ export async function POST(req: Request) {
 
             // 1. If it's the INITIAL LOAD (answer is null), Greeting.
             if (!answer) {
-                // Return Greeting (No DB Update needed for Greeting? Or should we save Greeting?)
-                // Usually we don't save System greetings in user history unless we want them to appear in context.
-                // Let's NOT save greeting for now to keep it clean.
+                const greetingText = effectiveLocale === 'es'
+                    ? "Buenos días. Soy el oficial consular asignado a su caso. Por favor, entrégueme su pasaporte y dígame el motivo de su viaje."
+                    : "Good morning. I am the consular officer assigned to your case. Please hand me your passport and state the purpose of your trip.";
+
+                // SAVE GREETING TO HISTORY (Critical for Context)
+                const newHistory = [{ role: "assistant", content: greetingText }];
+                await supabase.from("applications").update({ simulator_history: newHistory }).eq("id", application.id);
+
                 return NextResponse.json({
                     nextStep: {
-                        question: effectiveLocale === 'es'
-                            ? "Buenos días. Soy el oficial consular asignado a su caso. Por favor, entrégueme su pasaporte y dígame el motivo de su viaje."
-                            : "Good morning. I am the consular officer assigned to your case. Please hand me your passport and state the purpose of your trip.",
+                        question: greetingText,
                         field: "simulator_intro",
                         type: "text"
                     }
