@@ -301,7 +301,7 @@ export async function POST(req: Request) {
                     ],
                     response_format: { type: "json_object" },
                     max_completion_tokens: 4000,
-                    temperature: 0.7
+
                 });
 
                 const content = simCompletion.choices[0].message.content || '{}';
