@@ -397,5 +397,6 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                     </div>
                 </div>
             </div>
-            );
-        }
+        </div>
+    );
+}
