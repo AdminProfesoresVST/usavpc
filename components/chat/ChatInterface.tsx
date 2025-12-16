@@ -189,7 +189,7 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
             setMessages(prev => [...prev, {
                 id: Date.now().toString(),
                 role: "assistant",
-                content: "Error de conexión. Intente de nuevo.",
+                content: `Error de conexión (Cliente): ${(error as Error).message || "Desconocido"}. Intente de nuevo.`,
                 timestamp: new Date(),
             }]);
         } finally {
