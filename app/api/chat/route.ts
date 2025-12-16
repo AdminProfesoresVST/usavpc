@@ -318,9 +318,9 @@ export async function POST(req: Request) {
             } catch (error) {
                 console.error("GPT-5 Failed", error);
                 return NextResponse.json({
-                    response: "Error de conexión. Intente de nuevo.",
+                    response: `SYSTEM ERROR (DEBUG MODE): ${error instanceof Error ? error.message : JSON.stringify(error)}`,
                     nextStep: {
-                        question: "Error de conexión.",
+                        question: "System Error. Reload.",
                         field: "error",
                         type: "text"
                     }
