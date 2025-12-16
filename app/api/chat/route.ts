@@ -9,7 +9,7 @@ import { DS160Payload } from "@/types/ds160";
 // OpenAI initialized lazily inside handler to prevent build crashes
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // REMOVED
 
-export const maxDuration = 60; // Allow GPT-5 to think longer (Fixes Timeout)
+export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
 
 export async function POST(req: Request) {
     try {
