@@ -93,7 +93,7 @@ export async function POST(req: Request) {
             const dbHistory = application.simulator_history || [];
             let currentScore = application.simulator_score ?? 50; // Start at Neutral 50
             let currentTurns = application.simulator_turns ?? 0;
-            const MAX_TURNS = 10; // Approx 2-5 mins
+            const MAX_TURNS = 50; // Increased limit per user request
 
             // 1. If it's the INITIAL LOAD (answer is null), Greeting.
             if (!answer) {
@@ -248,12 +248,26 @@ export async function POST(req: Request) {
                 const simCompletion = await openai.chat.completions.create({
                     model: "gpt-5-mini",
                     messages: [
-                        { role: "system", content: simulatorPrompt },
-                        ...effectiveHistory.slice(-20)
+                        { role: "system", content: getSystemPrompt(supabase, effectiveLocale, simulatorPrompt) },
+                        ...effectiveHistory.slice(-20) // Keep context tight
                     ],
-                    response_format: { type: "json_object" }
+                    response_format: { type: "json_object" },
+                    max_tokens: 4000, // Explicitly allow long responses (Prevents truncation crash)
+                    temperature: 0.7
                 });
-                simRes = JSON.parse(simCompletion.choices[0].message.content || '{}');
+
+                const content = simCompletion.choices[0].message.content || '{}';
+                try {
+                    simRes = JSON.parse(content);
+                } catch (parseError) {
+                    console.error("JSON PARSE ERROR:", content);
+                    // Fallback to avoid crash
+                    simRes = {
+                        response: "Error interno de formato (IA). Por favor reformule su última respuesta.",
+                        action: "CONTINUE",
+                        score_delta: 0
+                    };
+                }
             } catch (error) {
                 console.error("GPT-5 Failed", error);
                 // NO FALLBACK ALLOWED.
