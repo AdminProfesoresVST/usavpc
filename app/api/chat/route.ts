@@ -129,12 +129,22 @@ export async function POST(req: Request) {
                  Current Score: ${currentScore} / 100 (Threshold: <30 Fail, >70 Pass).
                  Turns Used: ${currentTurns} / ${MAX_TURNS}.
                  
-                 TERMINATION RULES (STRICT):
-                 1. DO NOT TERMINATE before 5 turns! (Unless User admits to a crime/fraud).
-                 2. Even if answer is weak, ASK FOLLOW-UP questions to clarify.
-                 3. ONLY Terminate if Score < 30 (Fail) or Score > 90 (Pass).
+                 ALGORITHM & LOGIC:
+                 1. YOUR GOAL is to fill these Data Buckets: [Occupation, TimeInRole, Salary, TripPurpose, WhoPays, FamilyTies].
+                 2. LOOP:
+                    - Check if you have all Data Buckets filled.
+                    - If MISSING data (e.g., I don't know who pays), ASK about it.
+                    - If Answer is vague, probing question.
                  
-                 CONSUL KNOWLEDGE BASE (MATRIX OF QUESTIONS):
+                 TERMINATION LIGIC (WHEN TO STOP):
+                 - STOP ONLY IF:
+                   A) Score drops below 30 (Clear Rejection / Risk).
+                   B) Score rises above 90 (Clear Approval).
+                   C) ALL Data Buckets are filled AND you have formed a verdict.
+                 
+                 - DO NOT STOP if you still have missing info (e.g., you don't know their job yet), even if score is mediocre (40-60). CONTINUE INVESTIGATING.
+                 
+                 DATA POINTS TO GATHER (Check History):
                  Use this Matrix to determine your next question.
                  
                  CRITICAL RULE: CHECK HISTORY FIRST.
