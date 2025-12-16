@@ -1,6 +1,6 @@
 
 import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { CheckCircle2, XCircle, AlertCircle, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -46,12 +46,13 @@ export function SimulatorReport({ items, finalScore, verdict, onRestart }: Simul
                 </p>
             </Card>
 
+
             {/* Detailed Breakdown */}
-            <div className="flex-1 overflow-hidden flex flex-col">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            <div className="flex-1 overflow-auto flex flex-col min-h-0">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex-none">
                     Análisis Paso a Paso
                 </h3>
-                <ScrollArea className="flex-1 pr-4">
+                <div className="flex-1 overflow-y-auto pr-2">
                     <div className="space-y-4 pb-4">
                         {items.map((item, idx) => (
                             <Card key={idx} className="p-4 relative overflow-hidden">
@@ -85,12 +86,13 @@ export function SimulatorReport({ items, finalScore, verdict, onRestart }: Simul
                             </Card>
                         ))}
                     </div>
-                </ScrollArea>
+                    </div>
+                </div>
             </div>
 
             <Button onClick={onRestart} className="w-full bg-[#003366] hover:bg-[#004488] text-white py-6 text-lg">
                 Intentar de Nuevo
             </Button>
-        </div>
+        </div >
     );
 }
