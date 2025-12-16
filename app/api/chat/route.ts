@@ -300,7 +300,7 @@ export async function POST(req: Request) {
                         ...effectiveHistory.slice(-20).map((m: any) => ({ role: m.role, content: m.content }))
                     ],
                     response_format: { type: "json_object" },
-                    max_tokens: 4000,
+                    max_completion_tokens: 4000,
                     temperature: 0.7
                 });
 
