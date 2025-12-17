@@ -57,11 +57,14 @@ function calculateInitialRiskScore(payload: DS160Payload | null): number {
     if (income > 5000) score += 5;
 
     // 5. HISTORY
-    if (payload.has_previous_visa) score += 15; // Proven track record
+    if (payload.has_previous_visa) score += 10; // Proven track record
     if (payload.has_refusals) score -= 15; // Previous Denial = High Scrutiny
 
-    // Clamp 20-80 (Never start approved/denied)
-    return Math.max(20, Math.min(80, score));
+    // STRICT BASELINE (Section 214(b) - Presumption of Intent)
+    // Even the best profile cannot start "Approved".
+    // Max Initial Score: 50 (Neutral). Min: 10 (High Risk).
+    // The "Burden of Proof" is on the interview.
+    return Math.max(10, Math.min(50, score));
 }
 
 export async function POST(req: Request) {
