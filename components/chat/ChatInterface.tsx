@@ -11,6 +11,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import { experimental_useObject } from '@ai-sdk/react';
 import { simulatorSchema } from '@/lib/ai/simulator-schema';
 import { SimulatorReport } from "./SimulatorReport";
+import { ConsulAvatar } from "@/components/simulator/ConsulAvatar"; // [NEW]
+import { RiskMeter } from "@/components/simulator/RiskMeter";     // [NEW]
 
 interface Message {
     id: string;
@@ -34,6 +36,13 @@ interface QuestionState {
     context?: string;
 }
 
+// [NEW] Simulator State
+interface SimulatorState {
+    score: number;
+    delta: number;
+    sentiment: "neutral" | "skeptical" | "angry" | "positive";
+}
+
 export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { onComplete?: () => void, initialData?: any, mode?: string }) {
     const t = useTranslations('Chat');
     const locale = useLocale();
@@ -43,6 +52,13 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
 
     const [isFinished, setIsFinished] = useState(false);
     const [finalStats, setFinalStats] = useState<{ score: number, verdict: "APPROVED" | "DENIED" } | null>(null);
+
+    // [NEW] Simulator Visual Logic
+    const [simState, setSimState] = useState<SimulatorState>({
+        score: 50, // Start neutral
+        delta: 0,
+        sentiment: "neutral"
+    });
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState("");
@@ -106,45 +122,13 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
         api: '/api/chat',
         schema: simulatorSchema,
         onFinish: ({ object: finalObj }) => {
-            setIsTyping(false);
-            if (!finalObj) return;
-
-            // Add Assistant Message (Final)
-            const botMsg: Message = {
-                id: (Date.now() + 1).toString(),
-                role: "assistant",
-                content: finalObj.response || "",
-                timestamp: new Date(),
-                validationResult: {
-                    displayValue: finalObj.score_delta?.toString(),
-                    extractedValue: finalObj.feedback
-                }
-            };
-            setMessages(prev => [...prev, botMsg]);
-
-            if (finalObj.action?.startsWith("TERMINATE")) {
-                setFinalStats({
-                    score: finalObj.current_score || 0,
-                    verdict: finalObj.action.includes("APPROVED") ? "APPROVED" : "DENIED"
-                });
-                setIsFinished(true);
-            }
+            // NOTE: This hook is currently UNUSED by the main logic below (fetch is used instead).
+            // Keeping it for reference or future streaming switch.
         },
         onError: (err) => {
             console.error("Stream Error:", err);
-            setMessages(prev => [...prev, {
-                id: Date.now().toString(),
-                role: "assistant",
-                content: `Error de Stream: ${err.message}. Intente de nuevo.`,
-                timestamp: new Date(),
-            }]);
-            setIsTyping(false);
         }
     });
-
-    // EFFECT: While streaming, show a phantom message or update state?
-    // We can use `isStreaming` and `object` to render a "Typing..." bubble that shows real content.
-    // See Render Section.
 
     useEffect(() => {
         scrollToBottom();
@@ -197,9 +181,22 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
 
             const data = await response.json();
 
-            // Update metadata if present (simplified logic)
+            // [NEW] Update Simulator State Logic
             if (data.meta) {
-                // can extend logic here if needed
+                const newScore = data.meta.current_score || simState.score;
+                const delta = data.meta.score_delta || 0;
+
+                // Calculate Sentiment
+                let sentiment: SimulatorState["sentiment"] = "neutral";
+                if (delta > 0) sentiment = "positive";
+                if (delta < 0) sentiment = "skeptical";
+                if (delta <= -10) sentiment = "angry";
+
+                setSimState({
+                    score: newScore,
+                    delta: delta,
+                    sentiment: sentiment
+                });
             }
 
             // Check Termination
@@ -231,11 +228,7 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                 setCurrentQuestion(data.nextStep);
                 setProgress(data.progress || 0);
             } else {
-                // If terminated, maybe wait 3s then show Report?
-                // For now, immediate switch (controlled by isFinished render)
-                // But we probably want the user to read the last message.
-                // Let's rely on isFinished state.
-                // If isFinished=true, logic below handles it.
+                // Terminated logic handled by isFinished
             }
 
         } catch (error) {
@@ -283,21 +276,41 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
         <div className="flex flex-col h-full w-full bg-[#F0F2F5]">
             {/* Assistant Header */}
             <div className="px-4 pt-4 pb-2">
-                <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-[#F0F2F5] flex items-center justify-center">
-                            <Bot className="w-6 h-6 text-[#003366]" />
-                        </div>
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-[#1F2937]">
-                            {mode === 'simulator' ? "Oficial Consular (Simulador)" : "Asistente Consular"}
-                        </h3>
-                        <p className="text-xs text-gray-500">Sistema Automatizado • ID 4421</p>
-                    </div>
+                <div className={cn(
+                    "flex items-center gap-4 p-4 rounded-2xl shadow-sm border",
+                    mode === 'simulator' ? "bg-slate-900 border-slate-700 text-white" : "bg-white border-gray-100"
+                )}>
+                    {mode === 'simulator' ? (
+                        // [NEW] Simulator Header (Avatar + Risk Meter)
+                        <>
+                            <ConsulAvatar
+                                sentiment={simState.sentiment}
+                                isSpeaking={isTyping}
+                            />
+                            <div className="flex-1">
+                                <h3 className="font-bold">Oficial Consular</h3>
+                                <p className="text-xs text-slate-400">Section 214(b) Enforcement</p>
+                            </div>
+                            <RiskMeter score={simState.score} delta={simState.delta} />
+                        </>
+                    ) : (
+                        // Standard Header
+                        <>
+                            <div className="relative">
+                                <div className="w-12 h-12 rounded-full bg-[#F0F2F5] flex items-center justify-center">
+                                    <Bot className="w-6 h-6 text-[#003366]" />
+                                </div>
+                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-[#1F2937]">Asistente Consular</h3>
+                                <p className="text-xs text-gray-500">Sistema Automatizado • ID 4421</p>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
+
 
             {/* Chat Area */}
             <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3 scroll-smooth relative no-scrollbar">
