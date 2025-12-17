@@ -11,7 +11,58 @@ import { DS160Payload } from "@/types/ds160";
 // OpenAI initialized lazily inside handler to prevent build crashes
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // REMOVED
 
+import { DS160Payload } from "@/types/ds160";
+
 export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
+
+// ALGORITHM: Calculate Initial Risk Score based on DS-160 Data (Section 214(b) Profile)
+function calculateInitialRiskScore(payload: DS160Payload | null): number {
+    if (!payload?.ds160_data) return 40; // Default Skeptical if no data
+
+    let score = 50; // Neutral Start
+
+    const personal = payload.ds160_data.personal || {};
+    const work = payload.ds160_data.work_education || {};
+
+    // 1. AGE FACTOR
+    // Risk: Young Adults (18-29) have highest overstay rates.
+    // Low Risk: Children (<18) and Seniors (>60).
+    // Context: We assume 'dob' format YYYY-MM-DD
+    if (personal.dob) {
+        const birthYear = new Date(personal.dob).getFullYear();
+        const currentYear = new Date().getFullYear();
+        const age = currentYear - birthYear;
+
+        if (age >= 18 && age <= 29) score -= 10; // High Risk Zone
+        else if (age > 60) score += 10; // Low Risk
+        else score += 5; // Prime Working Age (Stable)
+    }
+
+    // 2. TIES TO HOME: MARRIAGE
+    const marital = personal.marital_status;
+    if (marital === 'M' || marital === 'C') score += 10; // Married/Common Law = Tie
+    else if (marital === 'S') score -= 5; // Single = Mobile (Risk)
+
+    // 3. ECONOMIC TIES: EMPLOYMENT
+    // We check primary occupation.
+    const job = payload.primary_occupation;
+    if (job === 'U') score -= 15; // Unemployed = High Risk
+    if (job === 'S') score += 5; // Student = Medium Risk (check ties)
+    if (job === 'E' || job === 'B') score += 10; // Employed/Business = Strong Tie
+
+    // 4. INCOME (Solvency)
+    // Assume monthly_income is numeric string
+    const income = parseInt(payload.monthly_income || "0");
+    if (income > 2000) score += 5;
+    if (income > 5000) score += 5;
+
+    // 5. HISTORY
+    if (payload.has_previous_visa) score += 15; // Proven track record
+    if (payload.has_refusals) score -= 15; // Previous Denial = High Scrutiny
+
+    // Clamp 20-80 (Never start approved/denied)
+    return Math.max(20, Math.min(80, score));
+}
 
 export async function POST(req: Request) {
     try {
@@ -105,10 +156,13 @@ export async function POST(req: Request) {
 
                 const newHistory = [{ role: "assistant", content: greetingText }];
 
+                // CALCULATE DYNAMIC SCORE
+                const initialScore = calculateInitialRiskScore(application.ds160_payload);
+
                 // RESET STATE ON INITIAL LOAD (Fixes "Instant Win" bug)
                 await supabase.from("applications").update({
                     simulator_history: newHistory,
-                    simulator_score: 40, // Start Skeptical (User needs 50 to pass, range 0-100)
+                    simulator_score: initialScore, // Data-Driven Score (20-80)
                     simulator_turns: 0
                 }).eq("id", application.id);
 
