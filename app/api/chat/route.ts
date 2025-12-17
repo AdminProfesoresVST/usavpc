@@ -287,22 +287,23 @@ export async function POST(req: Request) {
                  6. LOOP PREVENTION: If user says "I don't know", ACCEPT IT as a Skeptic, Note the Risk, and PIVOT to next Category.
 
                  OUTPUT format: JSON.
-                 {
+                 IMPORTANT: Return ONLY the raw JSON object. Do NOT wrap in markdown (```json).
+                {
                     "reasoning": "Explain step-by-step why you chose this. E.g. 'User said Alone, so Question 4 is answered. Moving to Funding.'",
-                    "known_data": { 
-                        "job": "detected_value_or_null", 
-                        "time_in_role": "detected_value_or_null", 
+                    "known_data": {
+                        "job": "detected_value_or_null",
+                        "time_in_role": "detected_value_or_null",
                         "salary": "detected_value_or_null",
                         "purpose": "detected_value_or_null",
                         "payer": "detected_value_or_null"
                     },
                     "response": "The Consul's verbal response (question) OR Verdict Message.",
-                    "feedback": "REQUIRED. Explain precisely why the score changed (e.g., 'Good job tenure +5'). If no change, explain why.",
+                    "feedback": "REQUIRED. Coach the user: Explain the Score Delta (Why +5/-10?) AND provide a Recommendation for better answers.",
                     "score_delta": number,
                     "action": "CONTINUE" | "TERMINATE_APPROVED" | "TERMINATE_DENIED",
-                    "current_score": number
-                 }
-             `;
+                        "current_score": number
+        }
+        `;
 
             // Construct Messages for AI
             // Include DB History + Current Answer
@@ -458,8 +459,8 @@ export async function POST(req: Request) {
             let valRes: any = { isValid: false }; // Default
             let bypassAI = false;
 
-            console.log(`[Chat] Processing Question: ${currentStep.field}, Type: ${currentStep.type}`);
-            console.log(`[Chat] User Answer: ${answer}`);
+            console.log(`[Chat] Processing Question: ${ currentStep.field }, Type: ${ currentStep.type } `);
+            console.log(`[Chat] User Answer: ${ answer } `);
 
             // SHORT-CIRCUIT: Exact Match for Select Options
             if (currentStep.options) {
@@ -470,7 +471,7 @@ export async function POST(req: Request) {
                 );
 
                 if (matchedOption) {
-                    console.log(`[Chat] Short-Circuit Match: ${matchedOption.label} -> ${matchedOption.value}`);
+                    console.log(`[Chat] Short - Circuit Match: ${ matchedOption.label } -> ${ matchedOption.value } `);
                     valRes = {
                         isValid: true,
                         extractedValue: matchedOption.value,
@@ -492,8 +493,8 @@ export async function POST(req: Request) {
                 } else {
                     let queryContext = currentStep.question;
                     if (currentStep.options) {
-                        const optionsStr = currentStep.options.map((o: any) => `"${o.label}" (Value: ${o.value})`).join(', ');
-                        queryContext += `\nValid Options: [${optionsStr}]`;
+                        const optionsStr = currentStep.options.map((o: any) => `"${o.label}"(Value: ${ o.value })`).join(', ');
+                        queryContext += `\nValid Options: [${ optionsStr }]`;
                     }
 
                     // Construct robust context for the AI
@@ -504,7 +505,7 @@ export async function POST(req: Request) {
                         model: "gpt-4o-mini",
                         messages: [
                             { role: "system", content: validatorPromptTemplate }, // The Rules/Persona
-                            { role: "user", content: `QUESTION CONTEXT:\n${queryContext}\n\nUSER INPUT:\n"${answer}"\n\nValidate and parse this answer.` }
+                            { role: "user", content: `QUESTION CONTEXT: \n${ queryContext } \n\nUSER INPUT: \n"${answer}"\n\nValidate and parse this answer.` }
                         ],
                         response_format: { type: "json_object" }
                     });
@@ -630,7 +631,7 @@ export async function POST(req: Request) {
                     return NextResponse.json({
                         nextStep: {
                             ...nextStep,
-                            question: `📊 **Análisis Preliminar**: ${assessment.assessment_message}\n\n${nextStep.question}`
+                            question: `📊 ** Análisis Preliminar **: ${ assessment.assessment_message } \n\n${ nextStep.question } `
                         },
                         validationResult: valRes
                     });
@@ -715,7 +716,7 @@ export async function POST(req: Request) {
                 let contextText = "";
                 if (knowledge && knowledge.length > 0) {
                     contextText = "\n\nRelevant Knowledge Base Entries:\n" +
-                        knowledge.map((k: any) => `- ${k.content}`).join("\n");
+                        knowledge.map((k: any) => `- ${ k.content } `).join("\n");
                 }
 
                 // AI Processing for Job Titles/Duties
@@ -749,8 +750,8 @@ export async function POST(req: Request) {
 
                 return NextResponse.json({
                     response: effectiveLocale === 'es'
-                        ? `He interpretado esto como **"${displayVal}"**. ¿Es correcto para el formulario?`
-                        : `I interpreted this as **"${displayVal}"**. Is this correct for the form?`,
+                        ? `He interpretado esto como ** "${displayVal}" **. ¿Es correcto para el formulario ? `
+                        : `I interpreted this as ** "${displayVal}" **.Is this correct for the form ? `,
                     nextStep: null, // Halt flow
                     validationResult: {
                         original: answer,
@@ -790,8 +791,8 @@ export async function POST(req: Request) {
 
                 return NextResponse.json({
                     response: effectiveLocale === 'es'
-                        ? `He mejorado tu respuesta para que suene más profesional:\n\n**"${polishedText}"**\n\n¿Estás de acuerdo?`
-                        : `I polished your answer to sound more professional:\n\n**"${polishedText}"**\n\nDo you agree?`,
+                        ? `He mejorado tu respuesta para que suene más profesional: \n\n ** "${polishedText}" **\n\n¿Estás de acuerdo ? `
+                        : `I polished your answer to sound more professional: \n\n ** "${polishedText}" **\n\nDo you agree ? `,
                     nextStep: null, // Halt
                     validationResult: {
                         original: answer,
@@ -832,7 +833,7 @@ export async function POST(req: Request) {
 
                 validationResult = {
                     original: answer,
-                    interpreted: `${aiResponse.given_names} ${aiResponse.surnames} (${aiResponse.dob})`,
+                    interpreted: `${ aiResponse.given_names } ${ aiResponse.surnames } (${ aiResponse.dob })`,
                     type: 'spouse_extraction'
                 };
 
@@ -868,8 +869,8 @@ export async function POST(req: Request) {
 
                     return NextResponse.json({
                         response: effectiveLocale === 'es'
-                            ? `He mejorado tu respuesta: **"${valRes.displayValue}"**. ¿Te parece bien?`
-                            : `I improved your answer to: **"${valRes.displayValue}"**. Is this okay?`,
+                            ? `He mejorado tu respuesta: ** "${valRes.displayValue}" **. ¿Te parece bien ? `
+                            : `I improved your answer to: ** "${valRes.displayValue}" **.Is this okay ? `,
                         nextStep: null, // Halt flow matches currentStep visually usually, or null
                         validationResult: {
                             original: answer,
