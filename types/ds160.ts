@@ -10,6 +10,8 @@ export interface DS160Payload {
     marital_status?: string;
     triage_has_children?: string;
     triage_property?: string;
+    has_refusals?: boolean;
+    has_previous_visa?: boolean;
 
     ds160_data: {
         personal: {

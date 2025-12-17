@@ -37,7 +37,7 @@ export function calculateConsularScore(payload: DS160Payload | null): ScoringRes
     }
 
     const p = payload.ds160_data.personal || {};
-    const w = payload.ds160_data.work_education || {};
+    const w = payload.ds160_data.work_history || {};
     const t = payload.ds160_data.travel || {};
 
     // --- 1. AGE & MARITAL STATUS INTERACTION (The "Flight Risk" Matrix) ---
@@ -50,14 +50,14 @@ export function calculateConsularScore(payload: DS160Payload | null): ScoringRes
     const marital = p.marital_status; // S, M, C, D, W
 
     if (age >= 18 && age <= 29) {
-        if (marital === 'S' || marital === 'D') {
+        if (marital === 'SINGLE' || marital === 'DIVORCED') {
             factors.push({ id: "YOUNG_SINGLE", description: "Age 18-29 & Single (High Mobility)", impact: 20, category: "RISK" }); // Only 20 base points
         } else {
             factors.push({ id: "YOUNG_TIED", description: "Young but Married (Moderate Ties)", impact: 40, category: "TIES" });
         }
     } else if (age > 29 && age < 60) {
         factors.push({ id: "PRIME_AGE", description: "Prime Working Age (Stability)", impact: 45, category: "TIES" });
-        if (marital === 'M' || marital === 'C') {
+        if (marital === 'MARRIED') {
             factors.push({ id: "FAMILY_TIES", description: "Strong Family Ties (Spouse)", impact: +10, category: "TIES" });
         }
     } else if (age >= 60) {

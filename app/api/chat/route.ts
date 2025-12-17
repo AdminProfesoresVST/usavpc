@@ -1,17 +1,13 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { openai } from "@ai-sdk/openai";
+import { openai as openaiModelProvider } from "@ai-sdk/openai";
 import { streamObject } from "ai";
 import { simulatorSchema } from "@/lib/ai/simulator-schema";
 import { DS160StateMachine } from "@/lib/ai/state-machine";
 import { getSystemPrompt } from "@/lib/ai/prompts";
 import { DS160Payload } from "@/types/ds160";
-
-// OpenAI initialized lazily inside handler to prevent build crashes
-// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // REMOVED
-
-import { DS160Payload } from "@/types/ds160";
+import OpenAI from "openai";
 import { calculateConsularScore } from "@/lib/ai/scoring-logic";
 
 export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
@@ -22,7 +18,7 @@ export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
 
 export async function POST(req: Request) {
     try {
-        const openaiInstance = new OpenAI({ // Renamed to avoid alias conflict
+        const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
         });
 
@@ -310,11 +306,11 @@ export async function POST(req: Request) {
             }
 
             const result = streamObject({
-                model: openai('gpt-5-mini'),
+                model: openaiModelProvider('gpt-4o-mini'),
                 schema: simulatorSchema,
                 system: simulatorPromptContent,
                 messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content })),
-                maxTokens: 4000, // Use standard maxTokens, sdk maps it
+
                 onFinish: async ({ object: finalObj }) => {
                     if (!finalObj) return;
 
