@@ -13,6 +13,7 @@ import { simulatorSchema } from '@/lib/ai/simulator-schema';
 import { SimulatorReport } from "./SimulatorReport";
 import { ConsulAvatar } from "@/components/simulator/ConsulAvatar"; // [NEW]
 import { RiskMeter } from "@/components/simulator/RiskMeter";     // [NEW]
+import { VoiceControls } from "@/components/simulator/VoiceControls"; // [NEW]
 
 interface Message {
     id: string;
@@ -375,13 +376,28 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
 
                 {/* Input Area */}
                 <div className="flex-none p-3 pb-4 bg-[#F0F2F5]">
-                    <div className="bg-white p-2 rounded-full flex items-center shadow-md border border-gray-100">
-                        <button
-                            onClick={() => setInput("")}
-                            className="p-2 text-[#2672DE] hover:bg-blue-50 rounded-full transition"
-                        >
-                            <PlusCircle size={24} />
-                        </button>
+                    {/* Helper Helper Text */}
+                    <div className="text-center mb-2 text-[10px] text-gray-400 font-mono tracking-wider">
+                        {mode === 'simulator' ? "SECTION 214(b) ENFORCEMENT ACTIVE" : ""}
+                    </div>
+
+                    <div className="bg-white p-2 rounded-full flex items-center shadow-md border border-gray-100 gap-2">
+                        {/* Voice Controls Integration */}
+                        {mode === 'simulator' ? (
+                            <VoiceControls
+                                onTranscript={(text) => setInput(text)}
+                                textToSpeak={messages.length > 0 && messages[messages.length - 1].role === "assistant" ? messages[messages.length - 1].content : ""}
+                                autoSpeak={true}
+                                disabled={isTyping || isStreaming || isFinished}
+                            />
+                        ) : (
+                            <button
+                                onClick={() => setInput("")}
+                                className="p-2 text-[#2672DE] hover:bg-blue-50 rounded-full transition"
+                            >
+                                <PlusCircle size={24} />
+                            </button>
+                        )}
 
                         <input
                             ref={inputRef}
@@ -394,16 +410,19 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                                     handleSend();
                                 }
                             }}
-                            placeholder={isTyping ? "Espere..." : (currentQuestion?.type === 'select' ? "Seleccione una opción..." : "Escribe tu respuesta...")}
+                            placeholder={mode === 'simulator' ? "Habla o escribe tu respuesta..." : (isTyping ? "Espere..." : "Escribe tu respuesta...")}
                             className="flex-1 bg-transparent border-none outline-none text-sm px-2 text-[#1F2937] placeholder-gray-400"
                             autoComplete="off"
-                            disabled={isTyping}
+                            disabled={isTyping || (mode === 'simulator' && isFinished)}
                         />
 
                         <button
                             onClick={() => handleSend()}
                             disabled={!input.trim() || isTyping}
-                            className="p-2 bg-[#2672DE] text-white rounded-full hover:bg-blue-700 transition disabled:opacity-50"
+                            className={cn(
+                                "p-2 rounded-full transition disabled:opacity-50",
+                                mode === 'simulator' ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-[#2672DE] text-white hover:bg-blue-700"
+                            )}
                         >
                             <Send size={18} className="ml-0.5" />
                         </button>
