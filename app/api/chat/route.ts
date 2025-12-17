@@ -287,7 +287,7 @@ export async function POST(req: Request) {
                  6. LOOP PREVENTION: If user says "I don't know", ACCEPT IT as a Skeptic, Note the Risk, and PIVOT to next Category.
 
                  OUTPUT format: JSON.
-                 IMPORTANT: Return ONLY the raw JSON object. Do NOT wrap in markdown (```json).
+                 IMPORTANT: Return ONLY the raw JSON object. Do NOT wrap in markdown (e.g. no code blocks).
                 {
                     "reasoning": "Explain step-by-step why you chose this. E.g. 'User said Alone, so Question 4 is answered. Moving to Funding.'",
                     "known_data": {
@@ -459,8 +459,8 @@ export async function POST(req: Request) {
             let valRes: any = { isValid: false }; // Default
             let bypassAI = false;
 
-            console.log(`[Chat] Processing Question: ${ currentStep.field }, Type: ${ currentStep.type } `);
-            console.log(`[Chat] User Answer: ${ answer } `);
+            console.log(`[Chat] Processing Question: ${currentStep.field}, Type: ${currentStep.type} `);
+            console.log(`[Chat] User Answer: ${answer} `);
 
             // SHORT-CIRCUIT: Exact Match for Select Options
             if (currentStep.options) {
@@ -471,7 +471,7 @@ export async function POST(req: Request) {
                 );
 
                 if (matchedOption) {
-                    console.log(`[Chat] Short - Circuit Match: ${ matchedOption.label } -> ${ matchedOption.value } `);
+                    console.log(`[Chat] Short - Circuit Match: ${matchedOption.label} -> ${matchedOption.value} `);
                     valRes = {
                         isValid: true,
                         extractedValue: matchedOption.value,
@@ -493,8 +493,8 @@ export async function POST(req: Request) {
                 } else {
                     let queryContext = currentStep.question;
                     if (currentStep.options) {
-                        const optionsStr = currentStep.options.map((o: any) => `"${o.label}"(Value: ${ o.value })`).join(', ');
-                        queryContext += `\nValid Options: [${ optionsStr }]`;
+                        const optionsStr = currentStep.options.map((o: any) => `"${o.label}"(Value: ${o.value})`).join(', ');
+                        queryContext += `\nValid Options: [${optionsStr}]`;
                     }
 
                     // Construct robust context for the AI
@@ -505,7 +505,7 @@ export async function POST(req: Request) {
                         model: "gpt-4o-mini",
                         messages: [
                             { role: "system", content: validatorPromptTemplate }, // The Rules/Persona
-                            { role: "user", content: `QUESTION CONTEXT: \n${ queryContext } \n\nUSER INPUT: \n"${answer}"\n\nValidate and parse this answer.` }
+                            { role: "user", content: `QUESTION CONTEXT: \n${queryContext} \n\nUSER INPUT: \n"${answer}"\n\nValidate and parse this answer.` }
                         ],
                         response_format: { type: "json_object" }
                     });
@@ -631,7 +631,7 @@ export async function POST(req: Request) {
                     return NextResponse.json({
                         nextStep: {
                             ...nextStep,
-                            question: `📊 ** Análisis Preliminar **: ${ assessment.assessment_message } \n\n${ nextStep.question } `
+                            question: `📊 ** Análisis Preliminar **: ${assessment.assessment_message} \n\n${nextStep.question} `
                         },
                         validationResult: valRes
                     });
@@ -716,7 +716,7 @@ export async function POST(req: Request) {
                 let contextText = "";
                 if (knowledge && knowledge.length > 0) {
                     contextText = "\n\nRelevant Knowledge Base Entries:\n" +
-                        knowledge.map((k: any) => `- ${ k.content } `).join("\n");
+                        knowledge.map((k: any) => `- ${k.content} `).join("\n");
                 }
 
                 // AI Processing for Job Titles/Duties
@@ -833,7 +833,7 @@ export async function POST(req: Request) {
 
                 validationResult = {
                     original: answer,
-                    interpreted: `${ aiResponse.given_names } ${ aiResponse.surnames } (${ aiResponse.dob })`,
+                    interpreted: `${aiResponse.given_names} ${aiResponse.surnames} (${aiResponse.dob})`,
                     type: 'spouse_extraction'
                 };
 
