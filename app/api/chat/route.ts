@@ -10,7 +10,8 @@ import { DS160Payload } from "@/types/ds160";
 import OpenAI from "openai";
 import { calculateConsularScore } from "@/lib/ai/scoring-logic";
 
-export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
+export const maxDuration = 60; // Allow up to 60 seconds for complex AI processing
+export const runtime = 'nodejs'; // Switch to Node.js for stability (Avoid Edge 10s timeout)
 
 // ALGORITHM: Calculate Initial Risk Score based on DS-160 Data (Section 214(b) Profile)
 // ALGORITHM: Moved to @/lib/ai/scoring-logic.ts
