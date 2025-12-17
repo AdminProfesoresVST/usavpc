@@ -190,12 +190,17 @@ export async function POST(req: Request) {
                  
                  TERMINATION LOGIC (WHEN TO STOP):
                  - STOP ONLY IF:
-                   A) Score drops below 20 (Clear Rejection / Risk).
-                   B) Score rises above 95 (Clear Approval).
+                   A) Score drops below 25 (Clear Rejection / Risk).
+                   B) Score rises above 85 (Clear Approval).
                    C) ALL Data Buckets are filled AND you have formed a verdict.
                    D) You have asked at least 5 questions.
                  
                  - DO NOT APPROVE if Turns < 5. KEEP DIGGING.
+                 - CRITICAL: DO NOT LOOP.
+                   - If you have gathered (Job + Purpose + Funding + Ties) and the Score is in the Gray Zone (30-85):
+                   - YOU MUST MAKE A DECISION (Section 214b logic). 
+                   - If you are 51% Unsure -> DENY. 
+                   - Do NOT say "Iy am reviewing" or "Please wait". ISSUE THE VERDICT.
                  
                  DATA POINTS TO GATHER (Check History):
                  Use this Matrix to determine your next question.
@@ -274,9 +279,10 @@ export async function POST(req: Request) {
                     - Lie Detected = -20 (Instant Fail).
                  3. SELECT NEXT QUESTION (if Game Continues).
                  4. CHECK TERMINATION:
-                    - If Score <= 30 => TERMINATE (DENIED).
-                    - If Score >= 90 => TERMINATE (APPROVED).
+                    - If Score <= 25 => TERMINATE (DENIED).
+                    - If Score >= 85 => TERMINATE (APPROVED).
                     - If Turns >= ${MAX_TURNS} => TERMINATE (Verdict based on Score).
+                    - If Data Collection Complete => TERMINATE.
                  5. ADAPT TO LANGUAGE: Reply in User's Language.
                  6. LOOP PREVENTION: If user says "I don't know", ACCEPT IT as a Skeptic, Note the Risk, and PIVOT to next Category.
 
@@ -291,7 +297,7 @@ export async function POST(req: Request) {
                         "payer": "detected_value_or_null"
                     },
                     "response": "The Consul's verbal response (question) OR Verdict Message.",
-                    "feedback": "Optional coaching tip explaining the score change",
+                    "feedback": "REQUIRED. Explain precisely why the score changed (e.g., 'Good job tenure +5'). If no change, explain why.",
                     "score_delta": number,
                     "action": "CONTINUE" | "TERMINATE_APPROVED" | "TERMINATE_DENIED",
                     "current_score": number
