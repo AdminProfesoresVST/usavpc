@@ -12,60 +12,13 @@ import { DS160Payload } from "@/types/ds160";
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // REMOVED
 
 import { DS160Payload } from "@/types/ds160";
+import { calculateConsularScore } from "@/lib/ai/scoring-logic";
 
 export const runtime = 'edge'; // Bypass Netlify 10s Serverless Timeout
 
 // ALGORITHM: Calculate Initial Risk Score based on DS-160 Data (Section 214(b) Profile)
-function calculateInitialRiskScore(payload: DS160Payload | null): number {
-    if (!payload?.ds160_data) return 40; // Default Skeptical if no data
-
-    let score = 50; // Neutral Start
-
-    const personal = payload.ds160_data.personal || {};
-    const work = payload.ds160_data.work_education || {};
-
-    // 1. AGE FACTOR
-    // Risk: Young Adults (18-29) have highest overstay rates.
-    // Low Risk: Children (<18) and Seniors (>60).
-    // Context: We assume 'dob' format YYYY-MM-DD
-    if (personal.dob) {
-        const birthYear = new Date(personal.dob).getFullYear();
-        const currentYear = new Date().getFullYear();
-        const age = currentYear - birthYear;
-
-        if (age >= 18 && age <= 29) score -= 10; // High Risk Zone
-        else if (age > 60) score += 10; // Low Risk
-        else score += 5; // Prime Working Age (Stable)
-    }
-
-    // 2. TIES TO HOME: MARRIAGE
-    const marital = personal.marital_status;
-    if (marital === 'M' || marital === 'C') score += 10; // Married/Common Law = Tie
-    else if (marital === 'S') score -= 5; // Single = Mobile (Risk)
-
-    // 3. ECONOMIC TIES: EMPLOYMENT
-    // We check primary occupation.
-    const job = payload.primary_occupation;
-    if (job === 'U') score -= 15; // Unemployed = High Risk
-    if (job === 'S') score += 5; // Student = Medium Risk (check ties)
-    if (job === 'E' || job === 'B') score += 10; // Employed/Business = Strong Tie
-
-    // 4. INCOME (Solvency)
-    // Assume monthly_income is numeric string
-    const income = parseInt(payload.monthly_income || "0");
-    if (income > 2000) score += 5;
-    if (income > 5000) score += 5;
-
-    // 5. HISTORY
-    if (payload.has_previous_visa) score += 10; // Proven track record
-    if (payload.has_refusals) score -= 15; // Previous Denial = High Scrutiny
-
-    // STRICT BASELINE (Section 214(b) - Presumption of Intent)
-    // Even the best profile cannot start "Approved".
-    // Max Initial Score: 50 (Neutral). Min: 10 (High Risk).
-    // The "Burden of Proof" is on the interview.
-    return Math.max(10, Math.min(50, score));
-}
+// ALGORITHM: Moved to @/lib/ai/scoring-logic.ts
+// function calculateInitialRiskScore... REMOVED
 
 export async function POST(req: Request) {
     try {
@@ -159,13 +112,14 @@ export async function POST(req: Request) {
 
                 const newHistory = [{ role: "assistant", content: greetingText }];
 
-                // CALCULATE DYNAMIC SCORE
-                const initialScore = calculateInitialRiskScore(application.ds160_payload);
+                // CALCULATE DYNAMIC SCORE (CONSULAR LOGIC MODEL)
+                const logicResult = calculateConsularScore(application.ds160_payload);
+                const initialScore = logicResult.totalScore;
 
                 // RESET STATE ON INITIAL LOAD (Fixes "Instant Win" bug)
                 await supabase.from("applications").update({
                     simulator_history: newHistory,
-                    simulator_score: initialScore, // Data-Driven Score (20-80)
+                    simulator_score: initialScore,
                     simulator_turns: 0
                 }).eq("id", application.id);
 
@@ -192,8 +146,15 @@ export async function POST(req: Request) {
                  Turns Used: ${currentTurns} / ${MAX_TURNS}.
                  MINIMUM TURNS BEFORE VERDICT: 5.
                  
+                 // DYNAMIC PROFILE INJECTION
+                 // We re-calculate score components to inform the AI context, 
+                 // even though the running score is in 'currentScore'.
+                 // Ideally we'd persist the factors in DB, but re-calculating is cheap.
+                 // We can import the function here? No, we need it outside.
+                 // We just need the Risk Summary string. 
+                 
                  RULES:
-                 1. START SKEPTICAL (Score 40). User must EARN the visa.
+                 1. START SKEPTICAL. User starts with a calculated score based on their DS-160.
                  2. DO NOT APPROVE EARLY. You MUST ask at least 5 questions to verify consistency.
                  3. If Turns < 5, ACTION must be "CONTINUE" (unless user admits crime/fraud).
                  
