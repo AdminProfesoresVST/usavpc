@@ -335,10 +335,53 @@ export async function POST(req: Request) {
                 }
             ];
 
+            // ---------------------------------------------------------
+            // DATA SYNC: "The Las Vegas Fix"
+            // Persist valid Simulator Data into the Real DS-160 Payload
+            // ---------------------------------------------------------
+            let payloadSync = application.ds160_payload || { ds160_data: { personal: {}, travel: {}, work_history: { current_job: {} } } };
+
+            // Ensure deep structure exists
+            if (!payloadSync.ds160_data) payloadSync.ds160_data = {};
+            if (!payloadSync.ds160_data.work_history) payloadSync.ds160_data.work_history = { current_job: {} };
+            if (!payloadSync.ds160_data.travel) payloadSync.ds160_data.travel = {};
+
+            const k = finalObj.known_data || {};
+            let syncedFields = [];
+
+            // 1. Job Title
+            if (k.job && typeof k.job === 'string') {
+                payloadSync.ds160_data.work_history.current_job.job_title_raw_es = k.job;
+                payloadSync.primary_occupation = k.job; // Also set Triage field
+                syncedFields.push("Job");
+            }
+
+            // 2. Salary (Parse Number)
+            if (k.salary) {
+                // Remove non-numeric chars (except dot)
+                const cleanSalary = k.salary.toString().replace(/[^0-9.]/g, '');
+                const salaryNum = parseFloat(cleanSalary);
+                if (!isNaN(salaryNum)) {
+                    payloadSync.ds160_data.work_history.current_job.monthly_income_local_currency = salaryNum;
+                    syncedFields.push("Salary");
+                }
+            }
+
+            // 3. Purpose / Plans
+            if (k.purpose && typeof k.purpose === 'string') {
+                payloadSync.ds160_data.travel.travel_plans = k.purpose;
+                syncedFields.push("Purpose");
+            }
+
+            if (syncedFields.length > 0) {
+                console.log(`[Simulator] 🔄 Synced Data to DS-160: ${syncedFields.join(', ')}`);
+            }
+
             await supabase.from("applications").update({
                 simulator_history: finalHistory,
                 simulator_score: finalObj.current_score || currentScore,
-                simulator_turns: currentTurns + 1
+                simulator_turns: currentTurns + 1,
+                ds160_payload: payloadSync // SAVE THE PAYLOAD UPDATES
             }).eq("id", application.id);
 
             // Return Standard JSON Response (Compatible with ChatInterface logic)
