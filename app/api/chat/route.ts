@@ -101,11 +101,16 @@ export async function POST(req: Request) {
             if (!answer) {
                 const greetingText = effectiveLocale === 'es'
                     ? "Buenos días. Soy el oficial consular asignado a su caso. Por favor, entrégueme su pasaporte y dígame el motivo de su viaje."
-                    : "Good morning. I am the consular officer assigned to your case. Please hand me your passport and state the purpose of your trip.";
+                    : "Good morning. I am the consular officer assigned to your case. Please hand me my passport and state the purpose of your trip.";
 
-                // SAVE GREETING TO HISTORY (Critical for Context)
                 const newHistory = [{ role: "assistant", content: greetingText }];
-                await supabase.from("applications").update({ simulator_history: newHistory }).eq("id", application.id);
+
+                // RESET STATE ON INITIAL LOAD (Fixes "Instant Win" bug)
+                await supabase.from("applications").update({
+                    simulator_history: newHistory,
+                    simulator_score: 40, // Start Skeptical (User needs 50 to pass, range 0-100)
+                    simulator_turns: 0
+                }).eq("id", application.id);
 
                 return NextResponse.json({
                     nextStep: {
@@ -121,17 +126,19 @@ export async function POST(req: Request) {
             // We'll use a specific Simulator Prompt that is flexible.
 
             const simulatorPromptContent = `
-                 You are a STRICT US Visa Consul conducting an interview.
-                 You are ALSO a helpful Coach (hidden persona) that critiques the user if they make mistakes.
+                 You are a HARSH & SKEPTICAL US Visa Consul.
+                 You are ALSO a helpful Coach (hidden persona).
                  
-                 Mode: SIMULATOR (Roleplay).
+                 Mode: SIMULATOR.
                  
-                 Current Context: User is applying for a visa.
-                 
-                 Current Score: ${currentScore} / 100 (Threshold: <30 Fail, >70 Pass).
+                 Current Score: ${currentScore} / 100.
                  Turns Used: ${currentTurns} / ${MAX_TURNS}.
+                 MINIMUM TURNS BEFORE VERDICT: 5.
                  
-                 ALGORITHM & LOGIC (REAL WORLD STATS - SECTION 214(b)):
+                 RULES:
+                 1. START SKEPTICAL (Score 40). User must EARN the visa.
+                 2. DO NOT APPROVE EARLY. You MUST ask at least 5 questions to verify consistency.
+                 3. If Turns < 5, ACTION must be "CONTINUE" (unless user admits crime/fraud).
                  
                  STATISTICAL RISK MATRIX (Apply these Invisible Penalties):
                  1. "The Young/Single Burden": If User is < 30 AND Single/Unmarried -> DEDUCT 15 POINTS INITIAL RISK. (High Statistical Overstay Rate).
@@ -169,11 +176,12 @@ export async function POST(req: Request) {
                  
                  TERMINATION LOGIC (WHEN TO STOP):
                  - STOP ONLY IF:
-                   A) Score drops below 30 (Clear Rejection / Risk).
-                   B) Score rises above 90 (Clear Approval).
+                   A) Score drops below 20 (Clear Rejection / Risk).
+                   B) Score rises above 95 (Clear Approval).
                    C) ALL Data Buckets are filled AND you have formed a verdict.
+                   D) You have asked at least 5 questions.
                  
-                 - DO NOT STOP if you still have missing info (e.g., you don't know their job yet), even if score is mediocre (40-60). CONTINUE INVESTIGATING.
+                 - DO NOT APPROVE if Turns < 5. KEEP DIGGING.
                  
                  DATA POINTS TO GATHER (Check History):
                  Use this Matrix to determine your next question.
