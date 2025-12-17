@@ -2,7 +2,7 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { openai as openaiModelProvider } from "@ai-sdk/openai";
-import { streamObject } from "ai";
+import { generateObject } from "ai";
 import { simulatorSchema } from "@/lib/ai/simulator-schema";
 import { DS160StateMachine } from "@/lib/ai/state-machine";
 import { getSystemPrompt } from "@/lib/ai/prompts";
@@ -312,38 +312,45 @@ export async function POST(req: Request) {
                 effectiveHistory.push({ role: "user", content: answer });
             }
 
-            const result = streamObject({
+            const { object: finalObj } = await generateObject({
                 model: openaiModelProvider('gpt-4o-mini'),
                 schema: simulatorSchema,
                 system: simulatorPromptContent,
                 messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content })),
-
-                onFinish: async ({ object: finalObj }) => {
-                    if (!finalObj) return;
-
-                    const finalHistory = [
-                        ...effectiveHistory,
-                        {
-                            role: "assistant",
-                            content: finalObj.response,
-                            data: {
-                                score_delta: finalObj.score_delta,
-                                feedback: finalObj.feedback,
-                                reasoning: finalObj.reasoning,
-                                current_score: finalObj.current_score
-                            }
-                        }
-                    ];
-
-                    await supabase.from("applications").update({
-                        simulator_history: finalHistory,
-                        simulator_score: finalObj.current_score || currentScore, // Use AI's calc or fallback
-                        simulator_turns: currentTurns + 1
-                    }).eq("id", application.id);
-                }
             });
 
-            return result.toTextStreamResponse();
+            // Save to DB
+            const finalHistory = [
+                ...effectiveHistory,
+                {
+                    role: "assistant",
+                    content: finalObj.response,
+                    data: {
+                        score_delta: finalObj.score_delta,
+                        feedback: finalObj.feedback,
+                        reasoning: finalObj.reasoning,
+                        current_score: finalObj.current_score
+                    }
+                }
+            ];
+
+            await supabase.from("applications").update({
+                simulator_history: finalHistory,
+                simulator_score: finalObj.current_score || currentScore,
+                simulator_turns: currentTurns + 1
+            }).eq("id", application.id);
+
+            // Return Standard JSON Response (Compatible with ChatInterface logic)
+            return NextResponse.json({
+                response: finalObj.response,
+                nextStep: null, // No nextStep struct for simulator
+                meta: {
+                    action: finalObj.action,
+                    score_delta: finalObj.score_delta,
+                    feedback: finalObj.feedback,
+                    current_score: finalObj.current_score
+                }
+            });
         }
         // ---------------------------------------------------------
 
