@@ -165,6 +165,12 @@ export async function POST(req: Request) {
         - Keep answers SHORT (1-2 sentences). You are busy.
         - If they speak English poorly, switch to simple English or their Native Language with a sigh.
         
+        [STRICT OUTPUT FORMAT]
+        - Output MUST be a FLAT JSON object.
+        - DO NOT wrap in "type", "properties", or "object" keys.
+        - DO NOT include schema definitions.
+        - Valid fields: reasoning, known_data, response, feedback, score_delta, action, current_score.
+        
         GET THE TRUTH. PROTECT THE BORDER.
         
         [DYNAMIC PROFILE & RISK MATRIX]
@@ -189,12 +195,45 @@ export async function POST(req: Request) {
                 effectiveHistory.push({ role: "user", content: answer });
             }
 
-            const { object: finalObj } = await generateObject({
-                model: openaiModelProvider('gpt-4o-mini'),
-                schema: simulatorSchema,
-                system: simulatorPromptContent,
-                messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content })),
-            });
+            let finalObj;
+            try {
+                const { object } = await generateObject({
+                    model: openaiModelProvider('gpt-4o-mini'),
+                    schema: simulatorSchema,
+                    system: simulatorPromptContent,
+                    messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content })),
+                });
+                finalObj = object;
+            } catch (error: any) {
+                console.warn("AI Schema Mismatch - Attempting Agent 5 'Repair' Layer...", error.message);
+
+                // [REPAIR LAYER]
+                try {
+                    const { object: repairObj } = await generateObject({
+                        model: openaiModelProvider('gpt-4o-mini'),
+                        schema: simulatorSchema,
+                        system: `You are a REPAIR AGENT. Fix the following JSON to match the schema.
+                        Schema: reasoning (string), response (string), feedback (string), score_delta (number), action (CONTINUE|TERMINATE_APPROVED|TERMINATE_DENIED), current_score (number).
+                        Fault: ${error.message}
+                        Data: ${JSON.stringify(error.value || {})}
+                        `,
+                        messages: [{ role: "user", content: "Repair the data." }]
+                    });
+                    finalObj = repairObj;
+                } catch (retryError) {
+                    console.error("Agent 5 Repair Failed. Triggering FAIL-SAFE FALLBACK.");
+                    // [FAIL-SAFE FALLBACK]
+                    finalObj = {
+                        reasoning: "System failure during evaluation. Defaulting to safe state.",
+                        response: "I see. Let's move on. Tell me more about your travel plans.",
+                        feedback: "The connection dropped momentarily. Try giving a more detailed answer.",
+                        score_delta: 0,
+                        action: "CONTINUE",
+                        current_score: currentScore,
+                        known_data: {}
+                    };
+                }
+            }
 
             // Save to DB
             const finalHistory = [
