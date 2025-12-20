@@ -1,0 +1,20 @@
+{
+  "node": {
+    "60e06198f0f33d9f7a6e4c93218b0b00d367e9df83": {
+      "workers": {
+        "app/[locale]/agent/page": {
+          "moduleId": 87136,
+          "async": false,
+          "exportedName": "updateStatus",
+          "filename": "app/actions/update-status.tsx"
+        }
+      },
+      "layer": {
+        "app/[locale]/agent/page": "action-browser"
+      },
+      "exportedName": "updateStatus",
+      "filename": "app/actions/update-status.tsx"
+    }
+  },
+  "edge": {}
+}

@@ -42,6 +42,7 @@ interface SimulatorState {
     score: number;
     delta: number;
     sentiment: "neutral" | "skeptical" | "angry" | "positive";
+    currentSuggestion?: string;
 }
 
 export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { onComplete?: () => void, initialData?: any, mode?: string }) {
@@ -60,6 +61,7 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
         delta: 0,
         sentiment: "neutral"
     });
+    const [showBriefing, setShowBriefing] = useState(mode === 'simulator');
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState("");
@@ -78,6 +80,14 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                     body: JSON.stringify({ answer: null, context: initialData, mode }),
                 });
                 const data = await response.json();
+
+                // [NEW] Capture Initial Suggestion
+                if (data.meta?.suggestion) {
+                    setSimState(prev => ({
+                        ...prev,
+                        currentSuggestion: data.meta.suggestion
+                    }));
+                }
 
                 if (data.nextStep) {
                     setMessages([{
@@ -196,7 +206,8 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                 setSimState({
                     score: newScore,
                     delta: delta,
-                    sentiment: sentiment
+                    sentiment: sentiment,
+                    currentSuggestion: data.meta.suggestion
                 });
             }
 
@@ -274,13 +285,59 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
     }
 
     return (
-        <div className="flex flex-col h-full w-full bg-[#F0F2F5]">
+        <div className="flex flex-col h-full w-full bg-slate-50">
+            {/* [NEW] Pre-Interview Briefing Modal */}
+            {mode === 'simulator' && showBriefing && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+                    <Card className="max-w-md w-full p-6 space-y-6 shadow-2xl border-2 border-blue-100">
+                        <div className="text-center space-y-2">
+                            <div className="mx-auto w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <Bot className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <h2 className="text-xl font-bold text-slate-800">
+                                {locale === 'es' ? 'Antes de comenzar...' : 'Before we start...'}
+                            </h2>
+                            <p className="text-sm text-slate-500">
+                                {locale === 'es'
+                                    ? 'Sigue estas recomendaciones para aprobar:'
+                                    : 'Follow these recommendations to pass:'}
+                            </p>
+                        </div>
+
+                        <ul className="space-y-3 text-sm text-slate-700 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                            <li className="flex gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                <span>{locale === 'es' ? 'Responde corto y directo.' : 'Keep answers short and direct.'}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                <span>{locale === 'es' ? 'Usa detalles (Fechas, Dólares, Lugares).' : 'Use specifics (Dates, Dollars, Places).'}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <Sparkles className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
+                                <span className="font-medium text-yellow-700">
+                                    {locale === 'es' ? 'El Coach te dará "Susurros" de ayuda.' : 'The Coach will give you "Whisper" hints.'}
+                                </span>
+                            </li>
+                        </ul>
+
+                        <Button onClick={() => setShowBriefing(false)} className="w-full h-12 text-base shadow-lg hover:scale-[1.02] transition-transform">
+                            {locale === 'es' ? 'Entendido, Comenzar' : 'Got it, Start'}
+                        </Button>
+                    </Card>
+                </div>
+            )}
             {/* Assistant Header */}
             <div className="px-4 pt-4 pb-2">
                 <div className={cn(
-                    "flex items-center gap-4 p-4 rounded-2xl shadow-sm border",
-                    mode === 'simulator' ? "bg-slate-900 border-slate-700 text-white" : "bg-white border-gray-100"
+                    "flex items-center gap-4 p-4 rounded-3xl shadow-md border relative overflow-hidden transition-all",
+                    mode === 'simulator'
+                        ? "bg-white border-blue-100/50 text-slate-800 ring-4 ring-blue-50/50"
+                        : "bg-white border-gray-100"
                 )}>
+                    {mode === 'simulator' && (
+                        <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#003366_1px,transparent_1px)] [background-size:12px_12px]" />
+                    )}
                     {mode === 'simulator' ? (
                         // [NEW] Simulator Header (Avatar + Risk Meter)
                         <>
@@ -310,6 +367,23 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                         </>
                     )}
                 </div>
+
+                {/* [NEW] COACHING SUGGESTION (Simple) */}
+                {simState.currentSuggestion && mode === 'simulator' && (
+                    <div className="mt-2 mx-1 p-3 bg-yellow-50 border border-yellow-200 rounded-xl flex items-start gap-3 shadow-sm">
+                        <div className="p-1.5 bg-yellow-100 rounded-full shrink-0">
+                            <Sparkles className="w-4 h-4 text-yellow-600" />
+                        </div>
+                        <div>
+                            <p className="text-xs font-bold text-yellow-800 uppercase tracking-wider mb-0.5">
+                                {locale === 'es' ? 'Sugerencia del Coach' : 'Coach Tip'}
+                            </p>
+                            <p className="text-sm text-yellow-900 leading-snug">
+                                {simState.currentSuggestion}
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
 
 
@@ -326,10 +400,10 @@ export function ChatInterface({ onComplete, initialData, mode = 'standard' }: { 
                         <div
                             key={msg.id}
                             className={cn(
-                                "flex w-max max-w-[80%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
+                                "flex w-max max-w-[85%] flex-col gap-2 rounded-2xl px-4 py-3 text-sm shadow-sm",
                                 msg.role === "user"
-                                    ? "ml-auto bg-primary text-primary-foreground"
-                                    : "bg-muted"
+                                    ? "ml-auto bg-[#003366] text-white rounded-tr-sm"
+                                    : "bg-white text-slate-700 border border-slate-100 rounded-tl-sm"
                             )}
                         >
                             {msg.content}

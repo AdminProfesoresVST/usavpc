@@ -2,7 +2,7 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { openai as openaiModelProvider } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 import { simulatorSchema } from "@/lib/ai/simulator-schema";
 import { DS160StateMachine } from "@/lib/ai/state-machine";
 import { getSystemPrompt } from "@/lib/ai/prompts";
@@ -152,40 +152,40 @@ export async function POST(req: Request) {
         3. **No Robot-Speak**: NEVER say: "I understand", "Great", "Thank you", "As an AI". Talk like a busy bureaucrat.
         4. **Interrupt**: If the user gives a long speech, cut them off (simulate this by ignoring the fluff).
         
-        [INTERVIEW STAGES]
-        1. **Triage**: Quickly verify Purpose, Job, Salary.
-        2. **Pressure**: Find the weak point (e.g., Low salary? Young? Single?) and press it.
-        3. **Verdict**: Decide based on logic.
+        [OCTAGON PROTOCOL ACTIVE - COGNITIVE MODE]
+        1. **INTERNAL MONOLOGUE**: Before speaking, THINK. Analyze the user's answer for Section 214(b) risks. Is the story consistent? Is the income realistic?
+        2. **SUSPICION LEVEL (0-100)**: Adjust this based on vague answers. >50 means DRILL DOWN. >80 means DENY.
         
-        [CURRENT CONTEXT]
-        - Locale: ${locale} (Reply in this language, but with US Authority tone)
-        - Applicant Data: ${JSON.stringify(application.ds160_payload || {})}
+        [INTERVIEW STRATEGY]
+        - **The "Trap"**: Ask the same question differently later to catch lies.
+        - **VIRTUAL READING (MANDATORY)**: If user says "Here it is", YOU MUST "READ" IT OUT LOUD.
+          - Good: "I see your bank statement shows $5,000. That is consistent." (INVENT THE DATA).
         
         [RESPONSE RULES]
-        - Keep answers SHORT (1-2 sentences). You are busy.
-        - If they speak English poorly, switch to simple English or their Native Language with a sigh.
+        - MATCH THE USER'S LANGUAGE. If they speak Spanish, you speak Spanish. If they speak English, you speak English.
+        - NO STALLING: NEVER say "Wait", "I will review". Decide IMMEDIATELY.
+        
+        [SCORING RULES - BE GENEROUS FOR TRUTH]
+        - **MANDATORY REWARDS**: +5 PTS for Job > 2y, Property, Family, High Income.
+        - Do not keep score at 0 if the user answers well.
+        
+        [TEACHING MODE - LIVE HINTS]
+        - **suggestion** (Output Field): **MANDATORY**. You MUST generate a hint for the user on how to answer the CURRENT question.
+        - IF asking "How long?": Suggestion: "Tip: Give specific dates and return ticket info."
+        - IF first question: Suggestion: "Tip: State your purpose clearly (e.g., Tourism, Business)."
+        - CONTENT: Use 'known_data' (Job, Age, Salary) in tips. E.g., "Mention your high salary to prove ties."
+        - LANGUAGE: Must match User Language. Do NOT skip this field.
+        
+        [COACHING FEEDBACK RULES (For 'feedback' field)]
+        - **LANGUAGE: MUST MATCH USER LANGUAGE.** (If Spanish -> "Consejo: Menciona...").
+        - BE ACTIONABLE: "Tip: Mention your 5-year tenure to prove stability."
+        - ACKNOWLEDGE: "Good job mentioning X. Now add Y."
         
         [STRICT OUTPUT FORMAT]
         - Output MUST be a FLAT JSON object.
-        - DO NOT wrap in "type", "properties", or "object" keys.
-        - DO NOT include schema definitions.
-        - Valid fields: reasoning, known_data, response, feedback, score_delta, action, current_score.
+        - REQUIRED: suggestion, reasoning, known_data, response, feedback, score_delta, action.
         
         GET THE TRUTH. PROTECT THE BORDER.
-        
-        [DYNAMIC PROFILE & RISK MATRIX]
-        - Young/Single (<30): High Risk of Overstay.
-        - No Travel History: High Risk (Blank Passport).
-        - New Job (<1 year): Moderate Risk.
-        
-        [TERMINATION LOGIC]
-        - STOP if Score < 25 (Deny).
-        - STOP if Score > 85 (Approve).
-        - STOP if Data is collected (Job, Purpose, Funding, Ties).
-        - MINIMUM 5 Questions.
-        
-        [HISTORY CHECK]
-        - Do not ask what you already know.
         `;
 
             // Construct Messages for AI
@@ -207,32 +207,104 @@ export async function POST(req: Request) {
             } catch (error: any) {
                 console.warn("AI Schema Mismatch - Attempting Agent 5 'Repair' Layer...", error.message);
 
-                // [REPAIR LAYER]
+                // [REPAIR LAYER - AGENT 5]
                 try {
                     const { object: repairObj } = await generateObject({
                         model: openaiModelProvider('gpt-4o-mini'),
                         schema: simulatorSchema,
-                        system: `You are a REPAIR AGENT. Fix the following JSON to match the schema.
-                        Schema: reasoning (string), response (string), feedback (string), score_delta (number), action (CONTINUE|TERMINATE_APPROVED|TERMINATE_DENIED), current_score (number).
-                        Fault: ${error.message}
-                        Data: ${JSON.stringify(error.value || {})}
+                        system: `You are the Consular Officer. Your last JSON output failed validation. 
+                        REPAIR the data.
+                        
+                        CRITICAL RULES:
+                        1. LANGUAGE: You MUST match the language of the user's last message.
+                        2. INTERNAL MONOLOGUE: Generate a valid 'internal_monologue' explaining why the data failed or what the new strategy is.
+                        3. SUSPICION: Set 'suspicion_level' (0-100).
+                        
+                        Faulty Data: ${JSON.stringify(error.value || {})}
+                        Error: ${error.message}
                         `,
-                        messages: [{ role: "user", content: "Repair the data." }]
+                        messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content }))
                     });
                     finalObj = repairObj;
                 } catch (retryError) {
-                    console.error("Agent 5 Repair Failed. Triggering FAIL-SAFE FALLBACK.");
-                    // [FAIL-SAFE FALLBACK]
-                    finalObj = {
-                        reasoning: "System failure during evaluation. Defaulting to safe state.",
-                        response: "I see. Let's move on. Tell me more about your travel plans.",
-                        feedback: "The connection dropped momentarily. Try giving a more detailed answer.",
-                        score_delta: 0,
-                        action: "CONTINUE",
-                        current_score: currentScore,
-                        known_data: {}
-                    };
+                    console.error("Agent 5 Repair Failed. Triggering FAIL-SAFE FALLBACK (Text Mode).");
+
+                    // [FAIL-SAFE FALLBACK: TEXT ONLY]
+                    try {
+                        const { text: emergencyQuestion } = await generateText({
+                            model: openaiModelProvider('gpt-4o-mini'),
+                            system: `You are the Consular Officer. The system is unstable. 
+                            Generate a SHORT, SKEPTICAL response based on the history.
+                            
+                            MANDATORY:
+                            - DETECT the language of the last user message (e.g., "vacaciones 5 dias" = Spanish).
+                            - ANSWER IN THAT DETECTED LANGUAGE.
+                            - If the interview seems finished (or user asks "?"), make a final decision.
+                            `,
+                            messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content }))
+                        });
+
+                        // Heuristic: If response sounds final, terminate.
+                        const text = emergencyQuestion?.toLowerCase() || "";
+                        const isTermination = text.includes("decision") || text.includes(" visa") || text.includes("approved") || text.includes("denied") || text.includes("aprobada") || text.includes("denegada");
+                        const fallbackAction = isTermination ? "TERMINATE_DENIED" : "CONTINUE";
+
+                        // Simple Language Detection for Feedback
+                        const lastUserMsg = effectiveHistory[effectiveHistory.length - 1]?.content?.toLowerCase() || "";
+                        const isSpanish = lastUserMsg.match(/[áéíóúñ¿¡]/) || ["si", "no", "gracias", "hola", "viaje", "dinero", "visa"].some(w => lastUserMsg.includes(w));
+                        const currentLocale = (effectiveLocale === 'es' || isSpanish) ? 'es' : 'en';
+
+                        finalObj = {
+                            reasoning: "Emergency Fallback Triggered.",
+                            response: emergencyQuestion || (currentLocale === 'es' ? "¿Puede ser más específico?" : "Can you explain in specific detail?"),
+                            feedback: currentLocale === 'es' ? "Por favor sea más claro y específico." : "Please provide specific details.",
+                            score_delta: 0,
+                            action: fallbackAction,
+                            current_score: currentScore,
+                            known_data: {}
+                        };
+                    } catch (finalError) {
+                        // Absolute last resort (should never happen)
+                        finalObj = {
+                            reasoning: "System Critical Failure.",
+                            response: effectiveLocale === 'es' ? "Error de conexión. Intente de nuevo." : "Connection error. Please try again.",
+                            feedback: "Network error.",
+                            score_delta: 0,
+                            action: "CONTINUE",
+                            current_score: currentScore,
+                            known_data: {},
+                            suggestion: "Connection error."
+                        };
+                    }
                 }
+            }
+
+            // [WATCHDOG WORKERS - POST PROCESSING LOGIC - "THE 4 WORKERS"]
+
+            // Worker 1: Language Guard (Session Level)
+            // If the user started in Spanish, we stay in Spanish.
+            const sessionIsSpanish = effectiveHistory.some((m: any) => m.role === 'user' && (m.content || "").match(/[áéíóúñ¿¡]/));
+            if (sessionIsSpanish && effectiveLocale !== 'es') effectiveLocale = 'es';
+
+            // Worker 2: Anti-Stall (Removes "Wait" loops)
+            if (finalObj.response.match(/(wait|moment|patience|review|esper|moment|revis)/i)) {
+                // If the AI stalls, we force a decision line.
+                finalObj.response = sessionIsSpanish
+                    ? "He evaluado su caso. Tengo una decisión."
+                    : "I have evaluated your case. I have a decision.";
+                // If it was stalling, it usually means it was uncertain. Force Deny/Approve based on score.
+                finalObj.action = finalObj.current_score > 60 ? 'TERMINATE_APPROVED' : 'TERMINATE_DENIED';
+            }
+
+            // Worker 3: Verdict Enforcer (Hard Limit)
+            if (currentTurns > 15) {
+                finalObj.action = finalObj.current_score > 60 ? 'TERMINATE_APPROVED' : 'TERMINATE_DENIED';
+                finalObj.reasoning += " [Forced Termination by Verdict Worker]";
+            }
+
+            // Worker 4: Feedback Guard (Feedback Localization)
+            if (sessionIsSpanish && finalObj.feedback && !finalObj.feedback.match(/[áéíóúñ¿¡]/) && finalObj.feedback.includes("Please")) {
+                finalObj.feedback = "Por favor responda a la solicitud del oficial.";
             }
 
             // Save to DB
@@ -256,7 +328,6 @@ export async function POST(req: Request) {
                 simulator_turns: currentTurns + 1
             }).eq("id", application.id);
 
-            // Return Standard JSON Response (Compatible with ChatInterface logic)
             return NextResponse.json({
                 response: finalObj.response,
                 nextStep: null, // No nextStep struct for simulator
@@ -264,6 +335,7 @@ export async function POST(req: Request) {
                     action: finalObj.action,
                     score_delta: finalObj.score_delta,
                     feedback: finalObj.feedback,
+                    suggestion: finalObj.suggestion, // Pass the Pre-Answer Hint
                     current_score: finalObj.current_score
                 }
             });

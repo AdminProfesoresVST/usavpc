@@ -1,0 +1,35 @@
+{
+  "node": {
+    "60e06198f0f33d9f7a6e4c93218b0b00d367e9df83": {
+      "workers": {
+        "app/[locale]/admin/page": {
+          "moduleId": 22630,
+          "async": false,
+          "exportedName": "updateStatus",
+          "filename": "app/actions/update-status.tsx"
+        }
+      },
+      "layer": {
+        "app/[locale]/admin/page": "action-browser"
+      },
+      "exportedName": "updateStatus",
+      "filename": "app/actions/update-status.tsx"
+    },
+    "40b35cf78ba1eaf88eade319e00003786778b1ca05": {
+      "workers": {
+        "app/[locale]/admin/page": {
+          "moduleId": 22630,
+          "async": false,
+          "exportedName": "createKnowledge",
+          "filename": "app/actions/create-knowledge.ts"
+        }
+      },
+      "layer": {
+        "app/[locale]/admin/page": "action-browser"
+      },
+      "exportedName": "createKnowledge",
+      "filename": "app/actions/create-knowledge.ts"
+    }
+  },
+  "edge": {}
+}

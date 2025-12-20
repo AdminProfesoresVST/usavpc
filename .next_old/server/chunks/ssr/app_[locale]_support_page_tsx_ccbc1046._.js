@@ -1,0 +1,3 @@
+module.exports=[72657,a=>{"use strict";var b=a.i(87924),c=a.i(63588),d=a.i(81631);function e(){return(0,b.jsxs)("div",{className:"flex flex-col h-full bg-[#F0F2F5]",children:[(0,b.jsx)(d.Header,{}),(0,b.jsxs)("div",{className:"flex-1 flex flex-col items-center justify-center text-gray-400 p-6 text-center",children:[(0,b.jsx)(c.MessageSquare,{className:"w-12 h-12 mb-2 opacity-20"}),(0,b.jsx)("h2",{className:"font-bold text-gray-600",children:"Centro de Ayuda"}),(0,b.jsx)("p",{className:"text-sm",children:"Próximamente disponible."})]})]})}a.s(["default",()=>e])}];
+
+//# sourceMappingURL=app_%5Blocale%5D_support_page_tsx_ccbc1046._.js.map
