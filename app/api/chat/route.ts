@@ -950,6 +950,7 @@ export async function POST(req: Request) {
         console.error("Chat API Error:", error);
         return NextResponse.json({
             error: error instanceof Error ? error.message : "Unknown Internal Error",
+            stack: error instanceof Error ? error.stack : null,
             details: JSON.stringify(error)
         }, { status: 500 });
     }
