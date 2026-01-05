@@ -51,8 +51,19 @@ class AiRepository {
       } else {
         throw Exception('Server Error: ${response.statusCode}');
       }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final data = e.response?.data;
+        // Try to extract backend error message
+        final serverError = data is Map ? (data['error'] ?? data.toString()) : data.toString();
+        final stack = data is Map ? data['stack'] : null;
+        
+        throw Exception('Server Error (${e.response?.statusCode}): $serverError\nStack: $stack');
+      } else {
+        throw Exception('Connection Error: ${e.message}');
+      }
     } catch (e) {
-      throw Exception('Connection Error: $e');
+      throw Exception('Unexpected Error: $e');
     }
   }
 }

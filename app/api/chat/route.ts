@@ -74,6 +74,29 @@ export async function POST(req: Request) {
 
         console.log(`[API] Chat Request - Mode: ${mode}, Answer: ${answer}`); // DEBUG LOG
 
+        // ---------------------------------------------------------
+        // 3.5. Ensure Profile Exists (Fix for FK Violation "applications_user_id_fkey")
+        // NOTE: In some environments, applications might reference public.profiles instead of auth.users
+        // ---------------------------------------------------------
+        try {
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .upsert(
+                    {
+                        id: user.id,
+                        email: user.email,
+                        updated_at: new Date().toISOString()
+                    },
+                    { onConflict: 'id' }
+                )
+                .select()
+                .single();
+
+            if (profileError) console.warn("[API] Profile Sync Warning:", profileError.message);
+        } catch (e) {
+            console.warn("[API] Profile Sync Failed (Non-Critical if FK is correct):", e);
+        }
+
         let effectiveLocale = locale;
 
         // ---------------------------------------------------------
