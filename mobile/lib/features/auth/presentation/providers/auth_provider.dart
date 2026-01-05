@@ -1,0 +1,37 @@
+import 'package:mobile/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:mobile/features/auth/domain/repositories/auth_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_provider.g.dart';
+
+@riverpod
+class AuthNotifier extends _$AuthNotifier {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> signIn(String email, String password) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final repo = ref.read(authRepositoryProvider);
+      await repo.signIn(email: email, password: password);
+    });
+  }
+
+  Future<void> signUp(String email, String password) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final repo = ref.read(authRepositoryProvider);
+      await repo.signUp(email: email, password: password);
+    });
+  }
+  
+  Future<void> signOut() async {
+      final repo = ref.read(authRepositoryProvider);
+      await repo.signOut();
+  }
+}
+
+@riverpod
+Stream<String?> authState(AuthStateRef ref) {
+  return ref.watch(authRepositoryProvider).authStateChanges;
+}

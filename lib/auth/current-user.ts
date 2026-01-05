@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { createClient } from "@supabase/supabase-js";
+import { cookies, headers } from "next/headers";
 
 export type DevUserRole = 'client' | 'admin' | 'agent' | 'client_fresh';
 
@@ -28,7 +29,29 @@ export const DEV_USERS: Record<DevUserRole, { id: string; email: string; role: D
 
 export async function getCurrentUser() {
     const cookieStore = await cookies();
+    const headersStore = await headers();
     const isDev = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
+
+    // 0. Mobile/API Token Bypass
+    const authHeader = headersStore.get('authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        try {
+            const supabase = createClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                {
+                    global: { headers: { Authorization: authHeader } }
+                }
+            );
+            const { data, error } = await supabase.auth.getUser(token);
+            if (data.user && !error) {
+                return { data, error: null };
+            }
+        } catch (e) {
+            console.warn("Token Auth Failed, falling back to cookies", e);
+        }
+    }
 
     // 1. Dev Mode Bypass
     if (isDev) {

@@ -1,0 +1,130 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:mobile/features/dashboard/presentation/screens/main_scaffold.dart';
+import 'package:mobile/features/dashboard/presentation/screens/profile_screen.dart';
+import 'package:mobile/features/auth/presentation/screens/login_screen.dart';
+import 'package:mobile/features/auth/presentation/screens/register_screen.dart';
+import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobile/features/payments/presentation/screens/service_selection_screen.dart';
+import 'package:mobile/features/payments/presentation/screens/visa_type_selection_screen.dart';
+import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
+import 'package:mobile/features/kyc/presentation/screens/form_wizard_screen.dart';
+import 'package:mobile/features/ocr/presentation/screens/ocr_screen.dart';
+import 'package:mobile/features/simulator/presentation/screens/simulator_screen.dart';
+import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart'; // Import
+import 'package:mobile/features/onboarding/presentation/screens/splash_screen.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'router.g.dart';
+
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+final shellNavigatorKey = GlobalKey<NavigatorState>();
+
+@riverpod
+GoRouter goRouter(GoRouterRef ref) {
+  final authState = ref.watch(authStateProvider);
+  
+  return GoRouter(
+    navigatorKey: rootNavigatorKey,
+    initialLocation: '/splash',
+    debugLogDiagnostics: true,
+    redirect: (context, state) {
+      final isLoggedIn = authState.valueOrNull != null;
+      final location = state.uri.toString();
+      
+      // Public routes that don't require auth
+      final publicRoutes = ['/splash', '/services', '/login', '/register'];
+      if (publicRoutes.contains(location)) return null;
+
+      // If not logged in and trying to access protected route
+      if (!isLoggedIn) return '/login';
+      
+      // If logged in and on login/splash, rely on internal navigation or default
+      if (isLoggedIn && location == '/login') return '/dashboard';
+      
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/services',
+        builder: (context, state) => const ServiceSelectionScreen(),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => MainScaffold(navigationShell: navigationShell),
+        branches: [
+          // Branch 1: Inicio (Dashboard)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/dashboard',
+                builder: (context, state) => const DashboardScreen(),
+              ),
+            ],
+          ),
+          // Branch 2: Servicios (Service Selection) - User asked "Where are services?"
+          StatefulShellBranch(
+            routes: [
+               GoRoute(
+                path: '/services_tab', // Distinct path for tab
+                builder: (context, state) => const ServiceSelectionScreen(),
+              ),
+            ],
+          ),
+          // Branch 3: Perfil
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
+              ),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/payment',
+        builder: (context, state) => const ServiceSelectionScreen(),
+      ),
+      GoRoute(
+        path: '/visa-type',
+        builder: (context, state) => const VisaTypeSelectionScreen(),
+      ),
+      GoRoute(
+        path: '/checkout',
+        builder: (context, state) => const OrderSummaryScreen(),
+      ),
+      GoRoute(
+        path: '/kyc',
+        builder: (context, state) => const FormWizardScreen(),
+      ),
+      GoRoute(
+        path: '/ocr',
+        builder: (context, state) => const OCRScreen(),
+      ),
+      GoRoute(
+        path: '/sim',
+        builder: (context, state) => const SimulatorScreen(),
+      ),
+      GoRoute(
+        path: '/chat-intake',
+        builder: (context, state) {
+           final type = state.uri.queryParameters['type'] ?? 'b1b2';
+           return ChatIntakeScreen(visaType: type);
+        },
+      ),
+    ],
+  );
+}
