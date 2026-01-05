@@ -1,5 +1,5 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { openai as openaiModelProvider } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
@@ -32,23 +32,41 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // 2. Setup Supabase Client (Use Service Role for Dev Users to bypass RLS)
-        const isDevUser = user.id.startsWith('00000000-0000-0000-0000-0000000000');
-        const supabaseKey = isDevUser
-            ? process.env.SUPABASE_SERVICE_ROLE_KEY!
-            : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+        // 2. Setup Supabase Client
+        // Check for Mobile Bearer Token First
+        const headerStore = await headers();
+        const authHeader = headerStore.get('authorization');
+        let supabase;
 
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            supabaseKey,
-            {
-                cookies: {
-                    get(name: string) { return cookieStore.get(name)?.value; },
-                    set(name: string, value: string, options: CookieOptions) { cookieStore.set({ name, value, ...options }); },
-                    remove(name: string, options: CookieOptions) { cookieStore.set({ name, value: "", ...options }); },
-                },
-            }
-        );
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            // MOBILE/API MODE
+            const { createClient } = await import("@supabase/supabase-js");
+            supabase = createClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                {
+                    global: { headers: { Authorization: authHeader } }
+                }
+            );
+        } else {
+            // WEB/COOKIE MODE
+            const isDevUser = user.id.startsWith('00000000-0000-0000-0000-0000000000');
+            const supabaseKey = isDevUser
+                ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+                : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+            supabase = createServerClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                supabaseKey,
+                {
+                    cookies: {
+                        get(name: string) { return cookieStore.get(name)?.value; },
+                        set(name: string, value: string, options: CookieOptions) { cookieStore.set({ name, value, ...options }); },
+                        remove(name: string, options: CookieOptions) { cookieStore.set({ name, value: "", ...options }); },
+                    },
+                }
+            );
+        }
 
         // 3. Process User Input (if any)
         const body = await req.json();
