@@ -20,7 +20,11 @@ class AiRepository {
 
   AiRepository(this._dio, this._baseUrl, this._anonKey);
 
-  Future<String> sendMessage({required String message, required String visaType}) async {
+  Future<String> sendMessage({
+    required String message, 
+    required String visaType,
+    String mode = 'standard', // Default to standard (Intake)
+  }) async {
     try {
       final session = Supabase.instance.client.auth.currentSession;
       if (session == null) throw Exception('User not logged in');
@@ -31,7 +35,7 @@ class AiRepository {
         _baseUrl.endsWith('/api/chat') ? _baseUrl : '$_baseUrl/api/chat',
         data: {
           'answer': message,
-          'mode': 'standard',
+          'mode': mode, // Dynamic Mode
           'locale': 'es',
           'context': {'visa_type': visaType},
         },
