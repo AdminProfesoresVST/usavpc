@@ -38,6 +38,39 @@ export async function POST(req: Request) {
             }
         );
 
+        // ---------------------------------------------------------
+        // 1.5. Ensure Profile Exists (Self-Healing for FK Violation)
+        // ---------------------------------------------------------
+        try {
+            // Use the lightweight supabase-js client for Admin operations
+            const { createClient: createAdminClient } = await import("@supabase/supabase-js");
+            const adminClient = createAdminClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.SUPABASE_SERVICE_ROLE_KEY!,
+                {
+                    auth: {
+                        autoRefreshToken: false,
+                        persistSession: false
+                    }
+                }
+            );
+
+            const { error: profileError } = await adminClient
+                .from('profiles')
+                .upsert(
+                    {
+                        id: user.id,
+                        email: user.email
+                        // REMOVED 'updated_at' to match actual DB Schema
+                    },
+                    { onConflict: 'id' }
+                );
+
+            if (profileError) console.error("DraftAPI: Profile Sync Failed:", profileError.message);
+        } catch (e) {
+            console.error("DraftAPI: Profile Sync Exception:", e);
+        }
+
         // 2. Check if application already exists
         const { data: existingApp } = await supabase
             .from("applications")

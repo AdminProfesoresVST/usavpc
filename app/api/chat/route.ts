@@ -76,25 +76,43 @@ export async function POST(req: Request) {
 
         // ---------------------------------------------------------
         // 3.5. Ensure Profile Exists (Fix for FK Violation "applications_user_id_fkey")
-        // NOTE: In some environments, applications might reference public.profiles instead of auth.users
+        // CRITICAL: We use SERVICE_ROLE key here to bypass RLS. 
+        // Standard users might not have permission to INSERT into public.profiles if the trigger failed.
         // ---------------------------------------------------------
         try {
-            const { error: profileError } = await supabase
+            // Use the lightweight supabase-js client for Admin operations (Cleaner than ssr)
+            const { createClient: createAdminClient } = await import("@supabase/supabase-js");
+            const adminClient = createAdminClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.SUPABASE_SERVICE_ROLE_KEY!,
+                {
+                    auth: {
+                        autoRefreshToken: false,
+                        persistSession: false
+                    }
+                }
+            );
+
+            const { error: profileError } = await adminClient
                 .from('profiles')
                 .upsert(
                     {
                         id: user.id,
-                        email: user.email,
-                        updated_at: new Date().toISOString()
+                        email: user.email
+                        // REMOVED 'updated_at' to match actual DB Schema (Fixes "Column not found" error)
                     },
                     { onConflict: 'id' }
                 )
                 .select()
                 .single();
 
-            if (profileError) console.warn("[API] Profile Sync Warning:", profileError.message);
+            if (profileError) {
+                console.error("[API] CRITICAL: Profile Sync Failed even with Admin Key:", profileError.message);
+            } else {
+                console.log("[API] Profile Sync Successful (Self-Healing Active)");
+            }
         } catch (e) {
-            console.warn("[API] Profile Sync Failed (Non-Critical if FK is correct):", e);
+            console.error("[API] Profile Sync Exception:", e);
         }
 
         let effectiveLocale = locale;
