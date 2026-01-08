@@ -5,7 +5,7 @@ void main() async {
   // Mock SharedPreferences
   SharedPreferences.setMockInitialValues({});
   
-  print('--- FORCING EMAIL CONFIRMATION (ADMIN) ---');
+  // print('--- FORCING EMAIL CONFIRMATION (ADMIN) ---');
   
   const url = 'https://inaxjdmofqbcoljxgnwr.supabase.co';
   // SERVICE ROLE KEY from .env.local
@@ -16,7 +16,7 @@ void main() async {
     // Supabase.initialize is for the Singleton. Let's make a raw client.
     final client = SupabaseClient(url, serviceRoleKey);
     
-    print('1. Client initialized with Service Role Key.');
+    // print('1. Client initialized with Service Role Key.');
     
     // The user ID from previous run was: e93badc1-d62c-48aa-a396-eeec79fc1473
     // Or we can find by email if we list users? But listUsers might be paginated.
@@ -27,7 +27,7 @@ void main() async {
     
     final userId = 'e93badc1-d62c-48aa-a396-eeec79fc1473';
     
-    print('2. Updating user $userId to valid email_confirmed_at...');
+    // print('2. Updating user $userId to valid email_confirmed_at...');
     
     final response = await client.auth.admin.updateUserById(
       userId,
@@ -38,12 +38,12 @@ void main() async {
     );
     
     if (response.user != null) {
-       print('   [SUCCESS] User Email Confirmed! Payload: ${response.user!.emailConfirmedAt}');
+       // print('   [SUCCESS] User Email Confirmed! Payload: ${response.user!.emailConfirmedAt}');
     } else {
-       print('   [ERROR] No user returned from update.');
+       // print('   [ERROR] No user returned from update.');
     }
 
   } catch (e) {
-    print('FATAL ERROR: $e');
+    // print('FATAL ERROR: $e');
   }
 }

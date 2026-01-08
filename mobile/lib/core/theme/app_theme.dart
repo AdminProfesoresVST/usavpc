@@ -25,8 +25,7 @@ class AppTheme {
         surface: surfaceWhite,
         onSurface: const Color(0xFF1F2937),
         error: errorRed,
-        background: backgroundGrey,
-        onBackground: const Color(0xFF1F2937),
+
       ),
       scaffoldBackgroundColor: backgroundGrey,
       

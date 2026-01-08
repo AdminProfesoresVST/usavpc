@@ -17,6 +17,7 @@ import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart
 import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart'; // Import
 import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart'; // Import
 import 'package:mobile/features/onboarding/presentation/screens/splash_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'router.g.dart';
@@ -25,7 +26,7 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 final shellNavigatorKey = GlobalKey<NavigatorState>();
 
 @riverpod
-GoRouter goRouter(GoRouterRef ref) {
+GoRouter goRouter(Ref ref) {
   final authState = ref.watch(authStateProvider);
   
   return GoRouter(
