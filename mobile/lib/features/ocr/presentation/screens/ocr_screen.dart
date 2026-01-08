@@ -76,7 +76,7 @@ class _OCRScreenState extends ConsumerState<OCRScreen> {
       backgroundColor: const Color(0xFF112E51), // Navy Background
       appBar: AppBar(
         title: Text(
-          'Verificación de Documento',
+          'MODO INTRO', // Debug Title
           style: GoogleFonts.publicSans(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,

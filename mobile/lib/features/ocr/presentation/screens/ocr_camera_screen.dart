@@ -57,7 +57,7 @@ class _OCRCameraScreenState extends ConsumerState<OCRCameraScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          'Escanear Pasaporte',
+          'CÁMARA ACTIVADA', // Debug Title
           style: GoogleFonts.publicSans(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
