@@ -116,7 +116,7 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const FormWizardScreen(),
       ),
       GoRoute(
-        path: '/ocr',
+        path: '/verification-intro',
         builder: (context, state) => const OCRScreen(),
         routes: [
            GoRoute(

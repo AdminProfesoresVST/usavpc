@@ -123,7 +123,7 @@ class _OCRScreenState extends ConsumerState<OCRScreen> {
                 // Force navigation to NEW Scan Screen
                 onPressed: () {
                     final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
-                    context.push('/ocr/scan?type=$visaType');
+                    context.push('/verification-intro/scan?type=$visaType');
                 },
                 icon: const Icon(Icons.camera_alt),
                 label: const Text('USAR CÁMARA'),
