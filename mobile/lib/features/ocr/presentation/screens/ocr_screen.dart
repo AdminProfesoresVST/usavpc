@@ -25,6 +25,13 @@ class _OCRScreenState extends ConsumerState<OCRScreen> {
   OCRMode _mode = OCRMode.intro;
   bool _isProcessing = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // Force intro mode on mount
+    _mode = OCRMode.intro;
+  }
+
   void _handleImage(CameraImage image) async {
     if (_mode != OCRMode.camera || _isProcessing) return;
 
