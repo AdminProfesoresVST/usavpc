@@ -1,5 +1,6 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter/foundation.dart'; // Import for debugPrint
 
 class VoiceManager {
   final FlutterTts _tts = FlutterTts();
@@ -10,8 +11,8 @@ class VoiceManager {
 
   Future<void> initialize() async {
     _isSttAvailable = await _stt.initialize(
-      onError: (e) => print('STT Error: $e'),
-      onStatus: (s) => print('STT Status: $s'),
+      onError: (e) => debugPrint('STT Error: $e'),
+      onStatus: (s) => debugPrint('STT Status: $s'),
     );
     await _tts.setLanguage("es-US"); // Spanish (US)
     await _tts.setSpeechRate(0.5);
@@ -32,7 +33,7 @@ class VoiceManager {
     required Function(bool) onListeningStateChanged
   }) async {
     if (!_isSttAvailable) {
-      print("STT not available");
+      debugPrint("STT not available");
       return;
     }
 
@@ -46,8 +47,11 @@ class VoiceManager {
            }
         },
         localeId: "es_US",
-        cancelOnError: true,
-        listenMode: ListenMode.confirmation,
+        listenOptions: SpeechListenOptions(
+          cancelOnError: true,
+          listenMode: ListenMode.dictation,
+          partialResults: true,
+        ),
       );
     }
   }

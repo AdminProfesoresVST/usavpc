@@ -29,8 +29,6 @@ class MrzParser {
     String? line1;
     String? line2;
 
-    final td3Pattern = RegExp(r'P<([A-Z<]{3})([A-Z<]{39})');
-    final line2Pattern = RegExp(r'([A-Z0-9<]{9})([0-9])([A-Z<]{3})([0-9]{6})([0-9])([M|F|<])([0-9]{6})([0-9])([A-Z0-9<]{14})([0-9])([0-9])');
 
     for (var i = 0; i < lines.length - 1; i++) {
         final l1 = lines[i].replaceAll(' ', '');

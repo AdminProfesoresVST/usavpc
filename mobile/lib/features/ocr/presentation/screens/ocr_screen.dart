@@ -170,8 +170,6 @@ class _ScannerOverlayShape extends ShapeBorder {
 
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
-    final width = rect.width;
-    final height = rect.height;
     final cutOutRect = _getCutOutRect(rect);
 
     final Paint paint = Paint()

@@ -9,6 +9,7 @@ void main() {
     apiBaseUrl: 'https://api.usavpc.app',
     supabaseUrl: 'https://your-prod-supabase.co',
     supabaseAnonKey: 'your-prod-key',
+    netlifyFunctionsUrl: 'https://api.usavpc.app/.netlify/functions',
   );
 
   mainCommon(prodConfig);
