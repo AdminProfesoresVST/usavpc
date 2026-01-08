@@ -11,6 +11,7 @@ import 'package:mobile/features/payments/presentation/screens/visa_type_selectio
 import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/form_wizard_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/ocr_screen.dart';
+import 'package:mobile/features/ocr/presentation/screens/ocr_camera_screen.dart'; // Import New Screen
 import 'package:mobile/features/simulator/presentation/screens/simulator_intro_screen.dart';
 import 'package:mobile/features/simulator/presentation/screens/chat_interface_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart'; // Import
@@ -117,6 +118,12 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: '/ocr',
         builder: (context, state) => const OCRScreen(),
+        routes: [
+           GoRoute(
+            path: 'scan',
+            builder: (context, state) => const OCRCameraScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/simulator',
