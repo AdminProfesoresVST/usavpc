@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile/features/ocr/logic/mrz_parser.dart';
 import 'package:mobile/features/ocr/logic/ocr_processor.dart';
 import 'package:mobile/features/ocr/presentation/widgets/camera_mrz_widget.dart';
@@ -16,6 +17,7 @@ class OCRScreen extends ConsumerStatefulWidget {
 
 class _OCRScreenState extends ConsumerState<OCRScreen> {
   final OCRProcessor _processor = OCRProcessor();
+  final ImagePicker _picker = ImagePicker();
   bool _isScanning = true;
 
   void _handleImage(CameraImage image) async {
@@ -48,6 +50,41 @@ class _OCRScreenState extends ConsumerState<OCRScreen> {
     );
   }
 
+  Future<void> _pickImageFromGallery() async {
+    // Stop scanning while picking
+    setState(() => _isScanning = false);
+
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image == null) {
+        // User canceled, resume scanning
+        if (mounted) setState(() => _isScanning = true);
+        return;
+      }
+
+      final passport = await _processor.processFilePath(image.path);
+      if (passport != null) {
+        if (mounted) {
+           _handlePassportFound(passport);
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No se detectó pasaporte. Intente de nuevo.')),
+          );
+          setState(() => _isScanning = true);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+         ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error al cargar imagen: $e')),
+          );
+         setState(() => _isScanning = true);
+      }
+    }
+  }
+
   @override
   void dispose() {
     _processor.dispose();
@@ -67,6 +104,11 @@ class _OCRScreenState extends ConsumerState<OCRScreen> {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
+             IconButton(
+               icon: const Icon(Icons.photo_library, color: Colors.white),
+               onPressed: _pickImageFromGallery,
+               tooltip: 'Subir foto',
+             ),
              // DEBUG ONLY: Remove for Strict Prod if needed, but useful for emulator without camera
              IconButton(
                icon: const Icon(Icons.bug_report, color: Colors.white24),
@@ -222,74 +264,4 @@ class _ScannerOverlayShape extends ShapeBorder {
   ShapeBorder scale(double t) => this;
 }
 
-class _StepIndicator extends StatelessWidget {
-  final int current;
-  final int total;
-  final String label;
-  final bool isActive;
 
-  const _StepIndicator({required this.current, required this.total, required this.label, this.isActive = true});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: isActive ? Colors.white : Colors.white24,
-            shape: BoxShape.circle,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            current.toString(),
-            style: TextStyle(
-              color: isActive ? const Color(0xFF112E51) : Colors.white70,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.white60,
-            fontSize: 10,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _InstructionRow extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _InstructionRow({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: const Color(0xFF112E51), size: 20),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            text,
-            style: GoogleFonts.publicSans(fontSize: 14, color: const Color(0xFF334155)),
-          ),
-        ),
-      ],
-    );
-  }
-}

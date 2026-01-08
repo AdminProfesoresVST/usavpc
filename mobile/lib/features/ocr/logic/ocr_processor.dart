@@ -11,12 +11,27 @@ class OCRProcessor {
 
   Future<PassportModel?> processImage(CameraImage image) async {
     if (_isBusy) return null;
+    final inputImage = _inputImageFromCameraImage(image);
+    if (inputImage == null) return null;
+    return _processInputImage(inputImage);
+  }
+
+  Future<PassportModel?> processFilePath(String path) async {
+    if (_isBusy) return null;
+    final inputImage = InputImage.fromFilePath(path);
+    return _processInputImage(inputImage);
+  }
+
+  Future<PassportModel?> _processInputImage(InputImage inputImage) async {
+    if (_isBusy) return null; // Double check if called directly? No, _isBusy is managed here?
+    // Wait, _isBusy should be managed in the wrapper methods or passed down.
+    // Let's manage _isBusy in wrappers to avoid race conditions if possible or just check here.
+    // Better: Helper method just does the work, wrappers manage state?
+    // But async...
+    // I'll put _isBusy check in wrapper.
     _isBusy = true;
 
     try {
-      final inputImage = _inputImageFromCameraImage(image);
-      if (inputImage == null) return null;
-
       final RecognizedText recognizedText = await _textRecognizer.processImage(inputImage);
       
       // Extract lines
