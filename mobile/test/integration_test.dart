@@ -11,11 +11,8 @@ import 'package:mobile/core/service_locator/app_config.dart';
 void main() {
   // IntegrationTestWidgetsFlutterBinding.ensureInitialized(); // Removed for headless run
 
-  testWidgets('Full App Flow: Launch -> Dashboard -> Profile', (tester) async {
+  testWidgets('App Launch Flow: Splash -> Service Selection', (tester) async {
     // 1. Launch App (Simulate main())
-    // We wrap in ProviderScope because MyApp likely expects it or we want to ensure it's there.
-    // If main() already wraps it, we might double wrap, which is usually fine or we just pump MyApp.
-    // Let's assume we construct MyApp directly.
     
     await tester.pumpWidget(
       ProviderScope(
@@ -25,29 +22,21 @@ void main() {
              apiBaseUrl: 'https://test.api',
              supabaseUrl: 'https://test.supabase',
              supabaseAnonKey: 'test-key',
+             netlifyFunctionsUrl: 'https://test.netlify',
              flavor: Flavor.dev,
           ),
         ),
       ),
     );
 
-    // 2. Wait for Dashboard Load (Async Repos)
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    // 2. Wait for Splash (3.5s) + Animation
+    await tester.pumpAndSettle(const Duration(seconds: 5));
 
-    // 3. Verify Dashboard
-    expect(find.widgetWithText(AppBar, 'Dashboard'), findsOneWidget);
-    expect(find.text('Application Status'), findsOneWidget);
-    expect(find.text('DRAFT'), findsOneWidget); // Default mock data
-
-    // 4. Navigate to Profile (Bottom Nav)
-    final profileTab = find.byIcon(Icons.person);
-    expect(profileTab, findsOneWidget);
-    await tester.tap(profileTab);
+    // 3. Verify Landing on Service Selection (Simulated User)
+    expect(find.text('Simplifica tu Trámite Consular'), findsOneWidget);
+    expect(find.text('Guía Oficial'), findsOneWidget);
     
-    await tester.pumpAndSettle();
-
-    // 5. Verify Profile Screen
-    expect(find.text('John Doe'), findsOneWidget); // Mock Profile Data
-    expect(find.text('Logout'), findsOneWidget);
+    // 4. Verify Service Cards Present
+    expect(find.text('Nueva Solicitud de Visa'), findsOneWidget);
   });
 }

@@ -11,8 +11,11 @@ import 'package:mobile/features/payments/presentation/screens/visa_type_selectio
 import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/form_wizard_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/ocr_screen.dart';
-import 'package:mobile/features/simulator/presentation/screens/simulator_screen.dart';
+import 'package:mobile/features/simulator/presentation/screens/simulator_intro_screen.dart';
+import 'package:mobile/features/simulator/presentation/screens/chat_interface_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart'; // Import
+import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart'; // Import
+import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart'; // Import
 import 'package:mobile/features/onboarding/presentation/screens/splash_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -115,8 +118,27 @@ GoRouter goRouter(GoRouterRef ref) {
         builder: (context, state) => const OCRScreen(),
       ),
       GoRoute(
+        path: '/simulator',
+        builder: (context, state) => const SimulatorIntroScreen(),
+        routes: [
+           GoRoute(
+            path: 'chat',
+            builder: (context, state) => const ChatInterfaceScreen(),
+          ),
+        ],
+      ),
+      // Alias for legacy support if needed, but better to migrate
+      GoRoute(
         path: '/sim',
-        builder: (context, state) => const SimulatorScreen(),
+        redirect: (_, __) => '/simulator', 
+      ),
+      GoRoute(
+        path: '/quick-check',
+        builder: (context, state) => const QuickCheckScreen(),
+      ),
+      GoRoute(
+        path: '/risk-audit',
+        builder: (context, state) => const RiskAuditScreen(),
       ),
       GoRoute(
         path: '/chat-intake',

@@ -19,7 +19,7 @@ void main() {
     );
 
     // Tap verify without entering text
-    await tester.tap(find.text('Sign In'));
+    await tester.tap(find.text('INGRESAR / LOGIN'));
     await tester.pump();
 
     expect(find.text('Please enter email'), findsOneWidget);

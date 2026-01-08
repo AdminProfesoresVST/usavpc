@@ -1,137 +1,227 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/features/ocr/logic/mrz_parser.dart';
+import 'package:mobile/features/ocr/logic/ocr_processor.dart';
+import 'package:mobile/features/ocr/presentation/widgets/camera_mrz_widget.dart';
 
-class OCRScreen extends ConsumerWidget {
+class OCRScreen extends ConsumerStatefulWidget {
   const OCRScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OCRScreen> createState() => _OCRScreenState();
+}
+
+class _OCRScreenState extends ConsumerState<OCRScreen> {
+  final OCRProcessor _processor = OCRProcessor();
+  bool _isScanning = true;
+
+  void _handleImage(CameraImage image) async {
+    if (!_isScanning) return;
+
+    final passport = await _processor.processImage(image);
+    if (passport != null) {
+      if (mounted) {
+        setState(() => _isScanning = false);
+        _handlePassportFound(passport);
+      }
+    }
+  }
+
+  void _handlePassportFound(PassportModel passport) {
+    // 1. Show feedback
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Pasaporte detectado: ${passport.firstName} ${passport.lastName}')),
+    );
+
+    // 2. Persist Data (TODO: Connect to FormProvider/Supabase directly)
+    // For now, passing via URL query params to Chat Intake as valid proof of life.
+    // In final prod, this should save to a proper Store.
+    
+    final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
+    
+    // 3. Navigate
+    context.push(
+      '/chat-intake?type=$visaType&surname=${passport.lastName}&passport=${passport.documentNumber}&dob=${passport.birthDate}'
+    );
+  }
+
+  @override
+  void dispose() {
+    _processor.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC), // Slate 50
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          'Escaneo de Documento',
+          'Escanear Pasaporte',
           style: GoogleFonts.publicSans(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: const Color(0xFF112E51), // Navy
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
-        centerTitle: true,
         elevation: 0,
         actions: [
-          // Skip/Next Button for Testing
-          IconButton(
-            onPressed: () {
-               final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
-               context.push('/chat-intake?type=$visaType'); // Navigates to Chat Form
-            },
-            icon: const Icon(Icons.arrow_forward),
-            tooltip: 'Saltar Escaneo (Test)',
-          ),
+             // DEBUG ONLY: Remove for Strict Prod if needed, but useful for emulator without camera
+             IconButton(
+               icon: const Icon(Icons.bug_report, color: Colors.white24),
+               onPressed: () { 
+                   // Fallback for emulator if camera fails to start (ML Kit needs real camera frame)
+                   final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
+                    context.push('/chat-intake?type=$visaType'); 
+               },
+             )
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          // 1. Progress Indicator
-          Container(
-            color: const Color(0xFF112E51),
-            padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
-            child: Row(
-              children: [
-                _StepIndicator(current: 1, total: 3, label: 'Escanear'),
-                const Expanded(child: Divider(color: Colors.white24, height: 1)),
-                _StepIndicator(current: 2, total: 3, label: 'Verificar', isActive: false),
-                const Expanded(child: Divider(color: Colors.white24, height: 1)),
-                _StepIndicator(current: 3, total: 3, label: 'Confirmar', isActive: false),
-              ],
+          // 1. Camera Feed
+          Positioned.fill(
+            child: CameraMRZWidget(onImage: _handleImage),
+          ),
+          
+          // 2. Overlay
+          Positioned.fill(
+            child: Container(
+              decoration: ShapeDecoration(
+                shape: _ScannerOverlayShape(
+                  borderColor: Colors.white,
+                  borderRadius: 10,
+                  borderLength: 30,
+                  borderWidth: 10,
+                  cutOutSize: MediaQuery.of(context).size.width * 0.8,
+                ),
+              ),
             ),
           ),
 
-          // 2. Instructions Content
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(24),
+          // 3. Instructions
+          Positioned(
+            bottom: 50,
+            left: 0,
+            right: 0,
+            child: Column(
               children: [
-                // Illustration
-                Center(
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.document_scanner_outlined, size: 60, color: const Color(0xFF112E51)),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                
                 Text(
-                  'Instrucciones de Captura',
-                  style: GoogleFonts.publicSans(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF112E51),
-                  ),
+                  'Alinee la página de datos del pasaporte',
+                  style: GoogleFonts.publicSans(color: Colors.white, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Para asegurar un procesamiento rápido, sigue estos consejos:',
-                  style: GoogleFonts.publicSans(fontSize: 14, color: Colors.grey.shade600),
-                  textAlign: TextAlign.center,
+                  'Buscando código MRZ...',
+                  style: GoogleFonts.publicSans(color: Colors.white70, fontSize: 12),
                 ),
-                const SizedBox(height: 32),
-
-                // Tips
-                _InstructionRow(icon: Icons.light_mode, text: 'Busca un lugar con buena iluminación.'),
-                const SizedBox(height: 16),
-                _InstructionRow(icon: Icons.crop_free, text: 'Alinea las 4 esquinas del pasaporte.'),
-                const SizedBox(height: 16),
-                _InstructionRow(icon: Icons.flash_off, text: 'Evita reflejos (apaga el flash si es necesario).'),
               ],
-            ),
-          ),
-
-          // 3. Action Button
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey.shade200)),
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                   // Simulate opening camera (or TODO: Implement real camera)
-                   ScaffoldMessenger.of(context).showSnackBar(
-                     const SnackBar(content: Text('Abriendo Cámara... (Simulado)')),
-                   );
-                   // In real app: context.push('/camera-view');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF112E51),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  elevation: 0,
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                     Icon(Icons.camera_alt, color: Colors.white),
-                     SizedBox(width: 8),
-                     Text('INICIAR ESCANEO', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+// Custom Overlay Shape
+class _ScannerOverlayShape extends ShapeBorder {
+  final Color borderColor;
+  final double borderWidth;
+  final double borderLength;
+  final double borderRadius;
+  final double cutOutSize;
+
+  const _ScannerOverlayShape({
+    required this.borderColor,
+    required this.borderWidth,
+    required this.borderLength,
+    required this.borderRadius,
+    required this.cutOutSize,
+  });
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+    return Path()
+      ..fillType = PathFillType.evenOdd
+      ..addPath(getOuterPath(rect), Offset.zero)
+      ..addRect(_getCutOutRect(rect));
+  }
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    return Path()..addRect(rect);
+  }
+
+  Rect _getCutOutRect(Rect rect) {
+    final width = rect.width - 40;
+    final height = width * 0.63; // Passport ID-3 ratio
+    return Rect.fromCenter(
+      center: rect.center,
+      width: width,
+      height: height,
+    );
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    final width = rect.width;
+    final height = rect.height;
+    final cutOutRect = _getCutOutRect(rect);
+
+    final Paint paint = Paint()
+      ..color = Colors.black54
+      ..style = PaintingStyle.fill;
+
+    canvas.drawPath(
+      Path.combine(
+        PathOperation.difference,
+        Path()..addRect(rect),
+        Path()..addRect(cutOutRect),
+      ),
+      paint,
+    );
+
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth;
+
+    final path = Path();
+    // Top Left
+    path.moveTo(cutOutRect.left, cutOutRect.top + borderLength);
+    path.lineTo(cutOutRect.left, cutOutRect.top + borderRadius);
+    path.quadraticBezierTo(cutOutRect.left, cutOutRect.top, cutOutRect.left + borderRadius, cutOutRect.top);
+    path.lineTo(cutOutRect.left + borderLength, cutOutRect.top);
+    
+    // Top Right
+    path.moveTo(cutOutRect.right - borderLength, cutOutRect.top);
+    path.lineTo(cutOutRect.right - borderRadius, cutOutRect.top);
+    path.quadraticBezierTo(cutOutRect.right, cutOutRect.top, cutOutRect.right, cutOutRect.top + borderRadius);
+    path.lineTo(cutOutRect.right, cutOutRect.top + borderLength);
+
+    // Bottom Right
+    path.moveTo(cutOutRect.right, cutOutRect.bottom - borderLength);
+    path.lineTo(cutOutRect.right, cutOutRect.bottom - borderRadius);
+    path.quadraticBezierTo(cutOutRect.right, cutOutRect.bottom, cutOutRect.right - borderRadius, cutOutRect.bottom);
+    path.lineTo(cutOutRect.right - borderLength, cutOutRect.bottom);
+
+    // Bottom Left
+    path.moveTo(cutOutRect.left + borderLength, cutOutRect.bottom);
+    path.lineTo(cutOutRect.left + borderRadius, cutOutRect.bottom);
+    path.quadraticBezierTo(cutOutRect.left, cutOutRect.bottom, cutOutRect.left, cutOutRect.bottom - borderRadius);
+    path.lineTo(cutOutRect.left, cutOutRect.bottom - borderLength);
+
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  ShapeBorder scale(double t) => this;
 }
 
 class _StepIndicator extends StatelessWidget {

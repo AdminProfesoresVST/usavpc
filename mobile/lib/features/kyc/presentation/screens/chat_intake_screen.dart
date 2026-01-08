@@ -23,10 +23,28 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
   @override
   void initState() {
     super.initState();
-    // Initial Greeting - This can be local or fetched. Keeping local for speed.
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _addBotMessage('¡Hola! Soy tu asistente virtual. Vamos a completar tu formulario para la visa ${widget.visaType.toUpperCase()}.');
+    // Start Chat with Context from OCR if available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeChat();
     });
+  }
+
+  Future<void> _initializeChat() async {
+    // Check for OCR data in URL
+    final state = GoRouterState.of(context);
+    final surname = state.uri.queryParameters['surname'];
+    final passport = state.uri.queryParameters['passport'];
+    final dob = state.uri.queryParameters['dob'];
+
+    final initialContext = {
+       'visa_type': widget.visaType,
+       if (surname != null) 'surname': surname,
+       if (passport != null) 'passport_number': passport,
+       if (dob != null) 'date_of_birth': dob,
+    };
+
+    // Send empty message to trigger AI Greeting with Context
+    _sendMessage("", customContext: initialContext); 
   }
 
   void _addBotMessage(String text) {
@@ -37,25 +55,33 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
     _scrollToBottom();
   }
 
-  void _addUserMessage(String text) async {
-    setState(() {
-      _messages.add(ChatMessage(text: text, isUser: true));
-      _isLoading = true;
-    });
-    _scrollToBottom();
+  void _sendMessage(String text, {Map<String, dynamic>? customContext}) async {
+    if (text.isNotEmpty) {
+      if (mounted) setState(() {
+        _messages.add(ChatMessage(text: text, isUser: true));
+        _isLoading = true;
+      });
+      _scrollToBottom();
+    } else {
+        // Silent trigger (loading state only)
+         if (mounted) setState(() => _isLoading = true);
+    }
 
     try {
-      // Real API Call
+      // Real API Call with Production Logic
       final response = await ref.read(aiRepositoryProvider).sendMessage(
         message: text,
         visaType: widget.visaType,
+        extraContext: customContext,
       );
       _addBotMessage(response);
     } catch (e) {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString().replaceAll("Exception: ", "")}')),
-      );
+      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString().replaceAll("Exception: ", "")}')),
+        );
+      }
     }
   }
 
@@ -75,7 +101,7 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
     if (_isLoading) return; // Prevent double send
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-    _addUserMessage(text);
+    _sendMessage(text);
     _controller.clear();
   }
 

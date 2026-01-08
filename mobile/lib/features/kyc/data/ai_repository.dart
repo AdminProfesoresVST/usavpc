@@ -24,6 +24,7 @@ class AiRepository {
     required String message, 
     required String visaType,
     String mode = 'standard', // Default to standard (Intake)
+    Map<String, dynamic>? extraContext,
   }) async {
     try {
       final session = Supabase.instance.client.auth.currentSession;
@@ -37,7 +38,10 @@ class AiRepository {
           'answer': message,
           'mode': mode, // Dynamic Mode
           'locale': 'es',
-          'context': {'visa_type': visaType},
+          'context': {
+            'visa_type': visaType,
+            ...?extraContext,
+          },
         },
         options: Options(
           headers: {

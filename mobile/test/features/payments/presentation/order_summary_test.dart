@@ -17,7 +17,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('Order Summary'), findsOneWidget);
-    expect(find.text('B1/B2 Tourist Visa'), findsOneWidget);
+    expect(find.text('US Visa Strategy Review (DIY)'), findsOneWidget);
     expect(find.text('Total'), findsOneWidget);
     expect(find.text('\$49.00'), findsOneWidget); // 39 + 10
     expect(find.text('Pay with Apple Pay'), findsOneWidget);
