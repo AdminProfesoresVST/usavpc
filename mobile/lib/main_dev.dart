@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mobile/core/service_locator/app_config.dart';
 import 'package:mobile/main.dart';
 

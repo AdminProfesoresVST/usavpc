@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mobile/core/service_locator/app_config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:mobile/core/service_locator/app_config_provider.dart';
@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 part 'ai_repository.g.dart';
 
 @riverpod
-AiRepository aiRepository(AiRepositoryRef ref) {
+AiRepository aiRepository(Ref ref) {
   final config = ref.watch(appConfigProvider);
   return AiRepository(Dio(), config.netlifyFunctionsUrl, config.supabaseAnonKey);
 }

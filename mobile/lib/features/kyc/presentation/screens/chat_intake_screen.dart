@@ -57,14 +57,18 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
 
   void _sendMessage(String text, {Map<String, dynamic>? customContext}) async {
     if (text.isNotEmpty) {
-      if (mounted) setState(() {
-        _messages.add(ChatMessage(text: text, isUser: true));
-        _isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          _messages.add(ChatMessage(text: text, isUser: true));
+          _isLoading = true;
+        });
+      }
       _scrollToBottom();
     } else {
         // Silent trigger (loading state only)
-         if (mounted) setState(() => _isLoading = true);
+         if (mounted) {
+           setState(() => _isLoading = true);
+         }
     }
 
     try {
@@ -76,7 +80,9 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
       );
       _addBotMessage(response);
     } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${e.toString().replaceAll("Exception: ", "")}')),
@@ -215,7 +221,6 @@ class _ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(message);
     final isUser = message.isUser;
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,

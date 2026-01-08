@@ -38,11 +38,14 @@ class VoiceManager {
     }
 
     if (!_isListening) {
+      _isListening = true;
       onListeningStateChanged(true);
+      
       await _stt.listen(
         onResult: (result) {
            onResult(result.recognizedWords);
            if (result.finalResult) {
+             _isListening = false;
              onListeningStateChanged(false);
            }
         },
@@ -57,6 +60,7 @@ class VoiceManager {
   }
 
   Future<void> stopListening() async {
+    _isListening = false;
     await _stt.stop();
   }
 }

@@ -1,5 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
@@ -32,6 +32,6 @@ class AuthNotifier extends _$AuthNotifier {
 }
 
 @riverpod
-Stream<String?> authState(AuthStateRef ref) {
+Stream<String?> authState(Ref ref) {
   return ref.watch(authRepositoryProvider).authStateChanges;
 }

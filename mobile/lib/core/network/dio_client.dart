@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile/core/service_locator/app_config.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   // We assume AppConfig is provided globally, but for now we'll rely on it being passed or accessed.
