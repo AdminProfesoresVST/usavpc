@@ -8,6 +8,7 @@ class AppTheme {
   static const surfaceWhite = Color(0xFFFFFFFF); 
   static const backgroundGrey = Color(0xFFF9FAFB); // Subtler Grey
   static const errorRed = Color(0xFFD32F2F);     // Mature Red
+  static const visaGold = Color(0xFFFDB813);     // Visa Gold
   
   // Exposing Action Blue for specific buttons if needed, though Navy is preferred main
   static const actionBlue = Color(0xFF005EA2);

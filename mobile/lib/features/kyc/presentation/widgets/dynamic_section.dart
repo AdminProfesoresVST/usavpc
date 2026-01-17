@@ -47,8 +47,16 @@ class DynamicSection extends StatelessWidget {
              ),
              readOnly: true,
              onTap: () async {
-               // Mock Date Picker
-               onChanged(key, '2023-01-01');
+               // PRODUCTION: Real date picker dialog
+               final picked = await showDatePicker(
+                 context: context,
+                 initialDate: DateTime.now(),
+                 firstDate: DateTime(1900),
+                 lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+               );
+               if (picked != null) {
+                 onChanged(key, picked.toIso8601String().split('T').first);
+               }
              },
           );
         }

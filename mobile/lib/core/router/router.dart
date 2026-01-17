@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -10,8 +11,8 @@ import 'package:mobile/features/payments/presentation/screens/service_selection_
 import 'package:mobile/features/payments/presentation/screens/visa_type_selection_screen.dart';
 import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/form_wizard_screen.dart';
-import 'package:mobile/features/ocr/presentation/screens/ocr_screen.dart';
-import 'package:mobile/features/ocr/presentation/screens/ocr_camera_screen.dart'; // Import New Screen
+import 'package:mobile/features/ocr/presentation/screens/verification_landing_screen.dart';
+import 'package:mobile/features/ocr/presentation/screens/verification_scanner_screen.dart';
 import 'package:mobile/features/simulator/presentation/screens/simulator_intro_screen.dart';
 import 'package:mobile/features/simulator/presentation/screens/chat_interface_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart'; // Import
@@ -33,7 +34,7 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/splash',
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode,
     redirect: (context, state) {
       final isLoggedIn = authState.valueOrNull != null;
       final location = state.uri.toString();
@@ -116,14 +117,12 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const FormWizardScreen(),
       ),
       GoRoute(
-        path: '/verification-intro',
-        builder: (context, state) => const OCRScreen(),
-        routes: [
-           GoRoute(
-            path: 'scan',
-            builder: (context, state) => const OCRCameraScreen(),
-          ),
-        ],
+        path: '/identity/start',
+        builder: (context, state) => const VerificationLandingScreen(),
+      ),
+      GoRoute(
+        path: '/identity/capture',
+        builder: (context, state) => const VerificationScannerScreen(),
       ),
       GoRoute(
         path: '/simulator',

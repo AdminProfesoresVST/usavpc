@@ -44,7 +44,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             title: 'Turismo, Negocios y Visitas',
             description: 'Vacaciones, compras, visitar familia o reuniones.',
             icon: Icons.beach_access_outlined, // Fine line
-            onTap: () => context.push('/verification-intro'),
+            onTap: () => context.push('/identity/start'),
           ),
           
           const SizedBox(height: 12),
@@ -54,7 +54,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             title: 'Renovación de Visa',
             description: 'Renovar una visa vencida o por vencer.',
             icon: Icons.refresh_outlined, // Fine line
-            onTap: () => context.push('/verification-intro'),
+            onTap: () => context.push('/identity/start'),
           ),
 
           const SizedBox(height: 12),
@@ -64,7 +64,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             title: 'Trabajo Temporal',
             description: 'Agricultura, construcción u otros trabajos estacionales.',
             icon: Icons.work_outline, // Fine line
-            onTap: () => context.push('/verification-intro?type=h2'), // Proceed to flow
+            onTap: () => context.push('/identity/start?type=h2'), // Proceed to flow
           ),
 
           const SizedBox(height: 12),
@@ -74,7 +74,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             title: 'Estudiante',
             description: 'Estudios académicos o de idiomas.',
             icon: Icons.school_outlined, // Fine line
-            onTap: () => context.push('/verification-intro?type=f1'), // Proceed to flow
+            onTap: () => context.push('/identity/start?type=f1'), // Proceed to flow
           ),
         ],
       ),

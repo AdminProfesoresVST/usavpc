@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -119,15 +120,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: const Text('Crear una cuenta / Create Account'),
                           ),
                           const Divider(),
-                          TextButton.icon(
-                            icon: const Icon(Icons.developer_mode),
-                            label: const Text('Quick Fill (Test User)'),
-                            onPressed: () {
-                              // Verified cloud user (created via verification script)
-                              _emailController.text = 'dev_applicant@gmail.com';
-                              _passwordController.text = 'password';
-                            },
-                          ),
+                          // SECURITY: Only show test credentials in debug mode
+                          if (kDebugMode)
+                            TextButton.icon(
+                              icon: const Icon(Icons.developer_mode),
+                              label: const Text('Quick Fill (Test User)'),
+                              onPressed: () {
+                                // Verified cloud user (created via verification script)
+                                _emailController.text = 'dev_applicant@gmail.com';
+                                _passwordController.text = 'password';
+                              },
+                            ),
                       ],
                     ),
                   ),

@@ -1,42 +1,31 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/features/payments/domain/entities/service_plan.dart';
 import 'package:mobile/features/payments/domain/repositories/payments_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Production-ready payments repository that fetches real data from Supabase.
+/// Migration: 2026-01-17 - Replaced hardcoded mock data with real DB calls.
 class PaymentsRepositoryImpl implements PaymentsRepository {
-  // In a real app, this would inject SupabaseClient
-  // final SupabaseClient _supabase; 
+  final SupabaseClient _supabase;
+
+  PaymentsRepositoryImpl(this._supabase);
 
   @override
   Future<List<ServicePlan>> getServicePlans() async {
-    // SIMULATING DB CALL - TO BE REPLACED WITH SUPABASE SELECT
-    // await _supabase.from('plans').select();
-    
-    await Future.delayed(const Duration(milliseconds: 500)); // Simulate network
-    
-    return [
-      const ServicePlan(
-        id: 'diy',
-        title: 'US Visa Strategy Review (DIY)',
-        price: 39.00,
-        description: 'Comprehensive analysis and VisaScore™ report. Best for self-starters.',
-        isPopular: true,
-      ),
-      const ServicePlan(
-        id: 'full',
-        title: 'US Visa Full Service',
-        price: 99.00,
-        description: 'Complete application management and priority review.',
-      ),
-       const ServicePlan(
-        id: 'simulator',
-        title: 'AI Interview Simulator',
-        price: 29.00,
-        description: '30 Days of unlimited practice with our AI Officer.',
-      ),
-    ];
+    // PRODUCTION: Real database query
+    final response = await _supabase
+        .from('plans')
+        .select()
+        .eq('is_active', true)
+        .order('sort_order', ascending: true);
+
+    return (response as List<dynamic>)
+        .map((json) => ServicePlan.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }
 
 final paymentsRepositoryProvider = Provider<PaymentsRepository>((ref) {
-  return PaymentsRepositoryImpl();
+  return PaymentsRepositoryImpl(ref.watch(supabaseClientProvider));
 });

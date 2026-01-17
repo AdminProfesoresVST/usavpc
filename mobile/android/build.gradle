@@ -6,6 +6,7 @@ ext {
         targetSdkVersion: 35,
         ndkVersion: "26.1.10909125"
     ]
+    ext.kotlin_version = '2.1.0'
 }
 
 allprojects {

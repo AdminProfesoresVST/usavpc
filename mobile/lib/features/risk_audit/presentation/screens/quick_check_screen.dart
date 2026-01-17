@@ -238,12 +238,15 @@ class _RadioOption extends StatelessWidget {
               size: 18,
             ),
             const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                color: selected ? const Color(0xFF112E51) : Colors.grey.shade700,
-                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                fontSize: 13,
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: selected ? const Color(0xFF112E51) : Colors.grey.shade700,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 13,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

@@ -1,33 +1,114 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/features/dashboard/domain/entities/dashboard_data.dart';
 import 'package:mobile/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Production-ready dashboard repository that fetches real data from Supabase.
+/// Migration: 2026-01-17 - Replaced hardcoded mock data with real DB calls.
 class DashboardRepositoryImpl implements DashboardRepository {
+  final SupabaseClient _supabase;
+
+  DashboardRepositoryImpl(this._supabase);
+
   @override
   Future<DashboardData> getDashboardData() async {
-    // Simulate DB Fetch
-    await Future.delayed(const Duration(milliseconds: 500));
+    // Get current user's application
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId == null) {
+      // Return default state for non-authenticated users
+      return const DashboardData(
+        status: 'NOT_STARTED',
+        progress: 0.0,
+        lastEdited: 'N/A',
+        nextSteps: [
+          DashboardAction(
+            title: 'Iniciar Solicitud',
+            subtitle: 'Comienza tu proceso de visa',
+            iconCode: 'start',
+          ),
+        ],
+      );
+    }
+
+    // PRODUCTION: Real database query
+    final response = await _supabase
+        .from('applications')
+        .select()
+        .eq('user_id', userId)
+        .order('updated_at', ascending: false)
+        .limit(1)
+        .maybeSingle();
+
+    if (response == null) {
+      return const DashboardData(
+        status: 'NOT_STARTED',
+        progress: 0.0,
+        lastEdited: 'N/A',
+        nextSteps: [
+          DashboardAction(
+            title: 'Iniciar Solicitud',
+            subtitle: 'Comienza tu proceso de visa',
+            iconCode: 'start',
+          ),
+        ],
+      );
+    }
+
+    // Parse application data
+    final status = response['status'] as String? ?? 'draft';
+    final step = response['step'] as int? ?? 1;
+    final updatedAt = response['updated_at'] as String?;
     
-    return const DashboardData(
-      status: 'DRAFT',
-      progress: 0.2, // 20%
-      lastEdited: '2h ago',
-      nextSteps: [
-        DashboardAction(
-          title: 'Upload Documents', 
-          subtitle: 'Passport and Photo needed', 
-          iconCode: 'upload_file'
-        ),
-        DashboardAction(
-          title: 'Pay Visa Details', 
-          subtitle: 'Select your plan', 
-          iconCode: 'payment'
-        ),
-      ],
+    // Calculate progress based on step (assuming 5 total steps)
+    final progress = (step / 5.0).clamp(0.0, 1.0);
+    
+    // Format last edited time
+    String lastEdited = 'N/A';
+    if (updatedAt != null) {
+      final date = DateTime.parse(updatedAt);
+      final diff = DateTime.now().difference(date);
+      if (diff.inMinutes < 60) {
+        lastEdited = '${diff.inMinutes}m ago';
+      } else if (diff.inHours < 24) {
+        lastEdited = '${diff.inHours}h ago';
+      } else {
+        lastEdited = '${diff.inDays}d ago';
+      }
+    }
+
+    // Determine next steps based on current status
+    List<DashboardAction> nextSteps = [];
+    if (status == 'draft') {
+      if (response['has_strategy_check'] != true) {
+        nextSteps.add(const DashboardAction(
+          title: 'Verificación de Estrategia',
+          subtitle: 'Análisis de riesgo con IA',
+          iconCode: 'assessment',
+        ));
+      }
+      nextSteps.add(const DashboardAction(
+        title: 'Subir Documentos',
+        subtitle: 'Pasaporte y foto requeridos',
+        iconCode: 'upload_file',
+      ));
+    } else if (status == 'pending_payment') {
+      nextSteps.add(const DashboardAction(
+        title: 'Completar Pago',
+        subtitle: 'Selecciona tu plan',
+        iconCode: 'payment',
+      ));
+    }
+
+    return DashboardData(
+      status: status.toUpperCase(),
+      progress: progress,
+      lastEdited: lastEdited,
+      nextSteps: nextSteps,
     );
   }
 }
 
 final dashboardRepositoryProvider = Provider<DashboardRepository>((ref) {
-  return DashboardRepositoryImpl();
+  return DashboardRepositoryImpl(ref.watch(supabaseClientProvider));
 });
