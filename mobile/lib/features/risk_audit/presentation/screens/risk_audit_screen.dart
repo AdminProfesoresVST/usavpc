@@ -3,31 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/features/risk_audit/logic/risk_evaluator.dart';
+import 'package:mobile/features/risk_audit/presentation/providers/application_provider.dart';
 
-class RiskAuditScreen extends ConsumerStatefulWidget {
+class RiskAuditScreen extends ConsumerWidget {
   const RiskAuditScreen({super.key});
 
   @override
-  ConsumerState<RiskAuditScreen> createState() => _RiskAuditScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userAppAsync = ref.watch(userApplicationProvider);
 
-class _RiskAuditScreenState extends ConsumerState<RiskAuditScreen> {
-  late Future<RiskEvaluation> _auditFuture;
-  final RiskEvaluator _evaluator = RiskEvaluator();
-
-  @override
-  void initState() {
-    super.initState();
-    _auditFuture = _evaluator.evaluate(
-      visaType: 'B1/B2',
-      age: '30', // TODO: Get from State
-      hasStrongTies: true, // TODO: Get from State
-      hasTravelHistory: false, // TODO: Get from State
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
@@ -39,18 +23,20 @@ class _RiskAuditScreenState extends ConsumerState<RiskAuditScreen> {
         foregroundColor: const Color(0xFF112E51),
         elevation: 1,
       ),
-      body: FutureBuilder<RiskEvaluation>(
-        future: _auditFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          
-          if (snapshot.hasError) {
-             return Center(child: Text("Error analizando datos: ${snapshot.error}"));
-          }
+      body: userAppAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text("Error cargando datos: $e")),
+        data: (userApp) {
+          // PRODUCTION: Use real user data from Supabase
+          final evaluator = RiskEvaluator();
+          final evaluation = evaluator.evaluate(
+            visaType: userApp?.visaType ?? 'B1/B2',
+            age: userApp?.age,
+            nationality: userApp?.formData['nationality'] as String?,
+            hasStrongTies: userApp?.hasStrongTies ?? false,
+            hasTravelHistory: userApp?.hasTravelHistory ?? false,
+          );
 
-          final evaluation = snapshot.data!;
           final isHighApproval = evaluation.score > 70;
 
           return SingleChildScrollView(
@@ -115,19 +101,24 @@ class _RiskAuditScreenState extends ConsumerState<RiskAuditScreen> {
                 
                 ElevatedButton(
                   onPressed: () {
-                     context.go('/'); 
+                     context.go('/simulator'); 
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF112E51),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('VOLVER AL INICIO', style: TextStyle(color: Colors.white)),
-                )
+                  child: const Text('CONTINUAR AL SIMULADOR', style: TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: () => context.go('/'),
+                  child: const Text('Volver al inicio'),
+                ),
               ],
             ),
           );
-        }
+        },
       ),
     );
   }

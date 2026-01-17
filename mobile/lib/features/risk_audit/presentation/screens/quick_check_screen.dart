@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/features/risk_audit/presentation/providers/application_provider.dart';
 
 class QuickCheckScreen extends ConsumerStatefulWidget {
   const QuickCheckScreen({super.key});
@@ -14,10 +15,21 @@ class QuickCheckScreen extends ConsumerStatefulWidget {
 class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
   final _formKey = GlobalKey<FormState>();
   final _ds160Controller = TextEditingController();
-  bool _hasDs160 = true; // Product B assumes they have it, but maybe checking?
+  String _selectedVisaType = 'B1/B2';
+  bool _hasDs160 = true;
 
   @override
   Widget build(BuildContext context) {
+    final quickCheckState = ref.watch(quickCheckNotifierProvider);
+
+    ref.listen(quickCheckNotifierProvider, (previous, next) {
+      if (next.hasError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${next.error}')),
+        );
+      }
+    });
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
@@ -25,7 +37,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
           'Auditoría Preliminar',
           style: GoogleFonts.publicSans(fontWeight: FontWeight.w600, fontSize: 18),
         ),
-        backgroundColor: AppTheme.navyPrimary, // Navy
+        backgroundColor: AppTheme.navyPrimary,
         foregroundColor: Colors.white,
         centerTitle: true,
       ),
@@ -71,13 +83,16 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: 'B1/B2',
+                    value: _selectedVisaType,
+                    isExpanded: true,
                     items: const [
                       DropdownMenuItem(value: 'B1/B2', child: Text('B1/B2 - Turismo y Negocios')),
                       DropdownMenuItem(value: 'F1', child: Text('F1 - Estudiante')),
                       DropdownMenuItem(value: 'H2', child: Text('H2 - Trabajo Temporal')),
                     ],
-                    onChanged: (val) {},
+                    onChanged: (val) {
+                      if (val != null) setState(() => _selectedVisaType = val);
+                    },
                   ),
                 ),
               ),
@@ -163,20 +178,26 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               SizedBox(
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_hasDs160 && !_formKey.currentState!.validate()) return;
-                    _submitForm();
-                  },
+                  onPressed: quickCheckState.isLoading ? null : _submitForm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.actionBlue, // Official Blue
+                    backgroundColor: AppTheme.actionBlue,
                     foregroundColor: Colors.white,
-                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)), // Rectangular
+                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                      elevation: 0,
                   ),
-                  child: Text(
-                    'COMENZAR ANÁLISIS',
-                    style: GoogleFonts.publicSans(fontWeight: FontWeight.bold, letterSpacing: 0.5),
-                  ),
+                  child: quickCheckState.isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : Text(
+                          'COMENZAR ANÁLISIS',
+                          style: GoogleFonts.publicSans(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                        ),
                 ),
               ),
             ],
@@ -186,25 +207,23 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
     );
   }
 
-  void _submitForm() {
-    // TODO: Save data to provider/repo
-    // Navigate to Risk Audit (Loading/Result)
-    // For now, let's assume we go to Simulator directly or a placeholder
-    // In plan: Quick Check -> Risk Audit -> Simulator
-    
-    // Simulating Analysis delay
-    showDialog(
-      context: context, 
-      barrierDismissible: false,
-      builder: (c) => const Center(child: CircularProgressIndicator())
+  void _submitForm() async {
+    if (_hasDs160 && !_formKey.currentState!.validate()) return;
+
+    // PRODUCTION: Save quick check data to Supabase
+    await ref.read(quickCheckNotifierProvider.notifier).saveQuickCheck(
+      visaType: _selectedVisaType,
+      ds160Code: _hasDs160 ? _ds160Controller.text : null,
+      hasDs160: _hasDs160,
     );
 
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pop(context); // Close dialog
-        context.push('/risk-audit'); // Go to Risk Audit
-      }
-    });
+    // Invalidate user application to refresh data
+    ref.invalidate(userApplicationProvider);
+
+    // Navigate to Risk Audit
+    if (mounted) {
+      context.push('/risk-audit');
+    }
   }
 }
 
