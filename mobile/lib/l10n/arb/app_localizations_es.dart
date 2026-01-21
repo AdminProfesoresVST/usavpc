@@ -233,9 +233,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tips => 'Tips:';
 
   @override
-  String example(String text) {
-    return 'Ejemplo: $text';
-  }
+  String get example => 'Ejemplo';
 
   @override
   String get preliminaryAuditTitle => 'Auditoría Preliminar';
@@ -464,4 +462,38 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get detected => '¡Detectado!';
+
+  @override
+  String get navigatingTo => 'Navegando a';
+
+  @override
+  String get pageLoaded => 'Página cargada';
+
+  @override
+  String get networkError => 'Error de red';
+
+  @override
+  String get detectingFormFields => 'Detectando campos del formulario...';
+
+  @override
+  String get injectingData => 'Inyectando datos en formulario...';
+
+  @override
+  String fieldsFilled(int filled, int notFound) {
+    return 'Campos llenados: $filled | No encontrados: $notFound';
+  }
+
+  @override
+  String get injectionComplete => 'Inyección completada';
+
+  @override
+  String get automationReady =>
+      'Automatización lista. Revise los datos y continúe manualmente.';
+
+  @override
+  String get processComplete =>
+      'PROCESO COMPLETADO - Verifique los datos antes de continuar';
+
+  @override
+  String get injectionError => 'Error durante inyección';
 }

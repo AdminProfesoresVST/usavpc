@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/network/supabase_client.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 
-/// AI-powered chat intake that asks DS-160 questions one at a time.
-/// Fetches questions from database, shows tips, and saves responses.
+/// AI-powered chat intake with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class AiIntakeScreen extends ConsumerStatefulWidget {
   const AiIntakeScreen({super.key});
 
@@ -34,7 +36,6 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     try {
       final supabase = ref.read(supabaseClientProvider);
       
-      // Load user's existing form data
       final userId = supabase.auth.currentUser?.id;
       if (userId != null) {
         final app = await supabase
@@ -47,7 +48,6 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         }
       }
 
-      // Load questions (skip OCR fields if already captured)
       final questions = await supabase
           .from('ds160_questions')
           .select()
@@ -56,11 +56,9 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
           .order('section_order');
 
       _questions = (questions as List).where((q) {
-        // Skip if OCR already captured and we have the data
         if (q['skip_if_ocr'] == true && _formData[q['field_key']] != null) {
           return false;
         }
-        // Skip if depends on another field that doesn't match
         if (q['depends_on'] != null && q['depends_on_value'] != null) {
           final dependValue = _formData[q['depends_on']];
           if (dependValue != q['depends_on_value']) {
@@ -71,12 +69,10 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       }).toList().cast<Map<String, dynamic>>();
 
       setState(() => _isLoading = false);
-      
-      // Start conversation
       _askNextQuestion();
     } catch (e) {
       setState(() => _isLoading = false);
-      _addBotMessage('Error cargando preguntas: $e');
+      _addBotMessage(context.l10n.loadingQuestionsError(e.toString()));
     }
   }
 
@@ -120,8 +116,6 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     final question = _questions[_currentQuestionIndex];
     final tips = (question['tips'] as List?)?.cast<String>() ?? [];
     final example = question['example_good'] as String?;
-    
-    // Use friendly question format for chat
     final questionText = question['question_friendly'] as String;
     
     _addBotMessage(questionText, tips: tips, example: example);
@@ -140,20 +134,17 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       final question = _questions[_currentQuestionIndex];
       final fieldKey = question['field_key'] as String;
       
-      // Validate response
       final validationRegex = question['validation_regex'] as String?;
       if (validationRegex != null && !RegExp(validationRegex).hasMatch(text)) {
         final errorMsg = question['validation_error'] as String? ?? 
-            'Hmm, eso no parece correcto. ¿Puedes verificar?';
+            context.l10n.validationError;
         _addBotMessage(errorMsg);
         setState(() => _isSending = false);
         return;
       }
 
-      // Save to form data
       _formData[fieldKey] = text;
       
-      // Save to database
       final supabase = ref.read(supabaseClientProvider);
       final userId = supabase.auth.currentUser?.id;
       if (userId != null) {
@@ -164,23 +155,18 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         }, onConflict: 'user_id');
       }
 
-      // Move to next question
       _currentQuestionIndex++;
       _askNextQuestion();
     } catch (e) {
-      _addBotMessage('Error guardando: $e');
+      _addBotMessage(context.l10n.savingError(e.toString()));
     } finally {
       setState(() => _isSending = false);
     }
   }
 
   void _completeIntake() {
-    _addBotMessage(
-      '🎉 ¡Excelente! Has completado todas las preguntas. '
-      'Tu información está guardada y lista para generar tu formulario DS-160.',
-    );
+    _addBotMessage(context.l10n.intakeComplete);
     
-    // Show completion button
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
@@ -197,34 +183,19 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final totalQuestions = _questions.length;
     final answeredQuestions = _currentQuestionIndex;
     final progress = totalQuestions > 0 ? answeredQuestions / totalQuestions : 0.0;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        title: Column(
-          children: [
-            Text('Asistente DS-160', style: GoogleFonts.publicSans(fontSize: 16, fontWeight: FontWeight.bold)),
-            if (!_isLoading)
-              Text(
-                'Pregunta ${answeredQuestions + 1} de $totalQuestions',
-                style: GoogleFonts.publicSans(fontSize: 11, color: Colors.white70),
-              ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF112E51),
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        bottom: _isLoading ? null : PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(
-            value: progress,
-            backgroundColor: Colors.white24,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.greenAccent),
-          ),
-        ),
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeaderWithProgress(
+        title: l10n.ds160Assistant,
+        subtitle: totalQuestions > 0 
+            ? l10n.questionProgress(answeredQuestions + 1, totalQuestions)
+            : null,
+        progress: progress,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -241,19 +212,19 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                     ),
                   ),
                 ),
-                _buildInputArea(),
+                _buildInputArea(l10n),
               ],
             ),
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea(dynamic l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2)),
         ],
       ),
       child: SafeArea(
@@ -263,7 +234,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
-                  hintText: 'Escribe tu respuesta...',
+                  hintText: l10n.typeYourResponse,
                   hintStyle: TextStyle(color: Colors.grey.shade400),
                   filled: true,
                   fillColor: Colors.grey.shade50,
@@ -280,7 +251,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
             const SizedBox(width: 8),
             Container(
               decoration: const BoxDecoration(
-                color: Color(0xFF112E51),
+                color: AppTheme.navyPrimary,
                 shape: BoxShape.circle,
               ),
               child: IconButton(
@@ -325,6 +296,8 @@ class _ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
     if (message.isAction) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -335,7 +308,7 @@ class _ChatBubble extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: const Text('VER MI SOLICITUD', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text(l10n.viewMyApplication, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         ),
       );
     }
@@ -347,11 +320,11 @@ class _ChatBubble extends StatelessWidget {
         crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 4),
+            margin: const EdgeInsetsDirectional.only(bottom: 4),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
             decoration: BoxDecoration(
-              color: isUser ? const Color(0xFF112E51) : Colors.white,
+              color: isUser ? AppTheme.navyPrimary : Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(16),
                 topRight: const Radius.circular(16),
@@ -359,22 +332,20 @@ class _ChatBubble extends StatelessWidget {
                 bottomRight: isUser ? Radius.zero : const Radius.circular(16),
               ),
               boxShadow: isUser ? null : [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
               ],
             ),
             child: Text(
               message.text,
-              style: GoogleFonts.publicSans(
-                color: isUser ? Colors.white : const Color(0xFF334155),
-                fontSize: 14,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isUser ? Colors.white : Colors.grey.shade700,
                 height: 1.4,
               ),
             ),
           ),
-          // Tips section
           if (message.tips != null && message.tips!.isNotEmpty)
             Container(
-              margin: const EdgeInsets.only(bottom: 8, top: 4),
+              margin: const EdgeInsetsDirectional.only(bottom: 8, top: 4),
               padding: const EdgeInsets.all(12),
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
               decoration: BoxDecoration(
@@ -389,12 +360,12 @@ class _ChatBubble extends StatelessWidget {
                     children: [
                       Icon(Icons.lightbulb, size: 16, color: Colors.amber.shade700),
                       const SizedBox(width: 6),
-                      Text('Tips:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.amber.shade800, fontSize: 12)),
+                      Text(l10n.tips, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.amber.shade800, fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 6),
                   ...message.tips!.map((tip) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
+                    padding: const EdgeInsetsDirectional.only(bottom: 4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -405,7 +376,7 @@ class _ChatBubble extends StatelessWidget {
                   )),
                   if (message.example != null) ...[
                     const SizedBox(height: 6),
-                    Text('Ejemplo: ${message.example}', 
+                    Text('${l10n.example}: ${message.example}', 
                       style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.amber.shade800)),
                   ],
                 ],

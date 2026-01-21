@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/features/rpa/logic/script_injector.dart';
 import 'package:mobile/features/rpa/presentation/providers/automation_provider.dart';
 import 'package:mobile/features/rpa/presentation/widgets/hacking_mode_overlay.dart';
 
-/// Production-ready DS-160 automation screen with WebView and JavaScript injection.
-/// This screen loads the user's form data from Supabase and auto-fills the DS-160 form.
+/// Production-ready DS-160 automation screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n per audit requirements
 class AutomationProgressScreen extends ConsumerStatefulWidget {
   const AutomationProgressScreen({super.key});
 
@@ -26,13 +27,14 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
   void initState() {
     super.initState();
     _initializeWebView();
-    // Load user data from Supabase
     Future.microtask(() {
       ref.read(automationProvider.notifier).loadUserData();
     });
   }
 
   void _initializeWebView() {
+    final l10n = context.l10n;
+    
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
@@ -41,21 +43,20 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
           onPageStarted: (String url) {
             ref.read(automationProvider.notifier).updateProgress(
               0.25,
-              'Navegando a: ${_shortenUrl(url)}',
+              '${l10n.navigatingTo}: ${_shortenUrl(url)}',
             );
           },
           onPageFinished: (String url) {
             setState(() => _isWebViewReady = true);
             ref.read(automationProvider.notifier).updateProgress(
               0.3,
-              'Página cargada: ${_shortenUrl(url)}',
+              '${l10n.pageLoaded}: ${_shortenUrl(url)}',
             );
-            // Auto-inject when page loads and we have data
             _attemptAutoFill();
           },
           onWebResourceError: (WebResourceError error) {
             ref.read(automationProvider.notifier).recordError(
-              'Error de red: ${error.description}',
+              '${l10n.networkError}: ${error.description}',
             );
           },
         ),
@@ -71,39 +72,35 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
   }
 
   Future<void> _attemptAutoFill() async {
+    final l10n = context.l10n;
     final state = ref.read(automationProvider);
     
     if (_hasInjected || state.formData == null || state.formData!.isEmpty) {
       return;
     }
 
-    // Detect current page
     try {
       final pageInfoJson = await _webViewController.runJavaScriptReturningResult(
         _injector.generatePageDetectionScript(),
       );
       
-      // Log page info for debugging
       debugPrint('Page info: $pageInfoJson');
       
       ref.read(automationProvider.notifier).updateProgress(
         0.4,
-        'Detectando campos del formulario...',
+        l10n.detectingFormFields,
       );
 
-      // Small delay for page scripts to initialize
       await Future.delayed(const Duration(milliseconds: 500));
 
-      // Execute batch fill
       ref.read(automationProvider.notifier).updateProgress(
         0.5,
-        'Inyectando datos en formulario...',
+        l10n.injectingData,
       );
 
       final batchScript = _injector.generateBatchFillScript(state.formData!);
       final result = await _webViewController.runJavaScriptReturningResult(batchScript);
 
-      // Parse results
       try {
         final resultStr = result.toString().replaceAll('"', '').replaceAll('\\', '');
         final results = jsonDecode(resultStr) as List;
@@ -112,12 +109,12 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
 
         ref.read(automationProvider.notifier).updateProgress(
           0.8,
-          'Campos llenados: $filled | No encontrados: $notFound',
+          l10n.fieldsFilled(filled, notFound),
         );
       } catch (_) {
         ref.read(automationProvider.notifier).updateProgress(
           0.8,
-          'Inyección completada',
+          l10n.injectionComplete,
         );
       }
 
@@ -125,16 +122,16 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
 
       ref.read(automationProvider.notifier).updateProgress(
         0.9,
-        'Automatización lista. Revise los datos y continúe manualmente.',
+        l10n.automationReady,
       );
 
       ref.read(automationProvider.notifier).markComplete(
-        'PROCESO COMPLETADO - Verifique los datos antes de continuar',
+        l10n.processComplete,
       );
 
     } catch (e) {
       ref.read(automationProvider.notifier).recordError(
-        'Error durante inyección: $e',
+        '${l10n.injectionError}: $e',
       );
     }
   }
@@ -146,20 +143,20 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final automationState = ref.watch(automationProvider);
 
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // WebView (main content)
           Positioned.fill(
             child: Column(
               children: [
                 // Progress Header
                 Container(
                   color: Colors.black,
-                  padding: const EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 8),
+                  padding: const EdgeInsetsDirectional.only(top: 50, start: 16, end: 16, bottom: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -169,9 +166,9 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                             icon: const Icon(Icons.arrow_back, color: Colors.greenAccent),
                             onPressed: () => context.pop(),
                           ),
-                          const Text(
-                            'DS-160 AUTO-FILL',
-                            style: TextStyle(
+                          Text(
+                            l10n.ds160AutoFill,
+                            style: const TextStyle(
                               color: Colors.greenAccent,
                               fontFamily: 'Courier',
                               fontWeight: FontWeight.bold,
@@ -182,9 +179,9 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                           if (automationState.formData != null && !_hasInjected)
                             TextButton(
                               onPressed: _manualInject,
-                              child: const Text(
-                                'INYECTAR',
-                                style: TextStyle(color: Colors.greenAccent),
+                              child: Text(
+                                l10n.inject,
+                                style: const TextStyle(color: Colors.greenAccent),
                               ),
                             ),
                         ],
@@ -206,7 +203,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.greenAccent.withOpacity(0.3)),
+                      border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: ClipRRect(
@@ -223,15 +220,15 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.black87,
-                      border: Border.all(color: Colors.greenAccent.withOpacity(0.5)),
+                      border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.5)),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          '> CONSOLE OUTPUT',
-                          style: TextStyle(
+                        Text(
+                          l10n.consoleOutput,
+                          style: const TextStyle(
                             color: Colors.greenAccent,
                             fontFamily: 'Courier',
                             fontSize: 10,
@@ -264,7 +261,6 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
               ],
             ),
           ),
-          // Overlay when not ready
           if (!_isWebViewReady)
             const HackingModeOverlay(),
         ],

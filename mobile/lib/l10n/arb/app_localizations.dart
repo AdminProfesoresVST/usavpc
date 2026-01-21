@@ -494,13 +494,13 @@ abstract class AppLocalizations {
   /// **'Error saving: {error}'**
   String savingError(String error);
 
-  /// Completion message
+  /// Intake completion message
   ///
   /// In en, this message translates to:
-  /// **'Excellent! You\'ve completed all questions. Your information is saved and ready to generate your DS-160 form.'**
+  /// **'🎉 Excellent! You have completed all questions. Your information is saved and ready to generate your DS-160 form.'**
   String get intakeComplete;
 
-  /// Completion action button
+  /// Button to view completed application
   ///
   /// In en, this message translates to:
   /// **'VIEW MY APPLICATION'**
@@ -512,11 +512,11 @@ abstract class AppLocalizations {
   /// **'Tips:'**
   String get tips;
 
-  /// Example text
+  /// Example label
   ///
   /// In en, this message translates to:
-  /// **'Example: {text}'**
-  String example(String text);
+  /// **'Example'**
+  String get example;
 
   /// Quick check screen title
   ///
@@ -937,6 +937,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Detected!'**
   String get detected;
+
+  /// Navigation progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigating to'**
+  String get navigatingTo;
+
+  /// Page load success message
+  ///
+  /// In en, this message translates to:
+  /// **'Page loaded'**
+  String get pageLoaded;
+
+  /// Network error prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Network error'**
+  String get networkError;
+
+  /// Form detection progress
+  ///
+  /// In en, this message translates to:
+  /// **'Detecting form fields...'**
+  String get detectingFormFields;
+
+  /// Data injection progress
+  ///
+  /// In en, this message translates to:
+  /// **'Injecting data into form...'**
+  String get injectingData;
+
+  /// Fill results
+  ///
+  /// In en, this message translates to:
+  /// **'Fields filled: {filled} | Not found: {notFound}'**
+  String fieldsFilled(int filled, int notFound);
+
+  /// Injection success message
+  ///
+  /// In en, this message translates to:
+  /// **'Injection completed'**
+  String get injectionComplete;
+
+  /// Automation ready message
+  ///
+  /// In en, this message translates to:
+  /// **'Automation ready. Review the data and continue manually.'**
+  String get automationReady;
+
+  /// Process completion message
+  ///
+  /// In en, this message translates to:
+  /// **'PROCESS COMPLETED - Verify data before continuing'**
+  String get processComplete;
+
+  /// Injection error prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Error during injection'**
+  String get injectionError;
 }
 
 class _AppLocalizationsDelegate

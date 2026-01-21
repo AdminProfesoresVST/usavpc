@@ -223,7 +223,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get intakeComplete =>
-      'Excellent! You\'ve completed all questions. Your information is saved and ready to generate your DS-160 form.';
+      '🎉 Excellent! You have completed all questions. Your information is saved and ready to generate your DS-160 form.';
 
   @override
   String get viewMyApplication => 'VIEW MY APPLICATION';
@@ -232,9 +232,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tips => 'Tips:';
 
   @override
-  String example(String text) {
-    return 'Example: $text';
-  }
+  String get example => 'Example';
 
   @override
   String get preliminaryAuditTitle => 'Preliminary Audit';
@@ -462,4 +460,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detected => 'Detected!';
+
+  @override
+  String get navigatingTo => 'Navigating to';
+
+  @override
+  String get pageLoaded => 'Page loaded';
+
+  @override
+  String get networkError => 'Network error';
+
+  @override
+  String get detectingFormFields => 'Detecting form fields...';
+
+  @override
+  String get injectingData => 'Injecting data into form...';
+
+  @override
+  String fieldsFilled(int filled, int notFound) {
+    return 'Fields filled: $filled | Not found: $notFound';
+  }
+
+  @override
+  String get injectionComplete => 'Injection completed';
+
+  @override
+  String get automationReady =>
+      'Automation ready. Review the data and continue manually.';
+
+  @override
+  String get processComplete =>
+      'PROCESS COMPLETED - Verify data before continuing';
+
+  @override
+  String get injectionError => 'Error during injection';
 }

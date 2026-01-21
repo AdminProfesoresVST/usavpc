@@ -419,7 +419,49 @@
   "@searchingMRZ": {"description": "Scanning status text"},
   
   "detected": "Detected!",
-  "@detected": {"description": "Success status text"}
+  "@detected": {"description": "Success status text"},
+  
+  "intakeComplete": "🎉 Excellent! You have completed all questions. Your information is saved and ready to generate your DS-160 form.",
+  "@intakeComplete": {"description": "Intake completion message"},
+  
+  "viewMyApplication": "VIEW MY APPLICATION",
+  "@viewMyApplication": {"description": "Button to view completed application"},
+  
+  "tips": "Tips:",
+  "@tips": {"description": "Tips section header"},
+  
+  "example": "Example",
+  "@example": {"description": "Example label"},
+  
+  "navigatingTo": "Navigating to",
+  "@navigatingTo": {"description": "Navigation progress message"},
+  
+  "pageLoaded": "Page loaded",
+  "@pageLoaded": {"description": "Page load success message"},
+  
+  "networkError": "Network error",
+  "@networkError": {"description": "Network error prefix"},
+  
+  "detectingFormFields": "Detecting form fields...",
+  "@detectingFormFields": {"description": "Form detection progress"},
+  
+  "injectingData": "Injecting data into form...",
+  "@injectingData": {"description": "Data injection progress"},
+  
+  "fieldsFilled": "Fields filled: {filled} | Not found: {notFound}",
+  "@fieldsFilled": {"description": "Fill results", "placeholders": {"filled": {"type": "int"}, "notFound": {"type": "int"}}},
+  
+  "injectionComplete": "Injection completed",
+  "@injectionComplete": {"description": "Injection success message"},
+  
+  "automationReady": "Automation ready. Review the data and continue manually.",
+  "@automationReady": {"description": "Automation ready message"},
+  
+  "processComplete": "PROCESS COMPLETED - Verify data before continuing",
+  "@processComplete": {"description": "Process completion message"},
+  
+  "injectionError": "Error during injection",
+  "@injectionError": {"description": "Injection error prefix"}
 }
 
 

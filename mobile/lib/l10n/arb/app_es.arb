@@ -156,6 +156,21 @@
   "passportDetected": "¡Pasaporte Detectado!",
   "passportScanInstructions": "Escanee la zona de datos del pasaporte",
   "searchingMRZ": "Buscando MRZ...",
-  "detected": "¡Detectado!"
+  "detected": "¡Detectado!",
+  
+  "intakeComplete": "🎉 ¡Excelente! Has completado todas las preguntas. Tu información está guardada y lista para generar tu formulario DS-160.",
+  "viewMyApplication": "VER MI SOLICITUD",
+  "tips": "Tips:",
+  "example": "Ejemplo",
+  "navigatingTo": "Navegando a",
+  "pageLoaded": "Página cargada",
+  "networkError": "Error de red",
+  "detectingFormFields": "Detectando campos del formulario...",
+  "injectingData": "Inyectando datos en formulario...",
+  "fieldsFilled": "Campos llenados: {filled} | No encontrados: {notFound}",
+  "injectionComplete": "Inyección completada",
+  "automationReady": "Automatización lista. Revise los datos y continúe manualmente.",
+  "processComplete": "PROCESO COMPLETADO - Verifique los datos antes de continuar",
+  "injectionError": "Error durante inyección"
 }
 
