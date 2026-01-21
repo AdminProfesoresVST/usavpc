@@ -11,13 +11,16 @@ import 'package:mobile/features/payments/presentation/screens/service_selection_
 import 'package:mobile/features/payments/presentation/screens/visa_type_selection_screen.dart';
 import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/form_wizard_screen.dart';
+import 'package:mobile/features/kyc/presentation/screens/ai_intake_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_landing_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_scanner_screen.dart';
+import 'package:mobile/features/ocr/presentation/screens/passport_confirm_screen.dart';
+import 'package:mobile/features/ocr/logic/mrz_parser.dart';
 import 'package:mobile/features/simulator/presentation/screens/simulator_intro_screen.dart';
 import 'package:mobile/features/simulator/presentation/screens/chat_interface_screen.dart';
-import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart'; // Import
-import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart'; // Import
-import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart'; // Import
+import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart';
+import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart';
+import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart';
 import 'package:mobile/features/onboarding/presentation/screens/splash_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -114,7 +117,22 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: '/kyc',
-        builder: (context, state) => const FormWizardScreen(),
+        builder: (context, state) => const AiIntakeScreen(), // Replaced FormWizardScreen with AI
+      ),
+      GoRoute(
+        path: '/kyc/chat',
+        builder: (context, state) => const AiIntakeScreen(),
+      ),
+      GoRoute(
+        path: '/kyc/confirm',
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is PassportModel) {
+            return PassportConfirmScreen(passportData: extra);
+          }
+          // Fallback to AI intake if no passport data
+          return const AiIntakeScreen();
+        },
       ),
       GoRoute(
         path: '/identity/start',
