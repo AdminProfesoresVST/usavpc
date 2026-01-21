@@ -41,7 +41,6 @@ class AuthRepositoryImpl implements AuthRepository {
     
     return await _localAuth.authenticate(
       localizedReason: 'Scan to verify identity',
-      options: const AuthenticationOptions(biometricOnly: true),
     );
   }
 }

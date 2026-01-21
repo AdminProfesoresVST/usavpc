@@ -218,7 +218,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
   }
 
   void _handleNavigation(BuildContext context, WidgetRef ref, String targetRoute) {
-      final isLoggedIn = ref.read(authStateProvider).valueOrNull != null;
+      final isLoggedIn = ref.read(authStateProvider).value != null;
       if (isLoggedIn) {
         GoRouter.of(context).push(targetRoute);
       } else {

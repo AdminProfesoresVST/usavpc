@@ -36,7 +36,7 @@ GoRouter goRouter(Ref ref) {
     initialLocation: '/splash',
     debugLogDiagnostics: kDebugMode,
     redirect: (context, state) {
-      final isLoggedIn = authState.valueOrNull != null;
+      final isLoggedIn = authState.value != null;
       final location = state.uri.toString();
       
       // Public routes that don't require auth

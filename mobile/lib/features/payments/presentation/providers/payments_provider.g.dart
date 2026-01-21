@@ -6,22 +6,43 @@ part of 'payments_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$servicePlansHash() => r'6c04a8c1b0dbe259f94bb7b6c19a69bc69e43d32';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [servicePlans].
 @ProviderFor(servicePlans)
-final servicePlansProvider =
-    AutoDisposeFutureProvider<List<ServicePlan>>.internal(
-  servicePlans,
-  name: r'servicePlansProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$servicePlansHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const servicePlansProvider = ServicePlansProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ServicePlansRef = AutoDisposeFutureProviderRef<List<ServicePlan>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ServicePlansProvider extends $FunctionalProvider<
+        AsyncValue<List<ServicePlan>>,
+        List<ServicePlan>,
+        FutureOr<List<ServicePlan>>>
+    with
+        $FutureModifier<List<ServicePlan>>,
+        $FutureProvider<List<ServicePlan>> {
+  const ServicePlansProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'servicePlansProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$servicePlansHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ServicePlan>> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ServicePlan>> create(Ref ref) {
+    return servicePlans(ref);
+  }
+}
+
+String _$servicePlansHash() => r'6c04a8c1b0dbe259f94bb7b6c19a69bc69e43d32';

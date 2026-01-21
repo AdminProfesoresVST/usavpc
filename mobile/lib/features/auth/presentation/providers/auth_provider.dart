@@ -6,7 +6,6 @@ part 'auth_provider.g.dart';
 
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
-  @override
   FutureOr<void> build() {}
 
   Future<void> signIn(String email, String password) async {

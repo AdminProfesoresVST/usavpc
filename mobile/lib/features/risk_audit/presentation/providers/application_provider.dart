@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/core/network/supabase_client.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Application state from Supabase for the current user.
 /// Used by risk audit and other features that need user's form data.
@@ -92,24 +91,42 @@ final userApplicationProvider = FutureProvider<UserApplication?>((ref) async {
   return UserApplication.fromJson(response);
 });
 
-/// Provider that saves/updates the user's quick check data
-class QuickCheckNotifier extends StateNotifier<AsyncValue<void>> {
-  final SupabaseClient _supabase;
+/// Quick check state
+class QuickCheckState {
+  final bool isLoading;
+  final String? error;
 
-  QuickCheckNotifier(this._supabase) : super(const AsyncData(null));
+  const QuickCheckState({
+    this.isLoading = false,
+    this.error,
+  });
+
+  QuickCheckState copyWith({bool? isLoading, String? error}) {
+    return QuickCheckState(
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
+}
+
+/// Riverpod 3.x compatible Notifier for quick check
+class QuickCheckNotifier extends Notifier<QuickCheckState> {
+  @override
+  QuickCheckState build() => const QuickCheckState();
 
   Future<void> saveQuickCheck({
     required String visaType,
     required String? ds160Code,
     required bool hasDs160,
   }) async {
-    state = const AsyncLoading();
+    state = state.copyWith(isLoading: true, error: null);
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final supabase = ref.read(supabaseClientProvider);
+      final userId = supabase.auth.currentUser?.id;
       if (userId == null) throw Exception('Not authenticated');
 
       // Update or create application with quick check data
-      await _supabase.from('applications').upsert({
+      await supabase.from('applications').upsert({
         'user_id': userId,
         'service_tier': visaType,
         'ds160_confirmation_number': ds160Code,
@@ -120,14 +137,12 @@ class QuickCheckNotifier extends StateNotifier<AsyncValue<void>> {
         'updated_at': DateTime.now().toIso8601String(),
       }, onConflict: 'user_id');
 
-      state = const AsyncData(null);
+      state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = AsyncError(e, StackTrace.current);
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 }
 
 final quickCheckNotifierProvider =
-    StateNotifierProvider<QuickCheckNotifier, AsyncValue<void>>((ref) {
-  return QuickCheckNotifier(ref.watch(supabaseClientProvider));
-});
+    NotifierProvider<QuickCheckNotifier, QuickCheckState>(QuickCheckNotifier.new);

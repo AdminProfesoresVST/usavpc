@@ -108,7 +108,7 @@ class AppTheme {
       ),
 
       // Cards: Very Subtle
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceWhite,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

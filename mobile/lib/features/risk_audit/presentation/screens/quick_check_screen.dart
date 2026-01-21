@@ -23,7 +23,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
     final quickCheckState = ref.watch(quickCheckNotifierProvider);
 
     ref.listen(quickCheckNotifierProvider, (previous, next) {
-      if (next.hasError) {
+      if (next.error != null && (previous?.error != next.error)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${next.error}')),
         );

@@ -25,7 +25,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      ref.read(authNotifierProvider.notifier).signIn(
+      ref.read(authProvider.notifier).signIn(
             _emailController.text,
             _passwordController.text,
           );
@@ -34,10 +34,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
 
-    ref.listen(authNotifierProvider, (previous, next) {
+    ref.listen(authProvider, (previous, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(next.error.toString())),

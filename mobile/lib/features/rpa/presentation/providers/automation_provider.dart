@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/core/network/supabase_client.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// RPA Automation state
 class AutomationState {
@@ -35,11 +34,18 @@ class AutomationState {
   }
 }
 
-/// RPA Notifier that manages automation state and fetches user data
-class AutomationNotifier extends StateNotifier<AutomationState> {
-  final SupabaseClient _supabase;
+/// Riverpod 3.x compatible Notifier for RPA automation
+class AutomationNotifier extends Notifier<AutomationState> {
+  @override
+  AutomationState build() => const AutomationState();
 
-  AutomationNotifier(this._supabase) : super(const AutomationState());
+  /// Add a log entry
+  void _addLog(String message) {
+    final timestamp = DateTime.now().toString().substring(11, 19);
+    state = state.copyWith(
+      logs: [...state.logs, '[$timestamp] $message'],
+    );
+  }
 
   /// Load user's form data from Supabase to prepare for automation
   Future<void> loadUserData() async {
@@ -47,7 +53,8 @@ class AutomationNotifier extends StateNotifier<AutomationState> {
       _addLog('Conectando a base de datos...');
       state = state.copyWith(progress: 0.05);
 
-      final userId = _supabase.auth.currentUser?.id;
+      final supabase = ref.read(supabaseClientProvider);
+      final userId = supabase.auth.currentUser?.id;
       if (userId == null) {
         throw Exception('Usuario no autenticado');
       }
@@ -55,7 +62,7 @@ class AutomationNotifier extends StateNotifier<AutomationState> {
       _addLog('Cargando datos de solicitud...');
       state = state.copyWith(progress: 0.1);
 
-      final response = await _supabase
+      final response = await supabase
           .from('applications')
           .select('form_data, ds160_payload')
           .eq('user_id', userId)
@@ -95,14 +102,6 @@ class AutomationNotifier extends StateNotifier<AutomationState> {
     }
   }
 
-  /// Add a log entry
-  void _addLog(String message) {
-    final timestamp = DateTime.now().toString().substring(11, 19);
-    state = state.copyWith(
-      logs: [...state.logs, '[$timestamp] $message'],
-    );
-  }
-
   /// Update progress after WebView injection
   void updateProgress(double progress, String message) {
     _addLog(message);
@@ -127,10 +126,11 @@ class AutomationNotifier extends StateNotifier<AutomationState> {
   /// Save DS-160 confirmation number back to database
   Future<void> saveConfirmationNumber(String confirmationNumber) async {
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final supabase = ref.read(supabaseClientProvider);
+      final userId = supabase.auth.currentUser?.id;
       if (userId == null) return;
 
-      await _supabase.from('applications').update({
+      await supabase.from('applications').update({
         'ds160_confirmation_number': confirmationNumber,
         'status': 'ds160_complete',
         'updated_at': DateTime.now().toIso8601String(),
@@ -144,6 +144,4 @@ class AutomationNotifier extends StateNotifier<AutomationState> {
 }
 
 final automationProvider =
-    StateNotifierProvider<AutomationNotifier, AutomationState>((ref) {
-  return AutomationNotifier(ref.watch(supabaseClientProvider));
-});
+    NotifierProvider<AutomationNotifier, AutomationState>(AutomationNotifier.new);
