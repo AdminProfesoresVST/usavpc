@@ -43,7 +43,8 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) {
           context.push(
-            '/kyc/intake?surname=${result.lastName}&firstName=${result.firstName}&passport=${result.documentNumber}&dob=${result.birthDate}&nationality=${result.nationality}',
+            '/kyc/confirm', 
+            extra: result, // Pass the full PassportModel object
           );
         }
       });

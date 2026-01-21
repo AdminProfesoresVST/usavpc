@@ -40,6 +40,13 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
     final passport = state.uri.queryParameters['passport'];
     final dob = state.uri.queryParameters['dob'];
 
+    final initialContext = {
+       'visa_type': widget.visaType,
+       if (surname != null) 'surname': surname,
+       if (passport != null) 'passport_number': passport,
+       if (dob != null) 'date_of_birth': dob,
+    };
+
     // SYSTEM INSTRUCTION: Force the AI to acknowledge context and follow strict order
     final systemInstruction = """
 SYSTEM_INSTRUCTION:

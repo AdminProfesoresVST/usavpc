@@ -121,7 +121,10 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: '/kyc/chat',
-        builder: (context, state) => const AiIntakeScreen(),
+        builder: (context, state) {
+           final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
+           return ChatIntakeScreen(visaType: type);
+        },
       ),
       GoRoute(
         path: '/kyc/confirm',
