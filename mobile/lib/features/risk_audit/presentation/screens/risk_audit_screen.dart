@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/risk_audit/logic/risk_evaluator.dart';
 import 'package:mobile/features/risk_audit/presentation/providers/application_provider.dart';
 
+/// Risk audit screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class RiskAuditScreen extends ConsumerWidget {
   const RiskAuditScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final userAppAsync = ref.watch(userApplicationProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        title: Text(
-          'Auditoría de Aprobación',
-          style: GoogleFonts.publicSans(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF112E51),
-        elevation: 1,
-      ),
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeader(title: l10n.approvalAuditTitle),
       body: userAppAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Error cargando datos: $e")),
+        error: (e, _) => Center(child: Text(l10n.errorLoadingData(e.toString()))),
         data: (userApp) {
-          // PRODUCTION: Use real user data from Supabase
           final evaluator = RiskEvaluator();
           final evaluation = evaluator.evaluate(
             visaType: userApp?.visaType ?? 'B1/B2',
@@ -55,14 +51,13 @@ class RiskAuditScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Probabilidad de Aprobación',
-                        style: GoogleFonts.publicSans(fontSize: 14, color: Colors.grey.shade600),
+                        l10n.approvalProbability,
+                        style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         '${evaluation.score}%',
-                        style: GoogleFonts.publicSans(
-                          fontSize: 64, 
+                        style: context.textTheme.displayMedium?.copyWith(
                           fontWeight: FontWeight.bold, 
                           color: isHighApproval ? Colors.green.shade600 : Colors.orange.shade600
                         ),
@@ -75,8 +70,8 @@ class RiskAuditScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          'Riesgo ${evaluation.riskLevel}',
-                          style: GoogleFonts.publicSans(
+                          l10n.riskLevel(evaluation.riskLevel),
+                          style: context.textTheme.labelLarge?.copyWith(
                             color: isHighApproval ? Colors.green.shade700 : Colors.orange.shade700, 
                             fontWeight: FontWeight.w600
                           ),
@@ -88,13 +83,13 @@ class RiskAuditScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Factors
-                Text('Análisis Factorial', style: GoogleFonts.publicSans(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF112E51))),
+                Text(l10n.factorAnalysis, style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.navyPrimary)),
                 const SizedBox(height: 16),
                 
-                ...evaluation.positiveFactors.map((f) => _buildFactorTile(f, true)),
+                ...evaluation.positiveFactors.map((f) => _buildFactorTile(context, f, true)),
                  if (evaluation.negativeFactors.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    ...evaluation.negativeFactors.map((f) => _buildFactorTile(f, false)),
+                    ...evaluation.negativeFactors.map((f) => _buildFactorTile(context, f, false)),
                  ],
 
                 const SizedBox(height: 32),
@@ -104,16 +99,16 @@ class RiskAuditScreen extends ConsumerWidget {
                      context.go('/simulator'); 
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF112E51),
+                    backgroundColor: AppTheme.navyPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('CONTINUAR AL SIMULADOR', style: TextStyle(color: Colors.white)),
+                  child: Text(l10n.continueToSimulator, style: const TextStyle(color: Colors.white)),
                 ),
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: () => context.go('/'),
-                  child: const Text('Volver al inicio'),
+                  child: Text(l10n.backToHome),
                 ),
               ],
             ),
@@ -123,9 +118,9 @@ class RiskAuditScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFactorTile(String text, bool isPositive) {
+  Widget _buildFactorTile(BuildContext context, String text, bool isPositive) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsetsDirectional.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -139,7 +134,7 @@ class RiskAuditScreen extends ConsumerWidget {
             color: isPositive ? Colors.green : Colors.orange,
           ),
           const SizedBox(width: 16),
-          Expanded(child: Text(text, style: GoogleFonts.publicSans(fontSize: 14))),
+          Expanded(child: Text(text, style: context.textTheme.bodyMedium)),
         ],
       ),
     );

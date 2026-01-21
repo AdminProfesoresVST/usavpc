@@ -709,6 +709,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account Created! Welcome.'**
   String get accountCreated;
+
+  /// Order summary screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get orderSummaryTitle;
+
+  /// Total label
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// Pay button with amount
+  ///
+  /// In en, this message translates to:
+  /// **'Pay \${amount}'**
+  String payButton(String amount);
+
+  /// Processing state
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// Payment success message
+  ///
+  /// In en, this message translates to:
+  /// **'Payment completed successfully!'**
+  String get paymentCompleted;
+
+  /// Payment cancelled message
+  ///
+  /// In en, this message translates to:
+  /// **'Payment cancelled: {message}'**
+  String paymentCancelled(String message);
+
+  /// Stripe security badge
+  ///
+  /// In en, this message translates to:
+  /// **'Secure payment with Stripe'**
+  String get securePayment;
+
+  /// Priority processing add-on
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Processing'**
+  String get priorityProcessing;
+
+  /// No plans message
+  ///
+  /// In en, this message translates to:
+  /// **'No plans available'**
+  String get noPlansAvailable;
+
+  /// Auth error message
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get userNotAuthenticated;
+
+  /// Risk audit screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Approval Audit'**
+  String get approvalAuditTitle;
+
+  /// Score card title
+  ///
+  /// In en, this message translates to:
+  /// **'Approval Probability'**
+  String get approvalProbability;
+
+  /// Risk level badge
+  ///
+  /// In en, this message translates to:
+  /// **'Risk {level}'**
+  String riskLevel(String level);
+
+  /// Section title
+  ///
+  /// In en, this message translates to:
+  /// **'Factor Analysis'**
+  String get factorAnalysis;
+
+  /// Action button
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE TO SIMULATOR'**
+  String get continueToSimulator;
+
+  /// Back button text
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get backToHome;
+
+  /// Data loading error
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data: {error}'**
+  String errorLoadingData(String error);
+
+  /// Passport confirm screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Data'**
+  String get confirmDataTitle;
+
+  /// Success badge title
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Scanned'**
+  String get passportScanned;
+
+  /// Success badge subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Verify that the data is correct'**
+  String get verifyDataCorrect;
+
+  /// Field label
+  ///
+  /// In en, this message translates to:
+  /// **'Surname(s)'**
+  String get surnameLabel;
+
+  /// Field label
+  ///
+  /// In en, this message translates to:
+  /// **'Given Name(s)'**
+  String get givenNameLabel;
+
+  /// Field label
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get birthDateLabel;
+
+  /// Field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality'**
+  String get nationalityLabel;
+
+  /// Field label
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Number'**
+  String get passportNumberLabel;
+
+  /// Info box text
+  ///
+  /// In en, this message translates to:
+  /// **'After confirming, I will ask you some additional questions not on your passport.'**
+  String get additionalQuestionsInfo;
+
+  /// Confirm button
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRM AND CONTINUE'**
+  String get confirmAndContinue;
+
+  /// Chat interface screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Interview in Progress'**
+  String get interviewInProgress;
+
+  /// Initial transcript placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Press the microphone to speak...'**
+  String get pressMicToSpeak;
+
+  /// Initial response placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to Consular Officer...'**
+  String get connectingToOfficer;
+
+  /// Listening state text
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get listening;
+
+  /// Automation screen title
+  ///
+  /// In en, this message translates to:
+  /// **'DS-160 AUTO-FILL'**
+  String get ds160AutoFill;
+
+  /// Manual inject button
+  ///
+  /// In en, this message translates to:
+  /// **'INJECT'**
+  String get inject;
+
+  /// Console header
+  ///
+  /// In en, this message translates to:
+  /// **'> CONSOLE OUTPUT'**
+  String get consoleOutput;
 }
 
 class _AppLocalizationsDelegate

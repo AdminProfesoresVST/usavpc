@@ -340,4 +340,115 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get accountCreated => '¡Cuenta Creada! Bienvenido.';
+
+  @override
+  String get orderSummaryTitle => 'Resumen del Pedido';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String payButton(String amount) {
+    return 'Pagar \$$amount';
+  }
+
+  @override
+  String get processing => 'Procesando...';
+
+  @override
+  String get paymentCompleted => '¡Pago completado exitosamente!';
+
+  @override
+  String paymentCancelled(String message) {
+    return 'Pago cancelado: $message';
+  }
+
+  @override
+  String get securePayment => 'Pago seguro con Stripe';
+
+  @override
+  String get priorityProcessing => 'Procesamiento Prioritario';
+
+  @override
+  String get noPlansAvailable => 'No hay planes disponibles';
+
+  @override
+  String get userNotAuthenticated => 'Usuario no autenticado';
+
+  @override
+  String get approvalAuditTitle => 'Auditoría de Aprobación';
+
+  @override
+  String get approvalProbability => 'Probabilidad de Aprobación';
+
+  @override
+  String riskLevel(String level) {
+    return 'Riesgo $level';
+  }
+
+  @override
+  String get factorAnalysis => 'Análisis Factorial';
+
+  @override
+  String get continueToSimulator => 'CONTINUAR AL SIMULADOR';
+
+  @override
+  String get backToHome => 'Volver al inicio';
+
+  @override
+  String errorLoadingData(String error) {
+    return 'Error cargando datos: $error';
+  }
+
+  @override
+  String get confirmDataTitle => 'Confirmar Datos';
+
+  @override
+  String get passportScanned => 'Pasaporte Escaneado';
+
+  @override
+  String get verifyDataCorrect => 'Verifica que los datos sean correctos';
+
+  @override
+  String get surnameLabel => 'Apellido(s)';
+
+  @override
+  String get givenNameLabel => 'Nombre(s)';
+
+  @override
+  String get birthDateLabel => 'Fecha de Nacimiento';
+
+  @override
+  String get nationalityLabel => 'Nacionalidad';
+
+  @override
+  String get passportNumberLabel => 'Número de Pasaporte';
+
+  @override
+  String get additionalQuestionsInfo =>
+      'Después de confirmar, te haré algunas preguntas adicionales que no están en tu pasaporte.';
+
+  @override
+  String get confirmAndContinue => 'CONFIRMAR Y CONTINUAR';
+
+  @override
+  String get interviewInProgress => 'Entrevista en Curso';
+
+  @override
+  String get pressMicToSpeak => 'Presione el micrófono para hablar...';
+
+  @override
+  String get connectingToOfficer => 'Conectando con el Oficial Consular...';
+
+  @override
+  String get listening => 'Escuchando...';
+
+  @override
+  String get ds160AutoFill => 'DS-160 AUTO-FILL';
+
+  @override
+  String get inject => 'INYECTAR';
+
+  @override
+  String get consoleOutput => '> CONSOLE OUTPUT';
 }

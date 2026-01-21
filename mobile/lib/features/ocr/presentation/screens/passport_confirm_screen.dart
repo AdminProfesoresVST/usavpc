@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/network/supabase_client.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/ocr/logic/mrz_parser.dart';
 
-/// Screen to confirm OCR-extracted passport data before proceeding to chat.
-/// Shows all extracted fields and allows user to edit if needed.
+/// Screen to confirm OCR-extracted passport data with full i18n.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class PassportConfirmScreen extends ConsumerStatefulWidget {
   final PassportModel passportData;
   
@@ -36,7 +38,6 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
   }
 
   String _formatDate(String yymmdd) {
-    // Convert MRZ format YYMMDD to DD/MM/YYYY
     if (yymmdd.length != 6) return yymmdd;
     final yy = yymmdd.substring(0, 2);
     final mm = yymmdd.substring(2, 4);
@@ -57,13 +58,13 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
 
   Future<void> _confirmAndProceed() async {
     setState(() => _isLoading = true);
+    final l10n = context.l10n;
     
     try {
       final supabase = ref.read(supabaseClientProvider);
       final userId = supabase.auth.currentUser?.id;
-      if (userId == null) throw Exception('No autenticado');
+      if (userId == null) throw Exception(l10n.userNotAuthenticated);
 
-      // Save OCR data to user's application
       await supabase.from('applications').upsert({
         'user_id': userId,
         'form_data': {
@@ -80,13 +81,12 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
       }, onConflict: 'user_id');
 
       if (mounted) {
-        // Navigate to AI chat intake (skipping OCR questions)
         context.push('/kyc/chat');
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(l10n.error(e.toString()))),
         );
       }
     } finally {
@@ -96,13 +96,11 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
-      appBar: AppBar(
-        title: Text('Confirmar Datos', style: GoogleFonts.publicSans(fontWeight: FontWeight.w600)),
-        backgroundColor: const Color(0xFF112E51),
-        foregroundColor: Colors.white,
-      ),
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeader(title: l10n.confirmDataTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -125,14 +123,14 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '✅ Pasaporte Escaneado',
-                          style: GoogleFonts.publicSans(
+                          '✅ ${l10n.passportScanned}',
+                          style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.green.shade800,
                           ),
                         ),
                         Text(
-                          'Verifica que los datos sean correctos',
+                          l10n.verifyDataCorrect,
                           style: TextStyle(color: Colors.green.shade700, fontSize: 13),
                         ),
                       ],
@@ -144,11 +142,11 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
             const SizedBox(height: 24),
 
             // Editable Fields
-            _buildField('Apellido(s)', _surnameController, Icons.person),
-            _buildField('Nombre(s)', _givenNameController, Icons.person_outline),
-            _buildField('Fecha de Nacimiento', _birthDateController, Icons.cake),
-            _buildField('Nacionalidad', _nationalityController, Icons.flag),
-            _buildField('Número de Pasaporte', _passportNumberController, Icons.credit_card),
+            _buildField(l10n.surnameLabel, _surnameController, Icons.person),
+            _buildField(l10n.givenNameLabel, _givenNameController, Icons.person_outline),
+            _buildField(l10n.birthDateLabel, _birthDateController, Icons.cake),
+            _buildField(l10n.nationalityLabel, _nationalityController, Icons.flag),
+            _buildField(l10n.passportNumberLabel, _passportNumberController, Icons.credit_card),
 
             const SizedBox(height: 32),
 
@@ -165,7 +163,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Después de confirmar, te haré algunas preguntas adicionales que no están en tu pasaporte.',
+                      l10n.additionalQuestionsInfo,
                       style: TextStyle(color: Colors.blue.shade800, fontSize: 13),
                     ),
                   ),
@@ -182,7 +180,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _confirmAndProceed,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF112E51),
+                  backgroundColor: AppTheme.navyPrimary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
@@ -193,8 +191,12 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       )
                     : Text(
-                        'CONFIRMAR Y CONTINUAR',
-                        style: GoogleFonts.publicSans(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                        l10n.confirmAndContinue,
+                        style: context.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                        ),
                       ),
               ),
             ),
@@ -206,12 +208,12 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
 
   Widget _buildField(String label, TextEditingController controller, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsetsDirectional.only(bottom: 16),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon, color: const Color(0xFF112E51)),
+          prefixIcon: Icon(icon, color: AppTheme.navyPrimary),
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
@@ -220,7 +222,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF112E51), width: 2),
+            borderSide: const BorderSide(color: AppTheme.navyPrimary, width: 2),
           ),
         ),
         textCapitalization: TextCapitalization.characters,

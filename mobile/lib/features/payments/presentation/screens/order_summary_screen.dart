@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/network/supabase_client.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/payments/presentation/providers/payments_provider.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-/// Production-ready order summary with Stripe payment integration.
-/// Migration: 2026-01-20 - Implemented payment flow with Stripe.
+/// Production-ready order summary with Stripe payment integration and full i18n.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class OrderSummaryScreen extends ConsumerStatefulWidget {
   const OrderSummaryScreen({super.key});
 
@@ -20,17 +22,17 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
 
   Future<void> _processPayment(double total, String planTitle) async {
     setState(() => _isProcessing = true);
+    final l10n = context.l10n;
 
     try {
       final supabase = ref.read(supabaseClientProvider);
       final userId = supabase.auth.currentUser?.id;
-      if (userId == null) throw Exception('Usuario no autenticado');
+      if (userId == null) throw Exception(l10n.userNotAuthenticated);
 
-      // PRODUCTION: Call Edge Function to create Stripe PaymentIntent
       final response = await supabase.functions.invoke(
         'stripe-payment-intent',
         body: {
-          'amount': (total * 100).toInt(), // Stripe uses cents
+          'amount': (total * 100).toInt(),
           'currency': 'usd',
           'metadata': {
             'user_id': userId,
@@ -40,13 +42,12 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
       );
 
       if (response.status != 200) {
-        throw Exception('Error creando pago: ${response.data}');
+        throw Exception('Error: ${response.data}');
       }
 
       final paymentData = response.data as Map<String, dynamic>;
       final clientSecret = paymentData['clientSecret'] as String;
 
-      // Initialize Stripe payment sheet
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: clientSecret,
@@ -55,10 +56,8 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
         ),
       );
 
-      // Present payment sheet
       await Stripe.instance.presentPaymentSheet();
 
-      // Payment successful - update application status
       await supabase.from('applications').update({
         'status': 'paid',
         'paid_at': DateTime.now().toIso8601String(),
@@ -67,8 +66,8 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ ¡Pago completado exitosamente!'),
+          SnackBar(
+            content: Text('✅ ${l10n.paymentCompleted}'),
             backgroundColor: Colors.green,
           ),
         );
@@ -77,13 +76,13 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
     } on StripeException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Pago cancelado: ${e.error.localizedMessage}')),
+          SnackBar(content: Text(l10n.paymentCancelled(e.error.localizedMessage ?? ''))),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(l10n.error(e.toString()))),
         );
       }
     } finally {
@@ -95,28 +94,24 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final plansAsync = ref.watch(servicePlansProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Resumen del Pedido', style: GoogleFonts.publicSans(fontWeight: FontWeight.w600)),
-        backgroundColor: const Color(0xFF112E51),
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppHeader(title: l10n.orderSummaryTitle),
       body: plansAsync.when(
         data: (plans) {
-          // Get selected plan (popular or first)
           final selectedPlan = plans.isNotEmpty 
               ? plans.firstWhere((p) => p.isPopular, orElse: () => plans.first)
               : null;
           
           if (selectedPlan == null) {
-            return const Center(child: Text('No hay planes disponibles'));
+            return Center(child: Text(l10n.noPlansAvailable));
           }
 
           final items = [
             {'name': selectedPlan.title, 'price': selectedPlan.price},
-            {'name': 'Procesamiento Prioritario', 'price': 10.00},
+            {'name': l10n.priorityProcessing, 'price': 10.00},
           ];
 
           double total = items.fold(0, (sum, item) => sum + (item['price'] as double));
@@ -146,12 +141,12 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Total', style: Theme.of(context).textTheme.headlineSmall),
+                      Text(l10n.total, style: context.textTheme.headlineSmall),
                       Text(
                         '\$${total.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        style: context.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF112E51),
+                          color: AppTheme.navyPrimary,
                         ),
                       ),
                     ],
@@ -171,23 +166,22 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
                         : const Icon(Icons.payment),
-                    label: Text(_isProcessing ? 'Procesando...' : 'Pagar \$${total.toStringAsFixed(2)}'),
+                    label: Text(_isProcessing ? l10n.processing : l10n.payButton('\$${total.toStringAsFixed(2)}')),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF112E51),
+                      backgroundColor: AppTheme.navyPrimary,
                       foregroundColor: Colors.white,
                       disabledBackgroundColor: Colors.grey,
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Secure payment badge
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.lock, size: 14, color: Colors.grey.shade600),
                     const SizedBox(width: 4),
                     Text(
-                      'Pago seguro con Stripe',
+                      l10n.securePayment,
                       style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                     ),
                   ],
@@ -197,7 +191,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(l10n.error(err.toString()))),
       ),
     );
   }

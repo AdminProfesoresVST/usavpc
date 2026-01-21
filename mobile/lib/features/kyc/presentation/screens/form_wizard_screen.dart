@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/kyc/presentation/providers/form_provider.dart';
 import 'package:mobile/features/kyc/presentation/widgets/dynamic_section.dart';
 
+/// Form wizard screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class FormWizardScreen extends ConsumerStatefulWidget {
   const FormWizardScreen({super.key});
 
@@ -16,13 +20,14 @@ class _FormWizardScreenState extends ConsumerState<FormWizardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final stepsAsync = ref.watch(formStepsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Visa Application')),
+      appBar: AppHeader(title: l10n.newVisaApplication),
       body: stepsAsync.when(
         data: (steps) {
-            if (steps.isEmpty) return const Center(child: Text('No steps configured'));
+            if (steps.isEmpty) return Center(child: Text(l10n.noPlansAvailable));
 
             return Stepper(
               currentStep: _currentStep,
@@ -52,7 +57,7 @@ class _FormWizardScreenState extends ConsumerState<FormWizardScreen> {
             );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text(l10n.error(err.toString()))),
       ),
     );
   }

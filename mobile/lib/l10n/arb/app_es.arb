@@ -112,6 +112,45 @@
   "fieldRequired": "Requerido",
   "passwordMinLength": "Mínimo {count} caracteres",
   "passwordsDoNotMatch": "Las contraseñas no coinciden",
-  "accountCreated": "¡Cuenta Creada! Bienvenido."
+  "accountCreated": "¡Cuenta Creada! Bienvenido.",
+  
+  "orderSummaryTitle": "Resumen del Pedido",
+  "total": "Total",
+  "payButton": "Pagar ${amount}",
+  "processing": "Procesando...",
+  "paymentCompleted": "¡Pago completado exitosamente!",
+  "paymentCancelled": "Pago cancelado: {message}",
+  "securePayment": "Pago seguro con Stripe",
+  "priorityProcessing": "Procesamiento Prioritario",
+  "noPlansAvailable": "No hay planes disponibles",
+  "userNotAuthenticated": "Usuario no autenticado",
+  
+  "approvalAuditTitle": "Auditoría de Aprobación",
+  "approvalProbability": "Probabilidad de Aprobación",
+  "riskLevel": "Riesgo {level}",
+  "factorAnalysis": "Análisis Factorial",
+  "continueToSimulator": "CONTINUAR AL SIMULADOR",
+  "backToHome": "Volver al inicio",
+  "errorLoadingData": "Error cargando datos: {error}",
+  
+  "confirmDataTitle": "Confirmar Datos",
+  "passportScanned": "Pasaporte Escaneado",
+  "verifyDataCorrect": "Verifica que los datos sean correctos",
+  "surnameLabel": "Apellido(s)",
+  "givenNameLabel": "Nombre(s)",
+  "birthDateLabel": "Fecha de Nacimiento",
+  "nationalityLabel": "Nacionalidad",
+  "passportNumberLabel": "Número de Pasaporte",
+  "additionalQuestionsInfo": "Después de confirmar, te haré algunas preguntas adicionales que no están en tu pasaporte.",
+  "confirmAndContinue": "CONFIRMAR Y CONTINUAR",
+  
+  "interviewInProgress": "Entrevista en Curso",
+  "pressMicToSpeak": "Presione el micrófono para hablar...",
+  "connectingToOfficer": "Conectando con el Oficial Consular...",
+  "listening": "Escuchando...",
+  
+  "ds160AutoFill": "DS-160 AUTO-FILL",
+  "inject": "INYECTAR",
+  "consoleOutput": "> CONSOLE OUTPUT"
 }
 

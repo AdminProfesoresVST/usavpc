@@ -305,6 +305,109 @@
   "@passwordsDoNotMatch": {"description": "Password confirmation error"},
   
   "accountCreated": "Account Created! Welcome.",
-  "@accountCreated": {"description": "Success message after registration"}
+  "@accountCreated": {"description": "Success message after registration"},
+  
+  "orderSummaryTitle": "Order Summary",
+  "@orderSummaryTitle": {"description": "Order summary screen title"},
+  
+  "total": "Total",
+  "@total": {"description": "Total label"},
+  
+  "payButton": "Pay ${amount}",
+  "@payButton": {"description": "Pay button with amount", "placeholders": {"amount": {"type": "String"}}},
+  
+  "processing": "Processing...",
+  "@processing": {"description": "Processing state"},
+  
+  "paymentCompleted": "Payment completed successfully!",
+  "@paymentCompleted": {"description": "Payment success message"},
+  
+  "paymentCancelled": "Payment cancelled: {message}",
+  "@paymentCancelled": {"description": "Payment cancelled message", "placeholders": {"message": {"type": "String"}}},
+  
+  "securePayment": "Secure payment with Stripe",
+  "@securePayment": {"description": "Stripe security badge"},
+  
+  "priorityProcessing": "Priority Processing",
+  "@priorityProcessing": {"description": "Priority processing add-on"},
+  
+  "noPlansAvailable": "No plans available",
+  "@noPlansAvailable": {"description": "No plans message"},
+  
+  "userNotAuthenticated": "User not authenticated",
+  "@userNotAuthenticated": {"description": "Auth error message"},
+  
+  "approvalAuditTitle": "Approval Audit",
+  "@approvalAuditTitle": {"description": "Risk audit screen title"},
+  
+  "approvalProbability": "Approval Probability",
+  "@approvalProbability": {"description": "Score card title"},
+  
+  "riskLevel": "Risk {level}",
+  "@riskLevel": {"description": "Risk level badge", "placeholders": {"level": {"type": "String"}}},
+  
+  "factorAnalysis": "Factor Analysis",
+  "@factorAnalysis": {"description": "Section title"},
+  
+  "continueToSimulator": "CONTINUE TO SIMULATOR",
+  "@continueToSimulator": {"description": "Action button"},
+  
+  "backToHome": "Back to home",
+  "@backToHome": {"description": "Back button text"},
+  
+  "errorLoadingData": "Error loading data: {error}",
+  "@errorLoadingData": {"description": "Data loading error", "placeholders": {"error": {"type": "String"}}},
+  
+  "confirmDataTitle": "Confirm Data",
+  "@confirmDataTitle": {"description": "Passport confirm screen title"},
+  
+  "passportScanned": "Passport Scanned",
+  "@passportScanned": {"description": "Success badge title"},
+  
+  "verifyDataCorrect": "Verify that the data is correct",
+  "@verifyDataCorrect": {"description": "Success badge subtitle"},
+  
+  "surnameLabel": "Surname(s)",
+  "@surnameLabel": {"description": "Field label"},
+  
+  "givenNameLabel": "Given Name(s)",
+  "@givenNameLabel": {"description": "Field label"},
+  
+  "birthDateLabel": "Date of Birth",
+  "@birthDateLabel": {"description": "Field label"},
+  
+  "nationalityLabel": "Nationality",
+  "@nationalityLabel": {"description": "Field label"},
+  
+  "passportNumberLabel": "Passport Number",
+  "@passportNumberLabel": {"description": "Field label"},
+  
+  "additionalQuestionsInfo": "After confirming, I will ask you some additional questions not on your passport.",
+  "@additionalQuestionsInfo": {"description": "Info box text"},
+  
+  "confirmAndContinue": "CONFIRM AND CONTINUE",
+  "@confirmAndContinue": {"description": "Confirm button"},
+  
+  "interviewInProgress": "Interview in Progress",
+  "@interviewInProgress": {"description": "Chat interface screen title"},
+  
+  "pressMicToSpeak": "Press the microphone to speak...",
+  "@pressMicToSpeak": {"description": "Initial transcript placeholder"},
+  
+  "connectingToOfficer": "Connecting to Consular Officer...",
+  "@connectingToOfficer": {"description": "Initial response placeholder"},
+  
+  "listening": "Listening...",
+  "@listening": {"description": "Listening state text"},
+  
+  "ds160AutoFill": "DS-160 AUTO-FILL",
+  "@ds160AutoFill": {"description": "Automation screen title"},
+  
+  "inject": "INJECT",
+  "@inject": {"description": "Manual inject button"},
+  
+  "consoleOutput": "> CONSOLE OUTPUT",
+  "@consoleOutput": {"description": "Console header"}
 }
+
 

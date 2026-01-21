@@ -1,12 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/kyc/data/ai_repository.dart';
 import 'package:mobile/features/simulator/logic/voice_manager.dart';
 import 'package:mobile/features/simulator/presentation/widgets/avatar_widget.dart';
 
+/// Chat interface for voice-based interview simulation with full i18n.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class ChatInterfaceScreen extends ConsumerStatefulWidget {
   const ChatInterfaceScreen({super.key});
 
@@ -17,20 +19,21 @@ class ChatInterfaceScreen extends ConsumerStatefulWidget {
 class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
   final VoiceManager _voiceManager = VoiceManager();
   AvatarState _avatarState = AvatarState.idle;
-  String _transcript = "Presione el micrófono para hablar...";
-  String _lastResponse = "Conectando con el Oficial Consular...";
+  late String _transcript;
+  late String _lastResponse;
   bool _isListening = false;
 
   @override
   void initState() {
     super.initState();
+    _transcript = '';
+    _lastResponse = '';
     _initializeVoice();
   }
 
   Future<void> _initializeVoice() async {
     await _voiceManager.initialize();
     
-    // Slight delay to ensure UI is ready before initial greeting
     Future.delayed(const Duration(milliseconds: 500), () {
         _startSimulation();
     });
@@ -68,16 +71,14 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
           _lastResponse = response;
         });
         
-        // Speak Response
         await _voiceManager.speak(response);
         
-        // After speaking, go back to idle
         if (mounted) setState(() => _avatarState = AvatarState.idle);
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _lastResponse = "Error: ${e.toString()}";
+          _lastResponse = context.l10n.error(e.toString());
           _avatarState = AvatarState.idle;
         });
       }
@@ -85,13 +86,15 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
   }
 
   void _toggleListening() {
+    final l10n = context.l10n;
+    
     if (_isListening) {
       _voiceManager.stopListening();
       setState(() => _isListening = false);
     } else {
       setState(() {
          _isListening = true;
-         _transcript = "Escuchando...";
+         _transcript = l10n.listening;
       });
       
       _voiceManager.startListening(
@@ -101,8 +104,7 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
         onListeningStateChanged: (isListening) {
            if (mounted) {
               setState(() => _isListening = isListening);
-              if (!isListening && _transcript.isNotEmpty && _transcript != "Escuchando...") {
-                 // Auto-send on silence/stop
+              if (!isListening && _transcript.isNotEmpty && _transcript != l10n.listening) {
                  _sendMessageToAI(_transcript);
               }
            }
@@ -113,14 +115,15 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
+    // Set initial values if empty
+    if (_transcript.isEmpty) _transcript = l10n.pressMicToSpeak;
+    if (_lastResponse.isEmpty) _lastResponse = l10n.connectingToOfficer;
+    
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: Text('Entrevista en Curso', style: GoogleFonts.publicSans(fontSize: 16)),
-        backgroundColor: Colors.white,
-        foregroundColor: AppTheme.navyPrimary,
-        elevation: 1,
-      ),
+      appBar: AppHeader(title: l10n.interviewInProgress),
       body: Column(
         children: [
           // Avatar Area
@@ -139,8 +142,7 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
                       child: SingleChildScrollView(
                         child: Text(
                           _lastResponse,
-                          style: GoogleFonts.publicSans(
-                            fontSize: 18,
+                          style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: AppTheme.navyPrimary,
                           ),
@@ -162,8 +164,7 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
                child: Center(
                  child: Text(
                    '"$_transcript"',
-                   style: GoogleFonts.publicSans(
-                     fontSize: 16,
+                   style: context.textTheme.bodyLarge?.copyWith(
                      color: _isListening ? Colors.redAccent : Colors.grey.shade600,
                      fontStyle: FontStyle.italic,
                      fontWeight: _isListening ? FontWeight.bold : FontWeight.normal,
