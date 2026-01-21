@@ -38,14 +38,35 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
     final passport = state.uri.queryParameters['passport'];
     final dob = state.uri.queryParameters['dob'];
 
-    final initialContext = {
-       'visa_type': widget.visaType,
-       if (surname != null) 'surname': surname,
-       if (passport != null) 'passport_number': passport,
-       if (dob != null) 'date_of_birth': dob,
-    };
+    // SYSTEM INSTRUCTION: Force the AI to acknowledge context and follow strict order
+    final systemInstruction = """
+SYSTEM_INSTRUCTION:
+1. CONTEXT: The user is applying for a ${widget.visaType} visa.
+2. VERIFIED DATA: Use these confirmed details, DO NOT ask for them again:
+   - Surname: ${surname ?? 'Provided'}
+   - Passport Number: ${passport ?? 'Provided'}
+   - Date of Birth: ${dob ?? 'Provided'}
+   - Nationality: ${state.uri.queryParameters['nationality'] ?? 'Provided'}
+   - Given Name: ${state.uri.queryParameters['given_name'] ?? 'Provided'}
 
-    _sendMessage("", customContext: initialContext); 
+3. STRICT ORDER: You MUST ask questions in this exact order corresponding to the DS-160 form:
+   - Step 1: Personal Address & Phone (Current)
+   - Step 2: Passport Details (Only if missing details like City of Issuance)
+   - Step 3: Travel Plans (Purpose, Arrival Date, Length of Stay, Address in US)
+   - Step 4: Travel Companions
+   - Step 5: Previous US Travel
+   - Step 6: U.S. Contact (Person or Organization)
+   - Step 7: Family Information (Father, Mother, Spouse)
+   - Step 8: Work / Education / Training (Current & Previous)
+   - Step 9: Security & Background
+
+4. CURRENT TASK: Start immediately with Step 1 (Address & Phone). 
+   - Ask: "What is your current home address?"
+   - Do NOT ask "How long did you work there?" until Step 8.
+   - Do NOT ask for Name/DOB/Passport Number (already verified).
+""";
+
+    _sendMessage(systemInstruction, customContext: initialContext, isSystemPrompt: true); 
   }
 
   void _addBotMessage(String text) {
@@ -56,15 +77,17 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
     _scrollToBottom();
   }
 
-  void _sendMessage(String text, {Map<String, dynamic>? customContext}) async {
+  void _sendMessage(String text, {Map<String, dynamic>? customContext, bool isSystemPrompt = false}) async {
     if (text.isNotEmpty) {
-      if (mounted) {
+      if (mounted && !isSystemPrompt) {
         setState(() {
           _messages.add(ChatMessage(text: text, isUser: true));
           _isLoading = true;
         });
+      } else if (mounted && isSystemPrompt) {
+         setState(() => _isLoading = true);
       }
-      _scrollToBottom();
+      if (!isSystemPrompt) _scrollToBottom();
     } else {
          if (mounted) {
            setState(() => _isLoading = true);

@@ -81,7 +81,13 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
       }, onConflict: 'user_id');
 
       if (mounted) {
-        context.push('/kyc/chat');
+        context.push(Uri(path: '/kyc/chat', queryParameters: {
+          'surname': _surnameController.text.toUpperCase(),
+          'given_name': _givenNameController.text.toUpperCase(),
+          'dob': _birthDateController.text,
+          'nationality': _nationalityController.text,
+          'passport': _passportNumberController.text,
+        }).toString());
       }
     } catch (e) {
       if (mounted) {
