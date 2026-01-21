@@ -34,7 +34,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
     // PRODUCTION: Real database query
     final response = await _supabase
         .from('applications')
-        .select()
+        .select('status, step, updated_at, has_strategy_check')
         .eq('user_id', userId)
         .order('updated_at', ascending: false)
         .limit(1)

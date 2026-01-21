@@ -16,7 +16,7 @@ class FormRepositoryImpl implements FormRepository {
     // PRODUCTION: Real database query for form schemas
     final response = await _supabase
         .from('form_schemas')
-        .select()
+        .select('title, schema')
         .eq('is_active', true)
         .order('step_order', ascending: true);
 

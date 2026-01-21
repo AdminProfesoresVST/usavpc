@@ -16,7 +16,7 @@ class PaymentsRepositoryImpl implements PaymentsRepository {
     // PRODUCTION: Real database query
     final response = await _supabase
         .from('plans')
-        .select()
+        .select('id, title, price, description, is_popular')
         .eq('is_active', true)
         .order('sort_order', ascending: true);
 
