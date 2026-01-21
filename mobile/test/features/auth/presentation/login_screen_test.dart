@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mobile/features/auth/presentation/screens/login_screen.dart';
+import 'package:mobile/l10n/generated/app_localizations.dart';
 
 
 // We override the provider in the test to avoid calling real repo.
@@ -13,13 +14,16 @@ void main() {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('en'),
           home: LoginScreen(),
         ),
       ),
     );
 
     // Tap verify without entering text
-    await tester.tap(find.text('INGRESAR / LOGIN'));
+    await tester.tap(find.text('SIGN IN / LOGIN'));
     await tester.pump();
 
     expect(find.text('Please enter email'), findsOneWidget);

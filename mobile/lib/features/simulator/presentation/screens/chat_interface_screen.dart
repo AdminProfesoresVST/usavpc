@@ -165,7 +165,7 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
                  child: Text(
                    '"$_transcript"',
                    style: context.textTheme.bodyLarge?.copyWith(
-                     color: _isListening ? Colors.redAccent : Colors.grey.shade600,
+                     color: _isListening ? AppTheme.errorRed : Colors.grey.shade600,
                      fontStyle: FontStyle.italic,
                      fontWeight: _isListening ? FontWeight.bold : FontWeight.normal,
                    ),
@@ -193,11 +193,11 @@ class _ChatInterfaceScreenState extends ConsumerState<ChatInterfaceScreen> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: _isListening ? Colors.red : AppTheme.actionBlue,
+                        color: _isListening ? AppTheme.errorRed : AppTheme.actionBlue,
                         shape: BoxShape.circle,
                         boxShadow: [
                            BoxShadow(
-                             color: _isListening ? Colors.redAccent.withOpacity(0.5) : Colors.black26, 
+                             color: _isListening ? AppTheme.errorRed.withOpacity(0.5) : Colors.black26, 
                              blurRadius: _isListening ? 20 : 8, 
                              offset: const Offset(0, 4)
                            )

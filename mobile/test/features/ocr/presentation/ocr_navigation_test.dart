@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/core/service_locator/app_config.dart';
 import 'package:mobile/core/service_locator/app_config_provider.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_landing_screen.dart';
+import 'package:mobile/l10n/generated/app_localizations.dart';
 
 // Mock Config
 final mockConfig = AppConfig(
@@ -25,6 +26,9 @@ void main() {
           appConfigProvider.overrideWithValue(mockConfig),
         ],
         child: MaterialApp.router(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
           routerConfig: GoRouter(
             initialLocation: '/identity/start',
             routes: [
@@ -46,13 +50,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // 1. Verify we are on the Intro Screen
-    expect(find.text('VERIFICACIÓN DE IDENTIDAD'), findsOneWidget);
+    expect(find.text('IDENTITY VERIFICATION'), findsOneWidget);
     
     // 2. Verify we see the instructions
-    expect(find.text('Prepare su Documento'), findsOneWidget);
+    expect(find.text('Scan Your Document'), findsOneWidget);
     
     // 3. Verify Buttons
-    expect(find.text('ESCANEAR CON CÁMARA'), findsOneWidget);
+    // Note: Button text might be "SCAN DOCUMENT" or similar depending on arb value
+    expect(find.text('Use Camera'), findsOneWidget); 
 
     debugPrint('✅ TEST PASSED: Verification Landing Screen loaded correctly.');
   });

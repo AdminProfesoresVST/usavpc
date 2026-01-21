@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mobile/l10n/arb/app_localizations.dart';
+import 'package:mobile/l10n/generated/app_localizations.dart';
 import 'package:mobile/core/router/router.dart';
 import 'package:mobile/core/service_locator/app_config.dart';
 import 'package:mobile/core/service_locator/app_config_provider.dart';

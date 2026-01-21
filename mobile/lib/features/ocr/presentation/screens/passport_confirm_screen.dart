@@ -154,17 +154,18 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: AppTheme.actionBlue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppTheme.actionBlue.withOpacity(0.2)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info, color: Colors.blue.shade600),
+                  Icon(Icons.info, color: AppTheme.actionBlue),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      l10n.additionalQuestionsInfo,
-                      style: TextStyle(color: Colors.blue.shade800, fontSize: 13),
+                      l10n.passportScanInstructions,
+                      style: TextStyle(color: AppTheme.actionBlue, fontSize: 13),
                     ),
                   ),
                 ],

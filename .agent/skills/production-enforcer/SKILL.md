@@ -97,6 +97,12 @@ return asyncData.when(
 );
 ```
 
+### 5. Prohibición de Deshabilitar Código Roto
+Si encuentras código roto, conflictos de versiones o errores heredados:
+- **❌ PROHIBIDO**: Comentar el código, desactivar el módulo o usar "stubs" vacíos.
+- **❌ PROHIBIDO**: Ignorar el error porque "ya estaba así".
+- **✅ REQUERIDO**: Debes **arreglarlo** a toda costa. Si hay conflicto de dependencias, escribe la implementación manual. Si la librería no sirve, reemplázala. El código debe funcionar.
+
 ## Protocolo de "No Asunción"
 
 Si la instrucción del usuario es ambigua, **NO ASUMAS** la solución más fácil.

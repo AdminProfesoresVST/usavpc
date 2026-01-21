@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/l10n/arb/app_localizations.dart';
+import 'package:mobile/l10n/generated/app_localizations.dart';
 
 /// Extensiones de BuildContext para acceso más limpio a recursos comunes.
 /// Added: 2026-01-21 - Implements context.l10n pattern per global-scale-master skill

@@ -12,7 +12,7 @@ void main() {
     tempDir = await Directory.systemTemp.createTemp();
     Hive.init(tempDir.path);
     
-    // Register Adapter
+    // Register Adapter explicitly
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(OfflineRequestAdapter());
     }
