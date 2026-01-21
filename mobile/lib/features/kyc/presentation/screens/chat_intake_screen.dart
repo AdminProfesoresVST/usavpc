@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/kyc/data/ai_repository.dart';
 
+/// Chat intake screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class ChatIntakeScreen extends ConsumerStatefulWidget {
   final String visaType;
 
@@ -23,14 +27,12 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
   @override
   void initState() {
     super.initState();
-    // Start Chat with Context from OCR if available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeChat();
     });
   }
 
   Future<void> _initializeChat() async {
-    // Check for OCR data in URL
     final state = GoRouterState.of(context);
     final surname = state.uri.queryParameters['surname'];
     final passport = state.uri.queryParameters['passport'];
@@ -43,7 +45,6 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
        if (dob != null) 'date_of_birth': dob,
     };
 
-    // Send empty message to trigger AI Greeting with Context
     _sendMessage("", customContext: initialContext); 
   }
 
@@ -65,14 +66,12 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
       }
       _scrollToBottom();
     } else {
-        // Silent trigger (loading state only)
          if (mounted) {
            setState(() => _isLoading = true);
          }
     }
 
     try {
-      // Real API Call with Production Logic
       final response = await ref.read(aiRepositoryProvider).sendMessage(
         message: text,
         visaType: widget.visaType,
@@ -85,7 +84,7 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString().replaceAll("Exception: ", "")}')),
+          SnackBar(content: Text(context.l10n.error(e.toString().replaceAll("Exception: ", "")))),
         );
       }
     }
@@ -104,7 +103,7 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
   }
 
   void _handleSend() {
-    if (_isLoading) return; // Prevent double send
+    if (_isLoading) return;
     final text = _controller.text.trim();
     if (text.isEmpty) return;
     _sendMessage(text);
@@ -113,25 +112,13 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC), // Slate 50
-      appBar: AppBar(
-        title: Column(
-          children: [
-            Text(
-              'Asistente Consular',
-              style: GoogleFonts.publicSans(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Trámite ${widget.visaType.toUpperCase()}',
-              style: GoogleFonts.publicSans(fontSize: 10, color: Colors.white70),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF112E51), // Navy
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        elevation: 0,
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeaderWithProgress(
+        title: l10n.ds160Assistant,
+        subtitle: widget.visaType.toUpperCase(),
       ),
       body: Column(
         children: [
@@ -145,13 +132,13 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
               },
             ),
           ),
-          _buildInputArea(),
+          _buildInputArea(l10n),
         ],
       ),
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea(dynamic l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -167,7 +154,7 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
-                  hintText: 'Escribe tu respuesta...',
+                  hintText: l10n.typeYourResponse,
                   hintStyle: TextStyle(color: Colors.grey.shade400),
                   filled: true,
                   fillColor: Colors.grey.shade50,
@@ -182,7 +169,7 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: const BorderSide(color: Color(0xFF112E51)),
+                    borderSide: const BorderSide(color: AppTheme.navyPrimary),
                   ),
                 ),
                 textCapitalization: TextCapitalization.sentences,
@@ -192,7 +179,7 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
             const SizedBox(width: 8),
             Container(
               decoration: const BoxDecoration(
-                color: Color(0xFF112E51),
+                color: AppTheme.navyPrimary,
                 shape: BoxShape.circle,
               ),
               child: IconButton(
@@ -225,11 +212,11 @@ class _ChatBubble extends StatelessWidget {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsetsDirectional.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
-          color: isUser ? const Color(0xFF112E51) : Colors.white,
+          color: isUser ? AppTheme.navyPrimary : Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -243,9 +230,8 @@ class _ChatBubble extends StatelessWidget {
         ),
         child: Text(
           message.text,
-          style: GoogleFonts.publicSans(
-            color: isUser ? Colors.white : const Color(0xFF334155),
-            fontSize: 14,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: isUser ? Colors.white : Colors.grey.shade700,
             height: 1.4,
           ),
         ),
