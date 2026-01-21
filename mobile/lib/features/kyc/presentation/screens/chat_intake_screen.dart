@@ -5,6 +5,8 @@ import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/kyc/data/ai_repository.dart';
+import 'package:mobile/features/kyc/data/form_persistence_service.dart';
+import 'dart:convert';
 
 /// Chat intake screen with full i18n support.
 /// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
@@ -64,14 +66,42 @@ SYSTEM_INSTRUCTION:
    - Ask: "What is your current home address?"
    - Do NOT ask "How long did you work there?" until Step 8.
    - Do NOT ask for Name/DOB/Passport Number (already verified).
+
+5. DATA EXTRACTION & POLISHING:
+   - Listen to the user's answer.
+   - REWRITE/POLISH the answer to be formal and official (e.g. if user says "i live in new york", polish to "New York, NY, USA").
+   - Extract the standardized data into a JSON block: [[UPDATE: {"field_name": "Polished Value"}]]
+   - Example response: "Got it. And what is your phone number? [[UPDATE: {"home_address": "123 Main St, New York, NY, 10001, USA"}]]"
 """;
 
     _sendMessage(systemInstruction, customContext: initialContext, isSystemPrompt: true); 
   }
 
-  void _addBotMessage(String text) {
+  void _addBotMessage(String fullText) {
+    // 1. Separate Conversational Text from Data Block
+    String displayText = fullText;
+    final regex = RegExp(r'\[\[UPDATE:\s*(\{.*?\})\s*\]\]');
+    final match = regex.firstMatch(fullText);
+
+    if (match != null) {
+      // Extract Clean Text for UI
+      displayText = fullText.replaceAll(match.group(0)!, '').trim();
+      
+      // Parse JSON and Save to DB
+      try {
+        final jsonStr = match.group(1)!;
+        final data = json.decode(jsonStr) as Map<String, dynamic>;
+        
+        // Save to Supabase (Fire & Forget)
+        ref.read(formPersistenceProvider).updateFormData(data);
+        debugPrint("✅ Saved polished data: $data");
+      } catch (e) {
+        debugPrint("❌ Failed to parse/save AI data: $e");
+      }
+    }
+
     setState(() {
-      _messages.add(ChatMessage(text: text, isUser: false));
+      _messages.add(ChatMessage(text: displayText, isUser: false));
       _isLoading = false;
     });
     _scrollToBottom();
