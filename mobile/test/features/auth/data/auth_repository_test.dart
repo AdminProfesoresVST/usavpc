@@ -54,12 +54,11 @@ void main() {
     when(mockLocalAuth.canCheckBiometrics).thenAnswer((_) async => true);
     when(mockLocalAuth.authenticate(
       localizedReason: anyNamed('localizedReason'),
-      options: anyNamed('options'),
     )).thenAnswer((_) async => true);
     
     final result = await authRepository.authenticateBiometric();
     
     expect(result, true);
-    verify(mockLocalAuth.authenticate(localizedReason: anyNamed('localizedReason'), options: anyNamed('options'))).called(1);
+    verify(mockLocalAuth.authenticate(localizedReason: anyNamed('localizedReason'))).called(1);
   });
 }

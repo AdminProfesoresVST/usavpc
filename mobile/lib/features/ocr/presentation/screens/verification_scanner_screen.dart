@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/features/ocr/logic/ocr_processor.dart';
 import 'package:mobile/features/ocr/presentation/widgets/camera_mrz_widget.dart';
 
+/// Production-ready passport scanner with real navigation.
+/// Migration: 2026-01-20 - Implemented navigation with OCR data.
 class VerificationScannerScreen extends ConsumerStatefulWidget {
   const VerificationScannerScreen({super.key});
 
@@ -38,11 +40,14 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
         ),
       );
       
-      // Navigate or Return Result here
-      // context.pop(result); OR context.push('/kyc/fill', extra: result);
-      // For now, just show success and pop after delay
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) context.pop();
+      // PRODUCTION: Navigate to KYC form with extracted data
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          // Pass OCR data to intake chat for auto-fill
+          context.push(
+            '/kyc/intake?surname=${result.lastName}&firstName=${result.firstName}&passport=${result.documentNumber}&dob=${result.birthDate}&nationality=${result.nationality}',
+          );
+        }
       });
     }
   }
@@ -97,14 +102,27 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
           ),
           
           // Instruction Text
-          const Positioned(
+          Positioned(
             bottom: 80,
             left: 0,
             right: 0,
-            child: Text(
-              "Escanee la zona de datos del pasaporte",
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            child: Column(
+              children: [
+                const Text(
+                  "Escanee la zona de datos del pasaporte",
+                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _isScanning ? "Buscando MRZ..." : "¡Detectado!",
+                  style: TextStyle(
+                    color: _isScanning ? Colors.yellow : Colors.green,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
         ],
