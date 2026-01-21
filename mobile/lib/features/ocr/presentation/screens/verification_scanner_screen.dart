@@ -2,11 +2,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/features/ocr/logic/ocr_processor.dart';
 import 'package:mobile/features/ocr/presentation/widgets/camera_mrz_widget.dart';
 
-/// Production-ready passport scanner with real navigation.
-/// Migration: 2026-01-20 - Implemented navigation with OCR data.
+/// Production-ready passport scanner with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n per audit requirements
 class VerificationScannerScreen extends ConsumerStatefulWidget {
   const VerificationScannerScreen({super.key});
 
@@ -29,21 +30,18 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
 
     final result = await _ocrProcessor.processImage(image);
     if (result != null && mounted) {
-      setState(() => _isScanning = false); // Stop scanning immediately
+      setState(() => _isScanning = false);
       
-      // Found valid MRZ
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Pasaporte Detectado!'),
+        SnackBar(
+          content: Text('✅ ${context.l10n.passportDetected}'),
           backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       
-      // PRODUCTION: Navigate to KYC form with extracted data
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) {
-          // Pass OCR data to intake chat for auto-fill
           context.push(
             '/kyc/intake?surname=${result.lastName}&firstName=${result.firstName}&passport=${result.documentNumber}&dob=${result.birthDate}&nationality=${result.nationality}',
           );
@@ -54,18 +52,18 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // The Camera Widget
           Positioned.fill(
             child: CameraMRZWidget(
               onImage: _handleImage,
             ),
           ),
           
-          // Overlay UI (Scanner Frame)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -86,10 +84,9 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
             ),
           ),
 
-          // Back Button Overlay
-          Positioned(
+          PositionedDirectional(
             top: 50,
-            left: 16,
+            start: 16,
             child: SafeArea(
               child: CircleAvatar(
                 backgroundColor: Colors.black45,
@@ -101,21 +98,20 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
             ),
           ),
           
-          // Instruction Text
           Positioned(
             bottom: 80,
             left: 0,
             right: 0,
             child: Column(
               children: [
-                const Text(
-                  "Escanee la zona de datos del pasaporte",
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.passportScanInstructions,
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _isScanning ? "Buscando MRZ..." : "¡Detectado!",
+                  _isScanning ? l10n.searchingMRZ : l10n.detected,
                   style: TextStyle(
                     color: _isScanning ? Colors.yellow : Colors.green,
                     fontSize: 14,
