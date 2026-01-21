@@ -117,7 +117,10 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: '/kyc',
-        builder: (context, state) => const AiIntakeScreen(), // Replaced FormWizardScreen with AI
+         builder: (context, state) {
+           final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
+           return ChatIntakeScreen(visaType: type);
+        },
       ),
       GoRoute(
         path: '/kyc/chat',
@@ -133,8 +136,9 @@ GoRouter goRouter(Ref ref) {
           if (extra is PassportModel) {
             return PassportConfirmScreen(passportData: extra);
           }
-          // Fallback to AI intake if no passport data
-          return const AiIntakeScreen();
+          // Fallback: If data is lost, go to new Chat Intake, NEVER old Ai Intake
+           final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
+           return ChatIntakeScreen(visaType: type);
         },
       ),
       GoRoute(
