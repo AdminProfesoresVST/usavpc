@@ -33,15 +33,19 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
       final result = await _ocrProcessor.processFilePath(image.path);
       
       if (mounted) {
-        if (result != null) {
+      if (result != null) {
            ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('✅ Documento validado correctamente'),
               backgroundColor: Colors.green,
             ),
           );
-          // TODO: Navigate with result
-          // context.push('/identity/confirm', extra: result);
+          // Navigate to KYC form with extracted data
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) {
+              context.push('/kyc', extra: result);
+            }
+          });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
