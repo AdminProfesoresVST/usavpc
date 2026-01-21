@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
+/// Splash screen - minimal changes needed, just consistency.
+/// Updated: 2026-01-21 - Applied AppTheme constants
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,7 +19,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateToNext() async {
-    // Longer duration to transmit "authority" and "seriousness"
     await Future.delayed(const Duration(milliseconds: 3500));
     if (mounted) {
       context.go('/services');
@@ -26,30 +28,26 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Requested: White Background
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Centered Big Logo
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
                   'assets/images/logo.png',
-                  width: 250, // Requested: Large
+                  width: 250,
                   height: 250,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 24),
-                // Optional: Loading indicator, but kept minimal as requested?
-                // Providing a small one just to show activity, or removing if "just logo" is preferred.
-                // Keeping it distinct (blue) so it's visible on white.
-                const CircularProgressIndicator(color: Color(0xFF112E51)),
+                const CircularProgressIndicator(color: AppTheme.navyPrimary),
               ],
             ),
           ),
           
-          // Disclaimer at bottom
+          // Disclaimer at bottom - bilingual
           const Positioned(
             left: 0, 
             right: 0,

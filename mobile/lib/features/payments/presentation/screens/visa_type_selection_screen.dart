@@ -1,36 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 
+/// Visa type selection screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class VisaTypeSelectionScreen extends ConsumerWidget {
   const VisaTypeSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB), // Subtle Grey
-      appBar: AppBar(
-        title: Text(
-          'Propósito del Viaje', // Spanish, Professional
-          style: GoogleFonts.publicSans(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: const Color(0xFF112E51), // Navy
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        elevation: 0,
-      ),
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeader(title: l10n.visaTypeLabel),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         children: [
           // Elegant Header
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
-              'Seleccione la categoría que mejor describe su motivo de viaje a los Estados Unidos.',
-              style: TextStyle(
-                color: Color(0xFF4B5563), // Dark Grey
-                fontSize: 14,
+              l10n.eligibilitySubtitle,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: Colors.grey.shade600,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -41,40 +37,30 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
 
           // Option 1: Turismo (B1/B2)
           _CompactVisaTile(
-            title: 'Turismo, Negocios y Visitas',
-            description: 'Vacaciones, compras, visitar familia o reuniones.',
-            icon: Icons.beach_access_outlined, // Fine line
+            title: l10n.visaB1B2,
+            description: l10n.newVisaSubtitle,
+            icon: Icons.beach_access_outlined,
             onTap: () => context.push('/identity/start'),
           ),
           
           const SizedBox(height: 12),
 
-          // Option 2: Renovation
+          // Option 2: Trabajo
           _CompactVisaTile(
-            title: 'Renovación de Visa',
-            description: 'Renovar una visa vencida o por vencer.',
-            icon: Icons.refresh_outlined, // Fine line
-            onTap: () => context.push('/identity/start'),
+            title: l10n.visaH2,
+            description: l10n.interviewSimulatorSubtitle,
+            icon: Icons.work_outline,
+            onTap: () => context.push('/identity/start?type=h2'),
           ),
 
           const SizedBox(height: 12),
 
-          // Option 3: Trabajo
+          // Option 3: Estudiante
           _CompactVisaTile(
-            title: 'Trabajo Temporal',
-            description: 'Agricultura, construcción u otros trabajos estacionales.',
-            icon: Icons.work_outline, // Fine line
-            onTap: () => context.push('/identity/start?type=h2'), // Proceed to flow
-          ),
-
-          const SizedBox(height: 12),
-
-          // Option 4: Estudiante
-          _CompactVisaTile(
-            title: 'Estudiante',
-            description: 'Estudios académicos o de idiomas.',
-            icon: Icons.school_outlined, // Fine line
-            onTap: () => context.push('/identity/start?type=f1'), // Proceed to flow
+            title: l10n.visaF1,
+            description: l10n.documentAuditSubtitle,
+            icon: Icons.school_outlined,
+            onTap: () => context.push('/identity/start?type=f1'),
           ),
         ],
       ),
@@ -101,7 +87,7 @@ class _CompactVisaTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Material(
         color: Colors.transparent,
@@ -113,39 +99,31 @@ class _CompactVisaTile extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icon
-                Icon(icon, color: const Color(0xFF112E51), size: 22),
-                
+                Icon(icon, color: AppTheme.navyPrimary, size: 22),
                 const SizedBox(width: 14),
-                
-                // Content
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          color: Color(0xFF112E51),
+                        style: context.textTheme.titleSmall?.copyWith(
+                          color: AppTheme.navyPrimary,
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         description,
-                        style: const TextStyle(
-                          color: Color(0xFF6B7280),
-                          fontSize: 13,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey.shade500,
                         ),
                       ),
                     ],
                   ),
                 ),
-                
-                // Chevron
-                 Padding(
-                  padding: const EdgeInsets.only(top: 2),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(top: 2),
                   child: Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
                 ),
               ],
