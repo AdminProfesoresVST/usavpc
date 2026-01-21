@@ -913,6 +913,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'> CONSOLE OUTPUT'**
   String get consoleOutput;
+
+  /// Success message when passport is detected
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Detected!'**
+  String get passportDetected;
+
+  /// Scanner instruction text
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the passport data zone'**
+  String get passportScanInstructions;
+
+  /// Scanning status text
+  ///
+  /// In en, this message translates to:
+  /// **'Searching MRZ...'**
+  String get searchingMRZ;
+
+  /// Success status text
+  ///
+  /// In en, this message translates to:
+  /// **'Detected!'**
+  String get detected;
 }
 
 class _AppLocalizationsDelegate

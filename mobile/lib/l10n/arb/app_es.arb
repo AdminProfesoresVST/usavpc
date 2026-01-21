@@ -151,6 +151,11 @@
   
   "ds160AutoFill": "DS-160 AUTO-FILL",
   "inject": "INYECTAR",
-  "consoleOutput": "> CONSOLE OUTPUT"
+  "consoleOutput": "> CONSOLE OUTPUT",
+  
+  "passportDetected": "¡Pasaporte Detectado!",
+  "passportScanInstructions": "Escanee la zona de datos del pasaporte",
+  "searchingMRZ": "Buscando MRZ...",
+  "detected": "¡Detectado!"
 }
 

@@ -450,4 +450,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consoleOutput => '> CONSOLE OUTPUT';
+
+  @override
+  String get passportDetected => 'Passport Detected!';
+
+  @override
+  String get passportScanInstructions => 'Scan the passport data zone';
+
+  @override
+  String get searchingMRZ => 'Searching MRZ...';
+
+  @override
+  String get detected => 'Detected!';
 }

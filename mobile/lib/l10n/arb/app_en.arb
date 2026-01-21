@@ -407,7 +407,19 @@
   "@inject": {"description": "Manual inject button"},
   
   "consoleOutput": "> CONSOLE OUTPUT",
-  "@consoleOutput": {"description": "Console header"}
+  "@consoleOutput": {"description": "Console header"},
+  
+  "passportDetected": "Passport Detected!",
+  "@passportDetected": {"description": "Success message when passport is detected"},
+  
+  "passportScanInstructions": "Scan the passport data zone",
+  "@passportScanInstructions": {"description": "Scanner instruction text"},
+  
+  "searchingMRZ": "Searching MRZ...",
+  "@searchingMRZ": {"description": "Scanning status text"},
+  
+  "detected": "Detected!",
+  "@detected": {"description": "Success status text"}
 }
 
 
