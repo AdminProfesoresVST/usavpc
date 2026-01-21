@@ -1,67 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/network/supabase_client.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
 
+/// Profile screen with full i18n support and consistent design.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // PRODUCTION: Get real user data from Supabase
+    final l10n = context.l10n;
     final supabase = ref.watch(supabaseClientProvider);
     final user = supabase.auth.currentUser;
     final displayName = user?.userMetadata?['full_name'] as String? ?? 
                         user?.email?.split('@').first ?? 
-                        'Usuario';
-    final email = user?.email ?? 'Sin correo';
+                        l10n.defaultUser;
+    final email = user?.email ?? l10n.noEmail;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Perfil', style: GoogleFonts.publicSans(fontWeight: FontWeight.w600)),
-        backgroundColor: const Color(0xFF112E51),
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppHeader(title: l10n.profileTitle),
       body: ListView(
         children: [
           UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(color: Color(0xFF112E51)),
+            decoration: const BoxDecoration(color: AppTheme.navyPrimary),
             accountName: Text(displayName, style: const TextStyle(fontWeight: FontWeight.bold)), 
             accountEmail: Text(email),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Text(
                 displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
-                style: const TextStyle(fontSize: 32, color: Color(0xFF112E51)),
+                style: const TextStyle(fontSize: 32, color: AppTheme.navyPrimary),
               ),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('Configuración'),
+            title: Text(l10n.settingsOption),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Configuración próximamente')),
+                SnackBar(content: Text(l10n.settingsComingSoon)),
               );
             },
           ),
           ListTile(
             leading: const Icon(Icons.help),
-            title: const Text('Ayuda y Soporte'),
+            title: Text(l10n.helpOption),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Contacte: soporte@usavpc.org')),
+                SnackBar(content: Text(l10n.contactSupport)),
               );
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Cerrar Sesión', style: TextStyle(color: Colors.red)),
+            leading: Icon(Icons.logout, color: AppTheme.errorRed),
+            title: Text(l10n.logoutOption, style: TextStyle(color: AppTheme.errorRed)),
             onTap: () async {
-              // PRODUCTION: Real logout
               await ref.read(authProvider.notifier).signOut();
               if (context.mounted) {
                 context.go('/services');

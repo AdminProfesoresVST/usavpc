@@ -2,8 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
 
+/// Login screen with full i18n support and consistent design.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -36,17 +41,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
+    final l10n = context.l10n;
 
     ref.listen(authProvider, (previous, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
+          SnackBar(content: Text(l10n.error(next.error.toString()))),
         );
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppHeader(title: l10n.loginTitle),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -57,10 +63,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                Image.asset('assets/images/logo.png', height: 80),
                const SizedBox(height: 16),
                Text(
-                'USA Visa Processing',
+                l10n.loginAppName,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF112E51),
+                  color: AppTheme.navyPrimary,
                 ),
               ),
               const SizedBox(height: 32),
@@ -68,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               // Form Card
               Card(
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)), // Strict Rect
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Form(
@@ -79,13 +85,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         TextFormField(
                           controller: _emailController,
                           key: const Key('emailField'),
-                          decoration: const InputDecoration(labelText: 'Email'),
+                          decoration: InputDecoration(labelText: l10n.emailLabel),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter email';
+                              return l10n.emailRequired;
                             }
                             if (!value.contains('@')) {
-                              return 'Invalid email';
+                              return l10n.emailInvalid;
                             }
                             return null;
                           },
@@ -94,11 +100,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         TextFormField(
                           controller: _passwordController,
                           key: const Key('passwordField'),
-                          decoration: const InputDecoration(labelText: 'Password'),
+                          decoration: InputDecoration(labelText: l10n.passwordLabel),
                           obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter password';
+                              return l10n.passwordRequired;
                             }
                             return null;
                           },
@@ -111,22 +117,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: _submit,
-                              child: const Text('INGRESAR / LOGIN'),
+                              child: Text(l10n.loginButton),
                             ),
                           ),
                           const SizedBox(height: 16),
                           TextButton(
                             onPressed: () => GoRouter.of(context).push('/register'),
-                            child: const Text('Crear una cuenta / Create Account'),
+                            child: Text(l10n.createAccountLink),
                           ),
                           const Divider(),
                           // SECURITY: Only show test credentials in debug mode
                           if (kDebugMode)
                             TextButton.icon(
                               icon: const Icon(Icons.developer_mode),
-                              label: const Text('Quick Fill (Test User)'),
+                              label: Text(l10n.quickFillTest),
                               onPressed: () {
-                                // Verified cloud user (created via verification script)
                                 _emailController.text = 'dev_applicant@gmail.com';
                                 _passwordController.text = 'password';
                               },
@@ -138,9 +143,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               
               const SizedBox(height: 24),
-              const Text(
-                'Non-government service provider',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
+              Text(
+                l10n.nonGovernmentDisclaimer,
+                style: const TextStyle(color: Colors.grey, fontSize: 12),
               ),
             ],
           ),

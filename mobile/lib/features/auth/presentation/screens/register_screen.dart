@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
 
+/// Register screen with full i18n support and consistent design.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -30,11 +36,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             _emailController.text,
             _passwordController.text,
           );
-      
-      // Navigate back to login or dashboard handled by auth state listener?
-      // Actually usually signUp requires email confirmation or auto-login.
-      // We'll rely on global auth state listener in router to redirect if auto-logged in,
-      // Or show success message.
     }
   }
 
@@ -42,24 +43,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isLoading = authState.isLoading;
+    final l10n = context.l10n;
 
     ref.listen(authProvider, (previous, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
+          SnackBar(content: Text(l10n.error(next.error.toString()))),
         );
       } else if (!next.isLoading && next.hasValue) {
-          // Success (Assuming auto-login or "Check email")
-          // If supabase doesn't auto-login, we might need to show "Check Email".
-          // But usually dev mode auto-confirms or returns user.
-           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Account Created! Welcome.')),
-          );
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.accountCreated)),
+        );
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Account')),
+      appBar: AppHeader(title: l10n.registerTitle),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
@@ -71,7 +70,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                  
                  Card(
                   elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)), // Strict Rect
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Form(
@@ -80,41 +79,41 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                            Text(
-                            'Create Account',
+                            l10n.registerTitle,
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF112E51),
+                              color: AppTheme.navyPrimary,
                             ),
                           ),
                           const SizedBox(height: 24),
                           
                           TextFormField(
                             controller: _emailController,
-                            decoration: const InputDecoration(labelText: 'Email'),
+                            decoration: InputDecoration(labelText: l10n.emailLabel),
                             validator: (value) {
-                              if (value == null || value.isEmpty) return 'Required';
-                              if (!value.contains('@')) return 'Invalid Email';
+                              if (value == null || value.isEmpty) return l10n.fieldRequired;
+                              if (!value.contains('@')) return l10n.emailInvalid;
                               return null;
                             },
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
-                            decoration: const InputDecoration(labelText: 'Password'),
+                            decoration: InputDecoration(labelText: l10n.passwordLabel),
                             obscureText: true,
                             validator: (value) {
-                              if (value == null || value.isEmpty) return 'Required';
-                              if (value.length < 6) return 'Min 6 chars';
+                              if (value == null || value.isEmpty) return l10n.fieldRequired;
+                              if (value.length < 6) return l10n.passwordMinLength(6);
                               return null;
                             },
                           ),
                            const SizedBox(height: 16),
                           TextFormField(
                             controller: _confirmPasswordController,
-                            decoration: const InputDecoration(labelText: 'Confirm Password'),
+                            decoration: InputDecoration(labelText: l10n.confirmPasswordLabel),
                             obscureText: true,
                             validator: (value) {
-                              if (value != _passwordController.text) return 'Passwords do not match';
+                              if (value != _passwordController.text) return l10n.passwordsDoNotMatch;
                               return null;
                             },
                           ),
@@ -128,13 +127,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: _submit,
-                                    child: const Text('REGISTRARSE / SIGN UP'),
+                                    child: Text(l10n.registerButton),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 TextButton(
                                   onPressed: () => context.pop(),
-                                  child: const Text('Already have an account? Sign In'),
+                                  child: Text(l10n.alreadyHaveAccount),
                                 ),
                               ],
                             ),

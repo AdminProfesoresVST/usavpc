@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/risk_audit/presentation/providers/application_provider.dart';
 
+/// Quick check screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class QuickCheckScreen extends ConsumerStatefulWidget {
   const QuickCheckScreen({super.key});
 
@@ -20,27 +23,20 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final quickCheckState = ref.watch(quickCheckNotifierProvider);
 
     ref.listen(quickCheckNotifierProvider, (previous, next) {
       if (next.error != null && (previous?.error != next.error)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${next.error}')),
+          SnackBar(content: Text(l10n.error(next.error ?? ''))),
         );
       }
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
-      appBar: AppBar(
-        title: Text(
-          'Auditoría Preliminar',
-          style: GoogleFonts.publicSans(fontWeight: FontWeight.w600, fontSize: 18),
-        ),
-        backgroundColor: AppTheme.navyPrimary,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-      ),
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeader(title: l10n.preliminaryAuditTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
@@ -50,18 +46,16 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
             children: [
               // Header
               Text(
-                'Verificación de Elegibilidad',
-                style: GoogleFonts.publicSans(
-                  fontSize: 22,
+                l10n.eligibilityVerification,
+                style: context.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppTheme.navyPrimary,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Antes de simular su entrevista, analizaremos su perfil básico para detectar riesgos evidentes.',
-                style: GoogleFonts.publicSans(
-                  fontSize: 14,
+                l10n.eligibilitySubtitle,
+                style: context.textTheme.bodyMedium?.copyWith(
                   color: Colors.grey.shade600,
                   height: 1.5,
                 ),
@@ -70,8 +64,11 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
 
               // Question 1: Visa Type
               Text(
-                'Tipo de Visa Solicitada',
-                style: GoogleFonts.publicSans(fontWeight: FontWeight.w600, color: const Color(0xFF1F2937)),
+                l10n.visaTypeLabel,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.navyPrimary,
+                ),
               ),
               const SizedBox(height: 8),
               Container(
@@ -85,10 +82,10 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   child: DropdownButton<String>(
                     value: _selectedVisaType,
                     isExpanded: true,
-                    items: const [
-                      DropdownMenuItem(value: 'B1/B2', child: Text('B1/B2 - Turismo y Negocios')),
-                      DropdownMenuItem(value: 'F1', child: Text('F1 - Estudiante')),
-                      DropdownMenuItem(value: 'H2', child: Text('H2 - Trabajo Temporal')),
+                    items: [
+                      DropdownMenuItem(value: 'B1/B2', child: Text(l10n.visaB1B2)),
+                      DropdownMenuItem(value: 'F1', child: Text(l10n.visaF1)),
+                      DropdownMenuItem(value: 'H2', child: Text(l10n.visaH2)),
                     ],
                     onChanged: (val) {
                       if (val != null) setState(() => _selectedVisaType = val);
@@ -100,15 +97,18 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
 
               // Question 2: DS-160
               Text(
-                '¿Ya completó su formulario DS-160?',
-                style: GoogleFonts.publicSans(fontWeight: FontWeight.w600, color: const Color(0xFF1F2937)),
+                l10n.ds160Question,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.navyPrimary,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     child: _RadioOption(
-                      label: 'Sí, tengo el código',
+                      label: l10n.yesHaveCode,
                       selected: _hasDs160,
                       onTap: () => setState(() => _hasDs160 = true),
                     ),
@@ -116,7 +116,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _RadioOption(
-                      label: 'No, aún no',
+                      label: l10n.notYet,
                       selected: !_hasDs160,
                       onTap: () => setState(() => _hasDs160 = false),
                     ),
@@ -127,22 +127,25 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               if (_hasDs160) ...[
                 const SizedBox(height: 24),
                 Text(
-                  'Código de Confirmación DS-160',
-                  style: GoogleFonts.publicSans(fontWeight: FontWeight.w600, color: const Color(0xFF1F2937)),
+                  l10n.ds160CodeLabel,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.navyPrimary,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _ds160Controller,
-                  decoration: const InputDecoration(
-                    hintText: 'Ej: AA00...',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: InputDecoration(
+                    hintText: l10n.ds160CodeHint,
+                    border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     fillColor: Colors.white,
                     filled: true,
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Ingrese el código';
-                    if (!value.toUpperCase().startsWith('AA')) return 'Debe comenzar con "AA"';
+                    if (value == null || value.isEmpty) return l10n.enterCode;
+                    if (!value.toUpperCase().startsWith('AA')) return l10n.codeStartAA;
                     return null;
                   },
                 ),
@@ -163,7 +166,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Para una auditoría precisa, recomendamos tener el formulario listo. Puede continuar, pero el análisis será limitado.',
+                          l10n.noDs160Warning,
                           style: TextStyle(fontSize: 12, color: Colors.amber.shade900),
                         ),
                       ),
@@ -195,8 +198,12 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                           ),
                         )
                       : Text(
-                          'COMENZAR ANÁLISIS',
-                          style: GoogleFonts.publicSans(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                          l10n.startAnalysis,
+                          style: context.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                 ),
               ),
@@ -210,17 +217,14 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
   void _submitForm() async {
     if (_hasDs160 && !_formKey.currentState!.validate()) return;
 
-    // PRODUCTION: Save quick check data to Supabase
     await ref.read(quickCheckNotifierProvider.notifier).saveQuickCheck(
       visaType: _selectedVisaType,
       ds160Code: _hasDs160 ? _ds160Controller.text : null,
       hasDs160: _hasDs160,
     );
 
-    // Invalidate user application to refresh data
     ref.invalidate(userApplicationProvider);
 
-    // Navigate to Risk Audit
     if (mounted) {
       context.push('/risk-audit');
     }
@@ -242,9 +246,9 @@ class _RadioOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF112E51).withOpacity(0.05) : Colors.white,
+          color: selected ? AppTheme.navyPrimary.withOpacity(0.05) : Colors.white,
           border: Border.all(
-            color: selected ? const Color(0xFF112E51) : Colors.grey.shade300,
+            color: selected ? AppTheme.navyPrimary : Colors.grey.shade300,
             width: selected ? 2 : 1
           ),
           borderRadius: BorderRadius.circular(4),
@@ -253,7 +257,7 @@ class _RadioOption extends StatelessWidget {
           children: [
             Icon(
               selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? const Color(0xFF112E51) : Colors.grey.shade400,
+              color: selected ? AppTheme.navyPrimary : Colors.grey.shade400,
               size: 18,
             ),
             const SizedBox(width: 8),
@@ -261,7 +265,7 @@ class _RadioOption extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: selected ? const Color(0xFF112E51) : Colors.grey.shade700,
+                  color: selected ? AppTheme.navyPrimary : Colors.grey.shade700,
                   fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                   fontSize: 13,
                 ),

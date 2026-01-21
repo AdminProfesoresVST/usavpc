@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/ocr/logic/ocr_processor.dart';
 
+/// Verification landing screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class VerificationLandingScreen extends ConsumerStatefulWidget {
   const VerificationLandingScreen({super.key});
 
@@ -22,6 +25,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
   Future<void> _pickFromGallery() async {
     try {
       setState(() => _isLoading = true);
+      final l10n = context.l10n;
       
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image == null) {
@@ -29,18 +33,16 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
         return;
       }
 
-      // Process Logic
       final result = await _ocrProcessor.processFilePath(image.path);
       
       if (mounted) {
-      if (result != null) {
+        if (result != null) {
            ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('✅ Documento validado correctamente'),
+            SnackBar(
+              content: Text('✅ ${l10n.documentValidated}'),
               backgroundColor: Colors.green,
             ),
           );
-          // Navigate to KYC form with extracted data
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted) {
               context.push('/kyc', extra: result);
@@ -48,8 +50,8 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('⚠️ No se detectó un pasaporte válido. Intente de nuevo.'),
+            SnackBar(
+              content: Text('⚠️ ${l10n.noValidPassport}'),
               backgroundColor: AppTheme.errorRed,
             ),
           );
@@ -58,7 +60,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: AppTheme.errorRed),
+          SnackBar(content: Text(context.l10n.error(e.toString())), backgroundColor: AppTheme.errorRed),
         );
       }
     } finally {
@@ -74,23 +76,12 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC), // Slate 50 (Official Match)
-      appBar: AppBar(
-        title: Text(
-          'VERIFICACIÓN DE IDENTIDAD',
-          style: GoogleFonts.publicSans(fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.5),
-        ),
-        centerTitle: true,
-        backgroundColor: AppTheme.navyPrimary,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.white),
-          onPressed: () => context.pop(),
-        ),
-      ),
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeader(title: l10n.verificationTitle),
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator(color: AppTheme.navyPrimary))
         : Column(
@@ -98,7 +89,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
             // Header Section (Navy Block)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 48),
+              padding: const EdgeInsetsDirectional.fromSTEB(24, 24, 24, 48),
               decoration: const BoxDecoration(
                 color: AppTheme.navyPrimary,
                 borderRadius: BorderRadius.only(
@@ -115,13 +106,12 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                       color: Colors.white.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(LucideIcons.scanLine, size: 40, color: Colors.white), // White instead of Gold
+                    child: const Icon(LucideIcons.scanLine, size: 40, color: Colors.white),
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Escanee su Documento',
-                    style: GoogleFonts.publicSans(
-                      fontSize: 24,
+                    l10n.scanDocument,
+                    style: context.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -129,9 +119,8 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Necesitamos capturar los datos de su pasaporte para autocompletar su solicitud.',
-                    style: GoogleFonts.publicSans(
-                      fontSize: 14,
+                    l10n.scanDocumentSubtitle,
+                    style: context.textTheme.bodyMedium?.copyWith(
                       color: Colors.white70,
                       height: 1.5,
                     ),
@@ -149,8 +138,8 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
               child: Column(
                 children: [
                    _ActionCard(
-                    title: 'Usar Cámara',
-                    subtitle: 'Escanear directamente',
+                    title: l10n.useCamera,
+                    subtitle: l10n.useCameraSubtitle,
                     icon: LucideIcons.camera,
                     isPrimary: true,
                     onTap: () => context.push('/identity/capture?type=$visaType'),
@@ -159,8 +148,8 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                   const SizedBox(height: 16),
 
                   _ActionCard(
-                    title: 'Subir Imagen',
-                    subtitle: 'Desde galería',
+                    title: l10n.uploadImage,
+                    subtitle: l10n.uploadImageSubtitle,
                     icon: LucideIcons.image,
                     isPrimary: false,
                     onTap: _pickFromGallery,
@@ -173,16 +162,15 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
             
             // Security Note
             Padding(
-              padding: const EdgeInsets.only(bottom: 32),
+              padding: const EdgeInsetsDirectional.only(bottom: 32),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(LucideIcons.lock, size: 14, color: Colors.grey),
                   const SizedBox(width: 8),
                   Text(
-                    'Sus datos están encriptados y seguros',
-                    style: GoogleFonts.publicSans(
-                      fontSize: 12,
+                    l10n.dataSecure,
+                    style: context.textTheme.bodySmall?.copyWith(
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
@@ -217,7 +205,6 @@ class _ActionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        // Subtle premium shadow
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -226,7 +213,7 @@ class _ActionCard extends StatelessWidget {
           ),
         ],
         border: isPrimary 
-          ? Border.all(color: AppTheme.navyPrimary, width: 2) // Navy Border
+          ? Border.all(color: AppTheme.navyPrimary, width: 2)
           : Border.all(color: Colors.transparent),
       ),
       child: Material(
@@ -238,12 +225,11 @@ class _ActionCard extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                // Icon Container
                 Container(
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: isPrimary ? AppTheme.navyPrimary : const Color(0xFFF3F4F6),
+                    color: isPrimary ? AppTheme.navyPrimary : AppTheme.backgroundGrey,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -254,15 +240,13 @@ class _ActionCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 
-                // Texts
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.publicSans(
-                          fontSize: 16,
+                        style: context.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppTheme.navyPrimary,
                         ),
@@ -270,8 +254,7 @@ class _ActionCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: GoogleFonts.publicSans(
-                          fontSize: 13,
+                        style: context.textTheme.bodySmall?.copyWith(
                           color: Colors.grey.shade500,
                         ),
                       ),
@@ -279,11 +262,7 @@ class _ActionCard extends StatelessWidget {
                   ),
                 ),
 
-                // Chevron
-                Icon(
-                  LucideIcons.chevronRight, 
-                  color: Colors.grey.shade300,
-                ),
+                Icon(LucideIcons.chevronRight, color: Colors.grey.shade300),
               ],
             ),
           ),

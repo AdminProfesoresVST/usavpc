@@ -67,6 +67,7 @@ dependency_overrides:
   js: ^0.7.1
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/images/

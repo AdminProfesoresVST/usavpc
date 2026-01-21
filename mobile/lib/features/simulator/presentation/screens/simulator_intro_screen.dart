@@ -1,11 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Simulator intro screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class SimulatorIntroScreen extends ConsumerStatefulWidget {
   const SimulatorIntroScreen({super.key});
 
@@ -24,7 +25,6 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
 
   Future<void> _checkPermissions() async {
     final micStatus = await Permission.microphone.status;
-    // We don't need camera strictly for voice sim, but let's check mic
     if (micStatus.isGranted) {
       if (mounted) setState(() => _permissionsGranted = true);
     }
@@ -37,7 +37,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Se requiere micrófono para el simulador de voz.')),
+          SnackBar(content: Text(context.l10n.microphoneRequired)),
         );
       }
     }
@@ -45,8 +45,15 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
     return Scaffold(
       backgroundColor: AppTheme.navyPrimary,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -56,9 +63,8 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                const Icon(Icons.record_voice_over, size: 80, color: Colors.white),
                const SizedBox(height: 32),
                Text(
-                 'Simulador de Entrevista',
-                 style: GoogleFonts.publicSans(
-                   fontSize: 28,
+                 l10n.simulatorTitle,
+                 style: context.textTheme.headlineMedium?.copyWith(
                    fontWeight: FontWeight.bold,
                    color: Colors.white,
                  ),
@@ -66,9 +72,8 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                ),
                const SizedBox(height: 16),
                Text(
-                 'Practique con nuestro Oficial Consular de IA. Responda verbalmente para evaluar su fluidez y coherencia.',
-                 style: GoogleFonts.publicSans(
-                   fontSize: 16,
+                 l10n.simulatorDescription,
+                 style: context.textTheme.bodyLarge?.copyWith(
                    color: Colors.white70,
                    height: 1.5,
                  ),
@@ -84,7 +89,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                    ),
-                   child: const Text('HABILITAR MICRÓFONO'),
+                   child: Text(l10n.enableMicrophone),
                  )
                else
                  ElevatedButton(
@@ -98,7 +103,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                    child: Row(
                      mainAxisSize: MainAxisSize.min,
                      children: [
-                       const Text('INICIAR ENTREVISTA'),
+                       Text(l10n.startInterview),
                        const SizedBox(width: 8),
                        const Icon(Icons.arrow_forward),
                      ],
