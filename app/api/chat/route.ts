@@ -574,7 +574,7 @@ export async function POST(req: Request) {
             if (!valRes.isValid) {
                 // Return refusal message and do NOT advance state
                 return NextResponse.json({
-                    response: valRes.refusalMessage || "Please answer the question.",
+                    response: valRes.refusalMessage || (effectiveLocale === 'es' ? "Por favor responda a la pregunta." : "Please answer the question."),
                     nextStep: currentStep // Repeat the same step
                 });
             }
