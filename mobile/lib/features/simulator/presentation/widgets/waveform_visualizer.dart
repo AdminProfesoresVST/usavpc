@@ -115,7 +115,7 @@ class _WaveformVisualizerState extends State<WaveformVisualizer> with TickerProv
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 1.5),
                   width: 2, // Thin lines
-                  height: 20 * _heightAnimations[index].value, // Subtle max height
+                  height: 40 * _heightAnimations[index].value, // Larger height
                   decoration: BoxDecoration(
                     color: _getBarColor(index).withOpacity(0.8),
                     borderRadius: BorderRadius.circular(1),

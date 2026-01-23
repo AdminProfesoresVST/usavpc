@@ -214,13 +214,11 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   child: _avatarState == AvatarState.speaking
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.record_voice_over, size: 32, color: AppTheme.navyPrimary),
-                            const SizedBox(width: 16),
-                            WaveformVisualizer(isActive: true, barCount: 12),
-                          ],
+                      ? Center(
+                          child: SizedBox(
+                            height: 60,
+                            child: WaveformVisualizer(isActive: true, barCount: 20),
+                          ),
                         )
                       : AvatarWidget(state: _avatarState, size: 80),
                 ),
