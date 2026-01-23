@@ -162,7 +162,18 @@ export async function POST(req: Request) {
 
             // 1. If it's the INITIAL LOAD (answer is null) OR Explicit Greeting Trigger
             if (!answer || answer.includes("SYSTEM_START_INTERVIEW_GREETING")) {
-                const greetingText = "Buenos días. Soy el oficial consular asignado a su caso. Por favor, entrégueme su pasaporte y dígame el motivo de su viaje.";
+                // Extract profile data for dynamic greeting
+                const profileData = application.ds160_payload?.ds160_data?.personal || {};
+                const hasName = profileData.given_names || profileData.surnames;
+                const name = hasName ? `${profileData.given_names || ''} ${profileData.surnames || ''}`.trim() : null;
+
+                // Dynamic greeting based on available profile data
+                let greetingText: string;
+                if (name) {
+                    greetingText = `Buenos días, ${name}. Soy el oficial consular asignado a su caso. Veo que solicita una visa B1/B2. ¿Cuál es el propósito principal de su viaje a Estados Unidos?`;
+                } else {
+                    greetingText = "Buenos días. Soy el oficial consular asignado a su caso. ¿Cuál es el propósito de su viaje a Estados Unidos?";
+                }
 
                 const newHistory = [{ role: "assistant", content: greetingText }];
 

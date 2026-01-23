@@ -219,7 +219,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                           children: [
                             const Icon(Icons.record_voice_over, size: 32, color: AppTheme.navyPrimary),
                             const SizedBox(width: 16),
-                            WaveformVisualizer(isActive: true, barCount: 10, color: AppTheme.actionBlue),
+                            WaveformVisualizer(isActive: true, barCount: 12),
                           ],
                         )
                       : AvatarWidget(state: _avatarState, size: 80),
@@ -242,7 +242,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                 : _messages.isEmpty
                     ? Center(
                         child: Text(
-                          'Conectando con el oficial...',
+                          l10n.connectingToOfficer,
                           style: TextStyle(
                             color: Colors.grey.shade500,
                             fontSize: 16,
@@ -262,40 +262,67 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                       ),
           ),
           
-          // Hybrid Input Controls
+          // Minimalist Input Bar
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [
-                 BoxShadow(
-                   color: AppTheme.navyPrimary.withOpacity(0.05), 
-                   blurRadius: 20, 
-                   offset: const Offset(0, -5)
-                 )
-              ],
+              border: Border(top: BorderSide(color: Colors.grey.shade200, width: 1)),
             ),
             child: Row(
                children: [
+                   // Mic Button (Small, Left)
+                   GestureDetector(
+                     onTap: _toggleListening,
+                     child: Container(
+                       width: 36,
+                       height: 36,
+                       decoration: BoxDecoration(
+                         color: _isListening ? Colors.red.shade50 : Colors.grey.shade100,
+                         shape: BoxShape.circle,
+                       ),
+                       child: Icon(
+                         _isListening ? Icons.stop : Icons.mic,
+                         color: _isListening ? Colors.red : Colors.grey.shade600,
+                         size: 18,
+                       ),
+                     ),
+                   ),
+                   const SizedBox(width: 12),
+                   // Text Input (Clean)
                    Expanded(
                      child: Container(
+                       height: 40,
                        decoration: BoxDecoration(
-                         color: Colors.grey.shade100,
-                         borderRadius: BorderRadius.circular(30),
-                         border: Border.all(color: Colors.grey.shade300),
+                         color: Colors.grey.shade50,
+                         borderRadius: BorderRadius.circular(20),
+                         border: Border.all(color: Colors.grey.shade200),
                        ),
                        child: TextField(
                          controller: _textController,
-                         style: context.textTheme.bodyMedium?.copyWith(color: AppTheme.navyPrimary),
+                         style: const TextStyle(fontSize: 14, color: AppTheme.navyPrimary),
                          decoration: InputDecoration(
-                           hintText: _isListening ? context.l10n.listening : "Escribe tu respuesta...",
-                           hintStyle: TextStyle(
-                             color: _isListening ? AppTheme.actionBlue : Colors.grey.shade500,
-                             fontWeight: _isListening ? FontWeight.bold : FontWeight.normal
-                           ),
+                           hintText: _isListening ? l10n.listening : l10n.typeYourResponse,
+                           hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
                            border: InputBorder.none,
-                           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                            isDense: true,
+                           suffixIcon: _textController.text.isNotEmpty
+                               ? GestureDetector(
+                                   onTap: () {
+                                     _sendMessageToAI(_textController.text);
+                                     _textController.clear();
+                                   },
+                                   child: Container(
+                                     margin: const EdgeInsets.only(right: 4),
+                                     child: Icon(
+                                       Icons.send_rounded,
+                                       color: AppTheme.actionBlue,
+                                       size: 20,
+                                     ),
+                                   ),
+                                 )
+                               : null,
                          ),
                          onSubmitted: (value) {
                            if (value.trim().isNotEmpty) {
@@ -306,34 +333,6 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                          onChanged: (text) => setState(() {}),
                        ),
                      ),
-                   ),
-                   const SizedBox(width: 12),
-                   GestureDetector(
-                      onTap: () {
-                         if (_textController.text.trim().isNotEmpty) {
-                            _sendMessageToAI(_textController.text);
-                            _textController.clear();
-                         } else {
-                            _toggleListening();
-                         }
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: (_textController.text.isNotEmpty) ? AppTheme.navyPrimary : (_isListening ? Colors.red : AppTheme.actionBlue),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(color: (_textController.text.isNotEmpty ? AppTheme.navyPrimary : AppTheme.actionBlue).withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))
-                          ]
-                        ),
-                        child: Icon(
-                          _textController.text.isNotEmpty ? Icons.send : (_isListening ? Icons.stop : Icons.mic), 
-                          color: Colors.white, 
-                          size: 24
-                        ),
-                      ),
                    ),
                ],
             ),
