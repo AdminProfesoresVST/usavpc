@@ -94,7 +94,7 @@ class RiskAuditScreen extends ConsumerWidget {
                 
                 ElevatedButton(
                   onPressed: () {
-                     context.go('/simulator'); 
+                     context.go('/simulator/chat'); 
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.navyPrimary,

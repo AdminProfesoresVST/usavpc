@@ -227,7 +227,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
 
       if (app != null && app['form_data'] != null && app['form_data']['ocr_confirmed'] == true) {
         // Data Exists -> Go to Simulator
-        if (context.mounted) GoRouter.of(context).push('/simulator');
+        if (context.mounted) GoRouter.of(context).push('/simulator/chat');
       } else {
         // No Data -> Go to Verification
         if (context.mounted) {

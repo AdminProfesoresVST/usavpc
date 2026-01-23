@@ -385,7 +385,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               const Text("Sin sesiones de práctica", style: TextStyle(color: AppTheme.inkSecondary)),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () { Navigator.pop(context); context.push('/simulator'); },
+                onPressed: () { Navigator.pop(context); context.push('/simulator/chat'); },
                 style: ElevatedButton.styleFrom(backgroundColor: AppTheme.navyPrimary),
                 child: const Text("Iniciar Simulación"),
               ),
