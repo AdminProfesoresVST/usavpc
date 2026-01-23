@@ -6,10 +6,11 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
+import 'package:mobile/core/widgets/dotted_border_painter.dart';
 import 'package:mobile/features/ocr/logic/ocr_processor.dart';
 
-/// Verification landing screen with full i18n support.
-/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
+/// Verification Landing Screen - "Clean Upload" Design
+/// Matches User Reference: Dashed Border Container, Upload Top, Camera Bottom.
 class VerificationLandingScreen extends ConsumerStatefulWidget {
   const VerificationLandingScreen({super.key});
 
@@ -26,52 +27,33 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
     try {
       setState(() => _isLoading = true);
       final l10n = context.l10n;
-      
+      // ... Same logic as before ...
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image == null) {
         setState(() => _isLoading = false);
         return;
       }
-
       final result = await _ocrProcessor.processFilePath(image.path);
-      
       if (mounted) {
-        if (result != null) {
-           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('✅ ${l10n.documentValidated}'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
-              context.push('/kyc', extra: result);
-            }
+        if (result != null && result.documentNumber.isNotEmpty && result.lastName.isNotEmpty) {
+           final uri = Uri(path: '/kyc/confirm', queryParameters: {
+            'surname': result.lastName,
+            'firstName': result.firstName,
+            'passport': result.documentNumber,
+            'dob': result.birthDate,
+            'nationality': result.nationality,
+            'sex': result.sex,
+            'expiry': result.expiryDate,
           });
+          context.push(uri.toString());
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('⚠️ ${l10n.noValidPassport}'),
-              backgroundColor: AppTheme.errorRed,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('⚠️ ${l10n.noValidPassport}'), backgroundColor: AppTheme.navyPrimary));
         }
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.error(e.toString())), backgroundColor: AppTheme.errorRed),
-        );
-      }
-    } finally {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()), backgroundColor: AppTheme.navyPrimary));    } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  @override
-  void dispose() {
-    _ocrProcessor.dispose();
-    super.dispose();
   }
 
   @override
@@ -80,194 +62,104 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
     final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundGrey,
+      backgroundColor: Colors.white, // Pure White per reference
       appBar: AppHeader(title: l10n.verificationTitle),
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator(color: AppTheme.navyPrimary))
-        : Column(
-          children: [
-            // Header Section (Navy Block)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsetsDirectional.fromSTEB(24, 24, 24, 48),
-              decoration: const BoxDecoration(
-                color: AppTheme.navyPrimary,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-              ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.navyPrimary))
+          : SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(LucideIcons.scanLine, size: 40, color: Colors.white),
-                  ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Text(
-                    l10n.scanDocument,
-                    style: context.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
+                    l10n.scanDocument, // "Upload ID"
+                    style: AppTheme.h1NavyBold, // STRICT 18px
                   ),
                   const SizedBox(height: 12),
                   Text(
                     l10n.scanDocumentSubtitle,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
+                    style: AppTheme.bodyGreyRegular.copyWith(height: 1.5),
                   ),
-                ],
-              ),
-            ),
+                  const SizedBox(height: 48),
 
-            const SizedBox(height: 32),
+                  // DASHED CONTAINER
+                  CustomPaint(
+                    painter: DottedBorderPainter(color: Colors.grey.shade300, radius: 24),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // 1. Upload Section
+                          GestureDetector(
+                            onTap: _pickFromGallery,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.backgroundGrey,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(LucideIcons.uploadCloud, size: 40, color: AppTheme.navyPrimary),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  l10n.uploadImage, // "Tap to upload photo"
+                                  style: AppTheme.h2NavyBold, // 16px
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "PNG, JPG or PDF (max. 800x400px)", // Matches reference
+                                  style: AppTheme.smallGreyRegular,
+                                ),
+                              ],
+                            ),
+                          ),
 
-            // Actions Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                   _ActionCard(
-                    title: l10n.useCamera,
-                    subtitle: l10n.useCameraSubtitle,
-                    icon: LucideIcons.camera,
-                    isPrimary: true,
-                    onTap: () => context.push('/identity/capture?type=$visaType'),
-                  ),
-                  
-                  const SizedBox(height: 16),
+                          const SizedBox(height: 32),
 
-                  _ActionCard(
-                    title: l10n.uploadImage,
-                    subtitle: l10n.uploadImageSubtitle,
-                    icon: LucideIcons.image,
-                    isPrimary: false,
-                    onTap: _pickFromGallery,
-                  ),
-                ],
-              ),
-            ),
-            
-            const Spacer(),
-            
-            // Security Note
-            Padding(
-              padding: const EdgeInsetsDirectional.only(bottom: 32),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(LucideIcons.lock, size: 14, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.dataSecure,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-    );
-  }
-}
+                          // 2. Divider
+                          Row(
+                            children: [
+                              Expanded(child: Divider(color: Colors.grey.shade300)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text("OR", style: AppTheme.smallGreyRegular.copyWith(fontWeight: FontWeight.bold)),
+                              ),
+                              Expanded(child: Divider(color: Colors.grey.shade300)),
+                            ],
+                          ),
 
-class _ActionCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final bool isPrimary;
-  final VoidCallback onTap;
+                          const SizedBox(height: 32),
 
-  const _ActionCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.isPrimary,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: isPrimary 
-          ? Border.all(color: AppTheme.navyPrimary, width: 2)
-          : Border.all(color: Colors.transparent),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: isPrimary ? AppTheme.navyPrimary : AppTheme.backgroundGrey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    icon, 
-                    color: isPrimary ? Colors.white : AppTheme.navyPrimary, 
-                    size: 24
-                  ),
-                ),
-                const SizedBox(width: 16),
-                
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.navyPrimary,
-                        ),
+                          // 3. Camera Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () => context.push('/identity/capture?type=$visaType'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.navyPrimary, // Navy Button
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 0,
+                              ),
+                              child: Text(
+                                l10n.useCamera, // "Open camera"
+                                style: AppTheme.h2NavyBold.copyWith(color: Colors.white), // 16px
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-
-                Icon(LucideIcons.chevronRight, color: Colors.grey.shade300),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

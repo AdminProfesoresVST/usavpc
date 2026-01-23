@@ -146,6 +146,22 @@ class MyRepo {
 }
 ```
 
+### 5. Auditoría de Zero Tolerance (Fallbacks & Asserts)
+
+| Problema Detectado | Acción Inmediata |
+|--------------------|------------------|
+| Uso de `??` (Null Coalescing) | **ELIMINAR**. Usar `if (val == null) throw/return`. |
+| Modelo sin `assert()` | Agregar asserciones en constructor (`assert(id.isNotEmpty)`). |
+| Try/Catch silencioso | Agregar manejo de error explícito en UI/State. |
+
+### 6. Auditoría de Documentación Viva
+
+| Problema Detectado | Acción Inmediata |
+|--------------------|------------------|
+| Pantalla nueva sin `APP_BIBLE.md` | Agregar entrada en Sitemap de la Biblia. |
+| Tabla nueva sin `APP_BIBLE.md` | Agregar entrada en Diccionario de Datos. |
+| Regla de negocio nueva | Documentar en Sección Reglas de Negocio. |
+
 ## Comandos de Ejecución Autónoma
 
 Como auditor, ejecuta mentalmente (o realmente si tienes acceso):

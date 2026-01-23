@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/features/ocr/logic/ocr_processor.dart';
 import 'package:mobile/features/ocr/presentation/widgets/camera_mrz_widget.dart';
+import 'package:mobile/features/ocr/presentation/widgets/scanner_overlay_painter.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 /// Production-ready passport scanner with full i18n support.
 /// Updated: 2026-01-21 - Applied i18n per audit requirements
@@ -32,22 +34,34 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
     if (result != null && mounted) {
       setState(() => _isScanning = false);
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('✅ ${context.l10n.passportDetected}'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      // ZERO TOLERANCE: Validate critical fields
+      if (result.documentNumber.isEmpty || result.lastName.isEmpty) {
+        setState(() => _isScanning = true); // Resume scanning
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('❌ Scan incomplete. Please rescan passport clearly.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      // Snackbar removed per user request
       
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          context.push(
-            '/kyc/confirm', 
-            extra: result, // Pass the full PassportModel object
-          );
-        }
-      });
+      // Navigate immediately without delay (conflicts with user actions)
+      if (mounted) {
+        final uri = Uri(path: '/kyc/confirm', queryParameters: {
+          'surname': result.lastName,
+          'firstName': result.firstName,
+          'passport': result.documentNumber,
+          'dob': result.birthDate,
+          'nationality': result.nationality,
+          'sex': result.sex,
+          'expiry': result.expiryDate,
+        });
+        context.push(uri.toString());
+      }
     }
   }
 
@@ -66,23 +80,12 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
           ),
           
           Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.symmetric(
-                  vertical: BorderSide(color: Colors.black.withOpacity(0.5), width: 40),
-                ),
-              ),
-              child: Center(
-                child: Container(
-                  height: 250,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.yellow, width: 2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
+             child: CustomPaint(
+               painter: ScannerOverlayPainter(
+                 borderColor: Colors.white, // Strict Palette
+                 overlayColor: const Color.fromRGBO(13, 36, 73, 0.85), // Deep Navy Mask
+               ),
+             ),
           ),
 
           PositionedDirectional(
@@ -107,16 +110,13 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
               children: [
                 Text(
                   l10n.passportScanInstructions,
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  style: AppTheme.h2NavyBold.copyWith(color: Colors.white), // 16px Bold White
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   _isScanning ? l10n.searchingMRZ : l10n.detected,
-                  style: TextStyle(
-                    color: _isScanning ? Colors.yellow : Colors.green,
-                    fontSize: 14,
-                  ),
+                  style: AppTheme.bodyWhiteRegular.copyWith(letterSpacing: 1.2), // 14px White
                   textAlign: TextAlign.center,
                 ),
               ],

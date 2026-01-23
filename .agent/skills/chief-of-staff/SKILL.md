@@ -20,7 +20,8 @@ Antes de responder a cualquier solicitud de código, DEBES iniciar tu respuesta 
 1.  [ ] **UI/UX:** ¿Definí estructura Riverpod + Material 3? (Ref: `flutter-ui-expert`)
 2.  [ ] **Data:** ¿Creé la tabla en DB real + Modelo + Repositorio? (Ref: `real-data-architect` / `supabase-backend`)
 3.  [ ] **i18n:** ¿Extraje TODOS los textos a ARB (EN/ES)? (Ref: `multilingual-architect`)
-4.  [ ] **Tests:** ¿Incluí el archivo `_test.dart`? (Ref: `test-driven-guru`)
-5.  [ ] **Quality:** ¿Manejo errores/loading y evité abreviaciones? (Ref: `production-enforcer`)
+4.  [ ] **Quality:** ¿Manejo errores/loading y evité abreviaciones? (Ref: `production-enforcer`)
+5.  [ ] **Zero Tolerance:** ¿Eliminé fallbacks (??) y usé Asserts en modelos? (Ref: `zero-tolerance-architect`)
 6.  [ ] **Safety:** ¿Verifiqué atomicidad y rollback? (Ref: `version-control-sentinel`)
+7.  [ ] **Docs:** ¿Actualicé `docs/APP_BIBLE.md` con los cambios? (Ref: `living-documentation-keeper`)
 ```

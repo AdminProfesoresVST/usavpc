@@ -5,6 +5,7 @@ import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
+import 'package:mobile/core/widgets/app_toast.dart';
 import 'package:mobile/features/ocr/logic/mrz_parser.dart';
 
 /// Screen to confirm OCR-extracted passport data with full i18n.
@@ -24,17 +25,26 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
   late TextEditingController _birthDateController;
   late TextEditingController _nationalityController;
   late TextEditingController _passportNumberController;
+  late TextEditingController _sexController;
+  late TextEditingController _expiryDateController;
   
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    // NUCLEAR CLEAN: Remove any lingering snackbars from scanner
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+    });
+
     _surnameController = TextEditingController(text: widget.passportData.lastName);
     _givenNameController = TextEditingController(text: widget.passportData.firstName);
     _birthDateController = TextEditingController(text: _formatDate(widget.passportData.birthDate));
     _nationalityController = TextEditingController(text: widget.passportData.nationality);
     _passportNumberController = TextEditingController(text: widget.passportData.documentNumber);
+    _sexController = TextEditingController(text: widget.passportData.sex);
+    _expiryDateController = TextEditingController(text: _formatDate(widget.passportData.expiryDate));
   }
 
   String _formatDate(String yymmdd) {
@@ -53,6 +63,8 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
     _birthDateController.dispose();
     _nationalityController.dispose();
     _passportNumberController.dispose();
+    _sexController.dispose();
+    _expiryDateController.dispose();
     super.dispose();
   }
 
@@ -65,35 +77,62 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
       final userId = supabase.auth.currentUser?.id;
       if (userId == null) throw Exception(l10n.userNotAuthenticated);
 
-      await supabase.from('applications').upsert({
+      // Manual upsert logic to avoid 42P10 (No unique constraint on user_id)
+      final existing = await supabase
+          .from('applications')
+          .select('id')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      final dataToSave = {
         'user_id': userId,
         'form_data': {
           'surname': _surnameController.text.toUpperCase(),
           'given_name': _givenNameController.text.toUpperCase(),
           'birth_date': _birthDateController.text,
           'nationality': _nationalityController.text,
-          'passport_number': _passportNumberController.text,
+          'passport_number': _passportNumberController.text.toUpperCase(),
+          'sex': _sexController.text.toUpperCase(),
+          'passport_expiry': _expiryDateController.text,
           'ocr_confirmed': true,
           'ocr_timestamp': DateTime.now().toIso8601String(),
         },
         'status': 'ocr_complete',
-        'updated_at': DateTime.now().toIso8601String(),
-      }, onConflict: 'user_id');
+      };
+
+      if (existing != null) {
+        // Update existing application
+        await supabase
+            .from('applications')
+            .update(dataToSave)
+            .eq('id', existing['id']);
+      } else {
+        // Create new application
+        await supabase
+            .from('applications')
+            .insert(dataToSave);
+      }
 
       if (mounted) {
-        context.push(Uri(path: '/kyc/chat', queryParameters: {
-          'surname': _surnameController.text.toUpperCase(),
-          'given_name': _givenNameController.text.toUpperCase(),
-          'dob': _birthDateController.text,
-          'nationality': _nationalityController.text,
-          'passport': _passportNumberController.text,
-        }).toString());
+        // Navigate immediately - User requested no "Success" toast
+        if (mounted) {
+          context.push(Uri(path: '/kyc/chat', queryParameters: {
+            'surname': _surnameController.text.toUpperCase(),
+            'given_name': _givenNameController.text.toUpperCase(),
+            'dob': _birthDateController.text,
+            'nationality': _nationalityController.text,
+            'passport': _passportNumberController.text.toUpperCase(),
+             'sex': _sexController.text.toUpperCase(),
+             'expiry': _expiryDateController.text,
+          }).toString());
+        }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.error(e.toString()))),
-        );
+        final errorMsg = e.toString().contains('42P10') 
+            ? 'Database Error: Unique constraint missing. Fixed in logic.' 
+            : l10n.error(e.toString());
+        AppToast.show(context, errorMsg, isError: true);
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -113,38 +152,8 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.green.shade200),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green.shade600, size: 32),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '✅ ${l10n.passportScanned}',
-                          style: context.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green.shade800,
-                          ),
-                        ),
-                        Text(
-                          l10n.verifyDataCorrect,
-                          style: TextStyle(color: Colors.green.shade700, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Header Removed per user request
+            const SizedBox(height: 8),
             const SizedBox(height: 24),
 
             // Editable Fields
@@ -153,30 +162,18 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
             _buildField(l10n.birthDateLabel, _birthDateController, Icons.cake),
             _buildField(l10n.nationalityLabel, _nationalityController, Icons.flag),
             _buildField(l10n.passportNumberLabel, _passportNumberController, Icons.credit_card),
+             Row(
+              children: [
+                Expanded(child: _buildField('Sex (M/F)', _sexController, Icons.person)), // TODO: i18n
+                const SizedBox(width: 16),
+                Expanded(child: _buildField('Expiry Date', _expiryDateController, Icons.calendar_today)), // TODO: i18n
+              ],
+            ),
 
             const SizedBox(height: 32),
 
             // Info box
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppTheme.actionBlue.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppTheme.actionBlue.withOpacity(0.2)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info, color: AppTheme.actionBlue),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      l10n.passportScanInstructions,
-                      style: TextStyle(color: AppTheme.actionBlue, fontSize: 13),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Info box removed per user request
 
             const SizedBox(height: 24),
 
@@ -199,8 +196,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                       )
                     : Text(
                         l10n.confirmAndContinue,
-                        style: context.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                        style: AppTheme.h2NavyBold.copyWith(
                           color: Colors.white,
                           letterSpacing: 0.5,
                         ),

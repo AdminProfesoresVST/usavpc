@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:mobile/core/service_locator/app_config_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mobile/features/kyc/data/simulator_models.dart';
+import 'dart:convert';
 
 part 'ai_repository.g.dart';
 
@@ -72,6 +74,40 @@ class AiRepository {
       }
     } catch (e) {
       throw Exception('Unexpected Error: $e');
+    }
+  }
+
+  Future<SimulatorResponse> sendSimulatorInteraction({
+    required String message,
+    required String visaType,
+    Map<String, dynamic>? profileData,
+  }) async {
+    // 2. Send via Standard Chat API (Native Backend Logic)
+    final rawResponse = await sendMessage(
+      message: message, 
+      visaType: visaType,
+      mode: 'simulator', // Connect to the fixed route.ts logic
+      extraContext: profileData
+    );
+
+    // 3. Parse JSON
+    try {
+      // Clean markdown if present (```json ... ```)
+      String cleanJson = rawResponse.replaceAll('```json', '').replaceAll('```', '').trim();
+      
+      // Attempt decode
+      final Map<String, dynamic> data = jsonDecode(cleanJson);
+      
+      return SimulatorResponse(
+        textToSpeak: data['consul_response'] ?? "Error processing response.",
+        feedback: data['feedback'] != null ? SimulatorFeedback.fromJson(data['feedback']) : null,
+      );
+    } catch (e) {
+      // Fallback if AI fails to output JSON
+      return SimulatorResponse(
+        textToSpeak: rawResponse, // Speak the raw text if parse fails
+        feedback: null
+      );
     }
   }
 }

@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobile/core/network/supabase_client.dart';
+import 'package:mobile/core/widgets/app_toast.dart';
 
 /// Main service selection screen (landing page) with full i18n support.
 /// Updated: 2026-01-21 - Applied i18n per audit requirements
@@ -31,10 +34,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Text(
                   l10n.appTitle,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTheme.h1WhiteBold,
                 ),
               ],
             ),
@@ -46,7 +46,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
               children: [
                 // 2. Hero Section
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // Reduced from 24
                   decoration: const BoxDecoration(
                     color: AppTheme.navyPrimary,
                     image: DecorationImage(
@@ -60,7 +60,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                     children: [
                       // Badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), // Compact badge
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(6),
@@ -69,59 +69,49 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.verified_user, color: Colors.white, size: 14),
-                            const SizedBox(width: 6),
+                            const Icon(Icons.verified_user, color: Colors.white, size: 12),
+                            const SizedBox(width: 4),
                             Text(
                               l10n.officialGuide,
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: AppTheme.smallWhiteBold.copyWith(fontSize: 10),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12), // Reduced from 16
                       Text(
                         l10n.heroTitle,
-                        style: context.textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          height: 1.1,
-                        ),
+                        style: AppTheme.h1WhiteBold.copyWith(fontSize: 20), // Reduced header size
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4), // Reduced from 8
                       Text(
                         l10n.heroSubtitle,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white70,
-                        ),
+                        style: AppTheme.bodyWhiteRegular.copyWith(color: Colors.white70, fontSize: 13),
+                        maxLines: 1, 
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16), // Reduced from 24
                     ],
                   ),
                 ),
 
                 // 3. How it Works (Steps)
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 24, 20, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0), // Reduced top from 24
                   child: Text(
                     l10n.howItWorks,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      color: AppTheme.navyPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTheme.h2NavyBold.copyWith(fontSize: 16),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12), // Reduced from 16
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
                       _StepItem(icon: Icons.document_scanner, title: l10n.stepScan, subtitle: l10n.stepScanSubtitle, isFirst: true),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8), // Reduced gap
                       _StepItem(icon: Icons.chat, title: l10n.stepSimulate, subtitle: l10n.stepSimulateSubtitle),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8),
                       _StepItem(icon: Icons.assignment_turned_in, title: l10n.stepResults, subtitle: l10n.stepResultsSubtitle, isLast: true),
                     ],
                   ),
@@ -129,23 +119,17 @@ class ServiceSelectionScreen extends ConsumerWidget {
 
                 // 4. Popular Services
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 32, 20, 16),
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 8), // Much tighter spacing
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         l10n.popularServices,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          color: AppTheme.navyPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTheme.h2NavyBold.copyWith(fontSize: 16),
                       ),
                       Text(
                         l10n.viewAll,
-                        style: context.textTheme.labelMedium?.copyWith(
-                          color: AppTheme.navyPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppTheme.smallNavyBold.copyWith(fontSize: 12),
                       ),
                     ],
                   ),
@@ -161,23 +145,23 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         subtitle: l10n.newVisaSubtitle,
                         icon: Icons.contact_page,
                         badgeText: l10n.badgeFast,
-                        badgeColor: Colors.green.shade700,
-                        badgeBg: Colors.green.shade50,
+                        badgeColor: AppTheme.navyPrimary,
+                        badgeBg: AppTheme.softBlue,
                         onTap: () => _handleNavigation(context, ref, '/visa-type'),
                       ),
                       
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8), // Reduced from 12
 
                       // Card 2: Simulator
                       _ServiceCard(
                         title: l10n.interviewSimulator,
                         subtitle: l10n.interviewSimulatorSubtitle,
                         icon: Icons.forum,
-                        badgeBg: Colors.blue.shade50,
-                        onTap: () => _handleNavigation(context, ref, '/quick-check'),
+                        badgeBg: AppTheme.softBlue,
+                        onTap: () => _handleSimulatorTap(context, ref),
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
 
                       // Card 3: Audit (Checklist)
                       _ServiceCard(
@@ -190,22 +174,23 @@ class ServiceSelectionScreen extends ConsumerWidget {
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 16), // Reduced from 40
 
                 // 5. Trust Signal
                 Center(
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.only(bottom: 30),
+                    padding: const EdgeInsetsDirectional.only(bottom: 16), // Reduced from 30
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.lock, size: 14, color: Colors.green.shade700),
-                        const SizedBox(width: 6),
+                        Icon(Icons.lock, size: 12, color: Colors.green.shade700),
+                        const SizedBox(width: 4),
                         Text(
                           l10n.securityNote,
                           style: context.textTheme.bodySmall?.copyWith(
                             color: Colors.grey.shade600,
                             fontWeight: FontWeight.w500,
+                            fontSize: 10,
                           ),
                         ),
                       ],
@@ -218,6 +203,42 @@ class ServiceSelectionScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _handleSimulatorTap(BuildContext context, WidgetRef ref) async {
+    final isLoggedIn = ref.read(authStateProvider).value != null;
+    final l10n = context.l10n;
+
+    if (!isLoggedIn) {
+      GoRouter.of(context).push('/login');
+      return;
+    }
+
+    // CHECK DATA
+    try {
+      final supabase = ref.read(supabaseClientProvider);
+      final userId = supabase.auth.currentUser?.id;
+      
+      final app = await supabase
+          .from('applications')
+          .select('form_data')
+          .eq('user_id', userId!)
+          .maybeSingle();
+
+      if (app != null && app['form_data'] != null && app['form_data']['ocr_confirmed'] == true) {
+        // Data Exists -> Go to Simulator
+        if (context.mounted) GoRouter.of(context).push('/simulator');
+      } else {
+        // No Data -> Go to Verification
+        if (context.mounted) {
+           AppToast.show(context, l10n.error("Profile incomplete. Please scan passport first.")); // TODO: Add i18n key or use generic
+           GoRouter.of(context).push('/identity/start');
+        }
+      }
+    } catch (e) {
+       // On error, default to safety (Verification)
+       if (context.mounted) GoRouter.of(context).push('/identity/start');
+    }
   }
 
   void _handleNavigation(BuildContext context, WidgetRef ref, String targetRoute) {
@@ -251,7 +272,7 @@ class _StepItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4), // Reduced padding
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -263,29 +284,29 @@ class _StepItem extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 32, // Reduced from 40
+              height: 32,
               decoration: BoxDecoration(
                 color: AppTheme.navyPrimary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: AppTheme.navyPrimary, size: 20),
+              child: Icon(icon, color: AppTheme.navyPrimary, size: 18),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               title,
               style: context.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppTheme.navyPrimary,
+                fontSize: 11, // Reduced font
               ),
             ),
             const SizedBox(height: 2),
             Text(
               subtitle,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: Colors.grey.shade500,
-              ),
+              style: AppTheme.smallGreyRegular.copyWith(fontSize: 9),
               textAlign: TextAlign.center,
+              maxLines: 1,
             ),
           ],
         ),
@@ -318,32 +339,32 @@ class _ServiceCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10), // Slightly reduced radius
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2)),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12), // Reduced from 16
             child: Row(
               children: [
                 // Icon Circle
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 40, // Reduced from 48
+                  height: 40,
                   decoration: BoxDecoration(
                     color: AppTheme.navyPrimary.withOpacity(0.08),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, color: AppTheme.navyPrimary, size: 24),
+                  child: Icon(icon, color: AppTheme.navyPrimary, size: 20),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 
                 // Content
                 Expanded(
@@ -355,10 +376,7 @@ class _ServiceCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               title,
-                              style: context.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.navyPrimary,
-                              ),
+                              style: AppTheme.h3NavySemiBold.copyWith(fontSize: 13), // Reduced font
                             ),
                           ),
                           if (badgeText != null)
@@ -371,22 +389,18 @@ class _ServiceCard extends StatelessWidget {
                               ),
                               child: Text(
                                 badgeText!,
-                                style: TextStyle(
+                                style: AppTheme.labelBold.copyWith(
                                   color: badgeColor,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
+                                  fontSize: 8, // Very small badge
                                 ),
                               ),
                             ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade500,
-                        ),
+                        style: AppTheme.smallGreyRegular.copyWith(fontSize: 11),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -395,7 +409,7 @@ class _ServiceCard extends StatelessWidget {
                 ),
                 
                 // Arrow
-                Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+                Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 16),
               ],
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/features/rpa/logic/script_injector.dart';
 import 'package:mobile/features/rpa/presentation/providers/automation_provider.dart';
 import 'package:mobile/features/rpa/presentation/widgets/hacking_mode_overlay.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 /// Production-ready DS-160 automation screen with full i18n support.
 /// Updated: 2026-01-21 - Applied i18n per audit requirements
@@ -147,7 +148,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
     final automationState = ref.watch(automationProvider);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppTheme.backgroundGrey,
       body: Stack(
         children: [
           Positioned.fill(
@@ -155,7 +156,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
               children: [
                 // Progress Header
                 Container(
-                  color: Colors.black,
+                  color: AppTheme.navyPrimary,
                   padding: const EdgeInsetsDirectional.only(top: 50, start: 16, end: 16, bottom: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,12 +169,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                           ),
                           Text(
                             l10n.ds160AutoFill,
-                            style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontFamily: 'Courier',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                            style: AppTheme.h1WhiteBold,
                           ),
                           const Spacer(),
                           if (automationState.formData != null && !_hasInjected)
@@ -181,7 +177,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                               onPressed: _manualInject,
                               child: Text(
                                 l10n.inject,
-                                style: const TextStyle(color: Colors.greenAccent),
+                                style: AppTheme.bodyWhiteRegular,
                               ),
                             ),
                         ],
@@ -219,7 +215,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.black87,
+                      color: AppTheme.navyPrimary,
                       border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.5)),
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -228,12 +224,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                       children: [
                         Text(
                           l10n.consoleOutput,
-                          style: const TextStyle(
-                            color: Colors.greenAccent,
-                            fontFamily: 'Courier',
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: AppTheme.smallWhiteRegular.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Expanded(
@@ -245,10 +236,9 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                               final isError = log.contains('ERROR');
                               return Text(
                                 log,
-                                style: TextStyle(
+                                style: AppTheme.smallWhiteRegular.copyWith(
                                   color: isError ? Colors.red : Colors.green.shade300,
                                   fontFamily: 'Courier',
-                                  fontSize: 11,
                                 ),
                               );
                             },

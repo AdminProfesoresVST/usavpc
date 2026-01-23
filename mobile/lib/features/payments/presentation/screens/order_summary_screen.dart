@@ -129,7 +129,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                         title: Text(item['name'] as String),
                         trailing: Text(
                           '\$${(item['price'] as double).toStringAsFixed(2)}',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: AppTheme.h2NavyBold,
                         ),
                       );
                     },
@@ -144,10 +144,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                       Text(l10n.total, style: context.textTheme.headlineSmall),
                       Text(
                         '\$${total.toStringAsFixed(2)}',
-                        style: context.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.navyPrimary,
-                        ),
+                        style: AppTheme.h1NavyBold,
                       ),
                     ],
                   ),
@@ -182,7 +179,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                     const SizedBox(width: 4),
                     Text(
                       l10n.securePayment,
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      style: AppTheme.smallGreyRegular,
                     ),
                   ],
                 ),

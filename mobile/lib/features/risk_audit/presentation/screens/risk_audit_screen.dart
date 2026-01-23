@@ -52,29 +52,27 @@ class RiskAuditScreen extends ConsumerWidget {
                     children: [
                       Text(
                         l10n.approvalProbability,
-                        style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+                        style: AppTheme.bodyGreyRegular,
                       ),
                       const SizedBox(height: 16),
                       Text(
                         '${evaluation.score}%',
-                        style: context.textTheme.displayMedium?.copyWith(
-                          fontWeight: FontWeight.bold, 
-                          color: isHighApproval ? Colors.green.shade600 : Colors.orange.shade600
-                        ),
+                          style: AppTheme.h1NavyBold.copyWith(
+                            color: isHighApproval ? AppTheme.navyPrimary : AppTheme.actionBlue
+                          ),
                       ),
                       const SizedBox(height: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
-                          color: isHighApproval ? Colors.green.shade50 : Colors.orange.shade50,
+                          color: AppTheme.softBlue,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           l10n.riskLevel(evaluation.riskLevel),
-                          style: context.textTheme.labelLarge?.copyWith(
-                            color: isHighApproval ? Colors.green.shade700 : Colors.orange.shade700, 
-                            fontWeight: FontWeight.w600
-                          ),
+                            style: AppTheme.smallNavyBold.copyWith(
+                              color: isHighApproval ? AppTheme.navyPrimary : AppTheme.actionBlue
+                            ),
                         ),
                       ),
                     ],
@@ -83,7 +81,7 @@ class RiskAuditScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Factors
-                Text(l10n.factorAnalysis, style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppTheme.navyPrimary)),
+                Text(l10n.factorAnalysis, style: AppTheme.h2NavyBold),
                 const SizedBox(height: 16),
                 
                 ...evaluation.positiveFactors.map((f) => _buildFactorTile(context, f, true)),
@@ -103,7 +101,7 @@ class RiskAuditScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: Text(l10n.continueToSimulator, style: const TextStyle(color: Colors.white)),
+                  child: Text(l10n.continueToSimulator, style: AppTheme.bodyWhiteRegular),
                 ),
                 const SizedBox(height: 12),
                 TextButton(
@@ -130,8 +128,8 @@ class RiskAuditScreen extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            isPositive ? Icons.check_circle : Icons.warning,
-            color: isPositive ? Colors.green : Colors.orange,
+            isPositive ? Icons.check_circle : Icons.info_outline,
+            color: isPositive ? AppTheme.navyPrimary : AppTheme.actionBlue,
           ),
           const SizedBox(width: 16),
           Expanded(child: Text(text, style: context.textTheme.bodyMedium)),

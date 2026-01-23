@@ -1,5 +1,6 @@
 {
   "@@locale": "es",
+  "dataSavedSuccess": "Datos guardados exitosamente",
   
   "appTitle": "Consular Assistant",
   "officialGuide": "Guía Oficial",
@@ -55,7 +56,7 @@
   "noEmail": "Sin correo",
   "defaultUser": "Usuario",
   
-  "verificationTitle": "VERIFICACIÓN DE IDENTIDAD",
+  "verificationTitle": "Verificación de Identidad",
   "scanDocument": "Escanee su Documento",
   "scanDocumentSubtitle": "Necesitamos capturar los datos de su pasaporte para autocompletar su solicitud.",
   "useCamera": "Usar Cámara",
@@ -149,7 +150,7 @@
   "connectingToOfficer": "Conectando con el Oficial Consular...",
   "listening": "Escuchando...",
   
-  "ds160AutoFill": "DS-160 AUTO-FILL",
+  "ds160AutoFill": "DS-160 Auto-fill",
   "inject": "INYECTAR",
   "consoleOutput": "> CONSOLE OUTPUT",
   

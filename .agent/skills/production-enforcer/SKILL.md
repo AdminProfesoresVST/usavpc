@@ -37,28 +37,29 @@ El código de producción requiere manejo de errores real:
 try {
   await someOperation();
 } on NetworkException catch (e) {
-  state = state.copyWith(
-    error: 'Error de conexión: ${e.message}',
-    isLoading: false,
-  );
-  // Mostrar SnackBar o AlertDialog en la UI
-} on ValidationException catch (e) {
-  state = state.copyWith(
-    validationErrors: e.errors,
-    isLoading: false,
-  );
+  // Runtime Errors (Network/IO) se manejan
+  state = state.copyWith(error: e.message);
 } catch (e, stackTrace) {
-  // Log para debugging en producción
+  // Logic Errors (Null check operator used on a null value) SE RE-LANZAN
+  // Ref: zero-tolerance-architect
+  if (e is TypeError || e is AssertionError) rethrow;
+  
   logger.error('Unexpected error', error: e, stackTrace: stackTrace);
-  state = state.copyWith(
-    error: 'Ha ocurrido un error inesperado',
-    isLoading: false,
-  );
+  state = state.copyWith(error: 'Error inesperado');
 }
 ```
 
-### 3. Sin "Magic Strings" ni "Magic Numbers"
-No hardcodees valores importantes. Extráelos a constantes o variables de configuración.
+### 3. Sin "Magic Strings", ni "Magic Numbers", NO Fallbacks
+- No hardcodees valores.
+- **PROHIBIDO:** Usar `??` (Null Coaleascing) para ocultar nulos en datos críticos. Si un dato es obligatorio, debe venir del backend.
+
+```dart
+// ❌ PROHIBIDO
+Text(user.name ?? "Usuario");
+
+// ✅ CORRECTO (Zero Tolerance)
+Text(user.name); // El modelo User valida en constructor que name no sea null
+```
 
 ```dart
 // ❌ PROHIBIDO

@@ -6,7 +6,7 @@ import 'package:mobile/core/theme/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// Simulator intro screen with full i18n support.
-/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
+/// Updated: 2026-01-22 - Refined UI for "Delicate" and "Compact" look
 class SimulatorIntroScreen extends ConsumerStatefulWidget {
   const SimulatorIntroScreen({super.key});
 
@@ -48,68 +48,93 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
     final l10n = context.l10n;
     
     return Scaffold(
-      backgroundColor: AppTheme.navyPrimary,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: AppTheme.navyPrimary),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined, color: AppTheme.navyPrimary),
+            onPressed: () => context.push('/profile'),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Column(
              mainAxisAlignment: MainAxisAlignment.center,
              children: [
-               const Icon(Icons.record_voice_over, size: 80, color: Colors.white),
-               const SizedBox(height: 32),
+               const Spacer(),
+               Container(
+                 padding: const EdgeInsets.all(24),
+                 decoration: BoxDecoration(
+                   color: AppTheme.navyPrimary.withOpacity(0.04), // Subtle background
+                   shape: BoxShape.circle,
+                   border: Border.all(color: AppTheme.navyPrimary.withOpacity(0.1)),
+                 ),
+                 child: const Icon(Icons.mic_none_outlined, size: 48, color: AppTheme.navyPrimary),
+               ),
+               const SizedBox(height: 48),
                Text(
                  l10n.simulatorTitle,
-                 style: context.textTheme.headlineMedium?.copyWith(
-                   fontWeight: FontWeight.bold,
-                   color: Colors.white,
+                 style: context.textTheme.headlineSmall?.copyWith(
+                   fontWeight: FontWeight.w600,
+                   color: AppTheme.navyPrimary,
+                   letterSpacing: -0.5,
                  ),
                  textAlign: TextAlign.center,
                ),
-               const SizedBox(height: 16),
+               const SizedBox(height: 12),
                Text(
                  l10n.simulatorDescription,
-                 style: context.textTheme.bodyLarge?.copyWith(
-                   color: Colors.white70,
-                   height: 1.5,
+                 style: context.textTheme.bodyMedium?.copyWith(
+                   color: Colors.grey.shade600,
+                   height: 1.6,
                  ),
                  textAlign: TextAlign.center,
                ),
-               const Spacer(),
+               const Spacer(flex: 2),
+               
                if (!_permissionsGranted)
-                 ElevatedButton(
-                   onPressed: _requestPermissions,
-                   style: ElevatedButton.styleFrom(
-                     backgroundColor: Colors.white,
-                     foregroundColor: AppTheme.navyPrimary,
-                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                 Center(
+                   child: ElevatedButton(
+                     onPressed: _requestPermissions,
+                     style: ElevatedButton.styleFrom(
+                       backgroundColor: AppTheme.actionBlue,
+                       foregroundColor: Colors.white,
+                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                       elevation: 1,
+                     ),
+                     child: Text(l10n.enableMicrophone),
                    ),
-                   child: Text(l10n.enableMicrophone),
                  )
                else
-                 ElevatedButton(
-                   onPressed: () => context.push('/simulator/chat'),
-                   style: ElevatedButton.styleFrom(
-                     backgroundColor: AppTheme.actionBlue,
-                     foregroundColor: Colors.white,
-                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                   ),
-                   child: Row(
-                     mainAxisSize: MainAxisSize.min,
-                     children: [
-                       Text(l10n.startInterview),
-                       const SizedBox(width: 8),
-                       const Icon(Icons.arrow_forward),
-                     ],
+                 Center(
+                   child: ElevatedButton(
+                     onPressed: () => context.push('/simulator/chat'),
+                     style: ElevatedButton.styleFrom(
+                       backgroundColor: AppTheme.navyPrimary, 
+                       foregroundColor: Colors.white,
+                       elevation: 4,
+                       shadowColor: AppTheme.navyPrimary.withOpacity(0.4),
+                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                       textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.5),
+                     ),
+                     child: Row(
+                       mainAxisSize: MainAxisSize.min,
+                       children: [
+                         Text(l10n.startInterview.toUpperCase()),
+                         const SizedBox(width: 8),
+                         const Icon(Icons.arrow_forward, size: 18),
+                       ],
+                     ),
                    ),
                  ),
-               const SizedBox(height: 32),
+               const SizedBox(height: 48),
              ],
           ),
         ),

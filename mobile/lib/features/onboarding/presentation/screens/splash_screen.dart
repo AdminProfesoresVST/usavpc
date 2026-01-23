@@ -28,34 +28,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.navyPrimary,
       body: Stack(
         children: [
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 250,
-                  height: 250,
-                  fit: BoxFit.contain,
+                Opacity(
+                  opacity: 0.15, // Subtle branding
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-                const SizedBox(height: 24),
-                const CircularProgressIndicator(color: AppTheme.navyPrimary),
+                // Removed Spinner: App loads fast, spinner looks cheap
               ],
             ),
           ),
           
           // Disclaimer at bottom - bilingual
-          const Positioned(
+          Positioned(
             left: 0, 
             right: 0,
             bottom: 32,
             child: Text(
               'Non-government service provider / Proveedor privado',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              style: AppTheme.smallGreyRegular.copyWith(color: Colors.white24),
             ),
           ),
         ],

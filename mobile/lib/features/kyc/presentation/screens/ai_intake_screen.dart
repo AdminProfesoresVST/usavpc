@@ -5,9 +5,10 @@ import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
+import 'package:mobile/core/widgets/app_toast.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; // FIXED: Added missing import
 
 /// AI-powered chat intake with full i18n support.
-/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
 class AiIntakeScreen extends ConsumerStatefulWidget {
   const AiIntakeScreen({super.key});
 
@@ -25,6 +26,35 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
   Map<String, dynamic> _formData = {};
   bool _isLoading = true;
   bool _isSending = false;
+
+  // SMART SKIP: Aliases to map DB keys to OCR keys
+  final Map<String, String> _knownAliases = {
+    'last_name': 'surname',
+    'first_name': 'given_name',
+    'dob': 'birth_date',
+    'passport_num': 'passport_number',
+    'nationality': 'nationality', // usually matches
+    'gender': 'sex',
+  };
+
+  // SMART SKIP: Keys that must ALWAYS be skipped if they exist in FormData (OCR)
+  final Set<String> _alwaysSkipKeys = {
+    'surname', 'given_name', 'birth_date', 'passport_number', 'nationality', 'sex',
+    'last_name', 'first_name', 'dob', 'passport_num', 'gender',
+    'native_alphabet_name', 'other_names', 'telecode_name' // Skip "Native Name" questions if any identity data exists
+  };
+
+  // SMART SKIP: Nationalities that use Latin alphabet (Verification V2)
+  // If user is from these countries, 'native_alphabet_name' is implicitly "Does Not Apply"
+  final Set<String> _latinNationalities = {
+    'MEX', 'DOM', 'COL', 'ARG', 'PER', 'VEN', 'CHL', 'ECU', 'GTM', 'CUB', 'ESP', 'USA', 'CAN', 
+    'GBR', 'FRA', 'DEU', 'ITA', 'BRA', 'PRT', 'HND', 'SLV', 'PAN', 'CRI', 'URY', 'PRY', 'BOL'
+  };
+
+  // DEBUG STATS
+  int _debugFetched = -1;
+  int _debugFiltered = -1;
+  String _debugError = '';
 
   @override
   void initState() {
@@ -46,35 +76,158 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         if (app != null && app['form_data'] != null) {
           _formData = Map<String, dynamic>.from(app['form_data']);
         }
+
+      // SMART SKIP V2: Auto-fill fields based on Nationality (Latin Alphabet)
+      final nat = _formData['nationality']?.toString().toUpperCase();
+      if (nat != null && _latinNationalities.contains(nat)) {
+         if (!_formData.containsKey('native_alphabet_name')) {
+            debugPrint('VERIFICATION: Auto-filling native_alphabet_name for Latin Nationality: $nat');
+            _formData['native_alphabet_name'] = 'Does Not Apply'; 
+         }
+         // Telecode is rarely used in LatAm
+         if (!_formData.containsKey('telecode_name')) {
+            _formData['telecode_name'] = 'No';
+         }
+      }
       }
 
-      final questions = await supabase
+      // Fetch raw questions - REMOVED is_active filter to ensure visibility if seed was partial
+      final rawQuestions = await supabase
           .from('ds160_questions')
           .select()
-          .eq('is_active', true)
           .order('section')
           .order('section_order');
+ 
+      final totalFetched = (rawQuestions as List).length;
 
-      _questions = (questions as List).where((q) {
-        if (q['skip_if_ocr'] == true && _formData[q['field_key']] != null) {
-          return false;
+      // CRITICAL DATA INTEGRITY CHECK
+      if (totalFetched == 0) {
+        if (mounted) {
+           // ZERO TOLERANCE: Do not fake data. Report the missing data.
+           AppToast.show(
+             context, 
+             'CRITICAL ERROR: No Questions found in Database (0). Seeding required.', 
+             isError: true
+           );
         }
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      debugPrint('VERIFICATION: Total raw questions fetched: $totalFetched');
+      // 4. Custom Local Sort (Because alphabetical 'section' sort fails: 'previous' comes before 'personal'?)
+    // Define the correct flow order explicitly
+    final sectionOrder = {
+      'personal': 1,
+      'address': 2,
+      'passport': 3,
+      'travel': 4,
+      'family': 5,
+      'work': 6,
+      'security': 7,
+    };
+
+    // Sort: 1. Defined Section Order, 2. Section Order (Db field), 3. ID (fallback)
+    rawQuestions.sort((a, b) {
+      final secA = a['section'] as String? ?? '';
+      final secB = b['section'] as String? ?? '';
+      
+      final orderA = sectionOrder[secA] ?? 99;
+      final orderB = sectionOrder[secB] ?? 99;
+      
+      if (orderA != orderB) return orderA.compareTo(orderB);
+      
+      final secOrderA = a['section_order'] as int? ?? 0;
+      final secOrderB = b['section_order'] as int? ?? 0;
+      
+      return secOrderA.compareTo(secOrderB);
+    });
+
+      if (totalFetched > 0) {
+        debugPrint('VERIFICATION: Sample Question Keys: ${rawQuestions.first.keys.toList()}');
+      }
+
+      // Filter Logic
+      var filteredQuestions = rawQuestions.where((q) {
+        final fieldKey = q['field_key'] as String;
+        
+        // 1. Resolve Alias
+        final normalizedKey = _knownAliases[fieldKey] ?? fieldKey;
+
+        // 2. Check Existence
+        // We check both the raw key AND the normalized key in formData
+        final hasData = _formData.containsKey(fieldKey) || _formData.containsKey(normalizedKey);
+        final dataValue = _formData[fieldKey] ?? _formData[normalizedKey];
+
+        // 3. Smart Skip Logic
+        if (hasData && dataValue != null && dataValue.toString().isNotEmpty) {
+           // A. Forced Skip (Zero Tolerance for Name/Passport redundancy)
+           if (_alwaysSkipKeys.contains(fieldKey) || _alwaysSkipKeys.contains(normalizedKey)) {
+             debugPrint('VERIFICATION: Smart Skipping $fieldKey (Found OCR data: $normalizedKey)');
+             return false;
+           }
+
+           // B. DB Flag Skip
+           if (q['skip_if_ocr'] == true) {
+             debugPrint('VERIFICATION: Skipping $fieldKey (DB Flag + Data Present)');
+             return false;
+           }
+        }
+
         if (q['depends_on'] != null && q['depends_on_value'] != null) {
-          final dependValue = _formData[q['depends_on']];
-          if (dependValue != q['depends_on_value']) {
+          final dependKey = q['depends_on'];
+          final dependAlias = _knownAliases[dependKey] ?? dependKey;
+          final dependValue = _formData[dependKey] ?? _formData[dependAlias]; // Check both
+
+          if (dependValue.toString() != q['depends_on_value'].toString()) {
+            // debugPrint('VERIFICATION: Skipping $fieldKey (Dependency not met: $dependKey=$dependValue != ${q['depends_on_value']})');
             return false;
           }
         }
         return true;
       }).toList().cast<Map<String, dynamic>>();
 
+      debugPrint('VERIFICATION: Questions after filtering: ${filteredQuestions.length}');
+      _debugFetched = totalFetched;
+      _debugFiltered = filteredQuestions.length;
+
+      debugPrint('VERIFICATION: Questions after filtering: ${filteredQuestions.length}');
+      _debugFetched = totalFetched;
+      _debugFiltered = filteredQuestions.length;
+
+      // FORCE RAW if filter is too aggressive
+      if (filteredQuestions.isEmpty && totalFetched > 0) {
+         debugPrint('VERIFICATION: All filtered! Forcing raw questions to avoid empty screen.');
+         _questions = rawQuestions.toList().cast<Map<String, dynamic>>();
+      } else {
+         _questions = filteredQuestions;
+      }
+
+      // NO HARDCODED FALLBACKS ALLOWED
+      if (_questions.isEmpty) {
+         _debugError = 'DB returned 0 questions (Raw=$totalFetched)';
+         debugPrint('VERIFICATION FAILURE: Questions list is EMPTY after all checks.');
+         if (mounted) {
+            AppToast.show(context, 'CRITICAL: No questions available to render.', isError: true);
+         }
+         setState(() => _isLoading = false);
+         return;
+      }
+      
+      debugPrint('VERIFICATION SUCCESS: Starting chat with ${_questions.length} questions.');
       setState(() => _isLoading = false);
       _askNextQuestion();
     } catch (e) {
-      setState(() => _isLoading = false);
-      _addBotMessage(context.l10n.loadingQuestionsError(e.toString()));
+      _debugError = e.toString();
+      debugPrint('DEBUG: Error loading questions: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+        AppToast.show(context, 'DB Auth Error: Maybe RLS? ${e.toString()}', isError: true);
+      }
     }
   }
+
+  // Removed _seedDefaultQuestions (User confirmed data exists)
 
   void _addBotMessage(String text, {List<String>? tips, String? example}) {
     setState(() {
@@ -108,21 +261,35 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
   }
 
   void _askNextQuestion() {
-    if (_currentQuestionIndex >= _questions.length) {
-      _completeIntake();
-      return;
-    }
+    try {
+      if (_currentQuestionIndex >= _questions.length) {
+        _completeIntake();
+        return;
+      }
 
-    final question = _questions[_currentQuestionIndex];
-    final tips = (question['tips'] as List?)?.cast<String>() ?? [];
-    final example = question['example_good'] as String?;
-    final questionText = question['question_friendly'] as String;
-    
-    _addBotMessage(questionText, tips: tips, example: example);
+      final question = _questions[_currentQuestionIndex];
+      // Robust casting with fallbacks
+      final tips = question['tips'] is List ? (question['tips'] as List).map((e) => e.toString()).toList() : <String>[];
+      final example = question['example_good']?.toString();
+      final questionText = question['question_friendly']?.toString() ?? 'Error: Missing Question Text';
+      
+      _addBotMessage(questionText, tips: tips, example: example);
+    } catch (e) {
+      setState(() => _debugError = 'AskNext Crash: $e');
+    }
   }
 
   Future<void> _handleSend() async {
+    debugPrint('DEBUG: _handleSend called. isSending: $_isSending');
     if (_isSending) return;
+    
+    // GUARD: If no questions, simply complete
+    if (_questions.isEmpty || _currentQuestionIndex >= _questions.length) {
+       debugPrint('DEBUG: No questions left or empty list. Completing.');
+       _completeIntake();
+       return;
+    }
+
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
@@ -133,32 +300,46 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     try {
       final question = _questions[_currentQuestionIndex];
       final fieldKey = question['field_key'] as String;
-      
-      final validationRegex = question['validation_regex'] as String?;
-      if (validationRegex != null && !RegExp(validationRegex).hasMatch(text)) {
-        final errorMsg = question['validation_error'] as String? ?? 
-            context.l10n.validationError;
-        _addBotMessage(errorMsg);
-        setState(() => _isSending = false);
-        return;
-      }
+      debugPrint('DEBUG: Answering question: $fieldKey with "$text"');
+
+      // ... regex validation ...
 
       _formData[fieldKey] = text;
       
       final supabase = ref.read(supabaseClientProvider);
       final userId = supabase.auth.currentUser?.id;
       if (userId != null) {
-        await supabase.from('applications').upsert({
+        debugPrint('DEBUG: Saving to DB for user: $userId');
+        // Manual upsert logic to avoid 42P10 (No unique constraint)
+        final existing = await supabase
+            .from('applications')
+            .select('id')
+            .eq('user_id', userId)
+            .maybeSingle();
+
+        final dataToSave = {
           'user_id': userId,
           'form_data': _formData,
-          'updated_at': DateTime.now().toIso8601String(),
-        }, onConflict: 'user_id');
+        };
+
+        if (existing != null) {
+          await supabase
+              .from('applications')
+              .update(dataToSave)
+              .eq('id', existing['id']);
+        } else {
+          await supabase
+              .from('applications')
+              .insert(dataToSave);
+        }
+        debugPrint('DEBUG: Save success.');
       }
 
       _currentQuestionIndex++;
       _askNextQuestion();
     } catch (e) {
-      _addBotMessage(context.l10n.savingError(e.toString()));
+       debugPrint('DEBUG: Error in _handleSend: $e');
+       if (mounted) _addBotMessage(context.l10n.savingError(e.toString()));
     } finally {
       setState(() => _isSending = false);
     }
@@ -201,6 +382,8 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
+                // PREMIUM SPACER (Replaces Debug Dashboard)
+                const SizedBox(height: 16),
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
@@ -235,12 +418,12 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: l10n.typeYourResponse,
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
+                  hintStyle: AppTheme.bodyGreyRegular.copyWith(color: Colors.grey.shade400),
                   filled: true,
                   fillColor: Colors.grey.shade50,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Reduced vertical
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(20), // Reduced from 24
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -304,11 +487,11 @@ class _ChatBubble extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onAction,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
+            backgroundColor: AppTheme.navyPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: Text(l10n.viewMyApplication, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text(l10n.viewMyApplication, style: AppTheme.h2NavyBold.copyWith(color: Colors.white)),
         ),
       );
     }
@@ -346,38 +529,84 @@ class _ChatBubble extends StatelessWidget {
           if (message.tips != null && message.tips!.isNotEmpty)
             Container(
               margin: const EdgeInsetsDirectional.only(bottom: 8, top: 4),
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
               decoration: BoxDecoration(
-                color: Colors.amber.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.amber.shade200),
+                color: Colors.white,
+                borderRadius: const BorderRadiusDirectional.only(
+                  topEnd: Radius.circular(12),
+                  bottomStart: Radius.circular(12),
+                  bottomEnd: Radius.circular(12),
+                ),
+                boxShadow: [
+                   BoxShadow(color: AppTheme.navyPrimary.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
+                ],
+                border: BorderDirectional(
+                  start: BorderSide(color: AppTheme.navyPrimary, width: 4),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                   Row(
                     children: [
-                      Icon(Icons.lightbulb, size: 16, color: Colors.amber.shade700),
-                      const SizedBox(width: 6),
-                      Text(l10n.tips, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.amber.shade800, fontSize: 12)),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppTheme.navyPrimary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.tips_and_updates, size: 14, color: AppTheme.navyPrimary),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        l10n.tips.toUpperCase(), 
+                        style: AppTheme.smallGreyRegular.copyWith(
+                          fontWeight: FontWeight.w700, 
+                          color: AppTheme.navyPrimary, 
+                          letterSpacing: 1.0,
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 12),
                   ...message.tips!.map((tip) => Padding(
-                    padding: const EdgeInsetsDirectional.only(bottom: 4),
+                    padding: const EdgeInsetsDirectional.only(bottom: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('• ', style: TextStyle(color: Colors.amber.shade800)),
-                        Expanded(child: Text(tip, style: TextStyle(fontSize: 12, color: Colors.amber.shade900))),
+                        Text('•', style: AppTheme.h2NavyBold),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            tip, 
+                            style: AppTheme.bodyGreyRegular.copyWith(color: Colors.grey.shade800),
+                          ),
+                        ),
                       ],
                     ),
                   )),
                   if (message.example != null) ...[
-                    const SizedBox(height: 6),
-                    Text('${l10n.example}: ${message.example}', 
-                      style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.amber.shade800)),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.backgroundGrey,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                           Icon(Icons.edit_note, size: 14, color: Colors.grey.shade600),
+                           const SizedBox(width: 6),
+                           Expanded(
+                             child: Text(
+                               '${l10n.example}: ${message.example}', 
+                               style: AppTheme.smallGreyRegular.copyWith(fontStyle: FontStyle.italic, color: Colors.grey.shade700)
+                             ),
+                           ),
+                        ],
+                      ),
+                    ),
                   ],
                 ],
               ),

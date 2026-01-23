@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 class MainScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -46,8 +47,8 @@ class MainScaffold extends StatelessWidget {
           backgroundColor: Colors.white,
           selectedItemColor: const Color(0xFF112E51), // Strict Navy
           unselectedItemColor: Colors.grey.shade400,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+          selectedLabelStyle: AppTheme.smallGreyRegular.copyWith(fontWeight: FontWeight.w600, color: const Color(0xFF112E51)),
+          unselectedLabelStyle: AppTheme.smallGreyRegular,
           elevation: 0,
         ),
       ),

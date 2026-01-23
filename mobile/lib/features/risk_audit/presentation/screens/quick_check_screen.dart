@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
+import 'package:mobile/core/widgets/app_alerts.dart';
 import 'package:mobile/features/risk_audit/presentation/providers/application_provider.dart';
 
 /// Quick check screen with full i18n support.
@@ -47,28 +48,19 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               // Header
               Text(
                 l10n.eligibilityVerification,
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.navyPrimary,
-                ),
+                style: AppTheme.h1NavyBold,
               ),
               const SizedBox(height: 8),
               Text(
                 l10n.eligibilitySubtitle,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade600,
-                  height: 1.5,
-                ),
+                style: AppTheme.bodyGreyRegular.copyWith(height: 1.5),
               ),
               const SizedBox(height: 32),
 
               // Question 1: Visa Type
               Text(
                 l10n.visaTypeLabel,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.navyPrimary,
-                ),
+                style: AppTheme.h3NavySemiBold,
               ),
               const SizedBox(height: 8),
               Container(
@@ -98,10 +90,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               // Question 2: DS-160
               Text(
                 l10n.ds160Question,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.navyPrimary,
-                ),
+                style: AppTheme.h3NavySemiBold,
               ),
               const SizedBox(height: 8),
               Row(
@@ -128,10 +117,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                 const SizedBox(height: 24),
                 Text(
                   l10n.ds160CodeLabel,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.navyPrimary,
-                  ),
+                  style: AppTheme.h3NavySemiBold,
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -153,26 +139,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               
                if (!_hasDs160) ...[
                 const SizedBox(height: 24),
-                 Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    border: Border.all(color: Colors.amber.shade200),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.warning_amber_rounded, color: Colors.amber.shade800),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          l10n.noDs160Warning,
-                          style: TextStyle(fontSize: 12, color: Colors.amber.shade900),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                 AppAlert.info(message: l10n.noDs160Warning),
               ],
 
               const SizedBox(height: 40),
@@ -199,11 +166,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                         )
                       : Text(
                           l10n.startAnalysis,
-                          style: context.textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 0.5,
-                          ),
+                          style: AppTheme.smallWhiteBold.copyWith(letterSpacing: 0.5),
                         ),
                 ),
               ),
@@ -264,11 +227,7 @@ class _RadioOption extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: TextStyle(
-                  color: selected ? AppTheme.navyPrimary : Colors.grey.shade700,
-                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 13,
-                ),
+                style: selected ? AppTheme.labelBold : AppTheme.labelRegular,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

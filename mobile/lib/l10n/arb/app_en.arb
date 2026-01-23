@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "dataSavedSuccess": "Data saved successfully",
   
   "appTitle": "Consular Assistant",
   "@appTitle": {"description": "Application title in navbar"},
@@ -151,7 +152,7 @@
   "defaultUser": "User",
   "@defaultUser": {"description": "Fallback for missing user name"},
   
-  "verificationTitle": "IDENTITY VERIFICATION",
+  "verificationTitle": "Identity Verification",
   "@verificationTitle": {"description": "Verification landing screen title"},
   
   "scanDocument": "Scan Your Document",
@@ -400,7 +401,7 @@
   "listening": "Listening...",
   "@listening": {"description": "Listening state text"},
   
-  "ds160AutoFill": "DS-160 AUTO-FILL",
+  "ds160AutoFill": "DS-160 Auto-fill",
   "@ds160AutoFill": {"description": "Automation screen title"},
   
   "inject": "INJECT",

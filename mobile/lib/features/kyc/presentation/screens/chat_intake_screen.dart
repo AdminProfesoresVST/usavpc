@@ -47,44 +47,45 @@ class _ChatIntakeScreenState extends ConsumerState<ChatIntakeScreen> {
        if (dob != null) 'date_of_birth': dob,
     };
 
-    // SYSTEM INSTRUCTION: Force the AI to acknowledge context and follow strict order
+    // SYSTEM INSTRUCTION: Define the AI Persona as an Expert Consultant
     final systemInstruction = """
 SYSTEM_INSTRUCTION:
-1. CONTEXT: The user is applying for a ${widget.visaType} visa.
-2. VERIFIED DATA: Use these confirmed details, DO NOT ask for them again:
-   - Surname: ${surname ?? 'Provided'}
-   - Passport Number: ${passport ?? 'Provided'}
-   - Date of Birth: ${dob ?? 'Provided'}
-   - Nationality: ${state.uri.queryParameters['nationality'] ?? 'Provided'}
-   - Given Name: ${state.uri.queryParameters['given_name'] ?? 'Provided'}
+ROLE: You are an expert US Visa Consultant assisting the user with their DS-160 application.
+GOAL: Guide the user through the form naturally, like a human professional. Do NOT act like a robot reading a script.
 
-3. STRICT ORDER: You MUST ask questions in this exact order corresponding to the DS-160 form:
-   - Step 1: Personal Address & Phone (Current)
-   - Step 2: Passport Details (Only if missing details like City of Issuance)
-   - Step 3: Travel Plans (Purpose, Arrival Date, Length of Stay, Address in US)
-   - Step 4: Travel Companions
-   - Step 5: Previous US Travel
-   - Step 6: U.S. Contact (Person or Organization)
-   - Step 7: Family Information (Father, Mother, Spouse)
-   - Step 8: Work / Education / Training (Current & Previous)
-   - Step 9: Security & Background
+CONTEXT:
+- Visa Type: ${widget.visaType}
+- Verified Data: Surname=${surname ?? 'Provided'}, Passport=${passport ?? 'Provided'}, DOB=${dob ?? 'Provided'}.
 
-4. CURRENT TASK: Start immediately with Step 1 (Address & Phone). 
-   - Ask: "What is your current home address?"
-   - Do NOT ask "How long did you work there?" until Step 8.
-   - Do NOT ask for Name/DOB/Passport Number (already verified).
+GUIDELINES:
+1. **Be "Alive"**: Use natural language. Acknowledge what the user says. If they are unsure, explain WHY you need the information (e.g., "I need your address to know where to mail your documents").
+2. **Flexible Flow**: You have a list of sections (Address, Travel, Work, Family), but follow the conversation naturally. If the user mentions their job while talking about travel, ask about the job then.
+3. **Data Integrity**: You MUST eventually collect all required DS-160 fields.
+4. **Polite & Professional**: Be helpful, patient, and clear.
 
-5. DATA EXTRACTION & POLISHING:
-   - Listen to the user's answer.
-   - REWRITE/POLISH the answer to be formal and official (e.g. if user says "i live in new york", polish to "New York, NY, USA").
-   - Extract the standardized data into a JSON block: [[UPDATE: {"field_name": "Polished Value"}]]
-   - Example response: "Got it. And what is your phone number? [[UPDATE: {"home_address": "123 Main St, New York, NY, 10001, USA"}]]"
+DATA POLISHING (CRITICAL):
+- As the user answers, EXTRACT and POLISH the data into formal format.
+- Return the polished data in a hidden JSON block: [[UPDATE: {"field_name": "Formal Value"}]]
+- Example: 
+  User: "im a teacher at hogwarts"
+  AI: "That sounds fascinating. How long have you been teaching there? [[UPDATE: {"occupation": "Teacher", "employer_name": "Hogwarts School"}]]"
+
+START:
+Begin by introducing yourself briefly as their assistant and asking for their current address to get started.
 """;
 
-    _sendMessage(systemInstruction, customContext: initialContext, isSystemPrompt: true); 
+    // Inject strict system instruction into the CONTEXT
+    final fullContext = {
+       ...initialContext,
+       'system_instruction': systemInstruction,
+    };
+
+    // Send a natural greeting trigger, but the AI will see the system instruction in context
+    _sendMessage("Hello, I am ready.", customContext: fullContext, isSystemPrompt: true); 
   }
 
   void _addBotMessage(String fullText) {
+    if (fullText.trim() == "Please answer the question.") return; // Ignore default error response
     // 1. Separate Conversational Text from Data Block
     String displayText = fullText;
     final regex = RegExp(r'\[\[UPDATE:\s*(\{.*?\})\s*\]\]');

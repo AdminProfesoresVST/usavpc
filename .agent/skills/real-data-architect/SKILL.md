@@ -141,23 +141,18 @@ abstract class ITaskRepository {
   Stream<List<Task>> watchAllTasks();
 }
 
-// data/repositories/task_repository_impl.dart
-class TaskRepositoryImpl implements ITaskRepository {
-  final TaskLocalDataSource _localDataSource;
+// domain/entities/task.dart
+class Task {
+  final String id;
+  final String title;
   
-  TaskRepositoryImpl(this._localDataSource);
-  
-  @override
-  Future<List<Task>> getAllTasks() async {
-    final models = await _localDataSource.getAllTasks();
-    return models.map((m) => m.toEntity()).toList();
-  }
-  
-  // ... implementar todos los métodos
+  Task({required this.id, required this.title})
+    : assert(id.isNotEmpty, 'Task ID required'),
+      assert(title.isNotEmpty, 'Task title required');
 }
 ```
 
-### 3. Provider de Repositorio
+### 3. Manejo de "Mock Data" (Protocolo de Seeding)
 
 ```dart
 // Inyección de dependencia via Riverpod
@@ -281,6 +276,7 @@ Antes de entregar código que muestre datos:
 - [ ] ¿Los datos vienen de un `Provider` conectado a un `Repository`?
 - [ ] ¿Existe una interfaz `IRepository` abstracta?
 - [ ] ¿El modelo/entidad está tipado correctamente?
+- [ ] ¿El modelo incluye `asserts` para garantizar integridad (Zero Tolerance)?
 - [ ] ¿Los datos de prueba están en un `Seeder`, no en la UI?
 - [ ] ¿Se usa `FutureProvider` o `StreamProvider` para la consulta?
 - [ ] ¿Los estados loading/error/empty están manejados?

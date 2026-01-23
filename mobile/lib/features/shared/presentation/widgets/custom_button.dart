@@ -41,8 +41,8 @@ class CustomButton extends StatelessWidget {
               )
             : Text(
                 text,
-                style: GoogleFonts.publicSans(
-                  fontSize: 16,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontSize: 16, // Keeping 16 for main buttons, but derived from theme font family
                   fontWeight: FontWeight.w600,
                   color: textColor ?? Colors.white,
                 ),

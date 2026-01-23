@@ -44,12 +44,11 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        title,
-        style: GoogleFonts.publicSans(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-          color: Colors.white,
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          title,
+          style: AppTheme.h1WhiteBold,
         ),
       ),
       backgroundColor: AppTheme.navyPrimary,
@@ -92,19 +91,12 @@ class AppHeaderWithProgress extends StatelessWidget implements PreferredSizeWidg
         children: [
           Text(
             title,
-            style: GoogleFonts.publicSans(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: AppTheme.h1WhiteBold,
           ),
           if (subtitle != null)
             Text(
               subtitle!,
-              style: GoogleFonts.publicSans(
-                fontSize: 11,
-                color: Colors.white70,
-              ),
+              style: AppTheme.smallWhiteRegular.copyWith(color: Colors.white70),
             ),
         ],
       ),
@@ -119,7 +111,7 @@ class AppHeaderWithProgress extends StatelessWidget implements PreferredSizeWidg
               child: LinearProgressIndicator(
                 value: progress,
                 backgroundColor: Colors.white24,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
           : null,

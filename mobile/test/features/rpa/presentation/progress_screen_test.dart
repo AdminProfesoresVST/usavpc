@@ -9,7 +9,11 @@ void main() {
     // Skipping this test because AutomationProgressScreen invokes WebViewController in initState,
     // which requires native platform channels not available in standard widget tests without 
     // extensive mocking of the WebViewPlatform interface.
+    // extensive mocking of the WebViewPlatform interface.
+    return;
   }, skip: true);
+  
+  testWidgets('AutomationProgressScreen renders header and progress', (tester) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(

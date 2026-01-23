@@ -18,6 +18,7 @@ class VoiceManager {
     await _tts.setSpeechRate(0.5);
     await _tts.setVolume(1.0);
     await _tts.setPitch(1.0);
+    await _tts.awaitSpeakCompletion(true); // Critical for animation timing
   }
 
   Future<void> speak(String text) async {

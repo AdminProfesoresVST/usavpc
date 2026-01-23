@@ -145,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 24),
               Text(
                 l10n.nonGovernmentDisclaimer,
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: AppTheme.smallGreyRegular,
               ),
             ],
           ),

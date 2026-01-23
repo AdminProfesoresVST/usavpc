@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('es')
   ];
 
+  /// No description provided for @dataSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Data saved successfully'**
+  String get dataSavedSuccess;
+
   /// Application title in navbar
   ///
   /// In en, this message translates to:
@@ -401,7 +407,7 @@ abstract class AppLocalizations {
   /// Verification landing screen title
   ///
   /// In en, this message translates to:
-  /// **'IDENTITY VERIFICATION'**
+  /// **'Identity Verification'**
   String get verificationTitle;
 
   /// Verification header
@@ -899,7 +905,7 @@ abstract class AppLocalizations {
   /// Automation screen title
   ///
   /// In en, this message translates to:
-  /// **'DS-160 AUTO-FILL'**
+  /// **'DS-160 Auto-fill'**
   String get ds160AutoFill;
 
   /// Manual inject button

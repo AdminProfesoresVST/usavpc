@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get dataSavedSuccess => 'Data saved successfully';
+
+  @override
   String get appTitle => 'Consular Assistant';
 
   @override
@@ -166,7 +169,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get defaultUser => 'User';
 
   @override
-  String get verificationTitle => 'IDENTITY VERIFICATION';
+  String get verificationTitle => 'Identity Verification';
 
   @override
   String get scanDocument => 'Scan Your Document';
@@ -441,7 +444,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get listening => 'Listening...';
 
   @override
-  String get ds160AutoFill => 'DS-160 AUTO-FILL';
+  String get ds160AutoFill => 'DS-160 Auto-fill';
 
   @override
   String get inject => 'INJECT';

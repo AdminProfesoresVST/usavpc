@@ -52,7 +52,7 @@ class DashboardScreen extends ConsumerWidget {
     if (data.status == 'PAID' || data.status == 'SUBMITTED') {
       statusColor = Colors.green;
     } else if (data.status == 'REJECTED') {
-      statusColor = AppTheme.errorRed;
+      statusColor = Colors.red;
     }
 
     return Card(
@@ -74,7 +74,7 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   child: Text(
                     _translateStatus(data.status, l10n), 
-                    style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
+                    style: AppTheme.h2NavyBold.copyWith(color: statusColor),
                   ),
                 ),
               ],
@@ -82,7 +82,7 @@ class DashboardScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             LinearProgressIndicator(
               value: data.progress,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: AppTheme.softBlue,
               valueColor: AlwaysStoppedAnimation<Color>(statusColor),
             ),
             const SizedBox(height: 8),
@@ -133,7 +133,7 @@ class DashboardScreen extends ConsumerWidget {
           backgroundColor: AppTheme.navyPrimary.withOpacity(0.1),
           child: Icon(icon, color: AppTheme.navyPrimary),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(title, style: AppTheme.h2NavyBold),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => _handleNavigation(context, iconCode),

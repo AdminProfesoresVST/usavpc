@@ -17,7 +17,7 @@ import 'package:mobile/features/ocr/presentation/screens/verification_scanner_sc
 import 'package:mobile/features/ocr/presentation/screens/passport_confirm_screen.dart';
 import 'package:mobile/features/ocr/logic/mrz_parser.dart';
 import 'package:mobile/features/simulator/presentation/screens/simulator_intro_screen.dart';
-import 'package:mobile/features/simulator/presentation/screens/chat_interface_screen.dart';
+import 'package:mobile/features/simulator/presentation/screens/simulator_interview_screen.dart';
 import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart';
 import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart';
 import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart';
@@ -84,16 +84,21 @@ GoRouter goRouter(Ref ref) {
               ),
             ],
           ),
-          // Branch 3: Perfil
+          // Branch 3: Placeholder (Keep 3 branches for nav balance, but Profile accessed via push)
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/profile',
+                path: '/profile_tab', // Placeholder - actual Profile is standalone
                 builder: (context, state) => const ProfileScreen(),
               ),
             ],
           ),
         ],
+      ),
+      // STANDALONE PROFILE (No BottomNavBar)
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         path: '/login',
@@ -125,18 +130,30 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: '/kyc/chat',
         builder: (context, state) {
-           final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
-           return ChatIntakeScreen(visaType: type);
+            // FIXED: Use the new AI Intake Screen which has the DB logic
+            return const AiIntakeScreen();
         },
       ),
       GoRoute(
         path: '/kyc/confirm',
         builder: (context, state) {
-          final extra = state.extra;
-          if (extra is PassportModel) {
-            return PassportConfirmScreen(passportData: extra);
-          }
-          // Fallback: If data is lost, go to new Chat Intake, NEVER old Ai Intake
+           // ZERO TOLERANCE: Check query params instead of fragile extra object
+           final p = state.uri.queryParameters;
+           if (p['passport'] != null) {
+             return PassportConfirmScreen(
+               passportData: PassportModel(
+                 documentNumber: p['passport']!,
+                 firstName: p['firstName'] ?? '',
+                 lastName: p['surname'] ?? '',
+                 birthDate: p['dob'] ?? '',
+                 nationality: p['nationality'] ?? '',
+                 expiryDate: p['expiry'] ?? '',
+                 sex: p['sex'] ?? '',
+                 personalNumber: '',
+               ),
+             );
+           }
+           // Fallback: If no data, go to new Chat Intake
            final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
            return ChatIntakeScreen(visaType: type);
         },
@@ -155,7 +172,7 @@ GoRouter goRouter(Ref ref) {
         routes: [
            GoRoute(
             path: 'chat',
-            builder: (context, state) => const ChatInterfaceScreen(),
+            builder: (context, state) => const SimulatorInterviewScreen(),
           ),
         ],
       ),
