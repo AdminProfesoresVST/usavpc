@@ -590,17 +590,17 @@ export async function POST(req: Request) {
 
             // Analytics: Log Behavioral Data
             try {
-                const geoCookie = cookieStore.get('x-client-geo')?.value;
-                const geo = geoCookie ? JSON.parse(geoCookie) : {};
+                const geoCookie = cookieStore.get('x-client-geo')?.value || '{}';
+                const geo = JSON.parse(geoCookie);
 
                 await supabase.from('analytics_events').insert({
-                    user_id: user.id,
+                    user_id: user!.id,
                     event_type: 'question_answered',
                     ip_address: geo.ip,
                     country: geo.country,
                     city: geo.city,
                     metadata: {
-                        question_id: currentStep.field,
+                        question_id: currentStep!.field,
                         english_score: valRes.english_proficiency,
                         sentiment: valRes.sentiment,
                         answer_length: answer.length,
@@ -614,12 +614,12 @@ export async function POST(req: Request) {
 
             // TRIAGE ASSESSMENT CHECK
             // If we just answered the last triage question (triage_property), trigger assessment
-            if (currentStep.field === 'triage_property') {
+            if (currentStep!.field === 'triage_property') {
                 // Fetch full payload to get triage data
                 const { data: fullPayload } = await supabase
                     .from('applications')
                     .select('ds160_payload')
-                    .eq('user_id', user.id)
+                    .eq('user_id', user!.id)
                     .single();
 
                 const p = fullPayload?.ds160_payload || {};
@@ -664,19 +664,19 @@ export async function POST(req: Request) {
                 if (valRes.additionalData) {
                     console.log("[Chat] 🧠 AI found extra context:", valRes.additionalData);
                     for (const [key, val] of Object.entries(valRes.additionalData)) {
-                        await sm.saveAnswer(user.id, key, val);
+                        await sm.saveAnswer(user!.id, key, val);
                     }
                 }
 
                 // Save direct answer
-                await sm.saveAnswer(user.id, currentStep.field, valRes.extractedValue || answer);
+                await sm.saveAnswer(user!.id, currentStep!.field, valRes.extractedValue || answer);
                 const nextStep = await sm.getNextStep();
 
                 if (nextStep) {
                     return NextResponse.json({
                         nextStep: {
                             ...nextStep,
-                            question: `📊 ** Análisis Preliminar **: ${assessment.assessment_message} \n\n${nextStep.question} `
+                            question: `📊 ** Análisis Preliminar **: ${assessment.assessment_message} \n\n${nextStep!.question} `
                         },
                         validationResult: valRes
                     });
@@ -744,7 +744,7 @@ export async function POST(req: Request) {
 
 
             // 2. Process Valid Answer
-            if (currentStep.context === 'needs_translation') {
+            if (currentStep!.context === 'needs_translation') {
                 // RAG: Search Knowledge Base for context
                 const embeddingResponse = await openai.embeddings.create({
                     model: "text-embedding-3-small",
@@ -780,7 +780,7 @@ export async function POST(req: Request) {
                 const translatedData = JSON.parse(completion.choices[0].message.content || '{}');
 
                 // Save structured object
-                setDeepValue(payload, currentStep.field, translatedData);
+                setDeepValue(payload, currentStep!.field, translatedData);
 
                 // MIRROR LOGIC: STOP and Ask for Confirmation
                 const displayVal = translatedData.job_title_translated_en || "Translated";
@@ -789,7 +789,7 @@ export async function POST(req: Request) {
                     ds160_payload: payload,
                     client_metadata: {
                         ...application.client_metadata,
-                        confirmation_pending: { field: currentStep.field, value: displayVal }
+                        confirmation_pending: { field: currentStep!.field, value: displayVal }
                     }
                 }).eq("id", application.id);
 
@@ -806,9 +806,9 @@ export async function POST(req: Request) {
                     }
                 });
 
-            } else if (currentStep.context === 'polish_content') { // Same for Polish
+            } else if (currentStep!.context === 'polish_content') { // Same for Polish
                 const prompt = await getSystemPrompt(supabase, 'CONTENT_POLISHER');
-                const finalPrompt = prompt.replace('{question}', currentStep.question);
+                const finalPrompt = prompt.replace('{question}', currentStep!.question);
 
                 const completion = await openai.chat.completions.create({
                     model: "gpt-4o-mini",
@@ -823,14 +823,14 @@ export async function POST(req: Request) {
                 const polishedText = aiResponse.polished_text || cleanAnswer;
 
                 // Save polished text
-                setDeepValue(payload, currentStep.field, polishedText);
+                setDeepValue(payload, currentStep!.field, polishedText);
 
                 // MIRROR LOGIC
                 await supabase.from("applications").update({
                     ds160_payload: payload,
                     client_metadata: {
                         ...application.client_metadata,
-                        confirmation_pending: { field: currentStep.field, value: polishedText }
+                        confirmation_pending: { field: currentStep!.field, value: polishedText }
                     }
                 }).eq("id", application.id);
 
@@ -848,7 +848,7 @@ export async function POST(req: Request) {
                 });
 
 
-            } else if (currentStep.context === 'spouse_parser') {
+            } else if (currentStep!.context === 'spouse_parser') {
                 // AI Processing for Spouse Details
                 const prompt = await getSystemPrompt(supabase, 'SPOUSE_PARSER');
                 const completion = await openai.chat.completions.create({
@@ -863,7 +863,7 @@ export async function POST(req: Request) {
                 const aiResponse = JSON.parse(completion.choices[0].message.content || "{}");
 
                 // Save the object to the spouse field
-                setDeepValue(payload, currentStep.field, aiResponse);
+                setDeepValue(payload, currentStep!.field, aiResponse);
 
                 // No confirmation needed for simple factual extraction usually, but explicit user request implies ALL interpretation
                 // Let's keep spouse verification implicit for now unless user complains, or add it.
@@ -882,7 +882,7 @@ export async function POST(req: Request) {
                     type: 'spouse_extraction'
                 };
 
-            } else if (currentStep.type === 'text' && valRes.displayValue && valRes.displayValue.length > 3 && valRes.displayValue !== answer && valRes.displayValue !== "Does Not Apply") {
+            } else if (currentStep!.type === 'text' && valRes.displayValue && valRes.displayValue.length > 3 && valRes.displayValue !== answer && valRes.displayValue !== "Does Not Apply") {
                 // UNIVERSAL POLISH & CONFIRM
                 // If the Validator improved the text (and it's not just a standard "N/A" map), verify with user.
                 // Heuristic: If string distance is significant or completely different words.
@@ -895,7 +895,7 @@ export async function POST(req: Request) {
 
                 // If it's just casing/trimming, skip confirmation
                 if (normAns === normDisp) {
-                    setDeepValue(payload, currentStep.field, valRes.extractedValue || answer);
+                    setDeepValue(payload, currentStep!.field, valRes.extractedValue || answer);
                     await supabase.from("applications").update({
                         ds160_payload: payload,
                         client_metadata: { ...application.client_metadata, prefers_language: effectiveLocale }
@@ -944,7 +944,7 @@ export async function POST(req: Request) {
             }
 
             // RE-INSTANTIATE SM WITH UPDATED PAYLOAD TO ENSURE FRESH STATE
-            const smNext = new DS160StateMachine(payload, supabase, effectiveLocale, user.id);
+            const smNext = new DS160StateMachine(payload, supabase, effectiveLocale, user!.id);
 
             // 4. Get Next Question (after update)
             const nextStep = await smNext.getNextStep();
