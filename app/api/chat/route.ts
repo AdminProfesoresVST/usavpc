@@ -713,7 +713,7 @@ export async function POST(req: Request) {
 
                     // 2. Advance State (The answer is already saved)
                     // Just return "Great" and next question
-                    const smNext = new DS160StateMachine(payload, supabase, effectiveLocale, user.id);
+                    const smNext = new DS160StateMachine(payload, supabase, effectiveLocale, user!.id);
                     const nextStep = await smNext.getNextStep();
                     return NextResponse.json({
                         response: effectiveLocale === 'es' ? "Excelente. Continuemos." : "Great. Moving on.",
@@ -908,7 +908,7 @@ export async function POST(req: Request) {
                         // Actually, we haven't saved the value in payload yet.
                         client_metadata: {
                             ...application.client_metadata,
-                            confirmation_pending: { field: currentStep.field, value: valRes.extractedValue } // Save the EXTRACTED value (the good one)
+                            confirmation_pending: { field: currentStep!.field, value: valRes.extractedValue } // Save the EXTRACTED value (the good one)
                         }
                     }).eq("id", application.id);
 
@@ -928,7 +928,7 @@ export async function POST(req: Request) {
 
             } else {
                 // Direct update (No polish needed or simple field)
-                setDeepValue(payload, currentStep.field, cleanAnswer);
+                setDeepValue(payload, currentStep!.field, cleanAnswer);
 
                 // Normal save logic
                 await supabase
