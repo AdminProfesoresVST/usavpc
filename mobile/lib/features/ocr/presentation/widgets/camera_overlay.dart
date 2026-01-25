@@ -16,7 +16,7 @@ class CameraOverlay extends StatelessWidget {
 class OverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = AppTheme.inkPrimary54;
+    final paint = Paint()..color = AppTheme.inkPrimary.withValues(alpha: 0.54);
     
     // Draw semi-transparent background
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);

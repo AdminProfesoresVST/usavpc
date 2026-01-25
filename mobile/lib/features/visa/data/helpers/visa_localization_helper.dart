@@ -1,4 +1,4 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mobile/l10n/generated/app_localizations.dart';
 
 /// Helper para obtener traducciones localizadas de categorías de visa
 /// Los datos de Supabase vienen en inglés, este helper mapea el código
