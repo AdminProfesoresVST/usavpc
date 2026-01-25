@@ -147,7 +147,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         badgeText: l10n.badgeFast,
                         badgeColor: AppTheme.navyPrimary,
                         badgeBg: AppTheme.softBlue,
-                        onTap: () => _handleNavigation(context, ref, '/visa-type'),
+                        onTap: () => _handleNavigation(context, ref, '/visa/select'),
                       ),
                       
                       const SizedBox(height: 8), // Reduced from 12
@@ -169,6 +169,26 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         subtitle: l10n.documentAuditSubtitle,
                         icon: Icons.checklist,
                         onTap: () => _handleNavigation(context, ref, '/quick-check'),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // Card 4: Cost Calculator
+                      _ServiceCard(
+                        title: l10n.costCalculatorTitle,
+                        subtitle: l10n.costCalculatorSubtitle,
+                        icon: Icons.calculate,
+                        onTap: () => _handleNavigation(context, ref, '/cost/calculate'),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // Card 5: Travel Ban
+                      _ServiceCard(
+                        title: l10n.travelBanTitle,
+                        subtitle: l10n.travelBanSubtitle,
+                        icon: Icons.public_off,
+                        onTap: () => _handleNavigation(context, ref, '/travel-ban/check'),
                       ),
                     ],
                   ),

@@ -172,6 +172,11 @@
   "injectionComplete": "Inyección completada",
   "automationReady": "Automatización lista. Revise los datos y continúe manualmente.",
   "processComplete": "PROCESO COMPLETADO - Verifique los datos antes de continuar",
-  "injectionError": "Error durante inyección"
+  "injectionError": "Error durante inyección",
+  
+  "costCalculatorTitle": "Calculadora de Costos",
+  "costCalculatorSubtitle": "Estimación completa de tarifas",
+  "travelBanTitle": "Verificar Restricciones",
+  "travelBanSubtitle": "Chequeo de Travel Ban 2026"
 }
 

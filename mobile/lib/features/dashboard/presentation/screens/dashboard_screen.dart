@@ -116,6 +116,8 @@ class DashboardScreen extends ConsumerWidget {
       case 'payment': return Icons.payment;
       case 'assessment': return Icons.assessment;
       case 'start': return Icons.play_arrow;
+      case 'calculator': return Icons.calculate;
+      case 'travel_ban': return Icons.public_off;
       default: return Icons.arrow_forward;
     }
   }
@@ -153,7 +155,13 @@ class DashboardScreen extends ConsumerWidget {
         GoRouter.of(context).push('/risk-audit');
         break;
       case 'start':
-        GoRouter.of(context).push('/visa-type');
+        GoRouter.of(context).push('/visa/select');
+        break;
+      case 'calculator':
+        GoRouter.of(context).push('/cost/calculate');
+        break;
+      case 'travel_ban':
+        GoRouter.of(context).push('/travel-ban/check');
         break;
       default:
         GoRouter.of(context).push('/services');

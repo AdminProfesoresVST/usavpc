@@ -22,10 +22,20 @@ class DashboardRepositoryImpl implements DashboardRepository {
         progress: 0.0,
         lastEdited: 'N/A',
         nextSteps: [
-          DashboardAction(
+          const DashboardAction(
             title: 'Iniciar Solicitud',
             subtitle: 'Comienza tu proceso de visa',
             iconCode: 'start',
+          ),
+          const DashboardAction(
+            title: 'Verificar Restricciones',
+            subtitle: 'Chequeo de Travel Ban 2026',
+            iconCode: 'travel_ban',
+          ),
+          const DashboardAction(
+            title: 'Calculadora de Costos',
+            subtitle: 'Estimación completa de tarifas',
+            iconCode: 'calculator',
           ),
         ],
       );
@@ -46,10 +56,20 @@ class DashboardRepositoryImpl implements DashboardRepository {
         progress: 0.0,
         lastEdited: 'N/A',
         nextSteps: [
-          DashboardAction(
+          const DashboardAction(
             title: 'Iniciar Solicitud',
             subtitle: 'Comienza tu proceso de visa',
             iconCode: 'start',
+          ),
+          const DashboardAction(
+            title: 'Verificar Restricciones',
+            subtitle: 'Chequeo de Travel Ban 2026',
+            iconCode: 'travel_ban',
+          ),
+          const DashboardAction(
+            title: 'Calculadora de Costos',
+            subtitle: 'Estimación completa de tarifas',
+            iconCode: 'calculator',
           ),
         ],
       );
@@ -99,6 +119,18 @@ class DashboardRepositoryImpl implements DashboardRepository {
         iconCode: 'payment',
       ));
     }
+    
+    // Always show utility tools
+    nextSteps.add(const DashboardAction(
+      title: 'Verificar Restricciones',
+      subtitle: 'Chequeo de Travel Ban 2026',
+      iconCode: 'travel_ban',
+    ));
+    nextSteps.add(const DashboardAction(
+      title: 'Calculadora de Costos',
+      subtitle: 'Estimación completa de tarifas',
+      iconCode: 'calculator',
+    ));
 
     return DashboardData(
       status: status.toUpperCase(),
