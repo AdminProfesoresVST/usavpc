@@ -30,7 +30,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
             backgroundColor: AppTheme.navyPrimary,
             title: Row(
               children: [
-                const Icon(Icons.policy, color: Colors.white),
+                const Icon(Icons.policy, color: AppTheme.inkInverse),
                 const SizedBox(width: 8),
                 Text(
                   l10n.appTitle,
@@ -62,14 +62,14 @@ class ServiceSelectionScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), // Compact badge
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: AppTheme.inkInverse.withOpacity(0.15),
                           borderRadius: AppTheme.smallRadius,
-                          border: Border.all(color: Colors.white24),
+                          border: Border.all(color: AppTheme.inkInverse.withOpacity(0.2)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.verified_user, color: Colors.white, size: 12),
+                            const Icon(Icons.verified_user, color: AppTheme.inkInverse, size: 12),
                             const SizedBox(width: 4),
                             Text(
                               l10n.officialGuide,
@@ -86,7 +86,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                       const SizedBox(height: 4), // Reduced from 8
                       Text(
                         l10n.heroSubtitle,
-                        style: AppTheme.bodyWhiteRegular.copyWith(color: Colors.white70, fontSize: 13),
+                        style: AppTheme.bodyWhiteRegular.copyWith(color: AppTheme.inkInverse.withOpacity(0.7), fontSize: 13),
                         maxLines: 1, 
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -203,12 +203,12 @@ class ServiceSelectionScreen extends ConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.lock, size: 12, color: Colors.green.shade700),
+                        Icon(Icons.lock, size: 12, color: AppTheme.successGreen),
                         const SizedBox(width: 4),
                         Text(
                           l10n.securityNote,
                           style: context.textTheme.bodySmall?.copyWith(
-                            color: Colors.grey.shade600,
+                            color: AppTheme.inkSecondary,
                             fontWeight: FontWeight.w500,
                             fontSize: 10,
                           ),
@@ -294,9 +294,9 @@ class _StepItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4), // Reduced padding
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.inkInverse,
           borderRadius: AppTheme.buttonRadius,
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: AppTheme.cardBorderColor),
           boxShadow: [
             BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
           ],
@@ -358,9 +358,9 @@ class _ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         borderRadius: AppTheme.buttonRadius, // Slightly reduced radius
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppTheme.cardBorderColor),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2)),
         ],
@@ -429,7 +429,7 @@ class _ServiceCard extends StatelessWidget {
                 ),
                 
                 // Arrow
-                Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 16),
+                Icon(Icons.chevron_right, color: AppTheme.inkSecondary, size: 16),
               ],
             ),
           ),

@@ -219,13 +219,13 @@ class CostBreakdownCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: AppTheme.successGreenLight,
                           borderRadius: AppTheme.smallRadius,
                         ),
                         child: Text(
                           'Refundable',
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: Colors.green,
+                            color: AppTheme.successGreen,
                             fontSize: 10,
                           ),
                         ),
@@ -239,13 +239,13 @@ class CostBreakdownCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: AppTheme.infoBlueLight,
                           borderRadius: AppTheme.smallRadius,
                         ),
                         child: Text(
                           'Optional',
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: Colors.blue,
+                            color: AppTheme.infoBlue,
                             fontSize: 10,
                           ),
                         ),
@@ -313,19 +313,19 @@ class CostBreakdownCard extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.1),
+        color: AppTheme.successGreenLight,
         borderRadius: AppTheme.buttonRadius,
-        border: Border.all(color: Colors.green.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.successGreen.withOpacity(0.3)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.replay, size: 18, color: Colors.green),
+          Icon(Icons.replay, size: 18, color: AppTheme.successGreen),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               'Up to \$$amount may be refundable with timely departure',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.green.shade700,
+                color: AppTheme.successGreen,
               ),
             ),
           ),
@@ -337,19 +337,19 @@ class CostBreakdownCard extends StatelessWidget {
   Color _getFeeColor(FeeType type) {
     switch (type) {
       case FeeType.mrvBase:
-        return Colors.blue;
+        return AppTheme.infoBlue;
       case FeeType.integrityFee:
-        return Colors.purple;
+        return AppTheme.warningOrange;
       case FeeType.sevisI901:
-        return Colors.teal;
+        return AppTheme.actionBlue;
       case FeeType.i94Land:
-        return Colors.orange;
+        return AppTheme.warningOrange;
       case FeeType.reciprocity:
-        return Colors.indigo;
+        return AppTheme.navyPrimary;
       case FeeType.premiumProcessing:
-        return Colors.amber;
+        return AppTheme.warningOrange;
       case FeeType.biometrics:
-        return Colors.cyan;
+        return AppTheme.actionBlue;
     }
   }
 
