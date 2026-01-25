@@ -30,7 +30,7 @@ class UserBubble extends StatelessWidget {
           ),
           borderRadius: BorderRadius.only(
             topLeft: AppTheme.radiusBurbuja,
-            topRight: Radius.circular(4),
+            topRight: AppTheme.radiusPequeno,
             bottomLeft: AppTheme.radiusBurbuja,
             bottomRight: AppTheme.radiusBurbuja,
           ),

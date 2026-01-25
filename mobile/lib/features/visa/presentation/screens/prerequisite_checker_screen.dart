@@ -306,7 +306,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
             // Continue button
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: AppTheme.alturaBotonGrande,
               child: ElevatedButton.icon(
                 onPressed: allMandatoryComplete ? () {
                     _continueToApplication(context, l10n);

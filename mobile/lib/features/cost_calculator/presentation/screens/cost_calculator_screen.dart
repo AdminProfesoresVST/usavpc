@@ -146,7 +146,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             // Calculate Button
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: AppTheme.alturaBotonGrande,
               child: ElevatedButton.icon(
                 onPressed: _canCalculate ? _calculate : null,
                 icon: const Icon(Icons.calculate),
@@ -420,7 +420,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: AppTheme.radiusModal),
       ),
       builder: (sheetContext) => DraggableScrollableSheet(
         initialChildSize: 0.6,

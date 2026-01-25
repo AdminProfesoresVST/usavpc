@@ -455,7 +455,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
             // Submit button
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: AppTheme.alturaBotonGrande,
               child: FilledButton.icon(
                 onPressed: _submit,
                 icon: const Icon(Icons.add),

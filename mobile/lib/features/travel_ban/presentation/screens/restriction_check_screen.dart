@@ -115,7 +115,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
             // Check Button
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: AppTheme.alturaBotonGrande,
               child: ElevatedButton.icon(
                 onPressed: _canCheck ? _performCheck : null,
                 icon: const Icon(Icons.search),

@@ -22,7 +22,7 @@ class ConsulBubble extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppTheme.inkSecondary,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(4),
+            topLeft: AppTheme.radiusPequeno,
             topRight: AppTheme.radiusBurbuja,
             bottomLeft: AppTheme.radiusBurbuja,
             bottomRight: AppTheme.radiusBurbuja,

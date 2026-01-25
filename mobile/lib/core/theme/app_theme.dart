@@ -134,6 +134,8 @@ class AppTheme {
   static double get smallRadiusValue => radiusDetalles;
   
   // --- RADIUS INDIVIDUALES (para BorderRadius.only) ---
+  /// Radius mínimo para esquinas sutiles (4px)
+  static Radius get radiusPequeno => Radius.circular(radiusDetalles);
   /// Radius para esquinas de tarjetas (14px)
   static Radius get radiusTarjetaEsquina => Radius.circular(radiusTarjetas);
   /// Radius para esquinas de botones/badges (12px)
@@ -141,7 +143,9 @@ class AppTheme {
   /// Radius para esquinas de inputs (8px)
   static Radius get radiusInputEsquina => Radius.circular(radiusCamposTexto);
   /// Radius para burbujas de chat (16px)
-  static Radius get radiusBurbuja => Radius.circular(8.0);
+  static Radius get radiusBurbuja => Radius.circular(16.0);
+  /// Radius para modales/bottomsheets (20px)
+  static Radius get radiusModal => Radius.circular(20.0);
   
   // ═══════════════════════════════════════════════════════════════════════════
   // 4. 📐 ESPACIADOS (Márgenes y Padding)

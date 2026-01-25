@@ -45,8 +45,8 @@ class CostBreakdownCard extends StatelessWidget {
                 ],
               ),
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+                topLeft: AppTheme.radiusModal,
+                topRight: AppTheme.radiusModal,
               ),
             ),
             child: Column(
@@ -134,8 +134,8 @@ class CostBreakdownCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+                bottomLeft: AppTheme.radiusModal,
+                bottomRight: AppTheme.radiusModal,
               ),
             ),
             child: Column(
