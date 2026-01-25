@@ -221,15 +221,15 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
                   fillColor: Colors.grey.shade50,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: AppTheme.badgeRadius,
                     borderSide: BorderSide(color: Colors.grey.shade200),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: AppTheme.badgeRadius,
                     borderSide: BorderSide(color: Colors.grey.shade200),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: AppTheme.badgeRadius,
                     borderSide: const BorderSide(color: AppTheme.navyPrimary),
                   ),
                 ),

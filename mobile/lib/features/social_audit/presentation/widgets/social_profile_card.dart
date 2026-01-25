@@ -27,7 +27,7 @@ class SocialProfileCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppTheme.cardRadius,
         border: Border.all(
           color: statusColor.withOpacity(0.3),
           width: 2,
@@ -52,7 +52,7 @@ class SocialProfileCard extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: _getPlatformColor(profile.platform).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppTheme.inputRadius,
                   ),
                   child: Icon(
                     _getPlatformIcon(profile.platform),
@@ -219,7 +219,7 @@ class SocialProfileCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppTheme.inputRadius,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -374,7 +374,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
                 height: 4,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: AppTheme.smallRadius,
                 ),
               ),
             ),
@@ -419,7 +419,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
                 hintText: 'https://linkedin.com/in/username',
                 prefixIcon: const Icon(Icons.link),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppTheme.inputRadius,
                 ),
               ),
               keyboardType: TextInputType.url,
@@ -444,7 +444,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
                 hintText: '@username',
                 prefixIcon: const Icon(Icons.alternate_email),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppTheme.inputRadius,
                 ),
               ),
             ),
@@ -461,7 +461,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
                 label: const Text('Add Profile'),
                 style: FilledButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppTheme.inputRadius,
                   ),
                 ),
               ),

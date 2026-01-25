@@ -86,14 +86,14 @@ class _CompactVisaTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppTheme.buttonRadius,
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: AppTheme.buttonRadius,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(

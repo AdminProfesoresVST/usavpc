@@ -63,7 +63,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), // Compact badge
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: AppTheme.smallRadius,
                           border: Border.all(color: Colors.white24),
                         ),
                         child: Row(
@@ -73,7 +73,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                             const SizedBox(width: 4),
                             Text(
                               l10n.officialGuide,
-                              style: AppTheme.smallWhiteBold.copyWith(fontSize: 10),
+                              style: AppTheme.captionWhiteBold.copyWith(fontSize: 10),
                             ),
                           ],
                         ),
@@ -125,11 +125,11 @@ class ServiceSelectionScreen extends ConsumerWidget {
                     children: [
                       Text(
                         l10n.popularServices,
-                        style: AppTheme.h2NavyBold.copyWith(fontSize: 16),
+                        style: AppTheme.h2NavyBold.copyWith(fontSize: 13),
                       ),
                       Text(
                         l10n.viewAll,
-                        style: AppTheme.smallNavyBold.copyWith(fontSize: 12),
+                        style: AppTheme.captionNavyBold.copyWith(fontSize: 12),
                       ),
                     ],
                   ),
@@ -295,7 +295,7 @@ class _StepItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4), // Reduced padding
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: AppTheme.buttonRadius,
           border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
             BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
@@ -324,7 +324,7 @@ class _StepItem extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               subtitle,
-              style: AppTheme.smallGreyRegular.copyWith(fontSize: 9),
+              style: AppTheme.captionGreyRegular.copyWith(fontSize: 9),
               textAlign: TextAlign.center,
               maxLines: 1,
             ),
@@ -359,7 +359,7 @@ class _ServiceCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10), // Slightly reduced radius
+        borderRadius: AppTheme.buttonRadius, // Slightly reduced radius
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2)),
@@ -369,7 +369,7 @@ class _ServiceCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: AppTheme.buttonRadius,
           child: Padding(
             padding: const EdgeInsets.all(12), // Reduced from 16
             child: Row(
@@ -396,7 +396,7 @@ class _ServiceCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               title,
-                              style: AppTheme.h3NavySemiBold.copyWith(fontSize: 13), // Reduced font
+                              style: AppTheme.h2NavyBold.copyWith(fontSize: 13), // Reduced font
                             ),
                           ),
                           if (badgeText != null)
@@ -405,7 +405,7 @@ class _ServiceCard extends StatelessWidget {
                               margin: const EdgeInsetsDirectional.only(start: 8),
                               decoration: BoxDecoration(
                                 color: badgeBg,
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: AppTheme.smallRadius,
                               ),
                               child: Text(
                                 badgeText!,
@@ -420,7 +420,7 @@ class _ServiceCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: AppTheme.smallGreyRegular.copyWith(fontSize: 11),
+                        style: AppTheme.captionGreyRegular.copyWith(fontSize: 11),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

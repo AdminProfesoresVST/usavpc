@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:mobile/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Subtle waveform visualizer with thin animated lines in blue gradient variants.
@@ -95,7 +96,7 @@ class _WaveformVisualizerState extends State<WaveformVisualizer> with TickerProv
             height: 3,
             decoration: BoxDecoration(
               color: _blueVariants[2].withOpacity(0.3),
-              borderRadius: BorderRadius.circular(1),
+              borderRadius: AppTheme.smallRadius,
             ),
           );
         }),
@@ -118,7 +119,7 @@ class _WaveformVisualizerState extends State<WaveformVisualizer> with TickerProv
                   height: 40 * _heightAnimations[index].value, // Larger height
                   decoration: BoxDecoration(
                     color: _getBarColor(index).withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(1),
+                    borderRadius: AppTheme.smallRadius,
                   ),
                 );
               },

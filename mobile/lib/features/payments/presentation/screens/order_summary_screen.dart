@@ -179,7 +179,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                     const SizedBox(width: 4),
                     Text(
                       l10n.securePayment,
-                      style: AppTheme.smallGreyRegular,
+                      style: AppTheme.captionGreyRegular,
                     ),
                   ],
                 ),

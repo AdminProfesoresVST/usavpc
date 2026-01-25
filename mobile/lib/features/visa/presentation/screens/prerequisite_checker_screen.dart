@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/utils/visa_localization.dart';
 
 import '../../data/models/visa_category.dart';
+
+
 import '../../data/models/prerequisite_form.dart';
 import '../providers/visa_providers.dart';
 import '../widgets/document_check_card.dart';
@@ -25,23 +30,26 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     
     final prerequisitesAsync = ref.watch(prerequisiteFormsProvider(widget.visaCategoryCode));
     final categoryAsync = ref.watch(visaCategoryByCodeProvider(widget.visaCategoryCode));
 
     return Scaffold(
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('Document Checklist'),
+        title: Text(l10n.documentChecklist),
         centerTitle: true,
+        backgroundColor: AppTheme.navyPrimary,
+        foregroundColor: Colors.white,
       ),
       body: prerequisitesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (prerequisites) {
           if (prerequisites.isEmpty) {
-            return _buildNoPrerequisitesView(context);
+            return _buildNoPrerequisitesView(context, l10n);
           }
 
           return Column(
@@ -50,7 +58,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               categoryAsync.when(
                 loading: () => const SizedBox.shrink(),
                 error: (_, __) => const SizedBox.shrink(),
-                data: (category) => _buildHeader(context, category, prerequisites),
+                data: (category) => _buildHeader(context, category, prerequisites, l10n),
               ),
 
               // List of prerequisites
@@ -60,19 +68,22 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                   itemCount: prerequisites.length,
                   itemBuilder: (context, index) {
                     final form = prerequisites[index];
-                    return DocumentCheckCard(
-                      form: form,
-                      validation: null, // Would come from provider
-                      onHasDocumentChanged: (hasDoc) {
-                        setState(() {
-                          _documentStatus[form.id] = hasDoc;
-                        });
-                      },
-                      onDataExtracted: (data) {
-                        setState(() {
-                          _extractedData[form.id] = data;
-                        });
-                      },
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: DocumentCheckCard(
+                        form: form,
+                        validation: null, // Would come from provider
+                        onHasDocumentChanged: (hasDoc) {
+                          setState(() {
+                            _documentStatus[form.id] = hasDoc;
+                          });
+                        },
+                        onDataExtracted: (data) {
+                          setState(() {
+                            _extractedData[form.id] = data;
+                          });
+                        },
+                      ),
                     );
                   },
                 ),
@@ -84,7 +95,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
       bottomNavigationBar: prerequisitesAsync.when(
         loading: () => null,
         error: (_, __) => null,
-        data: (prerequisites) => _buildBottomBar(context, prerequisites),
+        data: (prerequisites) => _buildBottomBar(context, prerequisites, l10n),
       ),
     );
   }
@@ -93,10 +104,8 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     BuildContext context,
     VisaCategory? category,
     List<PrerequisiteForm> prerequisites,
+    dynamic l10n,
   ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
     final completedCount = _documentStatus.values.where((v) => v).length;
     final totalRequired = prerequisites.where((p) => p.isMandatory).length;
     final progress = totalRequired > 0 ? completedCount / totalRequired : 0.0;
@@ -105,13 +114,15 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.tertiaryContainer,
-            colorScheme.tertiaryContainer.withOpacity(0.7),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
+        color: AppTheme.navyPrimary,
+        borderRadius: AppTheme.cardRadius,
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.navyPrimary.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,12 +132,12 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: colorScheme.tertiary.withOpacity(0.1),
+                  color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.checklist_rounded,
-                  color: colorScheme.tertiary,
+                  color: Colors.white,
                   size: 28,
                 ),
               ),
@@ -139,15 +150,14 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                       category != null
                           ? '${category.code} - ${category.name}'
                           : widget.visaCategoryCode,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: AppTheme.h2WhiteBold,
                     ),
                     if (category != null)
                       Text(
                         'Form: ${category.formEngine.value}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                        style: AppTheme.bodyWhiteRegular.copyWith(
+                          color: Colors.white70,
+                          fontSize: 12,
                         ),
                       ),
                   ],
@@ -161,29 +171,25 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
           Row(
             children: [
               Text(
-                'Progress',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                l10n.progress,
+                style: AppTheme.captionWhiteRegular,
               ),
               const Spacer(),
               Text(
-                '$completedCount of $totalRequired required',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                '$completedCount / $totalRequired ${l10n.required}',
+                style: AppTheme.captionWhiteBold,
               ),
             ],
           ),
           const SizedBox(height: 8),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: AppTheme.smallRadius,
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
-              backgroundColor: colorScheme.tertiary.withOpacity(0.2),
+              backgroundColor: Colors.white24,
               valueColor: AlwaysStoppedAnimation<Color>(
-                progress >= 1.0 ? Colors.green : colorScheme.tertiary,
+                progress >= 1.0 ? Colors.greenAccent : Colors.white,
               ),
             ),
           ),
@@ -192,9 +198,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     );
   }
 
-  Widget _buildNoPrerequisitesView(BuildContext context) {
-    final theme = Theme.of(context);
-    
+  Widget _buildNoPrerequisitesView(BuildContext context, dynamic l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -204,31 +208,39 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
             Icon(
               Icons.check_circle_outline,
               size: 80,
-              color: Colors.green.shade300,
+              color: Colors.green,
             ),
             const SizedBox(height: 24),
             Text(
-              'No Prerequisites Required',
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              l10n.noPrerequisities,
+              style: AppTheme.h1NavyBold,
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
-              'This visa category does not require any prerequisite documents. '
-              'You can proceed directly to fill out the application form.',
+              l10n.noPrerequisitiesDesc,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: AppTheme.labelRegular,
             ),
             const SizedBox(height: 32),
-            FilledButton.icon(
-              onPressed: () {
-                // Navigate to form
-              },
-              icon: const Icon(Icons.arrow_forward),
-              label: const Text('Continue to Application'),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Navigate to form
+                },
+                icon: const Icon(Icons.arrow_forward),
+                label: Text(l10n.continueToApp),
+                 style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.navyPrimary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: AppTheme.inputRadius,
+                  ),
+                  textStyle: AppTheme.h2WhiteBold,
+                ),
+              ),
             ),
           ],
         ),
@@ -236,10 +248,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, List<PrerequisiteForm> prerequisites) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
+  Widget _buildBottomBar(BuildContext context, List<PrerequisiteForm> prerequisites, dynamic l10n) {
     final mandatoryForms = prerequisites.where((p) => p.isMandatory).toList();
     final allMandatoryComplete = mandatoryForms.every(
       (form) => _documentStatus[form.id] == true,
@@ -248,7 +257,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -268,7 +277,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                 color: allMandatoryComplete
                     ? Colors.green.withOpacity(0.1)
                     : Colors.orange.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppTheme.buttonRadius,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -283,12 +292,10 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                   const SizedBox(width: 8),
                   Text(
                     allMandatoryComplete
-                        ? 'All required documents verified'
-                        : 'Missing required documents',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color:
-                          allMandatoryComplete ? Colors.green : Colors.orange,
-                      fontWeight: FontWeight.w500,
+                        ? l10n.prerequisitesVerified
+                        : l10n.missingDocuments,
+                    style: AppTheme.captionNavyBold.copyWith(
+                      color: allMandatoryComplete ? Colors.green : Colors.orange,
                     ),
                   ),
                 ],
@@ -300,14 +307,19 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
             SizedBox(
               width: double.infinity,
               height: 56,
-              child: FilledButton.icon(
-                onPressed: allMandatoryComplete ? _continueToApplication : null,
+              child: ElevatedButton.icon(
+                onPressed: allMandatoryComplete ? () {
+                    _continueToApplication(context, l10n);
+                } : null,
                 icon: const Icon(Icons.arrow_forward),
-                label: const Text('Continue to Application'),
-                style: FilledButton.styleFrom(
+                label: Text(l10n.continueToApp),
+                 style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.navyPrimary,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppTheme.inputRadius,
                   ),
+                  textStyle: AppTheme.h2WhiteBold,
                 ),
               ),
             ),
@@ -317,11 +329,11 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     );
   }
 
-  void _continueToApplication() {
+  void _continueToApplication(BuildContext context, dynamic l10n) {
     // Navigate to DS-160 or DS-260 form
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('All prerequisites verified. Proceeding to application...'),
+      SnackBar(
+        content: Text(l10n.proceedingToApp),
         behavior: SnackBarBehavior.floating,
       ),
     );

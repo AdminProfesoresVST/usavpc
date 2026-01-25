@@ -45,14 +45,14 @@ class RiskAuditScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: AppTheme.badgeRadius,
                     boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))],
                   ),
                   child: Column(
                     children: [
                       Text(
                         l10n.approvalProbability,
-                        style: AppTheme.bodyGreyRegular,
+                        style: AppTheme.labelRegular,
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -66,11 +66,11 @@ class RiskAuditScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
                           color: AppTheme.softBlue,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: AppTheme.badgeRadius,
                         ),
                         child: Text(
                           l10n.riskLevel(evaluation.riskLevel),
-                            style: AppTheme.smallNavyBold.copyWith(
+                            style: AppTheme.captionNavyBold.copyWith(
                               color: isHighApproval ? AppTheme.navyPrimary : AppTheme.actionBlue
                             ),
                         ),
@@ -99,7 +99,7 @@ class RiskAuditScreen extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.navyPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
                   ),
                   child: Text(l10n.continueToSimulator, style: AppTheme.bodyWhiteRegular),
                 ),
@@ -122,7 +122,7 @@ class RiskAuditScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppTheme.inputRadius,
         border: Border.all(color: Colors.grey.shade100),
       ),
       child: Row(

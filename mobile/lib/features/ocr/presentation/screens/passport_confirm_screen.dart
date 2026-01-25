@@ -186,7 +186,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.navyPrimary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
                 ),
                 child: _isLoading
                     ? const SizedBox(
@@ -220,11 +220,11 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: AppTheme.buttonRadius,
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: AppTheme.buttonRadius,
             borderSide: const BorderSide(color: AppTheme.navyPrimary, width: 2),
           ),
         ),

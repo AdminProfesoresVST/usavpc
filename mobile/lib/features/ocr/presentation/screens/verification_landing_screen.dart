@@ -79,7 +79,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                   const SizedBox(height: 12),
                   Text(
                     l10n.scanDocumentSubtitle,
-                    style: AppTheme.bodyGreyRegular.copyWith(height: 1.5),
+                    style: AppTheme.labelRegular.copyWith(height: 1.5),
                   ),
                   const SizedBox(height: 48),
 
@@ -113,7 +113,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                                 const SizedBox(height: 8),
                                 Text(
                                   "PNG, JPG or PDF (max. 800x400px)", // Matches reference
-                                  style: AppTheme.smallGreyRegular,
+                                  style: AppTheme.captionGreyRegular,
                                 ),
                               ],
                             ),
@@ -127,7 +127,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                               Expanded(child: Divider(color: Colors.grey.shade300)),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Text("OR", style: AppTheme.smallGreyRegular.copyWith(fontWeight: FontWeight.bold)),
+                                child: Text("OR", style: AppTheme.captionGreyRegular.copyWith(fontWeight: FontWeight.bold)),
                               ),
                               Expanded(child: Divider(color: Colors.grey.shade300)),
                             ],
@@ -144,7 +144,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                                 backgroundColor: AppTheme.navyPrimary, // Navy Button
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                shape: RoundedRectangleBorder(borderRadius: AppTheme.inputRadius),
                                 elevation: 0,
                               ),
                               child: Text(

@@ -200,10 +200,10 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: AppTheme.smallRadius,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: AppTheme.smallRadius,
                       child: WebViewWidget(controller: _webViewController),
                     ),
                   ),
@@ -217,14 +217,14 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                     decoration: BoxDecoration(
                       color: AppTheme.navyPrimary,
                       border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.5)),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: AppTheme.smallRadius,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           l10n.consoleOutput,
-                          style: AppTheme.smallWhiteRegular.copyWith(fontWeight: FontWeight.bold),
+                          style: AppTheme.captionWhiteBold,
                         ),
                         const SizedBox(height: 4),
                         Expanded(
@@ -236,7 +236,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                               final isError = log.contains('ERROR');
                               return Text(
                                 log,
-                                style: AppTheme.smallWhiteRegular.copyWith(
+                                style: AppTheme.captionWhiteRegular.copyWith(
                                   color: isError ? Colors.red : Colors.green.shade300,
                                   fontFamily: 'Courier',
                                 ),

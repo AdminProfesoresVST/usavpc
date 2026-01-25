@@ -96,7 +96,7 @@ class AppHeaderWithProgress extends StatelessWidget implements PreferredSizeWidg
           if (subtitle != null)
             Text(
               subtitle!,
-              style: AppTheme.smallWhiteRegular.copyWith(color: Colors.white70),
+              style: AppTheme.captionWhiteRegular.copyWith(color: Colors.white70),
             ),
         ],
       ),

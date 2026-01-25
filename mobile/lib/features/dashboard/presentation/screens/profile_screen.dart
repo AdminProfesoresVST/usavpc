@@ -171,7 +171,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 foregroundColor: AppTheme.navyPrimary,
                 side: const BorderSide(color: AppTheme.navyPrimary),
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
               ),
             ),
           ),
@@ -188,7 +188,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.navyPrimary,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppTheme.inputRadius,
         image: const DecorationImage(
           image: AssetImage('assets/images/logo.png'),
           opacity: 0.08,
@@ -220,7 +220,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: AppTheme.smallRadius,
                       ),
                       child: const Text("VERIFIED", style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
                     ),
@@ -260,7 +260,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppTheme.buttonRadius,
         border: Border.all(color: AppTheme.dividerGrey),
       ),
       child: ListTile(
@@ -281,7 +281,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppTheme.buttonRadius,
         border: Border.all(color: AppTheme.dividerGrey),
       ),
       child: SwitchListTile(
@@ -325,7 +325,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8),
               width: 32, height: 4,
-              decoration: BoxDecoration(color: AppTheme.dividerGrey, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: AppTheme.dividerGrey, borderRadius: AppTheme.smallRadius),
             ),
             // Title
             Padding(
@@ -364,7 +364,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     _showBottomSheet(context, "Mis Documentos", Column(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: AppTheme.buttonRadius,
           child: Image.network(passportUrl, height: 180, fit: BoxFit.cover,
             errorBuilder: (_, __, ___) => Container(height: 180, color: AppTheme.backgroundGrey, child: const Center(child: Icon(Icons.broken_image)))),
         ),
@@ -397,7 +397,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(color: AppTheme.softBlue, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: AppTheme.softBlue, borderRadius: AppTheme.buttonRadius),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -483,7 +483,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: AppTheme.backgroundGrey,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: AppTheme.smallRadius,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

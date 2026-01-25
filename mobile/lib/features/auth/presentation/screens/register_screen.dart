@@ -69,7 +69,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                  
                  Card(
                   elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Form(

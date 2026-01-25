@@ -24,7 +24,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: color.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppTheme.cardRadius,
         border: Border.all(color: color.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
@@ -126,7 +126,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: AppTheme.buttonRadius,
                     ),
                     child: Row(
                       children: [
@@ -173,7 +173,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                           Colors.blue.withOpacity(0.05),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: AppTheme.inputRadius,
                       border: Border.all(color: Colors.blue.withOpacity(0.2)),
                     ),
                     child: Column(
@@ -185,7 +185,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
                                 color: Colors.blue.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: AppTheme.smallRadius,
                               ),
                               child: const Icon(
                                 Icons.lightbulb_outline,
@@ -256,7 +256,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppTheme.inputRadius,
       ),
       child: Text(
         severity.value.toUpperCase(),

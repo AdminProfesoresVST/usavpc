@@ -53,21 +53,21 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               const SizedBox(height: 8),
               Text(
                 l10n.eligibilitySubtitle,
-                style: AppTheme.bodyGreyRegular.copyWith(height: 1.5),
+                style: AppTheme.labelRegular.copyWith(height: 1.5),
               ),
               const SizedBox(height: 32),
 
               // Question 1: Visa Type
               Text(
                 l10n.visaTypeLabel,
-                style: AppTheme.h3NavySemiBold,
+                style: AppTheme.h2NavyBold,
               ),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: AppTheme.smallRadius,
                   color: Colors.white,
                 ),
                 child: DropdownButtonHideUnderline(
@@ -90,7 +90,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               // Question 2: DS-160
               Text(
                 l10n.ds160Question,
-                style: AppTheme.h3NavySemiBold,
+                style: AppTheme.h2NavyBold,
               ),
               const SizedBox(height: 8),
               Row(
@@ -117,7 +117,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                 const SizedBox(height: 24),
                 Text(
                   l10n.ds160CodeLabel,
-                  style: AppTheme.h3NavySemiBold,
+                  style: AppTheme.h2NavyBold,
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -152,7 +152,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.actionBlue,
                     foregroundColor: Colors.white,
-                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                     shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
                      elevation: 0,
                   ),
                   child: quickCheckState.isLoading
@@ -166,7 +166,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                         )
                       : Text(
                           l10n.startAnalysis,
-                          style: AppTheme.smallWhiteBold.copyWith(letterSpacing: 0.5),
+                          style: AppTheme.captionWhiteBold.copyWith(letterSpacing: 0.5),
                         ),
                 ),
               ),
@@ -205,7 +205,7 @@ class _RadioOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: AppTheme.smallRadius,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
@@ -214,7 +214,7 @@ class _RadioOption extends StatelessWidget {
             color: selected ? AppTheme.navyPrimary : Colors.grey.shade300,
             width: selected ? 2 : 1
           ),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: AppTheme.smallRadius,
         ),
         child: Row(
           children: [

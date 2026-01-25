@@ -105,7 +105,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                        backgroundColor: AppTheme.actionBlue,
                        foregroundColor: Colors.white,
                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                       shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
                        elevation: 1,
                      ),
                      child: Text(l10n.enableMicrophone),
@@ -121,7 +121,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                        elevation: 4,
                        shadowColor: AppTheme.navyPrimary.withOpacity(0.4),
                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                       shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
                        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.5),
                      ),
                      child: Row(

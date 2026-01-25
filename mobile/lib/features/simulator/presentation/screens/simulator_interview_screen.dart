@@ -293,7 +293,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                        height: 40,
                        decoration: BoxDecoration(
                          color: Colors.grey.shade50,
-                         borderRadius: BorderRadius.circular(20),
+                         borderRadius: AppTheme.badgeRadius,
                          border: Border.all(color: Colors.grey.shade200),
                        ),
                        child: TextField(

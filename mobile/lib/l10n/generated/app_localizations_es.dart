@@ -252,10 +252,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get visaTypeLabel => 'Tipo de Visa Solicitada';
 
   @override
-  String get visaB1B2 => 'B1/B2 - Turismo y Negocios';
+  String get visaB1B2 => 'Visitante Negocios/Turismo';
 
   @override
-  String get visaF1 => 'F1 - Estudiante';
+  String get visaF1 => 'Estudiante Académico';
 
   @override
   String get visaH2 => 'H2 - Trabajo Temporal';
@@ -329,7 +329,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get alreadyHaveAccount => '¿Ya tienes cuenta? Inicia Sesión';
 
   @override
-  String get fieldRequired => 'Requerido';
+  String get fieldRequired => 'Este campo es obligatorio';
 
   @override
   String passwordMinLength(int count) {
@@ -511,4 +511,187 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get travelBanSubtitle => 'Chequeo de Travel Ban 2026';
+
+  @override
+  String get knowYourTotal => 'Conoce tu Total';
+
+  @override
+  String get knowYourTotalSubtitle => 'Calcula todas las tarifas para tu visa';
+
+  @override
+  String get yourNationality => 'Tu Nacionalidad';
+
+  @override
+  String get selectCountry => 'Selecciona tu país';
+
+  @override
+  String get visaCategory => 'Categoría de Visa';
+
+  @override
+  String get selectCategory => 'Selecciona categoría';
+
+  @override
+  String get additionalOptions => 'Opciones Adicionales';
+
+  @override
+  String get crossingByLand => 'Cruce Terrestre';
+
+  @override
+  String get crossingByLandSubtitle => 'Agrega tarifa I-94 (\$24)';
+
+  @override
+  String get calculateTotalCost => 'Calcular Costo Total';
+
+  @override
+  String get feeSchedule => 'Tabla de Tarifas 2026';
+
+  @override
+  String get checkYourEligibility => 'Verifica tu Elegibilidad';
+
+  @override
+  String get checkYourEligibilitySubtitle =>
+      'Revisa si hay restricciones para tu nacionalidad';
+
+  @override
+  String get checkRestrictions => 'Verificar Restricciones';
+
+  @override
+  String get currentRestrictions => 'Restricciones Actuales (2026)';
+
+  @override
+  String get totalBan => 'Prohibición Total';
+
+  @override
+  String get partial => 'Parcial';
+
+  @override
+  String get paused => 'Pausado';
+
+  @override
+  String get selectVisaType => 'Seleccionar Tipo de Visa';
+
+  @override
+  String get nonImmigrant => 'No Inmigrante';
+
+  @override
+  String get immigrant => 'Inmigrante';
+
+  @override
+  String get mrvFee => 'Tarifa MRV';
+
+  @override
+  String get fiance => 'Prometido/a';
+
+  @override
+  String get petition => 'Petición';
+
+  @override
+  String get sevis => 'SEVIS';
+
+  @override
+  String get kVisa => 'Visa K';
+
+  @override
+  String get documentChecklist => 'Lista de Documentos';
+
+  @override
+  String get prerequisitesVerified =>
+      'Todos los documentos requeridos verificados';
+
+  @override
+  String get missingDocuments => 'Faltan documentos requeridos';
+
+  @override
+  String get progress => 'Progreso';
+
+  @override
+  String get required => 'requeridos';
+
+  @override
+  String get noPrerequisities => 'Sin Prerrequisitos';
+
+  @override
+  String get noPrerequisitiesDesc =>
+      'Esta categoría no requiere documentos previos. Puede continuar directamente a la solicitud.';
+
+  @override
+  String get continueToApp => 'Continuar a Solicitud';
+
+  @override
+  String get proceedingToApp => 'Prerrequisitos verificados. Continuando...';
+
+  @override
+  String get visaB1 => 'Visitante de Negocios';
+
+  @override
+  String get visaB2 => 'Turista';
+
+  @override
+  String get visaF2 => 'Dependiente de Estudiante';
+
+  @override
+  String get visaM1 => 'Estudiante Vocacional';
+
+  @override
+  String get visaJ1 => 'Visitante de Intercambio';
+
+  @override
+  String get visaH1B => 'Ocupación Especializada';
+
+  @override
+  String get visaL1 => 'Transferencia Ejecutiva';
+
+  @override
+  String get visaO1 => 'Habilidad Extraordinaria';
+
+  @override
+  String get visaK1 => 'Prometido/a';
+
+  @override
+  String get visaE1 => 'Comerciante por Tratado';
+
+  @override
+  String get visaE2 => 'Inversionista por Tratado';
+
+  @override
+  String get optional => 'Opcional';
+
+  @override
+  String get doYouHaveDocument => '¿Tienes este documento?';
+
+  @override
+  String get yesHaveIt => 'Sí, lo tengo';
+
+  @override
+  String get noNotYet => 'No, aún no';
+
+  @override
+  String get enterDocDetails => 'Ingresa Detalles del Documento';
+
+  @override
+  String get saveDocInfo => 'Guardar Información';
+
+  @override
+  String get docInfoSaved => 'Información guardada';
+
+  @override
+  String get issuedBy => 'Emitido por';
+
+  @override
+  String get issuedBySchool => 'Tu Escuela/Universidad';
+
+  @override
+  String get issuedByUSCIS => 'USCIS';
+
+  @override
+  String get issuedBySponsor => 'Organización Patrocinadora';
+
+  @override
+  String get issuedByPetitioner => 'Tu Peticionario (Patrocinador)';
+
+  @override
+  String get issuedByStateDept => 'Departamento de Estado de EE.UU.';
+
+  @override
+  String get invalidFormat => 'Formato inválido';
 }

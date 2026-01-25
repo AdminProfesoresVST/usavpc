@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 import '../../data/models/visa_fee.dart';
 
@@ -22,7 +23,7 @@ class CostBreakdownCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppTheme.badgeRadius,
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withOpacity(0.1),
@@ -66,7 +67,7 @@ class CostBreakdownCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: colorScheme.onPrimary.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppTheme.badgeRadius,
                       ),
                       child: Text(
                         calculation.visaCategory,
@@ -187,7 +188,7 @@ class CostBreakdownCard extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: _getFeeColor(item.feeType).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: AppTheme.buttonRadius,
             ),
             child: Icon(
               _getFeeIcon(item.feeType),
@@ -219,7 +220,7 @@ class CostBreakdownCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: AppTheme.smallRadius,
                         ),
                         child: Text(
                           'Refundable',
@@ -239,7 +240,7 @@ class CostBreakdownCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: Colors.blue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: AppTheme.smallRadius,
                         ),
                         child: Text(
                           'Optional',
@@ -313,7 +314,7 @@ class CostBreakdownCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.green.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppTheme.buttonRadius,
         border: Border.all(color: Colors.green.withOpacity(0.3)),
       ),
       child: Row(

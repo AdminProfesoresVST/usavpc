@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/utils/visa_localization.dart';
+import 'package:mobile/core/widgets/standard_service_card.dart';
 
 import '../../data/models/visa_category.dart';
 import '../providers/visa_providers.dart';
 import 'prerequisite_checker_screen.dart';
+
 /// Pantalla de selección de tipo de visa
 class VisaCategorySelectorScreen extends ConsumerWidget {
   const VisaCategorySelectorScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final selectedFormEngine = ref.watch(selectedFormEngineProvider);
 
     return Scaffold(
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('Select Visa Type'),
+        title: Text(l10n.selectVisaType),
         centerTitle: true,
+        backgroundColor: AppTheme.navyPrimary,
+        foregroundColor: AppTheme.inkInverse,
       ),
       body: Column(
         children: [
@@ -25,8 +34,9 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+              color: AppTheme.surfaceWhite,
+              borderRadius: AppTheme.cardRadius,
+              border: Border.all(color: AppTheme.dividerGrey),
             ),
             child: Row(
               children: [
@@ -35,7 +45,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
                     context,
                     ref,
                     FormEngine.ds160,
-                    'Non-Immigrant',
+                    l10n.nonImmigrant,
                     Icons.flight_takeoff,
                     selectedFormEngine == FormEngine.ds160,
                   ),
@@ -45,7 +55,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
                     context,
                     ref,
                     FormEngine.ds260,
-                    'Immigrant',
+                    l10n.immigrant,
                     Icons.home,
                     selectedFormEngine == FormEngine.ds260,
                   ),
@@ -56,7 +66,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
 
           // Category List
           Expanded(
-            child: _buildCategoryList(context, ref, selectedFormEngine),
+            child: _buildCategoryList(context, ref, selectedFormEngine, l10n),
           ),
         ],
       ),
@@ -71,29 +81,24 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     IconData icon,
     bool isSelected,
   ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return InkWell(
       onTap: () {
         ref.read(selectedFormEngineProvider.notifier).set(engine);
       },
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: AppTheme.cardRadius,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? AppTheme.navyPrimary : AppTheme.surfaceWhite,
+          borderRadius: AppTheme.inputRadius, // Slightly less than container (16-2)
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: isSelected
-                  ? colorScheme.onPrimary
-                  : colorScheme.onSurfaceVariant,
+              color: isSelected ? AppTheme.inkInverse : AppTheme.navyPrimary.withOpacity(0.6),
               size: 20,
             ),
             const SizedBox(width: 8),
@@ -101,20 +106,16 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: isSelected
-                        ? colorScheme.onPrimary
-                        : colorScheme.onSurfaceVariant,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
+                  style: isSelected
+                      ? AppTheme.h2NavyBold.copyWith(color: AppTheme.inkInverse, fontWeight: FontWeight.bold)
+                      : AppTheme.h2NavyBold.copyWith(color: AppTheme.navyPrimary.withOpacity(0.6)),
                 ),
                 Text(
                   engine.value,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: isSelected
-                        ? colorScheme.onPrimary.withOpacity(0.7)
-                        : colorScheme.onSurfaceVariant.withOpacity(0.7),
-                  ),
+                  style: (isSelected
+                          ? AppTheme.captionWhiteRegular
+                          : AppTheme.captionGreyRegular)
+                      .copyWith(fontSize: 10),
                 ),
               ],
             ),
@@ -128,10 +129,11 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     FormEngine? selectedEngine,
+    dynamic l10n,
   ) {
     if (selectedEngine == null) {
-      return const Center(
-        child: Text('Select a visa type above'),
+      return Center(
+        child: Text(l10n.selectVisaType),
       );
     }
 
@@ -151,7 +153,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
           itemCount: grouped.length,
           itemBuilder: (context, index) {
             final entry = grouped.entries.elementAt(index);
-            return _buildFeeGroup(context, ref, entry.key, entry.value);
+            return _buildFeeGroup(context, ref, entry.key, entry.value, l10n);
           },
         );
       },
@@ -175,10 +177,8 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     WidgetRef ref,
     int fee,
     List<VisaCategory> categories,
+    dynamic l10n,
   ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -189,22 +189,19 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
+                  color: AppTheme.navyPrimary,
+                  borderRadius: AppTheme.cardRadius,
                 ),
                 child: Text(
-                  '\$$fee MRV Fee',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onPrimaryContainer,
-                  ),
+                  '\$$fee ${l10n.mrvFee}',
+                  style: AppTheme.captionWhiteBold,
                 ),
               ),
               const Expanded(child: Divider(indent: 12)),
             ],
           ),
         ),
-        ...categories.map((cat) => _buildCategoryCard(context, ref, cat)),
+        ...categories.map((cat) => _buildCategoryCard(context, ref, cat, l10n)),
       ],
     );
   }
@@ -213,19 +210,51 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     VisaCategory category,
+    dynamic l10n,
   ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    // Determine badge
+    String? badgeText;
+    Color? badgeColor;
+    Color? badgeBg;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+    if (category.requiresSevis) {
+      badgeText = l10n.sevis;
+      badgeColor = AppTheme.infoBlue;
+      badgeBg = AppTheme.infoBlueLight;
+    } else if (category.requiresPetition) {
+      badgeText = l10n.petition;
+      badgeColor = AppTheme.warningOrange;
+      badgeBg = AppTheme.warningOrangeLight;
+    } else if (category.isFianceVisa) {
+      badgeText = l10n.kVisa;
+      badgeColor = AppTheme.errorRed;
+      badgeBg = AppTheme.errorRedLight;
+    }
+
+    // Custom "Code Badge" for the icon slot
+    final codeBadge = Container(
+      constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppTheme.navyPrimary.withOpacity(0.08),
+        borderRadius: AppTheme.buttonRadius,
       ),
-      child: InkWell(
+      child: Center(
+        child: Text(
+          category.code,
+          style: AppTheme.h2NavyBold,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: StandardServiceCard(
+        title: VisaLocalization.getVisaName(category.code, category.name, l10n),
+        description: category.description,
         onTap: () {
           ref.read(selectedVisaCategoryProvider.notifier).set(category);
-          // Navigate to prerequisite checker
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -235,107 +264,12 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
             ),
           );
         },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Code badge
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: _getCategoryColor(category).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    category.code,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: _getCategoryColor(category),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              
-              // Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category.name,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    if (category.description != null)
-                      Text(
-                        category.description!,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        if (category.requiresSevis)
-                          _buildBadge('SEVIS', Colors.teal),
-                        if (category.requiresPetition)
-                          _buildBadge('Petition', Colors.purple),
-                        if (category.isFianceVisa)
-                          _buildBadge('K Visa', Colors.pink),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Arrow
-              Icon(
-                Icons.chevron_right,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
+        customBadge: codeBadge, // Instead of Icon
+        badgeText: badgeText,
+        badgeColor: badgeColor,
+        badgeBg: badgeBg,
+        // icon: null, // We act as if customBadge is the icon replacement in logic
       ),
     );
-  }
-
-  Widget _buildBadge(String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          color: color,
-        ),
-      ),
-    );
-  }
-
-  Color _getCategoryColor(VisaCategory category) {
-    if (category.type.isImmigrant) {
-      return Colors.green;
-    }
-    if (category.requiresPetition) {
-      return Colors.purple;
-    }
-    if (category.requiresSevis) {
-      return Colors.teal;
-    }
-    return Colors.blue;
   }
 }

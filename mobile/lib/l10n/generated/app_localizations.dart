@@ -548,16 +548,16 @@ abstract class AppLocalizations {
   /// **'Visa Type Requested'**
   String get visaTypeLabel;
 
-  /// Visa type option
+  /// Visa Name
   ///
   /// In en, this message translates to:
-  /// **'B1/B2 - Tourism and Business'**
+  /// **'Visitor Business/Tourism'**
   String get visaB1B2;
 
-  /// Visa type option
+  /// Visa Name
   ///
   /// In en, this message translates to:
-  /// **'F1 - Student'**
+  /// **'Academic Student'**
   String get visaF1;
 
   /// Visa type option
@@ -692,10 +692,10 @@ abstract class AppLocalizations {
   /// **'Already have an account? Sign In'**
   String get alreadyHaveAccount;
 
-  /// Generic required field error
+  /// Error message
   ///
   /// In en, this message translates to:
-  /// **'Required'**
+  /// **'This field is required'**
   String get fieldRequired;
 
   /// Password length error
@@ -1027,6 +1027,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check 2026 Travel Ban'**
   String get travelBanSubtitle;
+
+  /// Header title
+  ///
+  /// In en, this message translates to:
+  /// **'Know Your Total'**
+  String get knowYourTotal;
+
+  /// Header subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate all fees for your visa application'**
+  String get knowYourTotalSubtitle;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Your Nationality'**
+  String get yourNationality;
+
+  /// Dropdown hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select your country'**
+  String get selectCountry;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Category'**
+  String get visaCategory;
+
+  /// Dropdown hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select visa category'**
+  String get selectCategory;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Options'**
+  String get additionalOptions;
+
+  /// Option title
+  ///
+  /// In en, this message translates to:
+  /// **'Crossing by Land'**
+  String get crossingByLand;
+
+  /// Option subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Adds I-94 fee (\$24)'**
+  String get crossingByLandSubtitle;
+
+  /// Button label
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate Total Cost'**
+  String get calculateTotalCost;
+
+  /// Section title
+  ///
+  /// In en, this message translates to:
+  /// **'2026 Fee Schedule'**
+  String get feeSchedule;
+
+  /// Header title
+  ///
+  /// In en, this message translates to:
+  /// **'Check Your Eligibility'**
+  String get checkYourEligibility;
+
+  /// Header subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Verify if your nationality has any visa restrictions'**
+  String get checkYourEligibilitySubtitle;
+
+  /// Button label
+  ///
+  /// In en, this message translates to:
+  /// **'Check Restrictions'**
+  String get checkRestrictions;
+
+  /// Section title
+  ///
+  /// In en, this message translates to:
+  /// **'Current Restrictions (2026)'**
+  String get currentRestrictions;
+
+  /// Stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Ban'**
+  String get totalBan;
+
+  /// Stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get partial;
+
+  /// Stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// Screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Visa Type'**
+  String get selectVisaType;
+
+  /// Tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Non-Immigrant'**
+  String get nonImmigrant;
+
+  /// Tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Immigrant'**
+  String get immigrant;
+
+  /// Fee label
+  ///
+  /// In en, this message translates to:
+  /// **'MRV Fee'**
+  String get mrvFee;
+
+  /// Category label
+  ///
+  /// In en, this message translates to:
+  /// **'Fiancé(e)'**
+  String get fiance;
+
+  /// Badge label
+  ///
+  /// In en, this message translates to:
+  /// **'Petition'**
+  String get petition;
+
+  /// Badge label
+  ///
+  /// In en, this message translates to:
+  /// **'SEVIS'**
+  String get sevis;
+
+  /// Badge label
+  ///
+  /// In en, this message translates to:
+  /// **'K Visa'**
+  String get kVisa;
+
+  /// Screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Document Checklist'**
+  String get documentChecklist;
+
+  /// Status message
+  ///
+  /// In en, this message translates to:
+  /// **'All required documents verified'**
+  String get prerequisitesVerified;
+
+  /// Status message
+  ///
+  /// In en, this message translates to:
+  /// **'Missing required documents'**
+  String get missingDocuments;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progress;
+
+  /// Label suffix
+  ///
+  /// In en, this message translates to:
+  /// **'required'**
+  String get required;
+
+  /// Title
+  ///
+  /// In en, this message translates to:
+  /// **'No Prerequisites Required'**
+  String get noPrerequisities;
+
+  /// Description
+  ///
+  /// In en, this message translates to:
+  /// **'This visa category does not require any prerequisite documents. You can proceed directly to fill out the application form.'**
+  String get noPrerequisitiesDesc;
+
+  /// Button label
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Application'**
+  String get continueToApp;
+
+  /// Snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'All prerequisites verified. Proceeding to application...'**
+  String get proceedingToApp;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Business Visitor'**
+  String get visaB1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist'**
+  String get visaB2;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Student Dependent'**
+  String get visaF2;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Vocational Student'**
+  String get visaM1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange Visitor'**
+  String get visaJ1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Specialty Occupation'**
+  String get visaH1B;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Intracompany Transferee'**
+  String get visaL1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Extraordinary Ability'**
+  String get visaO1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Fiancé(e)'**
+  String get visaK1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty Trader'**
+  String get visaE1;
+
+  /// Visa Name
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty Investor'**
+  String get visaE2;
+
+  /// Badge label
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// Question
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have this document?'**
+  String get doYouHaveDocument;
+
+  /// Option
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I have it'**
+  String get yesHaveIt;
+
+  /// Option
+  ///
+  /// In en, this message translates to:
+  /// **'No, not yet'**
+  String get noNotYet;
+
+  /// Section title
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Document Details'**
+  String get enterDocDetails;
+
+  /// Button label
+  ///
+  /// In en, this message translates to:
+  /// **'Save Document Info'**
+  String get saveDocInfo;
+
+  /// Snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'Document info saved'**
+  String get docInfoSaved;
+
+  /// Label prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Issued by'**
+  String get issuedBy;
+
+  /// Issuer
+  ///
+  /// In en, this message translates to:
+  /// **'Your School/University'**
+  String get issuedBySchool;
+
+  /// Issuer
+  ///
+  /// In en, this message translates to:
+  /// **'USCIS'**
+  String get issuedByUSCIS;
+
+  /// Issuer
+  ///
+  /// In en, this message translates to:
+  /// **'Program Sponsor Organization'**
+  String get issuedBySponsor;
+
+  /// Issuer
+  ///
+  /// In en, this message translates to:
+  /// **'Your Petitioner (US Sponsor)'**
+  String get issuedByPetitioner;
+
+  /// Issuer
+  ///
+  /// In en, this message translates to:
+  /// **'US Department of State'**
+  String get issuedByStateDept;
+
+  /// Error message
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid format'**
+  String get invalidFormat;
 }
 
 class _AppLocalizationsDelegate

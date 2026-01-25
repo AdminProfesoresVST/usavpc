@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/utils/visa_localization.dart';
 
 import '../../data/models/prerequisite_form.dart';
 
@@ -51,27 +54,19 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
     
     final statusColor = _getStatusColor(widget.validation?.validationStatus);
     final statusIcon = _getStatusIcon(widget.validation?.validationStatus);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      decoration: AppTheme.standardCardDecoration.copyWith(
         border: Border.all(
-          color: statusColor.withOpacity(0.3),
-          width: 2,
+          color: _isExpanded ? statusColor.withOpacity(0.5) : AppTheme.cardBorderColor,
+          width: _isExpanded ? 1.5 : 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: statusColor.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         children: [
@@ -79,8 +74,8 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           InkWell(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(14),
-              topRight: Radius.circular(14),
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
             ),
             child: Container(
               padding: const EdgeInsets.all(16),
@@ -115,14 +110,14 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
-                                  vertical: 2,
+                                  vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.red.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: AppTheme.smallRadius,
                                 ),
                                 child: Text(
-                                  'Required',
+                                  l10n.required,
                                   style: theme.textTheme.labelSmall?.copyWith(
                                     color: Colors.red,
                                     fontWeight: FontWeight.bold,
@@ -133,14 +128,14 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
-                                  vertical: 2,
+                                  vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: AppTheme.smallRadius,
                                 ),
                                 child: Text(
-                                  'Optional',
+                                  l10n.optional,
                                   style: theme.textTheme.labelSmall?.copyWith(
                                     color: Colors.grey,
                                   ),
@@ -174,7 +169,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           // Expandable content
           AnimatedCrossFade(
             firstChild: const SizedBox.shrink(),
-            secondChild: _buildExpandedContent(context),
+            secondChild: _buildExpandedContent(context, l10n),
             crossFadeState: _isExpanded
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
@@ -185,7 +180,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
     );
   }
 
-  Widget _buildExpandedContent(BuildContext context) {
+  Widget _buildExpandedContent(BuildContext context, dynamic l10n) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -203,7 +198,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: colorScheme.primaryContainer.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppTheme.buttonRadius,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +225,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           
           // Do you have this document?
           Text(
-            'Do you have this document?',
+            l10n.doYouHaveDocument,
             style: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -241,7 +236,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               Expanded(
                 child: _buildOptionButton(
                   context,
-                  'Yes, I have it',
+                  l10n.yesHaveIt,
                   Icons.check_circle_outline,
                   _hasDocument,
                   () => _setHasDocument(true),
@@ -252,7 +247,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               Expanded(
                 child: _buildOptionButton(
                   context,
-                  'No, not yet',
+                  l10n.noNotYet,
                   Icons.cancel_outlined,
                   !_hasDocument,
                   () => _setHasDocument(false),
@@ -266,7 +261,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           if (_hasDocument) ...[
             const SizedBox(height: 20),
             Text(
-              'Enter Document Details',
+              l10n.enterDocDetails,
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -280,19 +275,15 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: TextFormField(
                       controller: _controllers[field],
-                      decoration: InputDecoration(
+                      decoration: AppTheme.inputDecoration(
                         labelText: _formatFieldName(field),
                         hintText: _getFieldHint(field),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '${_formatFieldName(field)} is required';
+                          return l10n.fieldRequired;
                         }
-                        return _validateFieldFormat(field, value);
+                        return _validateFieldFormat(field, value, l10n);
                       },
                       onChanged: (_) => _onDataChanged(),
                     ),
@@ -305,12 +296,12 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _saveData,
+                onPressed: () => _saveData(l10n),
                 icon: const Icon(Icons.save),
-                label: const Text('Save Document Info'),
+                label: Text(l10n.saveDocInfo),
                 style: FilledButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppTheme.inputRadius,
                   ),
                 ),
               ),
@@ -328,7 +319,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               ),
               const SizedBox(width: 8),
               Text(
-                'Issued by: ${_formatIssuedBy(widget.form.issuedBy)}',
+                '${l10n.issuedBy}: ${VisaLocalization.getIssuedBy(widget.form.issuedBy, l10n)}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -350,13 +341,13 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
   ) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: AppTheme.inputRadius,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppTheme.inputRadius,
           border: Border.all(
             color: isSelected ? color : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
@@ -400,12 +391,12 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
     widget.onDataExtracted?.call(data);
   }
 
-  void _saveData() {
+  void _saveData(dynamic l10n) {
     if (_formKey.currentState?.validate() ?? false) {
       _onDataChanged();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Document info saved'),
+        SnackBar(
+          content: Text(l10n.docInfoSaved),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -468,43 +459,24 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
     }
   }
 
-  String? _validateFieldFormat(String field, String value) {
+  String? _validateFieldFormat(String field, String value, dynamic l10n) {
     switch (field) {
       case 'sevis_id':
         if (!value.startsWith('N') || value.length != 11) {
-          return 'SEVIS ID should start with N and have 11 characters';
+          return l10n.invalidFormat; // Generic error for format mismatch
         }
         break;
       case 'receipt_number':
         if (!RegExp(r'^(WAC|LIN|EAC|SRC|IOE)').hasMatch(value)) {
-          return 'Receipt number should start with WAC, LIN, EAC, SRC, or IOE';
+           return l10n.invalidFormat;
         }
         break;
       case 'program_number':
         if (!value.startsWith('P-1-')) {
-          return 'Program number should start with P-1-';
+           return l10n.invalidFormat;
         }
         break;
     }
     return null;
-  }
-
-  String _formatIssuedBy(String issuedBy) {
-    switch (issuedBy) {
-      case 'school':
-        return 'Your School/University';
-      case 'uscis':
-        return 'USCIS';
-      case 'sponsor_organization':
-        return 'Program Sponsor Organization';
-      case 'fmjfee.com':
-        return 'fmjfee.com (After payment)';
-      case 'petitioner':
-        return 'Your Petitioner (US Sponsor)';
-      case 'state_department':
-        return 'US Department of State';
-      default:
-        return issuedBy;
-    }
   }
 }

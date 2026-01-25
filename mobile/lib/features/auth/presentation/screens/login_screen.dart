@@ -74,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               // Form Card
               Card(
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Form(
@@ -145,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 24),
               Text(
                 l10n.nonGovernmentDisclaimer,
-                style: AppTheme.smallGreyRegular,
+                style: AppTheme.captionGreyRegular,
               ),
             ],
           ),

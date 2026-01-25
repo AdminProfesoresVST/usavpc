@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 import '../../data/models/country_restriction.dart';
 
@@ -51,7 +52,7 @@ class TravelBanWarningCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppTheme.cardRadius,
         boxShadow: [
           BoxShadow(
             color: iconColor.withOpacity(0.2),
@@ -223,7 +224,7 @@ class RestrictionStatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppTheme.badgeRadius,
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Row(

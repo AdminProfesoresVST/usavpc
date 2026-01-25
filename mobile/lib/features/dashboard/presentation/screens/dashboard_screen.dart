@@ -55,9 +55,8 @@ class DashboardScreen extends ConsumerWidget {
       statusColor = Colors.red;
     }
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    return Container(
+      decoration: AppTheme.standardCardDecoration,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -70,7 +69,7 @@ class DashboardScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: AppTheme.badgeRadius,
                   ),
                   child: Text(
                     _translateStatus(data.status, l10n), 
@@ -128,9 +127,11 @@ class DashboardScreen extends ConsumerWidget {
     required String subtitle,
     required String iconCode,
   }) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.standardCardDecoration,
       child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: AppTheme.cardRadius),
         leading: CircleAvatar(
           backgroundColor: AppTheme.navyPrimary.withOpacity(0.1),
           child: Icon(icon, color: AppTheme.navyPrimary),

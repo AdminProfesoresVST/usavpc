@@ -418,12 +418,12 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: l10n.typeYourResponse,
-                  hintStyle: AppTheme.bodyGreyRegular.copyWith(color: Colors.grey.shade400),
+                  hintStyle: AppTheme.labelRegular.copyWith(color: Colors.grey.shade400),
                   filled: true,
                   fillColor: Colors.grey.shade50,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Reduced vertical
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20), // Reduced from 24
+                    borderRadius: AppTheme.badgeRadius, // Reduced from 24
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -489,7 +489,7 @@ class _ChatBubble extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.navyPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
           ),
           child: Text(l10n.viewMyApplication, style: AppTheme.h2NavyBold.copyWith(color: Colors.white)),
         ),
@@ -561,7 +561,7 @@ class _ChatBubble extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         l10n.tips.toUpperCase(), 
-                        style: AppTheme.smallGreyRegular.copyWith(
+                        style: AppTheme.captionGreyRegular.copyWith(
                           fontWeight: FontWeight.w700, 
                           color: AppTheme.navyPrimary, 
                           letterSpacing: 1.0,
@@ -580,7 +580,7 @@ class _ChatBubble extends StatelessWidget {
                         Expanded(
                           child: Text(
                             tip, 
-                            style: AppTheme.bodyGreyRegular.copyWith(color: Colors.grey.shade800),
+                            style: AppTheme.labelRegular.copyWith(color:Colors.grey.shade800),
                           ),
                         ),
                       ],
@@ -592,7 +592,7 @@ class _ChatBubble extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: AppTheme.backgroundGrey,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: AppTheme.smallRadius,
                       ),
                       child: Row(
                         children: [
@@ -601,7 +601,7 @@ class _ChatBubble extends StatelessWidget {
                            Expanded(
                              child: Text(
                                '${l10n.example}: ${message.example}', 
-                               style: AppTheme.smallGreyRegular.copyWith(fontStyle: FontStyle.italic, color: Colors.grey.shade700)
+                               style: AppTheme.captionGreyRegular.copyWith(fontStyle: FontStyle.italic, color: Colors.grey.shade700)
                              ),
                            ),
                         ],

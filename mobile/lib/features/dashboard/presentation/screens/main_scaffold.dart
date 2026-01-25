@@ -47,8 +47,8 @@ class MainScaffold extends StatelessWidget {
           backgroundColor: Colors.white,
           selectedItemColor: const Color(0xFF112E51), // Strict Navy
           unselectedItemColor: Colors.grey.shade400,
-          selectedLabelStyle: AppTheme.smallGreyRegular.copyWith(fontWeight: FontWeight.w600, color: const Color(0xFF112E51)),
-          unselectedLabelStyle: AppTheme.smallGreyRegular,
+          selectedLabelStyle: AppTheme.captionNavyBold.copyWith(color: const Color(0xFF112E51)),
+          unselectedLabelStyle: AppTheme.captionGreyRegular,
           elevation: 0,
         ),
       ),

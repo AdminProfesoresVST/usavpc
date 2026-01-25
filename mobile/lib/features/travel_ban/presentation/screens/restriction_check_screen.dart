@@ -1,7 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 
-// ... (existing imports)
+import '../../../visa/data/models/visa_category.dart';
+import '../../../visa/presentation/providers/visa_providers.dart';
+import '../../data/models/country_restriction.dart';
+import '../providers/travel_ban_providers.dart';
+import '../widgets/travel_ban_warning_card.dart';
 
 class RestrictionCheckScreen extends ConsumerStatefulWidget {
   const RestrictionCheckScreen({super.key});
@@ -40,7 +47,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.navyPrimary,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: AppTheme.cardRadius,
                 boxShadow: [
                   BoxShadow(
                     color: AppTheme.navyPrimary.withOpacity(0.3),
@@ -118,7 +125,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                   backgroundColor: AppTheme.navyPrimary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppTheme.inputRadius,
                   ),
                   textStyle: AppTheme.h2WhiteBold,
                 ),
@@ -161,7 +168,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
         prefixIcon: const Icon(Icons.flag_outlined, color: AppTheme.navyPrimary),
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
       ),
       items: _buildCountryItems(restrictedCountries),
       onChanged: (value) {
@@ -215,7 +222,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
           prefixIcon: const Icon(Icons.badge_outlined, color: AppTheme.navyPrimary),
           filled: true,
           fillColor: Colors.white,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
         ),
         items: cats.map((cat) {
           return DropdownMenuItem(
@@ -276,11 +283,9 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
             const SizedBox(height: 12),
             Row(
               children: [
-                _buildStatCard(l10n.totalBan, totalBan, Colors.red), // Intentionally red for alert
-                const SizedBox(width: 8),
-                _buildStatCard(l10n.partial, partial, Colors.orange),
-                const SizedBox(width: 8),
-                _buildStatCard(l10n.paused, pause, Colors.amber),
+                  _buildStatCard(l10n.totalBan, totalBan.toString(), Colors.red, Colors.red.shade50),
+                  _buildStatCard(l10n.partial, partial.toString(), Colors.orange, Colors.orange.shade50),
+                  _buildStatCard(l10n.paused, pause.toString(), Colors.grey, Colors.grey.shade200),
               ],
             ),
           ],
@@ -289,28 +294,41 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
     );
   }
 
-  Widget _buildStatCard(String label, int count, Color color) {
+  Widget _buildStatCard(String label, String value, Color color, Color bg) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          borderRadius: AppTheme.inputRadius,
+          border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
-             BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
           ],
         ),
         child: Column(
           children: [
             Text(
-              count.toString(),
-              style: AppTheme.h1NavyBold.copyWith(color: color, fontSize: 24),
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color, // Keep number colored
+              ),
             ),
+            const SizedBox(height: 4),
             Text(
               label,
-              style: AppTheme.smallGreyRegular.copyWith(fontSize: 10, color: color),
               textAlign: TextAlign.center,
+              style: AppTheme.captionGreyRegular.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

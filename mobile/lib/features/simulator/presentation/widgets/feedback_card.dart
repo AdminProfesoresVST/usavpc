@@ -38,7 +38,7 @@ class FeedbackCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppTheme.inputRadius,
         border: Border.all(
           color: AppTheme.navyPrimary.withOpacity(0.1),
           width: 1,
@@ -55,16 +55,15 @@ class FeedbackCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 title.toUpperCase(),
-                style: AppTheme.smallNavyBold.copyWith(
-                  color: AppTheme.navyPrimary
+                style: AppTheme.captionNavyBold.copyWith(
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
           Text(
             feedback.critique,
-            style: AppTheme.bodyGreyRegular.copyWith(fontWeight: FontWeight.w500),
+            style: AppTheme.labelRegular.copyWith(fontWeight: FontWeight.w500),
           ),
           if (feedback.recommendation.isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -72,7 +71,7 @@ class FeedbackCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: AppTheme.smallRadius,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +81,7 @@ class FeedbackCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       feedback.recommendation,
-                      style: AppTheme.smallGreyRegular.copyWith(color: AppTheme.actionBlue, fontStyle: FontStyle.italic),
+                      style: AppTheme.captionGreyRegular.copyWith(color: AppTheme.actionBlue, fontStyle: FontStyle.italic),
                     ),
                   ),
                 ],
