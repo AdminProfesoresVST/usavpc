@@ -162,9 +162,9 @@ class SocialProfileCard extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppTheme.warningOrange.withOpacity(0.05),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(14),
-                  bottomRight: Radius.circular(14),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: AppTheme.radiusTarjetaEsquina,
+                  bottomRight: AppTheme.radiusTarjetaEsquina,
                 ),
               ),
               child: Column(
@@ -275,11 +275,11 @@ class SocialProfileCard extends StatelessWidget {
   Color _getPlatformColor(SocialPlatform platform) {
     switch (platform) {
       case SocialPlatform.linkedin:
-        return const Color(0xFF0A66C2);
+        return AppTheme.linkedinBlue;
       case SocialPlatform.facebook:
-        return const Color(0xFF1877F2);
+        return AppTheme.facebookBlue;
       case SocialPlatform.instagram:
-        return const Color(0xFFE4405F);
+        return AppTheme.instagramPink;
       case SocialPlatform.twitter:
         return AppTheme.inkPrimary;
       case SocialPlatform.tiktok:

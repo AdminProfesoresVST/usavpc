@@ -69,9 +69,9 @@ class TravelBanWarningCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: iconColor.withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+              borderRadius: BorderRadius.only(
+                topLeft: AppTheme.radiusBurbuja,
+                topRight: AppTheme.radiusBurbuja,
               ),
             ),
             child: Row(

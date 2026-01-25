@@ -21,11 +21,11 @@ class ConsulBubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: AppTheme.inkSecondary,
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(4),
-            topRight: Radius.circular(16),
-            bottomLeft: Radius.circular(16),
-            bottomRight: Radius.circular(16),
+            topRight: AppTheme.radiusBurbuja,
+            bottomLeft: AppTheme.radiusBurbuja,
+            bottomRight: AppTheme.radiusBurbuja,
           ),
           border: Border.all(color: AppTheme.inkSecondary, width: 1),
         ),

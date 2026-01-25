@@ -45,9 +45,9 @@ class MainScaffold extends StatelessWidget {
           },
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppTheme.inkInverse,
-          selectedItemColor: const Color(0xFF112E51), // Strict Navy
+          selectedItemColor: AppTheme.navyPrimary, // Strict Navy
           unselectedItemColor: AppTheme.inkSecondary,
-          selectedLabelStyle: AppTheme.captionNavyBold.copyWith(color: const Color(0xFF112E51)),
+          selectedLabelStyle: AppTheme.captionNavyBold.copyWith(color: AppTheme.navyPrimary),
           unselectedLabelStyle: AppTheme.captionGreyRegular,
           elevation: 0,
         ),

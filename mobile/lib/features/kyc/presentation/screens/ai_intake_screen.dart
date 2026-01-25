@@ -509,10 +509,10 @@ class _ChatBubble extends StatelessWidget {
             decoration: BoxDecoration(
               color: isUser ? AppTheme.navyPrimary : AppTheme.inkInverse,
               borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(16),
-                topRight: const Radius.circular(16),
-                bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
-                bottomRight: isUser ? Radius.zero : const Radius.circular(16),
+                topLeft: AppTheme.radiusBurbuja,
+                topRight: AppTheme.radiusBurbuja,
+                bottomLeft: isUser ? AppTheme.radiusBurbuja : Radius.zero,
+                bottomRight: isUser ? Radius.zero : AppTheme.radiusBurbuja,
               ),
               boxShadow: isUser ? null : [
                 BoxShadow(color: AppTheme.inkPrimary.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
@@ -530,10 +530,10 @@ class _ChatBubble extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
               decoration: BoxDecoration(
                 color: AppTheme.inkInverse,
-                borderRadius: const BorderRadiusDirectional.only(
-                  topEnd: Radius.circular(12),
-                  bottomStart: Radius.circular(12),
-                  bottomEnd: Radius.circular(12),
+                borderRadius: BorderRadiusDirectional.only(
+                  topEnd: AppTheme.radiusBotonEsquina,
+                  bottomStart: AppTheme.radiusBotonEsquina,
+                  bottomEnd: AppTheme.radiusBotonEsquina,
                 ),
                 boxShadow: [
                    BoxShadow(color: AppTheme.navyPrimary.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),

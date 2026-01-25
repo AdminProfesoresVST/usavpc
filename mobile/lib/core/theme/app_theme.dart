@@ -87,6 +87,14 @@ class AppTheme {
   static const infoBlue = Color(0xFF1565C0);
   static const infoBlueLight = Color(0xFFE3F2FD);
   
+  // --- COLORES DE REDES SOCIALES ---
+  /// LinkedIn
+  static const linkedinBlue = Color(0xFF0A66C2);
+  /// Facebook
+  static const facebookBlue = Color(0xFF1877F2);
+  /// Instagram
+  static const instagramPink = Color(0xFFE4405F);
+  
   // ═══════════════════════════════════════════════════════════════════════════
   // 3. 📏 REDONDEO DE ESQUINAS (¿Qué tan redondeados son los elementos?)
   // ═══════════════════════════════════════════════════════════════════════════
@@ -124,6 +132,16 @@ class AppTheme {
   static double get inputRadiusValue => radiusCamposTexto;
   static double get badgeRadiusValue => radiusEtiquetas;
   static double get smallRadiusValue => radiusDetalles;
+  
+  // --- RADIUS INDIVIDUALES (para BorderRadius.only) ---
+  /// Radius para esquinas de tarjetas (14px)
+  static Radius get radiusTarjetaEsquina => Radius.circular(radiusTarjetas);
+  /// Radius para esquinas de botones/badges (12px)
+  static Radius get radiusBotonEsquina => Radius.circular(radiusBotones);
+  /// Radius para esquinas de inputs (8px)
+  static Radius get radiusInputEsquina => Radius.circular(radiusCamposTexto);
+  /// Radius para burbujas de chat (16px)
+  static Radius get radiusBurbuja => Radius.circular(8.0);
   
   // ═══════════════════════════════════════════════════════════════════════════
   // 4. 📐 ESPACIADOS (Márgenes y Padding)

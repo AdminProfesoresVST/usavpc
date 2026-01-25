@@ -74,9 +74,9 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           // Header
           InkWell(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
+            borderRadius: BorderRadius.only(
+              topLeft: AppTheme.radiusBotonEsquina,
+              topRight: AppTheme.radiusBotonEsquina,
             ),
             child: Container(
               padding: const EdgeInsets.all(16),

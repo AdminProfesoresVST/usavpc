@@ -28,11 +28,11 @@ class UserBubble extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16),
+          borderRadius: BorderRadius.only(
+            topLeft: AppTheme.radiusBurbuja,
             topRight: Radius.circular(4),
-            bottomLeft: Radius.circular(16),
-            bottomRight: Radius.circular(16),
+            bottomLeft: AppTheme.radiusBurbuja,
+            bottomRight: AppTheme.radiusBurbuja,
           ),
           boxShadow: [
             BoxShadow(

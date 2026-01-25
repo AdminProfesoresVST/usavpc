@@ -43,9 +43,9 @@ class InadmissibilityAlertCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(14),
-                topRight: Radius.circular(14),
+              borderRadius: BorderRadius.only(
+                topLeft: AppTheme.radiusTarjetaEsquina,
+                topRight: AppTheme.radiusTarjetaEsquina,
               ),
             ),
             child: Row(

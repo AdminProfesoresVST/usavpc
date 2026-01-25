@@ -279,10 +279,10 @@ class _ChatBubble extends StatelessWidget {
         decoration: BoxDecoration(
           color: isUser ? AppTheme.navyPrimary : AppTheme.inkInverse,
           borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
-            bottomRight: isUser ? Radius.zero : const Radius.circular(16),
+            topLeft: AppTheme.radiusBurbuja,
+            topRight: AppTheme.radiusBurbuja,
+            bottomLeft: isUser ? AppTheme.radiusBurbuja : Radius.zero,
+            bottomRight: isUser ? Radius.zero : AppTheme.radiusBurbuja,
           ),
           boxShadow: [
             if (!isUser)
