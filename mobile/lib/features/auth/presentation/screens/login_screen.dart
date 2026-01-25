@@ -64,10 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                const SizedBox(height: 16),
                Text(
                 l10n.loginAppName,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.navyPrimary,
-                ),
+                style: AppTheme.h1NavyBold,
               ),
               const SizedBox(height: 32),
               

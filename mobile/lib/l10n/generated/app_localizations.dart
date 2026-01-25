@@ -1919,7 +1919,7 @@ abstract class AppLocalizations {
   /// No description provided for @currentScore.
   ///
   /// In en, this message translates to:
-  /// **'Current Score: '**
+  /// **'Current Score'**
   String get currentScore;
 
   /// No description provided for @changePassword.
@@ -2191,6 +2191,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete entry prohibition'**
   String get restrictionCompleteEntryProhibition;
+
+  /// No description provided for @splashDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-government service provider'**
+  String get splashDisclaimer;
+
+  /// No description provided for @profileIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile incomplete. Please scan your passport first.'**
+  String get profileIncomplete;
+
+  /// No description provided for @digitalFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital File'**
+  String get digitalFile;
+
+  /// No description provided for @ds160Responses.
+  ///
+  /// In en, this message translates to:
+  /// **'DS-160 Responses'**
+  String get ds160Responses;
+
+  /// No description provided for @fieldsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fields'**
+  String fieldsCount(int count);
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noData;
+
+  /// No description provided for @myDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'My Documents'**
+  String get myDocuments;
+
+  /// No description provided for @documentCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Document'**
+  String documentCount(int count);
+
+  /// No description provided for @simulatorHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulation History'**
+  String get simulatorHistory;
+
+  /// No description provided for @sessionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sessions'**
+  String sessionsCount(int count);
+
+  /// No description provided for @noSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions'**
+  String get noSessions;
+
+  /// No description provided for @accountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSection;
+
+  /// No description provided for @basicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Information'**
+  String get basicInfo;
+
+  /// No description provided for @securitySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get securitySection;
+
+  /// No description provided for @updateAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Update access'**
+  String get updateAccess;
+
+  /// No description provided for @biometricsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometrics'**
+  String get biometricsLabel;
+
+  /// No description provided for @activated.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get activated;
+
+  /// No description provided for @deactivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get deactivated;
+
+  /// No description provided for @legal.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get legal;
+
+  /// No description provided for @termsAndPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and privacy'**
+  String get termsAndPrivacy;
+
+  /// No description provided for @verified.
+  ///
+  /// In en, this message translates to:
+  /// **'VERIFIED'**
+  String get verified;
+
+  /// No description provided for @passport.
+  ///
+  /// In en, this message translates to:
+  /// **'PASSPORT'**
+  String get passport;
+
+  /// No description provided for @nationality.
+  ///
+  /// In en, this message translates to:
+  /// **'NATIONALITY'**
+  String get nationality;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'BIRTH DATE'**
+  String get birthDate;
+
+  /// No description provided for @ds160Data.
+  ///
+  /// In en, this message translates to:
+  /// **'DS-160 Data'**
+  String get ds160Data;
+
+  /// No description provided for @sessionNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Session {number}'**
+  String sessionNumber(int number);
+
+  /// No description provided for @accountInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Information'**
+  String get accountInfo;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @notRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not registered'**
+  String get notRegistered;
+
+  /// No description provided for @role.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get role;
+
+  /// No description provided for @passwordResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Link sent to {email}'**
+  String passwordResetSent(String email);
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
 }
 
 class _AppLocalizationsDelegate

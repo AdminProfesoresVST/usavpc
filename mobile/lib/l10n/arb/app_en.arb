@@ -748,7 +748,80 @@
   "restrictionTotalBan": "Total Ban",
   "restrictionPartialBan": "Partial Restriction",
   "restrictionEnhancedVetting": "Enhanced Vetting",
-  "restrictionCompleteEntryProhibition": "Complete entry prohibition"
+  "restrictionCompleteEntryProhibition": "Complete entry prohibition",
+  
+  "splashDisclaimer": "Non-government service provider",
+  
+  "profileIncomplete": "Profile incomplete. Please scan your passport first.",
+  
+  "biometricsEnabled": "Biometrics enabled",
+  "biometricsDisabled": "Biometrics disabled",
+  "digitalFile": "Digital File",
+  "ds160Responses": "DS-160 Responses",
+  "fieldsCount": "{count} fields",
+  "@fieldsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noData": "No data",
+  "myDocuments": "My Documents",
+  "documentCount": "{count} Document",
+  "@documentCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noDocuments": "No documents",
+  "simulatorHistory": "Simulation History",
+  "sessionsCount": "{count} sessions",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noSessions": "No sessions",
+  "accountSection": "Account",
+  "basicInfo": "Basic Information",
+  "securitySection": "Security",
+  "changePassword": "Change Password",
+  "updateAccess": "Update access",
+  "biometricsLabel": "Biometrics",
+  "activated": "Enabled",
+  "deactivated": "Disabled",
+  "legal": "Legal",
+  "termsAndPrivacy": "Terms and privacy",
+  "verified": "VERIFIED",
+  "passport": "PASSPORT",
+  "nationality": "NATIONALITY",
+  "birthDate": "BIRTH DATE",
+  "noFormData": "No form data",
+  "ds160Data": "DS-160 Data",
+  "scannedPassport": "Scanned Passport",
+  "noPracticeSessions": "No practice sessions",
+  "startSimulation": "Start Simulation",
+  "currentScore": "Current Score",
+  "sessionNumber": "Session {number}",
+  "@sessionNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "accountInfo": "Account Information",
+  "email": "Email",
+  "phone": "Phone",
+  "notRegistered": "Not registered",
+  "role": "Role",
+  "passwordResetSent": "Link sent to {email}",
+  "@passwordResetSent": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "cancel": "Cancel",
+  "send": "Send",
+  "selectLanguage": "Select Language",
+  "languageChangeRequiresRestart": "Language change requires restart"
 }
 
 

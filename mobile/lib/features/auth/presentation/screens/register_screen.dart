@@ -79,10 +79,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         children: [
                            Text(
                             l10n.registerTitle,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.navyPrimary,
-                            ),
+                            style: AppTheme.h1NavyBold,
                           ),
                           const SizedBox(height: 24),
                           

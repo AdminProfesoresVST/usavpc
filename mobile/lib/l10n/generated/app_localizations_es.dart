@@ -975,7 +975,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get startSimulation => 'Iniciar Simulación';
 
   @override
-  String get currentScore => 'Puntaje Actual: ';
+  String get currentScore => 'Puntaje Actual';
 
   @override
   String get changePassword => 'Cambiar Contraseña';
@@ -1124,4 +1124,115 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get restrictionCompleteEntryProhibition =>
       'Prohibición completa de entrada';
+
+  @override
+  String get splashDisclaimer =>
+      'Proveedor de servicios privado - No gubernamental';
+
+  @override
+  String get profileIncomplete =>
+      'Perfil incompleto. Por favor escanea tu pasaporte primero.';
+
+  @override
+  String get digitalFile => 'Expediente Digital';
+
+  @override
+  String get ds160Responses => 'Respuestas DS-160';
+
+  @override
+  String fieldsCount(int count) {
+    return '$count campos';
+  }
+
+  @override
+  String get noData => 'Sin datos';
+
+  @override
+  String get myDocuments => 'Mis Documentos';
+
+  @override
+  String documentCount(int count) {
+    return '$count Documento';
+  }
+
+  @override
+  String get simulatorHistory => 'Historial de Simulaciones';
+
+  @override
+  String sessionsCount(int count) {
+    return '$count sesiones';
+  }
+
+  @override
+  String get noSessions => 'Sin sesiones';
+
+  @override
+  String get accountSection => 'Cuenta';
+
+  @override
+  String get basicInfo => 'Información Básica';
+
+  @override
+  String get securitySection => 'Seguridad';
+
+  @override
+  String get updateAccess => 'Actualizar acceso';
+
+  @override
+  String get biometricsLabel => 'Biometría';
+
+  @override
+  String get activated => 'Activado';
+
+  @override
+  String get deactivated => 'Desactivado';
+
+  @override
+  String get legal => 'Legal';
+
+  @override
+  String get termsAndPrivacy => 'Términos y privacidad';
+
+  @override
+  String get verified => 'VERIFICADO';
+
+  @override
+  String get passport => 'PASAPORTE';
+
+  @override
+  String get nationality => 'NACIONALIDAD';
+
+  @override
+  String get birthDate => 'NACIMIENTO';
+
+  @override
+  String get ds160Data => 'Datos DS-160';
+
+  @override
+  String sessionNumber(int number) {
+    return 'Sesión $number';
+  }
+
+  @override
+  String get accountInfo => 'Información de Cuenta';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get phone => 'Teléfono';
+
+  @override
+  String get notRegistered => 'No registrado';
+
+  @override
+  String get role => 'Rol';
+
+  @override
+  String passwordResetSent(String email) {
+    return 'Enlace enviado a $email';
+  }
+
+  @override
+  String get selectLanguage => 'Seleccionar Idioma';
 }

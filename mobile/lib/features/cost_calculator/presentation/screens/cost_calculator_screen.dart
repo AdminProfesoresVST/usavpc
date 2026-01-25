@@ -8,6 +8,7 @@ import '../../../visa/data/models/visa_category.dart';
 import '../../../visa/presentation/providers/visa_providers.dart';
 import '../providers/cost_calculator_providers.dart';
 import '../widgets/cost_breakdown_card.dart';
+import 'package:mobile/core/utils/visa_localization.dart';
 
 class CostCalculatorScreen extends ConsumerStatefulWidget {
   const CostCalculatorScreen({super.key});
@@ -256,8 +257,13 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                     style: AppTheme.captionNavyBold,
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(child: Text(cat.name, overflow: TextOverflow.ellipsis)),
+                Expanded(
+                  child: Text(
+                    VisaLocalization.getVisaName(cat.code, cat.name, l10n),
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTheme.bodyPrimaryRegular,
+                  ),
+                ),
                 Text(
                   '\$${cat.baseFeeUsd}',
                   style: AppTheme.captionGreyRegular,

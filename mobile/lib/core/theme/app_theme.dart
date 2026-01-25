@@ -164,6 +164,38 @@ class AppTheme {
   static const double iconoGrande = 48.0;
   
   // ═══════════════════════════════════════════════════════════════════════════
+  // 6. 📏 ALTURAS DE COMPONENTES
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 📍 Estos valores controlan la altura de botones, inputs y dropdowns.
+  
+  /// Altura estándar de botones grandes (CTAs principales como "Continuar")
+  static const double alturaBotonGrande = 56.0;
+  
+  /// Altura estándar de botones medianos (secundarios)
+  static const double alturaBotonMedio = 48.0;
+  
+  /// Altura estándar de botones pequeños (inline, chips)
+  static const double alturaBotonPequeno = 36.0;
+  
+  /// Altura estándar de TextFormField y DropdownButtonFormField
+  static const double alturaInput = 52.0;
+  
+  /// Altura de items en listas (ListTile, Cards de lista)
+  static const double alturaListItem = 64.0;
+  
+  /// Padding interno vertical de inputs (afecta altura visual)
+  static const double paddingVerticalInput = 14.0;
+  
+  /// Padding interno horizontal de inputs
+  static const double paddingHorizontalInput = 16.0;
+  
+  /// Padding interno de botones
+  static const EdgeInsets paddingBoton = EdgeInsets.symmetric(
+    horizontal: 24.0,
+    vertical: 14.0,
+  );
+  
+  // ═══════════════════════════════════════════════════════════════════════════
   // 4. ✍️ TIPOGRAFÍA (Estilos de Texto)
   // ═══════════════════════════════════════════════════════════════════════════
   // 📍 Ajuste aquí los tamaños de fuente de toda la aplicación.
@@ -297,7 +329,10 @@ class AppTheme {
       suffixIcon: suffixIcon,
       filled: true,
       fillColor: surfaceWhite,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: paddingHorizontalInput, 
+        vertical: paddingVerticalInput,
+      ),
       border: OutlineInputBorder(
         borderRadius: inputRadius, 
         borderSide: const BorderSide(color: dividerGrey)
@@ -375,7 +410,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonRadiusValue) // Radio del botón
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          padding: paddingBoton,
           textStyle: GoogleFonts.roboto( // Tipografía del botón
             fontSize: 14, // Tamaño de texto ligeramente mayor para legibilidad
             fontWeight: FontWeight.w600
@@ -388,8 +423,11 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surfaceWhite,
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        isDense: false,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: paddingHorizontalInput, 
+          vertical: paddingVerticalInput,
+        ),
         labelStyle: labelRegular,
         floatingLabelStyle: const TextStyle(color: actionBlue, fontWeight: FontWeight.bold),
         border: OutlineInputBorder(borderRadius: inputRadius, borderSide: const BorderSide(color: dividerGrey)),

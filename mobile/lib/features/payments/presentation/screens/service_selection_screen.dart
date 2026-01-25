@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
-import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/core/widgets/app_toast.dart';
@@ -251,7 +250,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
       } else {
         // No Data -> Go to Verification
         if (context.mounted) {
-           AppToast.show(context, l10n.error("Profile incomplete. Please scan passport first.")); // TODO: Add i18n key or use generic
+           AppToast.show(context, l10n.profileIncomplete);
            GoRouter.of(context).push('/identity/start');
         }
       }

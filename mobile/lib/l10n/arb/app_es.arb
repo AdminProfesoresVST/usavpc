@@ -384,6 +384,79 @@
   "restrictionTotalBan": "Prohibición Total",
   "restrictionPartialBan": "Restricción Parcial",
   "restrictionEnhancedVetting": "Verificación Reforzada",
-  "restrictionCompleteEntryProhibition": "Prohibición completa de entrada"
+  "restrictionCompleteEntryProhibition": "Prohibición completa de entrada",
+  
+  "splashDisclaimer": "Proveedor de servicios privado - No gubernamental",
+  
+  "profileIncomplete": "Perfil incompleto. Por favor escanea tu pasaporte primero.",
+  
+  "biometricsEnabled": "Biometría activada",
+  "biometricsDisabled": "Biometría desactivada",
+  "digitalFile": "Expediente Digital",
+  "ds160Responses": "Respuestas DS-160",
+  "fieldsCount": "{count} campos",
+  "@fieldsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noData": "Sin datos",
+  "myDocuments": "Mis Documentos",
+  "documentCount": "{count} Documento",
+  "@documentCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noDocuments": "Sin documentos",
+  "simulatorHistory": "Historial de Simulaciones",
+  "sessionsCount": "{count} sesiones",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "noSessions": "Sin sesiones",
+  "accountSection": "Cuenta",
+  "basicInfo": "Información Básica",
+  "securitySection": "Seguridad",
+  "changePassword": "Cambiar Contraseña",
+  "updateAccess": "Actualizar acceso",
+  "biometricsLabel": "Biometría",
+  "activated": "Activado",
+  "deactivated": "Desactivado",
+  "legal": "Legal",
+  "termsAndPrivacy": "Términos y privacidad",
+  "verified": "VERIFICADO",
+  "passport": "PASAPORTE",
+  "nationality": "NACIONALIDAD",
+  "birthDate": "NACIMIENTO",
+  "noFormData": "Sin datos de formulario",
+  "ds160Data": "Datos DS-160",
+  "scannedPassport": "Pasaporte Escaneado",
+  "noPracticeSessions": "Sin sesiones de práctica",
+  "startSimulation": "Iniciar Simulación",
+  "currentScore": "Puntaje Actual",
+  "sessionNumber": "Sesión {number}",
+  "@sessionNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "accountInfo": "Información de Cuenta",
+  "email": "Email",
+  "phone": "Teléfono",
+  "notRegistered": "No registrado",
+  "role": "Rol",
+  "passwordResetSent": "Enlace enviado a {email}",
+  "@passwordResetSent": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "cancel": "Cancelar",
+  "send": "Enviar",
+  "selectLanguage": "Seleccionar Idioma",
+  "languageChangeRequiresRestart": "Cambio de idioma requiere reinicio"
 }
 

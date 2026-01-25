@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 
-/// Splash screen - minimal changes needed, just consistency.
-/// Updated: 2026-01-21 - Applied AppTheme constants
+/// Splash screen - Auditado 2026-01-25: l10n + AppTheme centralizados
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -27,6 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    
     return Scaffold(
       backgroundColor: AppTheme.navyPrimary,
       body: Stack(
@@ -36,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Opacity(
-                  opacity: 0.15, // Subtle branding
+                  opacity: 0.15,
                   child: Image.asset(
                     'assets/images/logo.png',
                     width: 250,
@@ -44,18 +46,17 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.contain,
                   ),
                 ),
-                // Removed Spinner: App loads fast, spinner looks cheap
               ],
             ),
           ),
           
-          // Disclaimer at bottom - bilingual
+          // Disclaimer at bottom
           Positioned(
             left: 0, 
             right: 0,
-            bottom: 32,
+            bottom: AppTheme.espacioSecciones,
             child: Text(
-              'Non-government service provider / Proveedor privado',
+              l10n.splashDisclaimer,
               textAlign: TextAlign.center,
               style: AppTheme.captionGreyRegular.copyWith(color: AppTheme.inkInverse24),
             ),

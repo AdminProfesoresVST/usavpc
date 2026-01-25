@@ -148,7 +148,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                   children: [
                     Text(
                       category != null
-                          ? '${category.code} - ${category.name}'
+                          ? '${category.code} - ${VisaLocalization.getVisaName(category.code, category.name, l10n)}'
                           : widget.visaCategoryCode,
                       style: AppTheme.h2WhiteBold,
                     ),
