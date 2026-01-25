@@ -79,20 +79,13 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                const SizedBox(height: 48),
                Text(
                  l10n.simulatorTitle,
-                 style: context.textTheme.headlineSmall?.copyWith(
-                   fontWeight: FontWeight.w600,
-                   color: AppTheme.navyPrimary,
-                   letterSpacing: -0.5,
-                 ),
+                 style: AppTheme.h2NavyBold,
                  textAlign: TextAlign.center,
                ),
                const SizedBox(height: 12),
                Text(
                  l10n.simulatorDescription,
-                 style: context.textTheme.bodyMedium?.copyWith(
-                   color: AppTheme.inkSecondary,
-                   height: 1.6,
-                 ),
+                 style: AppTheme.bodyPrimaryRegular.copyWith(color: AppTheme.inkSecondary),
                  textAlign: TextAlign.center,
                ),
                const Spacer(flex: 2),
@@ -122,7 +115,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                        shadowColor: AppTheme.navyPrimary.withOpacity(0.4),
                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                        shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
-                       textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.5),
+                       textStyle: AppTheme.labelBold.copyWith(color: AppTheme.inkInverse),
                      ),
                      child: Row(
                        mainAxisSize: MainAxisSize.min,
