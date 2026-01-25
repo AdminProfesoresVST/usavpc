@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../visa/presentation/providers/visa_providers.dart';
-import '../data/models/social_media_profile.dart';
-import '../data/repositories/social_media_audit_repository.dart';
+import '../../data/models/social_media_profile.dart';
+import '../../data/repositories/social_media_audit_repository.dart';
 
 /// Provider del repository de auditoría de redes sociales
 final socialMediaAuditRepositoryProvider = Provider<ISocialMediaAuditRepository>((ref) {

@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../visa/presentation/providers/visa_providers.dart';
-import '../data/models/inadmissibility_flag.dart';
-import '../data/repositories/inadmissibility_repository.dart';
+import '../../data/models/inadmissibility_flag.dart';
+import '../../data/repositories/inadmissibility_repository.dart';
 
 /// Provider del repository de inadmisibilidad
 final inadmissibilityRepositoryProvider = Provider<IInadmissibilityRepository>((ref) {
@@ -52,4 +51,21 @@ class AnalyzeFormParams {
 }
 
 /// Estado de alertas reconocidas
-final acknowledgedFlagsProvider = StateProvider<Set<String>>((ref) => {});
+class AcknowledgedFlagsNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => {};
+  
+  void acknowledge(String flagId) {
+    state = {...state, flagId};
+  }
+  
+  void unacknowledge(String flagId) {
+    state = state.where((id) => id != flagId).toSet();
+  }
+  
+  void clear() => state = {};
+}
+
+final acknowledgedFlagsProvider = NotifierProvider<AcknowledgedFlagsNotifier, Set<String>>(
+  AcknowledgedFlagsNotifier.new,
+);

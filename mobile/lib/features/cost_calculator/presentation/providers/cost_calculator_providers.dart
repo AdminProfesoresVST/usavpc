@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../visa/presentation/providers/visa_providers.dart';
-import '../data/models/visa_fee.dart';
-import '../data/repositories/visa_fee_repository.dart';
+import '../../data/models/visa_fee.dart';
+import '../../data/repositories/visa_fee_repository.dart';
 
 /// Provider del repository de tarifas
 final visaFeeRepositoryProvider = Provider<IVisaFeeRepository>((ref) {
@@ -83,9 +82,41 @@ final costCalculationProvider = FutureProvider.family<CostCalculation, CostCalcu
   );
 });
 
-/// Estados de UI para calculadora
-final crossingByLandProvider = StateProvider<bool>((ref) => false);
-final requiresSevisProvider = StateProvider<bool>((ref) => false);
+/// Estado de cruce por tierra
+class CrossingByLandNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+  
+  void toggle() => state = !state;
+  void set(bool value) => state = value;
+}
+
+final crossingByLandProvider = NotifierProvider<CrossingByLandNotifier, bool>(
+  CrossingByLandNotifier.new,
+);
+
+/// Estado de requiere SEVIS
+class RequiresSevisNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+  
+  void toggle() => state = !state;
+  void set(bool value) => state = value;
+}
+
+final requiresSevisProvider = NotifierProvider<RequiresSevisNotifier, bool>(
+  RequiresSevisNotifier.new,
+);
 
 /// Estado de cálculo actual
-final currentCostCalculationProvider = StateProvider<CostCalculation?>((ref) => null);
+class CurrentCostCalculationNotifier extends Notifier<CostCalculation?> {
+  @override
+  CostCalculation? build() => null;
+  
+  void set(CostCalculation? calculation) => state = calculation;
+  void clear() => state = null;
+}
+
+final currentCostCalculationProvider = NotifierProvider<CurrentCostCalculationNotifier, CostCalculation?>(
+  CurrentCostCalculationNotifier.new,
+);

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/models/visa_category.dart';
 import '../providers/visa_providers.dart';
-
+import 'prerequisite_checker_screen.dart';
 /// Pantalla de selección de tipo de visa
 class VisaCategorySelectorScreen extends ConsumerWidget {
   const VisaCategorySelectorScreen({super.key});
@@ -76,7 +76,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
 
     return InkWell(
       onTap: () {
-        ref.read(selectedFormEngineProvider.notifier).state = engine;
+        ref.read(selectedFormEngineProvider.notifier).set(engine);
       },
       borderRadius: BorderRadius.circular(12),
       child: AnimatedContainer(
@@ -224,7 +224,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
       ),
       child: InkWell(
         onTap: () {
-          ref.read(selectedVisaCategoryProvider.notifier).state = category;
+          ref.read(selectedVisaCategoryProvider.notifier).set(category);
           // Navigate to prerequisite checker
           Navigator.push(
             context,
@@ -339,6 +339,3 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     return Colors.blue;
   }
 }
-
-// Re-import for navigation
-import 'prerequisite_checker_screen.dart';

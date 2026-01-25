@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../data/models/visa_category.dart';
-import '../data/repositories/visa_category_repository.dart';
-import '../data/models/prerequisite_form.dart';
-import '../data/repositories/prerequisite_repository.dart';
+import '../../data/models/visa_category.dart';
+import '../../data/repositories/visa_category_repository.dart';
+import '../../data/models/prerequisite_form.dart';
+import '../../data/repositories/prerequisite_repository.dart';
 
 /// Provider de Supabase client
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
@@ -64,7 +64,27 @@ final prerequisiteValidationsProvider = FutureProvider.family<List<PrerequisiteV
 });
 
 /// Estado de categoría seleccionada
-final selectedVisaCategoryProvider = StateProvider<VisaCategory?>((ref) => null);
+class SelectedVisaCategoryNotifier extends Notifier<VisaCategory?> {
+  @override
+  VisaCategory? build() => null;
+  
+  void set(VisaCategory? category) => state = category;
+  void clear() => state = null;
+}
+
+final selectedVisaCategoryProvider = NotifierProvider<SelectedVisaCategoryNotifier, VisaCategory?>(
+  SelectedVisaCategoryNotifier.new,
+);
 
 /// Estado de motor de formulario seleccionado
-final selectedFormEngineProvider = StateProvider<FormEngine?>((ref) => null);
+class SelectedFormEngineNotifier extends Notifier<FormEngine?> {
+  @override
+  FormEngine? build() => null;
+  
+  void set(FormEngine? engine) => state = engine;
+  void clear() => state = null;
+}
+
+final selectedFormEngineProvider = NotifierProvider<SelectedFormEngineNotifier, FormEngine?>(
+  SelectedFormEngineNotifier.new,
+);

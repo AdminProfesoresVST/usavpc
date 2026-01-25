@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../visa/presentation/providers/visa_providers.dart';
-import '../data/models/country_restriction.dart';
-import '../data/repositories/country_restriction_repository.dart';
+import '../../data/models/country_restriction.dart';
+import '../../data/repositories/country_restriction_repository.dart';
 import '../../../visa/data/models/visa_category.dart';
 
 /// Provider del repository de restricciones de países
@@ -77,4 +76,14 @@ final restrictionCheckProvider = FutureProvider.family<RestrictionCheckResult, R
 });
 
 /// Estado del país seleccionado
-final selectedCountryCodeProvider = StateProvider<String?>((ref) => null);
+class SelectedCountryCodeNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+  
+  void set(String? code) => state = code;
+  void clear() => state = null;
+}
+
+final selectedCountryCodeProvider = NotifierProvider<SelectedCountryCodeNotifier, String?>(
+  SelectedCountryCodeNotifier.new,
+);
