@@ -497,4 +497,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get injectionError => 'Error during injection';
+
+  @override
+  String get costCalculatorTitle => 'Cost Calculator';
+
+  @override
+  String get costCalculatorSubtitle => 'Complete fee estimation';
+
+  @override
+  String get travelBanTitle => 'Check Restrictions';
+
+  @override
+  String get travelBanSubtitle => 'Check 2026 Travel Ban';
 }

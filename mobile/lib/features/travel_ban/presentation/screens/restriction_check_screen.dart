@@ -1,13 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
-import '../../../visa/data/models/visa_category.dart';
-import '../../../visa/presentation/providers/visa_providers.dart';
-import '../../data/models/country_restriction.dart';
-import '../providers/travel_ban_providers.dart';
-import '../widgets/travel_ban_warning_card.dart';
+// ... (existing imports)
 
-/// Pantalla de verificación de restricciones de viaje
 class RestrictionCheckScreen extends ConsumerStatefulWidget {
   const RestrictionCheckScreen({super.key});
 
@@ -22,43 +17,49 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final restrictedCountries = ref.watch(allRestrictedCountriesProvider);
     final categories = ref.watch(visaCategoriesProvider);
 
     return Scaffold(
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('Travel Restriction Check'),
+        title: Text(l10n.travelBanTitle),
         centerTitle: true,
+        backgroundColor: AppTheme.navyPrimary,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            // Header - Standard Navy Card
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primaryContainer,
-                    theme.colorScheme.primaryContainer.withOpacity(0.7),
-                  ],
-                ),
+                color: AppTheme.navyPrimary,
                 borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.navyPrimary.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      color: Colors.white.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.travel_explore,
-                      color: theme.colorScheme.primary,
+                      color: Colors.white,
                       size: 32,
                     ),
                   ),
@@ -68,17 +69,13 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Check Your Eligibility',
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          l10n.checkYourEligibility,
+                          style: AppTheme.h1WhiteBold,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Verify if your nationality has any visa restrictions',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          l10n.checkYourEligibilitySubtitle,
+                          style: AppTheme.bodyWhiteRegular.copyWith(fontSize: 13, color: Colors.white70),
                         ),
                       ],
                     ),
@@ -91,25 +88,21 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
 
             // Country Selector
             Text(
-              'Your Nationality',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              l10n.yourNationality,
+              style: AppTheme.h2NavyBold,
             ),
             const SizedBox(height: 8),
-            _buildCountryDropdown(context, restrictedCountries),
+            _buildCountryDropdown(context, restrictedCountries, l10n),
 
             const SizedBox(height: 20),
 
             // Visa Category Selector
             Text(
-              'Visa Category',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              l10n.visaCategory,
+              style: AppTheme.h2NavyBold,
             ),
             const SizedBox(height: 8),
-            _buildCategoryDropdown(context, categories),
+            _buildCategoryDropdown(context, categories, l10n),
 
             const SizedBox(height: 32),
 
@@ -117,14 +110,17 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
             SizedBox(
               width: double.infinity,
               height: 56,
-              child: FilledButton.icon(
+              child: ElevatedButton.icon(
                 onPressed: _canCheck ? _performCheck : null,
                 icon: const Icon(Icons.search),
-                label: const Text('Check Restrictions'),
-                style: FilledButton.styleFrom(
+                label: Text(l10n.checkRestrictions),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.navyPrimary,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  textStyle: AppTheme.h2WhiteBold,
                 ),
               ),
             ),
@@ -140,7 +136,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
             const SizedBox(height: 32),
 
             // Statistics
-            _buildStatsSection(restrictedCountries),
+            _buildStatsSection(restrictedCountries, l10n),
           ],
         ),
       ),
@@ -155,18 +151,17 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
   Widget _buildCountryDropdown(
     BuildContext context,
     AsyncValue<List<CountryRestriction>> restrictedCountries,
+    dynamic l10n,
   ) {
-    // In a real app, this would be a full country list
-    // For now, we'll show restricted countries prominently
     return DropdownButtonFormField<String>(
       value: _selectedCountryCode,
+      isExpanded: true,
       decoration: InputDecoration(
-        hintText: 'Select your country',
-        prefixIcon: const Icon(Icons.flag_outlined),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        hintText: l10n.selectCountry,
+        prefixIcon: const Icon(Icons.flag_outlined, color: AppTheme.navyPrimary),
         filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       items: _buildCountryItems(restrictedCountries),
       onChanged: (value) {
@@ -197,7 +192,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
     for (final (code, name) in commonCountries) {
       items.add(DropdownMenuItem(
         value: code,
-        child: Text(name),
+        child: Text(name, overflow: TextOverflow.ellipsis),
       ));
     }
 
@@ -207,24 +202,25 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
   Widget _buildCategoryDropdown(
     BuildContext context,
     AsyncValue<List<VisaCategory>> categories,
+    dynamic l10n,
   ) {
     return categories.when(
       loading: () => const LinearProgressIndicator(),
       error: (e, _) => Text('Error: $e'),
       data: (cats) => DropdownButtonFormField<String>(
         value: _selectedCategoryCode,
+        isExpanded: true, // Fixes overflow
         decoration: InputDecoration(
-          hintText: 'Select visa category',
-          prefixIcon: const Icon(Icons.badge_outlined),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          hintText: l10n.selectCategory,
+          prefixIcon: const Icon(Icons.badge_outlined, color: AppTheme.navyPrimary),
           filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         items: cats.map((cat) {
           return DropdownMenuItem(
             value: cat.code,
-            child: Text('${cat.code} - ${cat.name}'),
+            child: Text('${cat.code} - ${cat.name}', overflow: TextOverflow.ellipsis),
           );
         }).toList(),
         onChanged: (value) {
@@ -261,7 +257,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
     );
   }
 
-  Widget _buildStatsSection(AsyncValue<List<CountryRestriction>> restrictedCountries) {
+  Widget _buildStatsSection(AsyncValue<List<CountryRestriction>> restrictedCountries, dynamic l10n) {
     return restrictedCountries.when(
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
@@ -274,19 +270,17 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Current Restrictions (2026)',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              l10n.currentRestrictions,
+              style: AppTheme.h2NavyBold,
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                _buildStatCard('Total Ban', totalBan, Colors.red),
+                _buildStatCard(l10n.totalBan, totalBan, Colors.red), // Intentionally red for alert
                 const SizedBox(width: 8),
-                _buildStatCard('Partial', partial, Colors.orange),
+                _buildStatCard(l10n.partial, partial, Colors.orange),
                 const SizedBox(width: 8),
-                _buildStatCard('Paused', pause, Colors.amber),
+                _buildStatCard(l10n.paused, pause, Colors.amber),
               ],
             ),
           ],
@@ -300,24 +294,25 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: color.withOpacity(0.3)),
+          boxShadow: [
+             BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+          ],
         ),
         child: Column(
           children: [
             Text(
               count.toString(),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              style: AppTheme.h1NavyBold.copyWith(color: color, fontSize: 24),
             ),
             Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: color,
-              ),
+              style: AppTheme.smallGreyRegular.copyWith(fontSize: 10, color: color),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

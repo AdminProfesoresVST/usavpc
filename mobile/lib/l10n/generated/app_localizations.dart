@@ -1003,6 +1003,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error during injection'**
   String get injectionError;
+
+  /// Service card title
+  ///
+  /// In en, this message translates to:
+  /// **'Cost Calculator'**
+  String get costCalculatorTitle;
+
+  /// Service card subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Complete fee estimation'**
+  String get costCalculatorSubtitle;
+
+  /// Service card title
+  ///
+  /// In en, this message translates to:
+  /// **'Check Restrictions'**
+  String get travelBanTitle;
+
+  /// Service card subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Check 2026 Travel Ban'**
+  String get travelBanSubtitle;
 }
 
 class _AppLocalizationsDelegate

@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart'; // Ensure l10n access
+import 'package:mobile/core/theme/app_theme.dart';
 
-import '../../../visa/data/models/visa_category.dart';
-import '../../../visa/presentation/providers/visa_providers.dart';
-import '../providers/cost_calculator_providers.dart';
-import '../widgets/cost_breakdown_card.dart';
+// ... (existing imports)
 
-/// Pantalla de calculadora de costos de visa
 class CostCalculatorScreen extends ConsumerStatefulWidget {
   const CostCalculatorScreen({super.key});
 
@@ -22,14 +18,17 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final categories = ref.watch(visaCategoriesProvider);
 
     return Scaffold(
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('Cost Calculator'),
+        title: Text(l10n.costCalculatorTitle),
         centerTitle: true,
+        backgroundColor: AppTheme.navyPrimary,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -42,29 +41,31 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Card
+            // Header Card - Standard Navy Card
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.secondaryContainer,
-                    colorScheme.secondaryContainer.withOpacity(0.7),
-                  ],
-                ),
+                color: AppTheme.navyPrimary,
                 borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.navyPrimary.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.secondary.withOpacity(0.1),
+                      color: Colors.white.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.calculate_outlined,
-                      color: colorScheme.secondary,
+                      color: Colors.white,
                       size: 32,
                     ),
                   ),
@@ -74,17 +75,13 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Know Your Total',
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          l10n.knowYourTotal,
+                          style: AppTheme.h1WhiteBold,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Calculate all fees for your visa application',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                          l10n.knowYourTotalSubtitle,
+                          style: AppTheme.bodyWhiteRegular.copyWith(fontSize: 13, color: Colors.white70),
                         ),
                       ],
                     ),
@@ -97,37 +94,31 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
 
             // Currency selector
             Text(
-              'Your Nationality',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              l10n.yourNationality,
+              style: AppTheme.h2NavyBold,
             ),
             const SizedBox(height: 8),
-            _buildCountryDropdown(context),
+            _buildCountryDropdown(context, l10n),
 
             const SizedBox(height: 20),
 
             // Visa Category
             Text(
-              'Visa Category',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              l10n.visaCategory,
+              style: AppTheme.h2NavyBold,
             ),
             const SizedBox(height: 8),
-            _buildCategoryDropdown(context, categories),
+            _buildCategoryDropdown(context, categories, l10n),
 
             const SizedBox(height: 20),
 
             // Options
             Text(
-              'Additional Options',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              l10n.additionalOptions,
+              style: AppTheme.h2NavyBold,
             ),
             const SizedBox(height: 8),
-            _buildOptionsCard(context),
+            _buildOptionsCard(context, l10n),
 
             const SizedBox(height: 24),
 
@@ -135,14 +126,17 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             SizedBox(
               width: double.infinity,
               height: 56,
-              child: FilledButton.icon(
+              child: ElevatedButton.icon(
                 onPressed: _canCalculate ? _calculate : null,
                 icon: const Icon(Icons.calculate),
-                label: const Text('Calculate Total Cost'),
-                style: FilledButton.styleFrom(
+                label: Text(l10n.calculateTotalCost),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.navyPrimary,
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  textStyle: AppTheme.h2WhiteBold,
                 ),
               ),
             ),
@@ -156,7 +150,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             const SizedBox(height: 32),
 
             // Fee summary cards
-            _buildFeeSummaryCards(context),
+            _buildFeeSummaryCards(context, l10n),
           ],
         ),
       ),
@@ -166,7 +160,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
   bool get _canCalculate =>
       _selectedCountryCode != null && _selectedCategory != null;
 
-  Widget _buildCountryDropdown(BuildContext context) {
+  Widget _buildCountryDropdown(BuildContext context, dynamic l10n) {
     final countries = [
       ('MX', 'Mexico 🇲🇽'),
       ('CO', 'Colombia 🇨🇴'),
@@ -184,18 +178,18 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
 
     return DropdownButtonFormField<String>(
       value: _selectedCountryCode,
+      isExpanded: true,
       decoration: InputDecoration(
-        hintText: 'Select your country',
-        prefixIcon: const Icon(Icons.public),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        hintText: l10n.selectCountry,
+        prefixIcon: const Icon(Icons.public, color: AppTheme.navyPrimary),
         filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       items: countries.map((c) {
         return DropdownMenuItem(
           value: c.$1,
-          child: Text(c.$2),
+          child: Text(c.$2, overflow: TextOverflow.ellipsis),
         );
       }).toList(),
       onChanged: (value) {
@@ -210,19 +204,20 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
   Widget _buildCategoryDropdown(
     BuildContext context,
     AsyncValue<List<VisaCategory>> categories,
+    dynamic l10n,
   ) {
     return categories.when(
       loading: () => const LinearProgressIndicator(),
       error: (e, _) => Text('Error: $e'),
       data: (cats) => DropdownButtonFormField<VisaCategory>(
         value: _selectedCategory,
+        isExpanded: true,
         decoration: InputDecoration(
-          hintText: 'Select visa category',
-          prefixIcon: const Icon(Icons.badge_outlined),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          hintText: l10n.selectCategory,
+          prefixIcon: const Icon(Icons.badge_outlined, color: AppTheme.navyPrimary),
           filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         items: cats.map((cat) {
           return DropdownMenuItem(
@@ -232,27 +227,19 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: cat.type.isImmigrant
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.blue.withOpacity(0.1),
+                    color: AppTheme.softBlue,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     cat.code,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: cat.type.isImmigrant ? Colors.green : Colors.blue,
-                    ),
+                    style: AppTheme.smallNavyBold,
                   ),
                 ),
                 const SizedBox(width: 8),
-                Expanded(child: Text(cat.name)),
+                Expanded(child: Text(cat.name, overflow: TextOverflow.ellipsis)),
                 Text(
                   '\$${cat.baseFeeUsd}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  ),
+                  style: AppTheme.smallGreyRegular,
                 ),
               ],
             ),
@@ -268,22 +255,22 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
     );
   }
 
-  Widget _buildOptionsCard(BuildContext context) {
-    final theme = Theme.of(context);
-
+  Widget _buildOptionsCard(BuildContext context, dynamic l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.dividerGrey),
       ),
       child: Column(
         children: [
           // Land crossing option
           SwitchListTile(
-            title: const Text('Crossing by Land'),
-            subtitle: const Text('Adds I-94 fee (\$24)'),
-            secondary: const Icon(Icons.directions_car),
+            title: Text(l10n.crossingByLand, style: AppTheme.bodyPrimaryRegular),
+            subtitle: Text(l10n.crossingByLandSubtitle, style: AppTheme.smallGreyRegular),
+            secondary: const Icon(Icons.directions_car, color: AppTheme.navyPrimary),
+            activeColor: AppTheme.actionBlue,
             value: _crossingByLand,
             onChanged: (value) {
               setState(() {
@@ -296,14 +283,15 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           // SEVIS indicator (automatic based on category)
           if (_selectedCategory != null && _selectedCategory!.requiresSevis)
             ListTile(
-              leading: const Icon(Icons.school, color: Colors.teal),
-              title: const Text('SEVIS Fee Included'),
+              leading: const Icon(Icons.school, color: AppTheme.actionBlue),
+              title: const Text('SEVIS Fee Included', style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.navyPrimary)),
               subtitle: Text(
                 _selectedCategory!.code == 'J1'
                     ? 'J-1 SEVIS: \$220'
                     : 'F/M SEVIS: \$350',
+                style: AppTheme.smallGreyRegular,
               ),
-              trailing: const Icon(Icons.check_circle, color: Colors.green),
+              trailing: const Icon(Icons.check_circle, color: AppTheme.actionBlue),
             ),
         ],
       ),
@@ -333,23 +321,20 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
     );
   }
 
-  Widget _buildFeeSummaryCards(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget _buildFeeSummaryCards(BuildContext context, dynamic l10n) {
     final fees = [
-      ('MRV Fee', '\$185-\$315', Icons.receipt_long, Colors.blue),
-      ('Integrity', '\$250', Icons.verified_user, Colors.purple),
-      ('SEVIS', '\$220-\$350', Icons.school, Colors.teal),
-      ('I-94 Land', '\$24', Icons.directions_car, Colors.orange),
+      ('MRV Fee', '\$185-\$315', Icons.receipt_long, AppTheme.navyPrimary),
+      ('Integrity', '\$250', Icons.verified_user, AppTheme.actionBlue),
+      ('SEVIS', '\$220-\$350', Icons.school, AppTheme.actionBlue),
+      ('I-94 Land', '\$24', Icons.directions_car, AppTheme.navyPrimary),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '2026 Fee Schedule',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          l10n.feeSchedule,
+          style: AppTheme.h2NavyBold,
         ),
         const SizedBox(height: 12),
         Wrap(
@@ -360,9 +345,12 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
               width: (MediaQuery.of(context).size.width - 48) / 2,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: fee.$4.withOpacity(0.1),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: fee.$4.withOpacity(0.3)),
+                border: Border.all(color: AppTheme.dividerGrey),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+                ],
               ),
               child: Row(
                 children: [
@@ -374,15 +362,11 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                       children: [
                         Text(
                           fee.$1,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: fee.$4,
-                          ),
+                          style: AppTheme.smallGreyRegular.copyWith(fontSize: 10),
                         ),
                         Text(
                           fee.$2,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: AppTheme.h2NavyBold.copyWith(fontSize: 14),
                         ),
                       ],
                     ),
@@ -395,6 +379,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
       ],
     );
   }
+// ... (rest of file)
 
   void _calculate() {
     setState(() {

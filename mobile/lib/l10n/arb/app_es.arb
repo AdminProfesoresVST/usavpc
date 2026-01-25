@@ -177,6 +177,25 @@
   "costCalculatorTitle": "Calculadora de Costos",
   "costCalculatorSubtitle": "Estimación completa de tarifas",
   "travelBanTitle": "Verificar Restricciones",
-  "travelBanSubtitle": "Chequeo de Travel Ban 2026"
+  "travelBanSubtitle": "Chequeo de Travel Ban 2026",
+  
+  "knowYourTotal": "Conoce tu Total",
+  "knowYourTotalSubtitle": "Calcula todas las tarifas para tu visa",
+  "yourNationality": "Tu Nacionalidad",
+  "selectCountry": "Selecciona tu país",
+  "visaCategory": "Categoría de Visa",
+  "selectCategory": "Selecciona categoría",
+  "additionalOptions": "Opciones Adicionales",
+  "crossingByLand": "Cruce Terrestre",
+  "crossingByLandSubtitle": "Agrega tarifa I-94 ($24)",
+  "calculateTotalCost": "Calcular Costo Total",
+  "feeSchedule": "Tabla de Tarifas 2026",
+  "checkYourEligibility": "Verifica tu Elegibilidad",
+  "checkYourEligibilitySubtitle": "Revisa si hay restricciones para tu nacionalidad",
+  "checkRestrictions": "Verificar Restricciones",
+  "currentRestrictions": "Restricciones Actuales (2026)",
+  "totalBan": "Prohibición Total",
+  "partial": "Parcial",
+  "paused": "Pausado"
 }
 

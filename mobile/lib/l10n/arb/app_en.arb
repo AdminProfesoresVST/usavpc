@@ -462,7 +462,56 @@
   "@processComplete": {"description": "Process completion message"},
   
   "injectionError": "Error during injection",
-  "@injectionError": {"description": "Injection error prefix"}
+  "@injectionError": {"description": "Injection error prefix"},
+  
+  "costCalculatorTitle": "Cost Calculator",
+  "@costCalculatorTitle": {"description": "Service card title"},
+  
+  "costCalculatorSubtitle": "Complete fee estimation",
+  "@costCalculatorSubtitle": {"description": "Service card subtitle"},
+  
+  "travelBanTitle": "Check Restrictions",
+  "@travelBanTitle": {"description": "Service card title"},
+  
+  "travelBanSubtitle": "Check 2026 Travel Ban",
+  "@travelBanSubtitle": {"description": "Service card subtitle"},
+  
+  "knowYourTotal": "Know Your Total",
+  "@knowYourTotal": {"description": "Header title"},
+  "knowYourTotalSubtitle": "Calculate all fees for your visa application",
+  "@knowYourTotalSubtitle": {"description": "Header subtitle"},
+  "yourNationality": "Your Nationality",
+  "@yourNationality": {"description": "Label"},
+  "selectCountry": "Select your country",
+  "@selectCountry": {"description": "Dropdown hint"},
+  "visaCategory": "Visa Category",
+  "@visaCategory": {"description": "Label"},
+  "selectCategory": "Select visa category",
+  "@selectCategory": {"description": "Dropdown hint"},
+  "additionalOptions": "Additional Options",
+  "@additionalOptions": {"description": "Label"},
+  "crossingByLand": "Crossing by Land",
+  "@crossingByLand": {"description": "Option title"},
+  "crossingByLandSubtitle": "Adds I-94 fee ($24)",
+  "@crossingByLandSubtitle": {"description": "Option subtitle"},
+  "calculateTotalCost": "Calculate Total Cost",
+  "@calculateTotalCost": {"description": "Button label"},
+  "feeSchedule": "2026 Fee Schedule",
+  "@feeSchedule": {"description": "Section title"},
+  "checkYourEligibility": "Check Your Eligibility",
+  "@checkYourEligibility": {"description": "Header title"},
+  "checkYourEligibilitySubtitle": "Verify if your nationality has any visa restrictions",
+  "@checkYourEligibilitySubtitle": {"description": "Header subtitle"},
+  "checkRestrictions": "Check Restrictions",
+  "@checkRestrictions": {"description": "Button label"},
+  "currentRestrictions": "Current Restrictions (2026)",
+  "@currentRestrictions": {"description": "Section title"},
+  "totalBan": "Total Ban",
+  "@totalBan": {"description": "Stat label"},
+  "partial": "Partial",
+  "@partial": {"description": "Stat label"},
+  "paused": "Paused",
+  "@paused": {"description": "Stat label"}
 }
 
 
