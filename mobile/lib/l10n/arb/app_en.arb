@@ -821,7 +821,24 @@
   "cancel": "Cancel",
   "send": "Send",
   "selectLanguage": "Select Language",
-  "languageChangeRequiresRestart": "Language change requires restart"
+  "languageChangeRequiresRestart": "Language change requires restart",
+  
+  "passwordResetDialogContent": "A recovery link will be sent to:\n{email}",
+  "@passwordResetDialogContent": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "legalDocuments": "Legal Documents",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "viewDocument": "View document",
+  "openingTerms": "Opening terms...",
+  "openingPrivacy": "Opening privacy policy...",
+  "spanishLanguage": "🇪🇸  Español",
+  "englishLanguage": "🇺🇸  English",
+  
+  "emailCopied": "Email copied"
 }
 
 

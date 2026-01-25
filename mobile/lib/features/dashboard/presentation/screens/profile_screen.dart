@@ -61,8 +61,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     await prefs.setBool('biometrics_enabled', value);
     setState(() => _biometricsEnabled = value);
     if (mounted) {
+      final l10n = context.l10n;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(value ? "Biometría activada" : "Biometría desactivada")),
+        SnackBar(content: Text(value ? l10n.biometricsEnabled : l10n.biometricsDisabled)),
       );
     }
   }
@@ -112,39 +113,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Column(
         children: [
           // Identity Card (Compact)
-          _buildIdentityCard(context, fullName, nationality, passportNumber, dob, email),
+          _buildIdentityCard(context, l10n, fullName, nationality, passportNumber, dob, email),
           const SizedBox(height: 16),
 
           // Expediente Digital
-          _buildSectionHeader("Expediente Digital"),
+          _buildSectionHeader(l10n.digitalFile),
           const SizedBox(height: 8),
-          _buildMenuItem(Icons.assignment_outlined, "Respuestas DS-160", 
-              formData != null ? "${formData.keys.length} campos" : "Sin datos",
+          _buildMenuItem(Icons.assignment_outlined, l10n.ds160Responses, 
+              formData != null ? l10n.fieldsCount(formData.keys.length) : l10n.noData,
               () => _showDS160Data(context, formData)),
-          _buildMenuItem(Icons.folder_outlined, "Mis Documentos", 
-              passportImageUrl != null ? "1 Documento" : "Sin documentos",
+          _buildMenuItem(Icons.folder_outlined, l10n.myDocuments, 
+              passportImageUrl != null ? l10n.documentCount(1) : l10n.noDocuments,
               () => _showDocuments(context, passportImageUrl),
               trailing: passportImageUrl != null ? const Icon(Icons.check_circle, color: AppTheme.successGreen, size: 14) : null),
-          _buildMenuItem(Icons.history_outlined, "Historial de Simulaciones", 
-              simulatorHistory.isNotEmpty ? "${simulatorHistory.length} sesiones" : "Sin sesiones",
+          _buildMenuItem(Icons.history_outlined, l10n.simulatorHistory, 
+              simulatorHistory.isNotEmpty ? l10n.sessionsCount(simulatorHistory.length) : l10n.noSessions,
               () => _showSimulatorHistory(context, simulatorHistory, simulatorScore)),
 
           const SizedBox(height: 16),
 
           // Cuenta
-          _buildSectionHeader("Cuenta"),
+          _buildSectionHeader(l10n.accountSection),
           const SizedBox(height: 8),
-          _buildMenuItem(Icons.person_outline, "Información Básica", email,
+          _buildMenuItem(Icons.person_outline, l10n.basicInfo, email,
               () => _showBasicInfo(context, profile, email)),
 
           const SizedBox(height: 16),
 
           // Seguridad
-          _buildSectionHeader("Seguridad"),
+          _buildSectionHeader(l10n.securitySection),
           const SizedBox(height: 8),
-          _buildMenuItem(Icons.lock_outline, "Cambiar Contraseña", "Actualizar acceso",
+          _buildMenuItem(Icons.lock_outline, l10n.changePassword, l10n.updateAccess,
               () => _handlePasswordReset(context)),
-          _buildBiometricsSwitch(),
+          _buildBiometricsSwitch(l10n),
 
           const SizedBox(height: 16),
 
@@ -155,7 +156,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               () => _showLanguageSelector(context)),
           _buildMenuItem(Icons.help_outline, l10n.helpOption, "soporte@usavpc.org",
               () => _copySupportEmail(context)),
-          _buildMenuItem(Icons.description_outlined, "Legal", "Términos y privacidad",
+          _buildMenuItem(Icons.description_outlined, l10n.legal, l10n.termsAndPrivacy,
               () => _showLegalDocs(context)),
 
           const SizedBox(height: 16),
@@ -182,7 +183,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   // ============== COMPACT IDENTITY CARD ==============
-  Widget _buildIdentityCard(BuildContext context, String name, String nat, String passport, String dob, String email) {
+  Widget _buildIdentityCard(BuildContext context, dynamic l10n, String name, String nat, String passport, String dob, String email) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -204,7 +205,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 backgroundColor: AppTheme.inkInverse,
                 child: Text(
                   name.isNotEmpty ? name[0] : 'U',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.navyPrimary),
+                  style: AppTheme.h2NavyBold,
                 ),
               ),
               const SizedBox(width: 12),
@@ -212,17 +213,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name, style: const TextStyle(color: AppTheme.inkInverse, fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(name, style: AppTheme.bodyWhiteBold),
                     const SizedBox(height: 2),
-                    Text(email, style: TextStyle(color: AppTheme.inkInverse.withOpacity(0.7), fontSize: 11)),
+                    Text(email, style: AppTheme.captionWhiteRegular),
                     const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppTheme.inkInverse.withOpacity(0.15),
+                        color: AppTheme.inkInverse24,
                         borderRadius: AppTheme.smallRadius,
                       ),
-                      child: const Text("VERIFIED", style: TextStyle(color: AppTheme.inkInverse, fontSize: 9, fontWeight: FontWeight.bold)),
+                      child: Text(l10n.verified, style: AppTheme.captionWhiteBold.copyWith(fontSize: 9)),
                     ),
                   ],
                 ),
@@ -233,9 +234,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildIdField("PASAPORTE", passport),
-              _buildIdField("NACIONALIDAD", nat),
-              _buildIdField("NACIMIENTO", dob),
+              _buildIdField(l10n.passport, passport),
+              _buildIdField(l10n.nationality, nat),
+              _buildIdField(l10n.birthDate, dob),
             ],
           ),
         ],
@@ -247,9 +248,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: AppTheme.inkInverse.withOpacity(0.5), fontSize: 9, fontWeight: FontWeight.bold)),
+        Text(label, style: AppTheme.captionWhiteBold.copyWith(fontSize: 9, color: AppTheme.inkInverse70)),
         const SizedBox(height: 2),
-        Text(value, style: const TextStyle(color: AppTheme.inkInverse, fontSize: 11, fontWeight: FontWeight.w500)),
+        Text(value, style: AppTheme.captionWhiteRegular.copyWith(fontSize: 11)),
       ],
     );
   }
@@ -268,15 +269,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         visualDensity: VisualDensity.compact,
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-        leading: Icon(icon, color: AppTheme.navyPrimary, size: 20),
-        title: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppTheme.inkPrimary)),
-        subtitle: Text(subtitle, style: TextStyle(fontSize: 11, color: AppTheme.inkSecondary)),
+        leading: Icon(icon, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
+        title: Text(title, style: AppTheme.labelBold.copyWith(fontSize: 13)),
+        subtitle: Text(subtitle, style: AppTheme.captionGreyRegular.copyWith(fontSize: 11)),
         trailing: trailing ?? const Icon(Icons.chevron_right, color: AppTheme.dividerGrey, size: 18),
       ),
     );
   }
 
-  Widget _buildBiometricsSwitch() {
+  Widget _buildBiometricsSwitch(dynamic l10n) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -288,11 +289,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         dense: true,
         value: _biometricsEnabled,
         onChanged: _toggleBiometrics,
-        activeColor: AppTheme.navyPrimary,
+        activeTrackColor: AppTheme.navyPrimary,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-        secondary: const Icon(Icons.fingerprint, color: AppTheme.navyPrimary, size: 20),
-        title: const Text("Biometría", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppTheme.inkPrimary)),
-        subtitle: Text(_biometricsEnabled ? "Activado" : "Desactivado", style: TextStyle(fontSize: 11, color: AppTheme.inkSecondary)),
+        secondary: Icon(Icons.fingerprint, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
+        title: Text(l10n.biometricsLabel, style: AppTheme.labelBold.copyWith(fontSize: 13)),
+        subtitle: Text(_biometricsEnabled ? l10n.activated : l10n.deactivated, style: AppTheme.captionGreyRegular.copyWith(fontSize: 11)),
       ),
     );
   }
@@ -347,21 +348,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _showDS160Data(BuildContext context, Map<String, dynamic>? formData) {
+    final l10n = context.l10n;
     if (formData == null || formData.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sin datos de formulario")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.noFormData)));
       return;
     }
-    _showBottomSheet(context, "Datos DS-160", Column(
+    _showBottomSheet(context, l10n.ds160Data, Column(
       children: formData.entries.map((e) => _buildInfoRow(e.key.replaceAll('_', ' '), e.value.toString())).toList(),
     ));
   }
 
   void _showDocuments(BuildContext context, String? passportUrl) {
+    final l10n = context.l10n;
     if (passportUrl == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sin documentos")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.noDocuments)));
       return;
     }
-    _showBottomSheet(context, "Mis Documentos", Column(
+    _showBottomSheet(context, l10n.myDocuments, Column(
       children: [
         ClipRRect(
           borderRadius: AppTheme.buttonRadius,
@@ -369,25 +372,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             errorBuilder: (_, __, ___) => Container(height: 180, color: AppTheme.backgroundGrey, child: const Center(child: Icon(Icons.broken_image)))),
         ),
         const SizedBox(height: 12),
-        const Text("Pasaporte Escaneado", style: TextStyle(fontWeight: FontWeight.w500)),
+        Text(l10n.scannedPassport, style: const TextStyle(fontWeight: FontWeight.w500)),
       ],
     ));
   }
 
   void _showSimulatorHistory(BuildContext context, List<dynamic> history, int? score) {
-    _showBottomSheet(context, "Historial de Simulaciones", 
+    final l10n = context.l10n;
+    _showBottomSheet(context, l10n.simulatorHistory, 
       history.isEmpty
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.history, size: 48, color: AppTheme.dividerGrey),
+              Icon(Icons.history, size: AppTheme.iconoGrande, color: AppTheme.dividerGrey),
               const SizedBox(height: 12),
-              const Text("Sin sesiones de práctica", style: TextStyle(color: AppTheme.inkSecondary)),
+              Text(l10n.noPracticeSessions, style: AppTheme.captionGreyRegular),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () { Navigator.pop(context); context.push('/simulator/chat'); },
-                style: ElevatedButton.styleFrom(backgroundColor: AppTheme.navyPrimary),
-                child: const Text("Iniciar Simulación"),
+                child: Text(l10n.startSimulation),
               ),
             ],
           )
@@ -401,51 +404,52 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Puntaje Actual: ", style: TextStyle(fontWeight: FontWeight.w500)),
-                      Text("$score%", style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.navyPrimary, fontSize: 18)),
+                      Text('${l10n.currentScore}: ', style: AppTheme.labelBold),
+                      Text('$score%', style: AppTheme.h2NavyBold),
                     ],
                   ),
                 ),
-              ...history.asMap().entries.map((entry) => _buildInfoRow("Sesión ${entry.key + 1}", entry.value.toString())),
+              ...history.asMap().entries.map((entry) => _buildInfoRow(l10n.sessionNumber(entry.key + 1), entry.value.toString())),
             ],
           ),
     );
   }
 
   void _showBasicInfo(BuildContext context, Map<String, dynamic>? profile, String email) {
-    _showBottomSheet(context, "Información de Cuenta", Column(
+    final l10n = context.l10n;
+    _showBottomSheet(context, l10n.accountInfo, Column(
       children: [
-        _buildInfoRow("Email", email),
-        _buildInfoRow("Teléfono", profile?['phone']?.toString() ?? 'No registrado'),
-        _buildInfoRow("Rol", profile?['role']?.toString() ?? 'client'),
+        _buildInfoRow(l10n.email, email),
+        _buildInfoRow(l10n.phone, profile?['phone']?.toString() ?? l10n.notRegistered),
+        _buildInfoRow(l10n.role, profile?['role']?.toString() ?? 'client'),
       ],
     ));
   }
 
   Future<void> _handlePasswordReset(BuildContext context) async {
+    final l10n = context.l10n;
     final supabase = ref.read(supabaseClientProvider);
     final email = supabase.auth.currentUser?.email;
     if (email == null) return;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Cambiar Contraseña", style: TextStyle(color: AppTheme.navyPrimary)),
-        content: Text("Se enviará un enlace de recuperación a:\n$email"),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.changePassword, style: AppTheme.h2NavyBold),
+        content: Text(l10n.passwordResetDialogContent(email)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancelar")),
+          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l10n.cancel)),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.navyPrimary),
             onPressed: () async {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               try {
                 await supabase.auth.resetPasswordForEmail(email);
-                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enlace enviado a $email")));
+                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.passwordResetSent(email))));
               } catch (e) {
-                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.error(e.toString()))));
               }
             },
-            child: const Text("Enviar"),
+            child: Text(l10n.send),
           ),
         ],
       ),
@@ -453,25 +457,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _showLanguageSelector(BuildContext context) {
-    _showBottomSheet(context, "Seleccionar Idioma", Column(
+    final l10n = context.l10n;
+    _showBottomSheet(context, l10n.selectLanguage, Column(
       children: [
-        _buildOptionTile("🇪🇸  Español", true, () { Navigator.pop(context); }),
-        _buildOptionTile("🇺🇸  English", false, () { Navigator.pop(context); 
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cambio de idioma requiere reinicio"))); }),
+        _buildOptionTile(l10n.spanishLanguage, true, () { Navigator.pop(context); }),
+        _buildOptionTile(l10n.englishLanguage, false, () { Navigator.pop(context); 
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.languageChangeRequiresRestart))); }),
       ],
     ));
   }
 
   void _showLegalDocs(BuildContext context) {
-    _showBottomSheet(context, "Documentos Legales", Column(
+    final l10n = context.l10n;
+    _showBottomSheet(context, l10n.legalDocuments, Column(
       children: [
-        _buildMenuItem(Icons.description_outlined, "Términos de Servicio", "Ver documento", () {
+        _buildMenuItem(Icons.description_outlined, l10n.termsOfService, l10n.viewDocument, () {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Abriendo términos...")));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.openingTerms)));
         }),
-        _buildMenuItem(Icons.privacy_tip_outlined, "Política de Privacidad", "Ver documento", () {
+        _buildMenuItem(Icons.privacy_tip_outlined, l10n.privacyPolicy, l10n.viewDocument, () {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Abriendo política...")));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.openingPrivacy)));
         }),
       ],
     ));
@@ -488,8 +494,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.inkSecondary)),
-          Flexible(child: Text(value, style: const TextStyle(fontSize: 12, color: AppTheme.inkPrimary), textAlign: TextAlign.right)),
+          Text(label.toUpperCase(), style: AppTheme.captionGreyBold.copyWith(fontSize: 10)),
+          Flexible(child: Text(value, style: AppTheme.labelRegular.copyWith(fontSize: 12), textAlign: TextAlign.right)),
         ],
       ),
     );
@@ -499,14 +505,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return ListTile(
       dense: true,
       onTap: onTap,
-      title: Text(title, style: const TextStyle(fontSize: 14)),
+      title: Text(title, style: AppTheme.labelRegular),
       trailing: selected ? const Icon(Icons.check_circle, color: AppTheme.navyPrimary, size: 18) : null,
     );
   }
 
   void _copySupportEmail(BuildContext context) {
+    final l10n = context.l10n;
     Clipboard.setData(const ClipboardData(text: 'soporte@usavpc.org'));
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Email copiado")));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.emailCopied)));
   }
 
   Future<void> _handleLogout(BuildContext context) async {

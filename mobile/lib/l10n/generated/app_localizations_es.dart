@@ -1235,4 +1235,27 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Seleccionar Idioma';
+
+  @override
+  String passwordResetDialogContent(String email) {
+    return 'Se enviará un enlace de recuperación a:\n$email';
+  }
+
+  @override
+  String get legalDocuments => 'Documentos Legales';
+
+  @override
+  String get termsOfService => 'Términos de Servicio';
+
+  @override
+  String get privacyPolicy => 'Política de Privacidad';
+
+  @override
+  String get viewDocument => 'Ver documento';
+
+  @override
+  String get spanishLanguage => '🇪🇸  Español';
+
+  @override
+  String get englishLanguage => '🇺🇸  English';
 }

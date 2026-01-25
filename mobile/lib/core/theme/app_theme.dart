@@ -169,19 +169,19 @@ class AppTheme {
   // 📍 Estos valores controlan la altura de botones, inputs y dropdowns.
   
   /// Altura estándar de botones grandes (CTAs principales como "Continuar")
-  static const double alturaBotonGrande = 56.0;
+  static const double alturaBotonGrande = 35.0;
   
   /// Altura estándar de botones medianos (secundarios)
-  static const double alturaBotonMedio = 48.0;
+  static const double alturaBotonMedio = 35.0;
   
   /// Altura estándar de botones pequeños (inline, chips)
-  static const double alturaBotonPequeno = 36.0;
+  static const double alturaBotonPequeno = 2.0;
   
   /// Altura estándar de TextFormField y DropdownButtonFormField
-  static const double alturaInput = 52.0;
+  static const double alturaInput = 35.0;
   
   /// Altura de items en listas (ListTile, Cards de lista)
-  static const double alturaListItem = 64.0;
+  static const double alturaListItem = 35.0;
   
   /// Padding interno vertical de inputs (afecta altura visual)
   static const double paddingVerticalInput = 14.0;
@@ -242,6 +242,11 @@ class AppTheme {
     fontWeight: FontWeight.w400, 
     color: inkInverse
   );
+  static TextStyle get bodyWhiteBold => GoogleFonts.roboto(
+    fontSize: _sizeBody, 
+    fontWeight: FontWeight.w700, 
+    color: inkInverse
+  );
   
   // --- LABEL: Etiquetas y Botones (14px) ---
   static TextStyle get labelBold => GoogleFonts.roboto(
@@ -259,6 +264,11 @@ class AppTheme {
   static TextStyle get captionGreyRegular => GoogleFonts.roboto(
     fontSize: _sizeCaption, 
     fontWeight: FontWeight.w400, 
+    color: inkSecondary
+  );
+  static TextStyle get captionGreyBold => GoogleFonts.roboto(
+    fontSize: _sizeCaption, 
+    fontWeight: FontWeight.w700, 
     color: inkSecondary
   );
   static TextStyle get captionNavyBold => GoogleFonts.roboto(
