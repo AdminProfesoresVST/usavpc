@@ -838,7 +838,28 @@
   "spanishLanguage": "🇪🇸  Español",
   "englishLanguage": "🇺🇸  English",
   
-  "emailCopied": "Email copied"
+  "emailCopied": "Email copied",
+  
+  "roundTrip": "Round Trip",
+  "oneWay": "One Way",
+  "flightCostEstimate": "Flight Cost Estimate",
+  "includesHotelCosts": "Includes average hotel costs for 2 nights",
+  "sevisFeeIncluded": "SEVIS Fee Included",
+  "j1SevisFee": "J-1 SEVIS: USD 220",
+  "fmSevisFee": "F/M SEVIS: USD 350",
+  "mrvFeeLabel": "MRV Fee",
+  "integrityFeeLabel": "Integrity",
+  "sevisFeeLabel": "SEVIS",
+  "i94LandFeeLabel": "I-94 Land",
+  "understandingVisaFees": "Understanding Visa Fees (2026)",
+  "mrvFeeInfoTitle": "MRV Fee (Non-refundable)",
+  "mrvFeeInfoDescription": "The Machine Readable Visa fee is paid when scheduling your interview. It varies by visa category.",
+  "integrityFeeInfoTitle": "Visa Integrity Fee (NEW)",
+  "integrityFeeInfoDescription": "A new USD 250 fee implemented in 2026 for most non-immigrant visas.",
+  "sevisFeeInfoTitle": "SEVIS I-901 Fee",
+  "sevisFeeInfoDescription": "Required for students and exchange visitors. Pay at fmjfee.com BEFORE your interview.",
+  "i94FeeInfoTitle": "I-94 Land Border Fee",
+  "i94FeeInfoDescription": "Increased from USD 6 to USD 24 in 2026. Only applies if entering the US by land."
 }
 
 

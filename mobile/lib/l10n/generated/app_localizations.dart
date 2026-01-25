@@ -2431,6 +2431,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'🇺🇸  English'**
   String get englishLanguage;
+
+  /// No description provided for @roundTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Round Trip'**
+  String get roundTrip;
+
+  /// No description provided for @oneWay.
+  ///
+  /// In en, this message translates to:
+  /// **'One Way'**
+  String get oneWay;
+
+  /// No description provided for @flightCostEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight Cost Estimate'**
+  String get flightCostEstimate;
+
+  /// No description provided for @includesHotelCosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes average hotel costs for 2 nights'**
+  String get includesHotelCosts;
+
+  /// No description provided for @sevisFeeIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'SEVIS Fee Included'**
+  String get sevisFeeIncluded;
+
+  /// No description provided for @j1SevisFee.
+  ///
+  /// In en, this message translates to:
+  /// **'J-1 SEVIS: USD 220'**
+  String get j1SevisFee;
+
+  /// No description provided for @fmSevisFee.
+  ///
+  /// In en, this message translates to:
+  /// **'F/M SEVIS: USD 350'**
+  String get fmSevisFee;
+
+  /// No description provided for @mrvFeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MRV Fee'**
+  String get mrvFeeLabel;
+
+  /// No description provided for @integrityFeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Integrity'**
+  String get integrityFeeLabel;
+
+  /// No description provided for @sevisFeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SEVIS'**
+  String get sevisFeeLabel;
+
+  /// No description provided for @i94LandFeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'I-94 Land'**
+  String get i94LandFeeLabel;
+
+  /// No description provided for @understandingVisaFees.
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding Visa Fees (2026)'**
+  String get understandingVisaFees;
+
+  /// No description provided for @mrvFeeInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'MRV Fee (Non-refundable)'**
+  String get mrvFeeInfoTitle;
+
+  /// No description provided for @mrvFeeInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The Machine Readable Visa fee is paid when scheduling your interview. It varies by visa category.'**
+  String get mrvFeeInfoDescription;
+
+  /// No description provided for @integrityFeeInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Integrity Fee (NEW)'**
+  String get integrityFeeInfoTitle;
+
+  /// No description provided for @integrityFeeInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A new USD 250 fee implemented in 2026 for most non-immigrant visas.'**
+  String get integrityFeeInfoDescription;
+
+  /// No description provided for @sevisFeeInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SEVIS I-901 Fee'**
+  String get sevisFeeInfoTitle;
+
+  /// No description provided for @sevisFeeInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Required for students and exchange visitors. Pay at fmjfee.com BEFORE your interview.'**
+  String get sevisFeeInfoDescription;
+
+  /// No description provided for @i94FeeInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'I-94 Land Border Fee'**
+  String get i94FeeInfoTitle;
+
+  /// No description provided for @i94FeeInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Increased from USD 6 to USD 24 in 2026. Only applies if entering the US by land.'**
+  String get i94FeeInfoDescription;
 }
 
 class _AppLocalizationsDelegate

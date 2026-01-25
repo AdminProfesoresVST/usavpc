@@ -28,7 +28,6 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final categories = ref.watch(visaCategoriesProvider);
 
     return Scaffold(
@@ -84,7 +83,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _isRoundTrip ? 'Round Trip' : 'One Way',
+                          _isRoundTrip ? l10n.roundTrip : l10n.oneWay,
                           style: AppTheme.captionGreyRegular,
                         ),
                       ],
@@ -112,17 +111,17 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             ),
           ),
           
-          if (_isFlight) ...[
+           if (_isFlight) ...[
              const SizedBox(height: 16),
              Text(
-               'Flight Cost Estimate',
+               l10n.flightCostEstimate,
                style: AppTheme.captionGreyRegular,
              ),
              // ... slider ...
           ],
           // ...
           Text(
-            'Includes average hotel costs for 2 nights',
+            l10n.includesHotelCosts,
             style: AppTheme.captionGreyRegular.copyWith(fontSize: 10),
           ),   // Visa Category
             Text(
@@ -311,11 +310,11 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           if (_selectedCategory != null && _selectedCategory!.requiresSevis)
             ListTile(
               leading: const Icon(Icons.school, color: AppTheme.actionBlue),
-              title: const Text('SEVIS Fee Included', style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.navyPrimary)),
+              title: Text(l10n.sevisFeeIncluded, style: AppTheme.labelBold),
               subtitle: Text(
                 _selectedCategory!.code == 'J1'
-                    ? 'J-1 SEVIS: \$220'
-                    : 'F/M SEVIS: \$350',
+                    ? l10n.j1SevisFee
+                    : l10n.fmSevisFee,
                 style: AppTheme.captionGreyRegular,
               ),
               trailing: const Icon(Icons.check_circle, color: AppTheme.actionBlue),
@@ -326,6 +325,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
   }
 
   Widget _buildCalculationResult() {
+    final l10n = context.l10n;
     final params = CostCalculationParams(
       countryCode: _selectedCountryCode!,
       visaCategoryCode: _selectedCategory!.code,
@@ -343,17 +343,17 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           child: CircularProgressIndicator(),
         ),
       ),
-      error: (e, _) => Text('Error: $e'),
+      error: (e, _) => Text(l10n.error(e.toString())),
       data: (calc) => CostBreakdownCard(calculation: calc),
     );
   }
 
   Widget _buildFeeSummaryCards(BuildContext context, dynamic l10n) {
     final fees = [
-      ('MRV Fee', '\$185-\$315', Icons.receipt_long, AppTheme.navyPrimary),
-      ('Integrity', '\$250', Icons.verified_user, AppTheme.actionBlue),
-      ('SEVIS', '\$220-\$350', Icons.school, AppTheme.actionBlue),
-      ('I-94 Land', '\$24', Icons.directions_car, AppTheme.navyPrimary),
+      (l10n.mrvFeeLabel, 'USD 185-315', Icons.receipt_long, AppTheme.navyPrimary),
+      (l10n.integrityFeeLabel, 'USD 250', Icons.verified_user, AppTheme.actionBlue),
+      (l10n.sevisFeeLabel, 'USD 220-350', Icons.school, AppTheme.actionBlue),
+      (l10n.i94LandFeeLabel, 'USD 24', Icons.directions_car, AppTheme.navyPrimary),
     ];
 
     return Column(
@@ -415,13 +415,14 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
   }
 
   void _showFeesInfo() {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => DraggableScrollableSheet(
+      builder: (sheetContext) => DraggableScrollableSheet(
         initialChildSize: 0.6,
         minChildSize: 0.3,
         maxChildSize: 0.9,
@@ -445,38 +446,25 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Understanding Visa Fees (2026)',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  l10n.understandingVisaFees,
+                  style: AppTheme.h1NavyBold,
                 ),
                 const SizedBox(height: 16),
                 _buildInfoSection(
-                  'MRV Fee (Non-refundable)',
-                  'The Machine Readable Visa fee is paid when scheduling your interview. '
-                  'It varies by visa category:\n'
-                  '• \$185: B1/B2, F, M, J, TN\n'
-                  '• \$205: H, L, O, P, Q, R\n'
-                  '• \$265: K (Fiancé)\n'
-                  '• \$315: E (Treaty)',
+                  l10n.mrvFeeInfoTitle,
+                  l10n.mrvFeeInfoDescription,
                 ),
                 _buildInfoSection(
-                  'Visa Integrity Fee (NEW)',
-                  'A new \$250 fee implemented in 2026 for most non-immigrant visas. '
-                  'This fee MAY be partially refundable if you depart the US on time '
-                  'with proof of departure (boarding pass submission).',
+                  l10n.integrityFeeInfoTitle,
+                  l10n.integrityFeeInfoDescription,
                 ),
                 _buildInfoSection(
-                  'SEVIS I-901 Fee',
-                  'Required for students and exchange visitors:\n'
-                  '• \$350: F-1 and M-1 students\n'
-                  '• \$220: J-1 exchange visitors\n'
-                  'Pay at fmjfee.com BEFORE your interview.',
+                  l10n.sevisFeeInfoTitle,
+                  l10n.sevisFeeInfoDescription,
                 ),
                 _buildInfoSection(
-                  'I-94 Land Border Fee',
-                  'Increased from \$6 to \$24 in 2026. Only applies if entering '
-                  'the US by land (Mexico/Canada border crossings).',
+                  l10n.i94FeeInfoTitle,
+                  l10n.i94FeeInfoDescription,
                 ),
               ],
             ),
@@ -494,17 +482,12 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTheme.labelBold,
           ),
           const SizedBox(height: 8),
           Text(
             content,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              height: 1.5,
-            ),
+            style: AppTheme.bodyPrimaryRegular,
           ),
         ],
       ),

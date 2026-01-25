@@ -1248,4 +1248,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get englishLanguage => '🇺🇸  English';
+
+  @override
+  String get roundTrip => 'Round Trip';
+
+  @override
+  String get oneWay => 'One Way';
+
+  @override
+  String get flightCostEstimate => 'Flight Cost Estimate';
+
+  @override
+  String get includesHotelCosts => 'Includes average hotel costs for 2 nights';
+
+  @override
+  String get sevisFeeIncluded => 'SEVIS Fee Included';
+
+  @override
+  String get j1SevisFee => 'J-1 SEVIS: USD 220';
+
+  @override
+  String get fmSevisFee => 'F/M SEVIS: USD 350';
+
+  @override
+  String get mrvFeeLabel => 'MRV Fee';
+
+  @override
+  String get integrityFeeLabel => 'Integrity';
+
+  @override
+  String get sevisFeeLabel => 'SEVIS';
+
+  @override
+  String get i94LandFeeLabel => 'I-94 Land';
+
+  @override
+  String get understandingVisaFees => 'Understanding Visa Fees (2026)';
+
+  @override
+  String get mrvFeeInfoTitle => 'MRV Fee (Non-refundable)';
+
+  @override
+  String get mrvFeeInfoDescription =>
+      'The Machine Readable Visa fee is paid when scheduling your interview. It varies by visa category.';
+
+  @override
+  String get integrityFeeInfoTitle => 'Visa Integrity Fee (NEW)';
+
+  @override
+  String get integrityFeeInfoDescription =>
+      'A new USD 250 fee implemented in 2026 for most non-immigrant visas.';
+
+  @override
+  String get sevisFeeInfoTitle => 'SEVIS I-901 Fee';
+
+  @override
+  String get sevisFeeInfoDescription =>
+      'Required for students and exchange visitors. Pay at fmjfee.com BEFORE your interview.';
+
+  @override
+  String get i94FeeInfoTitle => 'I-94 Land Border Fee';
+
+  @override
+  String get i94FeeInfoDescription =>
+      'Increased from USD 6 to USD 24 in 2026. Only applies if entering the US by land.';
 }

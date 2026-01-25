@@ -184,15 +184,15 @@ class AppTheme {
   static const double alturaListItem = 35.0;
   
   /// Padding interno vertical de inputs (afecta altura visual)
-  static const double paddingVerticalInput = 14.0;
+  static const double paddingVerticalInput = 6.0;
   
   /// Padding interno horizontal de inputs
-  static const double paddingHorizontalInput = 16.0;
+  static const double paddingHorizontalInput = 6.0;
   
   /// Padding interno de botones
   static const EdgeInsets paddingBoton = EdgeInsets.symmetric(
-    horizontal: 24.0,
-    vertical: 14.0,
+    horizontal: 6.0,
+    vertical: 6.0,
   );
   
   // ═══════════════════════════════════════════════════════════════════════════

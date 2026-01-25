@@ -474,6 +474,27 @@
   "spanishLanguage": "🇪🇸  Español",
   "englishLanguage": "🇺🇸  English",
   
-  "emailCopied": "Email copiado"
+  "emailCopied": "Email copiado",
+  
+  "roundTrip": "Ida y Vuelta",
+  "oneWay": "Solo Ida",
+  "flightCostEstimate": "Estimación de Costo de Vuelo",
+  "includesHotelCosts": "Incluye costos promedio de hotel por 2 noches",
+  "sevisFeeIncluded": "Tarifa SEVIS Incluida",
+  "j1SevisFee": "SEVIS J-1: USD 220",
+  "fmSevisFee": "SEVIS F/M: USD 350",
+  "mrvFeeLabel": "Tarifa MRV",
+  "integrityFeeLabel": "Integridad",
+  "sevisFeeLabel": "SEVIS",
+  "i94LandFeeLabel": "I-94 Terrestre",
+  "understandingVisaFees": "Entendiendo las Tarifas de Visa (2026)",
+  "mrvFeeInfoTitle": "Tarifa MRV (No reembolsable)",
+  "mrvFeeInfoDescription": "La tarifa de Visa de Lectura Mecánica se paga al programar su entrevista. Varía según la categoría de visa.",
+  "integrityFeeInfoTitle": "Tarifa de Integridad (NUEVA)",
+  "integrityFeeInfoDescription": "Una nueva tarifa de USD 250 implementada en 2026 para la mayoría de visas de no inmigrante.",
+  "sevisFeeInfoTitle": "Tarifa SEVIS I-901",
+  "sevisFeeInfoDescription": "Requerida para estudiantes y visitantes de intercambio. Pague en fmjfee.com ANTES de su entrevista.",
+  "i94FeeInfoTitle": "Tarifa I-94 Frontera Terrestre",
+  "i94FeeInfoDescription": "Aumentó de USD 6 a USD 24 en 2026. Solo aplica si entra a EE.UU. por tierra."
 }
 

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile/l10n/generated/app_localizations.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
@@ -29,7 +29,7 @@ class DashboardScreen extends ConsumerWidget {
             children: [
               _buildStatusCard(context, data, l10n),
               const SizedBox(height: 24),
-              Text(l10n.nextSteps, style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+              Text(l10n.nextSteps, style: AppTheme.h2NavyBold),
               const SizedBox(height: 16),
               ...data.nextSteps.map((step) => _buildActionTile(
                 context, 
@@ -64,7 +64,7 @@ class DashboardScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(l10n.applicationStatus, style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.applicationStatus, style: AppTheme.labelBold),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(

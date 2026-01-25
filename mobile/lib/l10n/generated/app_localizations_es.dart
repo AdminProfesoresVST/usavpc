@@ -1258,4 +1258,69 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get englishLanguage => '🇺🇸  English';
+
+  @override
+  String get roundTrip => 'Ida y Vuelta';
+
+  @override
+  String get oneWay => 'Solo Ida';
+
+  @override
+  String get flightCostEstimate => 'Estimación de Costo de Vuelo';
+
+  @override
+  String get includesHotelCosts =>
+      'Incluye costos promedio de hotel por 2 noches';
+
+  @override
+  String get sevisFeeIncluded => 'Tarifa SEVIS Incluida';
+
+  @override
+  String get j1SevisFee => 'SEVIS J-1: USD 220';
+
+  @override
+  String get fmSevisFee => 'SEVIS F/M: USD 350';
+
+  @override
+  String get mrvFeeLabel => 'Tarifa MRV';
+
+  @override
+  String get integrityFeeLabel => 'Integridad';
+
+  @override
+  String get sevisFeeLabel => 'SEVIS';
+
+  @override
+  String get i94LandFeeLabel => 'I-94 Terrestre';
+
+  @override
+  String get understandingVisaFees => 'Entendiendo las Tarifas de Visa (2026)';
+
+  @override
+  String get mrvFeeInfoTitle => 'Tarifa MRV (No reembolsable)';
+
+  @override
+  String get mrvFeeInfoDescription =>
+      'La tarifa de Visa de Lectura Mecánica se paga al programar su entrevista. Varía según la categoría de visa.';
+
+  @override
+  String get integrityFeeInfoTitle => 'Tarifa de Integridad (NUEVA)';
+
+  @override
+  String get integrityFeeInfoDescription =>
+      'Una nueva tarifa de USD 250 implementada en 2026 para la mayoría de visas de no inmigrante.';
+
+  @override
+  String get sevisFeeInfoTitle => 'Tarifa SEVIS I-901';
+
+  @override
+  String get sevisFeeInfoDescription =>
+      'Requerida para estudiantes y visitantes de intercambio. Pague en fmjfee.com ANTES de su entrevista.';
+
+  @override
+  String get i94FeeInfoTitle => 'Tarifa I-94 Frontera Terrestre';
+
+  @override
+  String get i94FeeInfoDescription =>
+      'Aumentó de USD 6 a USD 24 en 2026. Solo aplica si entra a EE.UU. por tierra.';
 }
