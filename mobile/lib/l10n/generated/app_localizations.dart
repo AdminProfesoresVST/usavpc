@@ -1387,6 +1387,390 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid format'**
   String get invalidFormat;
+
+  /// No description provided for @visaB1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Visitor'**
+  String get visaB1Name;
+
+  /// No description provided for @visaB1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary business activities, meetings, conferences'**
+  String get visaB1Desc;
+
+  /// No description provided for @visaB1B2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Visitor Business/Tourism'**
+  String get visaB1B2Name;
+
+  /// No description provided for @visaB1B2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'For temporary business or tourism purposes'**
+  String get visaB1B2Desc;
+
+  /// No description provided for @visaB2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist'**
+  String get visaB2Name;
+
+  /// No description provided for @visaB2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourism, vacation, medical treatment, visiting family'**
+  String get visaB2Desc;
+
+  /// No description provided for @visaCR1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditional Resident - Spouse'**
+  String get visaCR1Name;
+
+  /// No description provided for @visaCR1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Spouse married less than 2 years'**
+  String get visaCR1Desc;
+
+  /// No description provided for @visaCR2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditional Resident - Child'**
+  String get visaCR2Name;
+
+  /// No description provided for @visaCR2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Child of CR1'**
+  String get visaCR2Desc;
+
+  /// No description provided for @visaDVName.
+  ///
+  /// In en, this message translates to:
+  /// **'Diversity Visa'**
+  String get visaDVName;
+
+  /// No description provided for @visaDVDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Diversity visa lottery winners'**
+  String get visaDVDesc;
+
+  /// No description provided for @visaE1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty Trader'**
+  String get visaE1Name;
+
+  /// No description provided for @visaE1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty traders engaged in substantial trade'**
+  String get visaE1Desc;
+
+  /// No description provided for @visaE1E2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty Trader/Investor'**
+  String get visaE1E2Name;
+
+  /// No description provided for @visaE1E2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'For investors from treaty countries'**
+  String get visaE1E2Desc;
+
+  /// No description provided for @visaE2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty Investor'**
+  String get visaE2Name;
+
+  /// No description provided for @visaE2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Treaty investors with substantial investment'**
+  String get visaE2Desc;
+
+  /// No description provided for @visaEB1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment First Pref'**
+  String get visaEB1Name;
+
+  /// No description provided for @visaEB1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority workers, extraordinary ability'**
+  String get visaEB1Desc;
+
+  /// No description provided for @visaEB2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Second Pref'**
+  String get visaEB2Name;
+
+  /// No description provided for @visaEB2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Professionals with advanced degrees'**
+  String get visaEB2Desc;
+
+  /// No description provided for @visaEB3Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Third Pref'**
+  String get visaEB3Name;
+
+  /// No description provided for @visaEB3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Skilled workers, professionals'**
+  String get visaEB3Desc;
+
+  /// No description provided for @visaEB4Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Fourth Pref'**
+  String get visaEB4Name;
+
+  /// No description provided for @visaEB4Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Special immigrants, religious workers'**
+  String get visaEB4Desc;
+
+  /// No description provided for @visaEB5Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Fifth Pref'**
+  String get visaEB5Name;
+
+  /// No description provided for @visaEB5Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Immigrant investors'**
+  String get visaEB5Desc;
+
+  /// No description provided for @visaF1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic Student'**
+  String get visaF1Name;
+
+  /// No description provided for @visaF1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-time academic studies at accredited institution'**
+  String get visaF1Desc;
+
+  /// No description provided for @visaF1IMMName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Preference Family'**
+  String get visaF1IMMName;
+
+  /// No description provided for @visaF1IMMDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmarried adult children of US citizens'**
+  String get visaF1IMMDesc;
+
+  /// No description provided for @visaH1BName.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialty Occupation'**
+  String get visaH1BName;
+
+  /// No description provided for @visaH1BDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional workers requiring specialized knowledge'**
+  String get visaH1BDesc;
+
+  /// No description provided for @visaH2AName.
+  ///
+  /// In en, this message translates to:
+  /// **'Agricultural Worker'**
+  String get visaH2AName;
+
+  /// No description provided for @visaH2ADesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary agricultural workers'**
+  String get visaH2ADesc;
+
+  /// No description provided for @visaH2BName.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary Worker'**
+  String get visaH2BName;
+
+  /// No description provided for @visaH2BDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary non-agricultural workers'**
+  String get visaH2BDesc;
+
+  /// No description provided for @visaIR1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediate Relative - Spouse'**
+  String get visaIR1Name;
+
+  /// No description provided for @visaIR1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Spouse of US citizen'**
+  String get visaIR1Desc;
+
+  /// No description provided for @visaIR2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediate Relative - Child'**
+  String get visaIR2Name;
+
+  /// No description provided for @visaIR2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmarried child under 21 of US citizen'**
+  String get visaIR2Desc;
+
+  /// No description provided for @visaIR5Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediate Relative - Parent'**
+  String get visaIR5Name;
+
+  /// No description provided for @visaIR5Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent of US citizen 21 or older'**
+  String get visaIR5Desc;
+
+  /// No description provided for @visaJ1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange Visitor'**
+  String get visaJ1Name;
+
+  /// No description provided for @visaJ1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange programs: au pair, intern, professor, work & travel'**
+  String get visaJ1Desc;
+
+  /// No description provided for @visaK1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiancé(e)'**
+  String get visaK1Name;
+
+  /// No description provided for @visaK1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiancé(e) of US citizen, must marry within 90 days'**
+  String get visaK1Desc;
+
+  /// No description provided for @visaK2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Child of K-1'**
+  String get visaK2Name;
+
+  /// No description provided for @visaK2Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmarried child of K-1 applicant'**
+  String get visaK2Desc;
+
+  /// No description provided for @visaL1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Intracompany Transfer'**
+  String get visaL1Name;
+
+  /// No description provided for @visaL1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers and executives transferred within company'**
+  String get visaL1Desc;
+
+  /// No description provided for @visaM1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocational Student'**
+  String get visaM1Name;
+
+  /// No description provided for @visaM1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocational or technical training programs'**
+  String get visaM1Desc;
+
+  /// No description provided for @visaO1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Extraordinary Ability'**
+  String get visaO1Name;
+
+  /// No description provided for @visaO1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Individuals with extraordinary ability in sciences, arts, etc.'**
+  String get visaO1Desc;
+
+  /// No description provided for @visaP1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete/Entertainer'**
+  String get visaP1Name;
+
+  /// No description provided for @visaP1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Internationally recognized athletes or entertainers'**
+  String get visaP1Desc;
+
+  /// No description provided for @visaQ1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Cultural Exchange'**
+  String get visaQ1Name;
+
+  /// No description provided for @visaQ1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'International cultural exchange programs'**
+  String get visaQ1Desc;
+
+  /// No description provided for @visaR1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Religious Worker'**
+  String get visaR1Name;
+
+  /// No description provided for @visaR1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Religious workers in religious capacity'**
+  String get visaR1Desc;
+
+  /// No description provided for @visaTNName.
+  ///
+  /// In en, this message translates to:
+  /// **'NAFTA Professional'**
+  String get visaTNName;
+
+  /// No description provided for @visaTNDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Canadian/Mexican professionals under USMCA'**
+  String get visaTNDesc;
 }
 
 class _AppLocalizationsDelegate

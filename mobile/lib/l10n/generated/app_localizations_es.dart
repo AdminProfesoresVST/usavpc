@@ -694,4 +694,208 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get invalidFormat => 'Formato inválido';
+
+  @override
+  String get visaB1Name => 'Visitante de Negocios';
+
+  @override
+  String get visaB1Desc =>
+      'Actividades comerciales temporales, reuniones, conferencias';
+
+  @override
+  String get visaB1B2Name => 'Turismo/Negocios';
+
+  @override
+  String get visaB1B2Desc => 'Para propósitos temporales de negocios o turismo';
+
+  @override
+  String get visaB2Name => 'Turista';
+
+  @override
+  String get visaB2Desc =>
+      'Turismo, vacaciones, tratamiento médico, visitar familia';
+
+  @override
+  String get visaCR1Name => 'Residente Condicional - Cónyuge';
+
+  @override
+  String get visaCR1Desc => 'Cónyuge casado menos de 2 años';
+
+  @override
+  String get visaCR2Name => 'Residente Condicional - Hijo';
+
+  @override
+  String get visaCR2Desc => 'Hijo de CR1';
+
+  @override
+  String get visaDVName => 'Visa de Diversidad';
+
+  @override
+  String get visaDVDesc => 'Ganadores de la lotería de visas de diversidad';
+
+  @override
+  String get visaE1Name => 'Comerciante por Tratado';
+
+  @override
+  String get visaE1Desc => 'Comerciantes en comercio sustancial';
+
+  @override
+  String get visaE1E2Name => 'Comerciante/Inversionista por Tratado';
+
+  @override
+  String get visaE1E2Desc => 'Para inversionistas de países con tratado';
+
+  @override
+  String get visaE2Name => 'Inversionista por Tratado';
+
+  @override
+  String get visaE2Desc => 'Inversionistas con inversión sustancial';
+
+  @override
+  String get visaEB1Name => 'Empleo Primera Preferencia';
+
+  @override
+  String get visaEB1Desc =>
+      'Trabajadores prioritarios, habilidad extraordinaria';
+
+  @override
+  String get visaEB2Name => 'Empleo Segunda Preferencia';
+
+  @override
+  String get visaEB2Desc => 'Profesionales con títulos avanzados';
+
+  @override
+  String get visaEB3Name => 'Empleo Tercera Preferencia';
+
+  @override
+  String get visaEB3Desc => 'Trabajadores calificados, profesionales';
+
+  @override
+  String get visaEB4Name => 'Empleo Cuarta Preferencia';
+
+  @override
+  String get visaEB4Desc => 'Inmigrantes especiales, trabajadores religiosos';
+
+  @override
+  String get visaEB5Name => 'Empleo Quinta Preferencia';
+
+  @override
+  String get visaEB5Desc => 'Inversionistas inmigrantes';
+
+  @override
+  String get visaF1Name => 'Estudiante Académico';
+
+  @override
+  String get visaF1Desc =>
+      'Estudios académicos de tiempo completo en institución acreditada';
+
+  @override
+  String get visaF1IMMName => 'Primera Preferencia Familiar';
+
+  @override
+  String get visaF1IMMDesc =>
+      'Hijos adultos solteros de ciudadanos estadounidenses';
+
+  @override
+  String get visaH1BName => 'Ocupación Especializada';
+
+  @override
+  String get visaH1BDesc =>
+      'Trabajadores profesionales que requieren conocimiento especializado';
+
+  @override
+  String get visaH2AName => 'Trabajador Agrícola';
+
+  @override
+  String get visaH2ADesc => 'Trabajadores agrícolas temporales';
+
+  @override
+  String get visaH2BName => 'Trabajador Temporal';
+
+  @override
+  String get visaH2BDesc => 'Trabajadores temporales no agrícolas';
+
+  @override
+  String get visaIR1Name => 'Familiar Inmediato - Cónyuge';
+
+  @override
+  String get visaIR1Desc => 'Cónyuge de ciudadano estadounidense';
+
+  @override
+  String get visaIR2Name => 'Familiar Inmediato - Hijo';
+
+  @override
+  String get visaIR2Desc =>
+      'Hijo soltero menor de 21 años de ciudadano estadounidense';
+
+  @override
+  String get visaIR5Name => 'Familiar Inmediato - Padre';
+
+  @override
+  String get visaIR5Desc =>
+      'Padre de ciudadano estadounidense mayor de 21 años';
+
+  @override
+  String get visaJ1Name => 'Visitante de Intercambio';
+
+  @override
+  String get visaJ1Desc =>
+      'Programas de intercambio: au pair, pasante, profesor, trabajo y viaje';
+
+  @override
+  String get visaK1Name => 'Prometido/a';
+
+  @override
+  String get visaK1Desc =>
+      'Prometido/a de ciudadano estadounidense, debe casarse en 90 días';
+
+  @override
+  String get visaK2Name => 'Hijo de K-1';
+
+  @override
+  String get visaK2Desc => 'Hijo soltero del solicitante K-1';
+
+  @override
+  String get visaL1Name => 'Transferencia Ejecutiva';
+
+  @override
+  String get visaL1Desc =>
+      'Gerentes y ejecutivos transferidos dentro de la empresa';
+
+  @override
+  String get visaM1Name => 'Estudiante Vocacional';
+
+  @override
+  String get visaM1Desc => 'Programas de formación vocacional o técnica';
+
+  @override
+  String get visaO1Name => 'Habilidad Extraordinaria';
+
+  @override
+  String get visaO1Desc =>
+      'Individuos con habilidad extraordinaria en ciencias, artes, etc.';
+
+  @override
+  String get visaP1Name => 'Atleta/Artista';
+
+  @override
+  String get visaP1Desc => 'Atletas o artistas reconocidos internacionalmente';
+
+  @override
+  String get visaQ1Name => 'Intercambio Cultural';
+
+  @override
+  String get visaQ1Desc => 'Programas de intercambio cultural internacional';
+
+  @override
+  String get visaR1Name => 'Trabajador Religioso';
+
+  @override
+  String get visaR1Desc => 'Trabajadores religiosos en capacidad religiosa';
+
+  @override
+  String get visaTNName => 'Profesional NAFTA';
+
+  @override
+  String get visaTNDesc => 'Profesionales canadienses/mexicanos bajo T-MEC';
 }

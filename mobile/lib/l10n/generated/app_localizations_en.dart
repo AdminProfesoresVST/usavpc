@@ -693,4 +693,203 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalidFormat => 'Invalid format';
+
+  @override
+  String get visaB1Name => 'Business Visitor';
+
+  @override
+  String get visaB1Desc =>
+      'Temporary business activities, meetings, conferences';
+
+  @override
+  String get visaB1B2Name => 'Visitor Business/Tourism';
+
+  @override
+  String get visaB1B2Desc => 'For temporary business or tourism purposes';
+
+  @override
+  String get visaB2Name => 'Tourist';
+
+  @override
+  String get visaB2Desc =>
+      'Tourism, vacation, medical treatment, visiting family';
+
+  @override
+  String get visaCR1Name => 'Conditional Resident - Spouse';
+
+  @override
+  String get visaCR1Desc => 'Spouse married less than 2 years';
+
+  @override
+  String get visaCR2Name => 'Conditional Resident - Child';
+
+  @override
+  String get visaCR2Desc => 'Child of CR1';
+
+  @override
+  String get visaDVName => 'Diversity Visa';
+
+  @override
+  String get visaDVDesc => 'Diversity visa lottery winners';
+
+  @override
+  String get visaE1Name => 'Treaty Trader';
+
+  @override
+  String get visaE1Desc => 'Treaty traders engaged in substantial trade';
+
+  @override
+  String get visaE1E2Name => 'Treaty Trader/Investor';
+
+  @override
+  String get visaE1E2Desc => 'For investors from treaty countries';
+
+  @override
+  String get visaE2Name => 'Treaty Investor';
+
+  @override
+  String get visaE2Desc => 'Treaty investors with substantial investment';
+
+  @override
+  String get visaEB1Name => 'Employment First Pref';
+
+  @override
+  String get visaEB1Desc => 'Priority workers, extraordinary ability';
+
+  @override
+  String get visaEB2Name => 'Employment Second Pref';
+
+  @override
+  String get visaEB2Desc => 'Professionals with advanced degrees';
+
+  @override
+  String get visaEB3Name => 'Employment Third Pref';
+
+  @override
+  String get visaEB3Desc => 'Skilled workers, professionals';
+
+  @override
+  String get visaEB4Name => 'Employment Fourth Pref';
+
+  @override
+  String get visaEB4Desc => 'Special immigrants, religious workers';
+
+  @override
+  String get visaEB5Name => 'Employment Fifth Pref';
+
+  @override
+  String get visaEB5Desc => 'Immigrant investors';
+
+  @override
+  String get visaF1Name => 'Academic Student';
+
+  @override
+  String get visaF1Desc =>
+      'Full-time academic studies at accredited institution';
+
+  @override
+  String get visaF1IMMName => 'First Preference Family';
+
+  @override
+  String get visaF1IMMDesc => 'Unmarried adult children of US citizens';
+
+  @override
+  String get visaH1BName => 'Specialty Occupation';
+
+  @override
+  String get visaH1BDesc =>
+      'Professional workers requiring specialized knowledge';
+
+  @override
+  String get visaH2AName => 'Agricultural Worker';
+
+  @override
+  String get visaH2ADesc => 'Temporary agricultural workers';
+
+  @override
+  String get visaH2BName => 'Temporary Worker';
+
+  @override
+  String get visaH2BDesc => 'Temporary non-agricultural workers';
+
+  @override
+  String get visaIR1Name => 'Immediate Relative - Spouse';
+
+  @override
+  String get visaIR1Desc => 'Spouse of US citizen';
+
+  @override
+  String get visaIR2Name => 'Immediate Relative - Child';
+
+  @override
+  String get visaIR2Desc => 'Unmarried child under 21 of US citizen';
+
+  @override
+  String get visaIR5Name => 'Immediate Relative - Parent';
+
+  @override
+  String get visaIR5Desc => 'Parent of US citizen 21 or older';
+
+  @override
+  String get visaJ1Name => 'Exchange Visitor';
+
+  @override
+  String get visaJ1Desc =>
+      'Exchange programs: au pair, intern, professor, work & travel';
+
+  @override
+  String get visaK1Name => 'Fiancé(e)';
+
+  @override
+  String get visaK1Desc => 'Fiancé(e) of US citizen, must marry within 90 days';
+
+  @override
+  String get visaK2Name => 'Child of K-1';
+
+  @override
+  String get visaK2Desc => 'Unmarried child of K-1 applicant';
+
+  @override
+  String get visaL1Name => 'Intracompany Transfer';
+
+  @override
+  String get visaL1Desc => 'Managers and executives transferred within company';
+
+  @override
+  String get visaM1Name => 'Vocational Student';
+
+  @override
+  String get visaM1Desc => 'Vocational or technical training programs';
+
+  @override
+  String get visaO1Name => 'Extraordinary Ability';
+
+  @override
+  String get visaO1Desc =>
+      'Individuals with extraordinary ability in sciences, arts, etc.';
+
+  @override
+  String get visaP1Name => 'Athlete/Entertainer';
+
+  @override
+  String get visaP1Desc =>
+      'Internationally recognized athletes or entertainers';
+
+  @override
+  String get visaQ1Name => 'Cultural Exchange';
+
+  @override
+  String get visaQ1Desc => 'International cultural exchange programs';
+
+  @override
+  String get visaR1Name => 'Religious Worker';
+
+  @override
+  String get visaR1Desc => 'Religious workers in religious capacity';
+
+  @override
+  String get visaTNName => 'NAFTA Professional';
+
+  @override
+  String get visaTNDesc => 'Canadian/Mexican professionals under USMCA';
 }

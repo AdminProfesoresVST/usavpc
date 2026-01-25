@@ -95,7 +95,7 @@ class AppTheme {
   
   /// 🃏 TARJETAS (Cards de servicios, dashboard, etc.)
   /// Valor actual: 16px - Cambie para más/menos redondez en tarjetas.
-  static const double radiusTarjetas = 16.0;
+  static const double radiusTarjetas = 8.0;
   static BorderRadius get cardRadius => BorderRadius.circular(radiusTarjetas);
   
   /// 🔘 BOTONES (Botón "Continuar", "Calcular", etc.)
@@ -105,11 +105,11 @@ class AppTheme {
   
   /// 📝 CAMPOS DE TEXTO (Inputs, Dropdowns, Search)
   /// Valor actual: 12px - Cambie para más/menos redondez en campos de entrada.
-  static const double radiusCamposTexto = 12.0;
+  static const double radiusCamposTexto = 8.0;
   static BorderRadius get inputRadius => BorderRadius.circular(radiusCamposTexto);
   
   /// 💊 ETIQUETAS/PILLS (Badges como "$185 MRV", "SEVIS", "Visa K")
-  /// Valor actual: 20px - Muy redondeado, casi ovalado.
+  /// Valor actual: 8px - Muy redondeado, casi ovalado.
   static const double radiusEtiquetas = 20.0;
   static BorderRadius get badgeRadius => BorderRadius.circular(radiusEtiquetas);
   

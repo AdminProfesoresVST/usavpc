@@ -252,7 +252,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: StandardServiceCard(
         title: VisaLocalization.getVisaName(category.code, category.name, l10n),
-        description: category.description,
+        description: VisaLocalization.getVisaDescription(category.code, category.description ?? '', l10n),
         onTap: () {
           ref.read(selectedVisaCategoryProvider.notifier).set(category);
           Navigator.push(
