@@ -168,8 +168,8 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   controller: _ds160Controller,
                   decoration: InputDecoration(
                     hintText: l10n.ds160CodeHint,
-                    border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
+                    contentPadding: EdgeInsets.symmetric(horizontal: AppTheme.paddingHorizontalInput, vertical: AppTheme.paddingVerticalInput),
                     fillColor: AppTheme.inkInverse,
                     filled: true,
                   ),
@@ -190,7 +190,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
 
               // Action Button
               SizedBox(
-                height: 50,
+                height: AppTheme.alturaBotonGrande,
                 child: ElevatedButton(
                   onPressed: quickCheckState.isLoading ? null : _submitForm,
                   style: ElevatedButton.styleFrom(

@@ -18,7 +18,7 @@ class VoiceControls extends StatelessWidget {
       children: [
         if (isListening)
           Container(
-            height: 50,
+            height: AppTheme.alturaBotonGrande,
             margin: const EdgeInsets.only(bottom: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

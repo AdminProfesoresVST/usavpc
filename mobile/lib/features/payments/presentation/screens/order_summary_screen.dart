@@ -152,7 +152,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
+                  height: AppTheme.alturaBotonGrande,
                   child: ElevatedButton.icon(
                     onPressed: _isProcessing 
                         ? null 
