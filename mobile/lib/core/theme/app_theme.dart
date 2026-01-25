@@ -196,6 +196,34 @@ class AppTheme {
   );
   
   // ═══════════════════════════════════════════════════════════════════════════
+  // 7. 📐 ESPACIADOS VERTICALES (para SizedBox height entre elementos)
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  /// 4px - Entre label y su input, entre icono y texto inline
+  static const double espacioEntreLabelInput = 4.0;
+  
+  /// 8px - Entre elementos dentro de una misma sección (ej: entre campos de un form)
+  static const double espacioEntreCampos = 8.0;
+  
+  /// 12px - Entre grupos pequeños de contenido relacionado
+  static const double espacioEntreGrupos = 12.0;
+  
+  /// 16px - Entre secciones dentro de una card o container
+  static const double espacioEntreSecciones = 16.0;
+  
+  /// 24px - Entre cards, entre secciones principales de una pantalla
+  static const double espacioEntreCards = 24.0;
+  
+  /// 32px - Entre bloques de contenido grande (ej: antes de un grupo de botones)
+  static const double espacioEntreBloques = 32.0;
+  
+  /// 48px - Espaciado grande decorativo (ej: después de un ícono hero)
+  static const double espacioHero = 48.0;
+  
+  /// 40px - Espaciado específico antes de botón de acción principal
+  static const double espacioAntesBotonPrincipal = 40.0;
+  
+  // ═══════════════════════════════════════════════════════════════════════════
   // 4. ✍️ TIPOGRAFÍA (Estilos de Texto)
   // ═══════════════════════════════════════════════════════════════════════════
   // 📍 Ajuste aquí los tamaños de fuente de toda la aplicación.
@@ -206,6 +234,20 @@ class AppTheme {
   static const double _sizeBody = 14.0;    // Texto normal
   static const double _sizeLabel = 13.0;   // Etiquetas y Botones
   static const double _sizeCaption = 12.0; // Textos pequeños
+  
+  // --- TAMAÑOS PÚBLICOS (para uso en archivos con fontSize:) ---
+  /// 18px - Títulos de pantalla
+  static const double fuenteH1 = _sizeH1;
+  /// 16px - Subtítulos de sección
+  static const double fuenteH2 = _sizeH2;
+  /// 16px - Subtítulos (alias)
+  static const double fuenteSubtitle = _sizeH2;
+  /// 14px - Texto normal de párrafos
+  static const double fuenteBody = _sizeBody;
+  /// 13px - Labels de campos y botones
+  static const double fuenteLabel = _sizeLabel;
+  /// 12px - Textos pequeños, captions, badges
+  static const double fuenteCaption = _sizeCaption;
 
   // --- H1: Títulos Grandes (18px) ---
   static TextStyle get h1NavyBold => GoogleFonts.roboto(

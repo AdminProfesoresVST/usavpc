@@ -144,7 +144,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                               ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: AppTheme.espacioEntreLabelInput),
                         Text(
                           PrerequisiteLocalization.getFormName(
                             widget.form.formCode,
@@ -195,7 +195,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Divider(),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           
           // Help text
           if (widget.form.helpText != null)
@@ -230,7 +230,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               ),
             ),
           
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
           
           // Do you have this document?
           Text(
@@ -239,7 +239,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           Row(
             children: [
               Expanded(
@@ -275,7 +275,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.espacioEntreGrupos),
             Form(
               key: _formKey,
               child: Column(
@@ -318,7 +318,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           ],
           
           // Issued by info
-          const SizedBox(height: 12),
+          SizedBox(height: AppTheme.espacioEntreGrupos),
           Row(
             children: [
               Icon(

@@ -78,7 +78,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                           l10n.checkYourEligibility,
                           style: AppTheme.h1WhiteBold,
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: AppTheme.espacioEntreLabelInput),
                         Text(
                           l10n.checkYourEligibilitySubtitle,
                           style: AppTheme.bodyWhiteRegular.copyWith(fontSize: 13, color: AppTheme.inkInverse70),
@@ -90,14 +90,14 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Country Selector
             Text(
               l10n.yourNationality,
               style: AppTheme.h2NavyBold,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             _buildCountryDropdown(context, restrictedCountries, l10n),
 
             const SizedBox(height: 20),
@@ -107,10 +107,10 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               l10n.visaCategory,
               style: AppTheme.h2NavyBold,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             _buildCategoryDropdown(context, categories, l10n),
 
-            const SizedBox(height: 32),
+            SizedBox(height: AppTheme.espacioEntreBloques),
 
             // Check Button
             SizedBox(
@@ -131,7 +131,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Result
             if (_selectedCountryCode != null &&
@@ -139,7 +139,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                 _selectedFormEngine != null)
               _buildResultSection(),
 
-            const SizedBox(height: 32),
+            SizedBox(height: AppTheme.espacioEntreBloques),
 
             // Statistics
             _buildStatsSection(restrictedCountries, l10n),
@@ -279,7 +279,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               l10n.currentRestrictions,
               style: AppTheme.h2NavyBold,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.espacioEntreGrupos),
             Row(
               children: [
                   _buildStatCard(l10n.totalBan, totalBan.toString(), AppTheme.errorRed, AppTheme.errorRedLight),
@@ -316,12 +316,12 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               value,
               style: AppTheme.h1NavyBold.copyWith(color: color),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: AppTheme.espacioEntreLabelInput),
             Text(
               label,
               textAlign: TextAlign.center,
               style: AppTheme.captionGreyRegular.copyWith(
-                fontSize: 10,
+                fontSize: AppTheme.fuenteCaption,
                 fontWeight: FontWeight.w600,
               ),
               maxLines: 1,

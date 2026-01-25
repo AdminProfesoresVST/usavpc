@@ -153,8 +153,8 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
           children: [
             // Header
             // Header Removed per user request
-            const SizedBox(height: 8),
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCampos),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Editable Fields
             _buildField(l10n.surnameLabel, _surnameController, Icons.person),
@@ -170,12 +170,12 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
               ],
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: AppTheme.espacioEntreBloques),
 
             // Info box
             // Info box removed per user request
 
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Confirm Button
             SizedBox(

@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Positioned(
             left: 0, 
             right: 0,
-            bottom: AppTheme.espacioSecciones,
+            bottom: AppTheme.espacioEntreSecciones,
             child: Text(
               l10n.splashDisclaimer,
               textAlign: TextAlign.center,

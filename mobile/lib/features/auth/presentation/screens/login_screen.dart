@@ -61,12 +61,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             children: [
               // Logo & Title
                Image.asset('assets/images/logo.png', height: 80),
-               const SizedBox(height: 16),
+               SizedBox(height: AppTheme.espacioEntreSecciones),
                Text(
                 l10n.loginAppName,
                 style: AppTheme.h1NavyBold,
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppTheme.espacioEntreBloques),
               
               // Form Card
               Card(
@@ -93,7 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppTheme.espacioEntreSecciones),
                         TextFormField(
                           controller: _passwordController,
                           key: const Key('passwordField'),
@@ -106,7 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: AppTheme.espacioEntreCards),
                         if (isLoading)
                           const CircularProgressIndicator()
                         else
@@ -117,7 +117,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: Text(l10n.loginButton),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: AppTheme.espacioEntreSecciones),
                           TextButton(
                             onPressed: () => GoRouter.of(context).push('/register'),
                             child: Text(l10n.createAccountLink),
@@ -139,7 +139,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               
-              const SizedBox(height: 24),
+              SizedBox(height: AppTheme.espacioEntreCards),
               Text(
                 l10n.nonGovernmentDisclaimer,
                 style: AppTheme.captionGreyRegular,

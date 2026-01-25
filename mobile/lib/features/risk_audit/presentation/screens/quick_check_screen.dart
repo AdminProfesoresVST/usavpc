@@ -52,19 +52,19 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                 l10n.eligibilityVerification,
                 style: AppTheme.h1NavyBold,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppTheme.espacioEntreCampos),
               Text(
                 l10n.eligibilitySubtitle,
                 style: AppTheme.labelRegular.copyWith(height: 1.5),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppTheme.espacioEntreBloques),
 
               // Question 1: Visa Type (loaded from Supabase)
               Text(
                 l10n.visaTypeLabel,
                 style: AppTheme.h2NavyBold,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppTheme.espacioEntreCampos),
               Consumer(
                 builder: (context, ref, _) {
                   final categoriesAsync = ref.watch(visaCategoriesProvider);
@@ -129,14 +129,14 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppTheme.espacioEntreCards),
 
               // Question 2: DS-160
               Text(
                 l10n.ds160Question,
                 style: AppTheme.h2NavyBold,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppTheme.espacioEntreCampos),
               Row(
                 children: [
                   Expanded(
@@ -158,12 +158,12 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               ),
               
               if (_hasDs160) ...[
-                const SizedBox(height: 24),
+                SizedBox(height: AppTheme.espacioEntreCards),
                 Text(
                   l10n.ds160CodeLabel,
                   style: AppTheme.h2NavyBold,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppTheme.espacioEntreCampos),
                 TextFormField(
                   controller: _ds160Controller,
                   decoration: InputDecoration(
@@ -182,11 +182,11 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               ],
               
                if (!_hasDs160) ...[
-                const SizedBox(height: 24),
+                SizedBox(height: AppTheme.espacioEntreCards),
                  AppAlert.info(message: l10n.noDs160Warning),
               ],
 
-              const SizedBox(height: 40),
+              SizedBox(height: AppTheme.espacioAntesBotonPrincipal),
 
               // Action Button
               SizedBox(

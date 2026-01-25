@@ -80,7 +80,7 @@ class SocialProfileCard extends StatelessWidget {
                           _buildStatusBadge(theme, profile.auditStatus, statusColor),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppTheme.espacioEntreLabelInput),
                       if (profile.username != null)
                         Text(
                           '@${profile.username}',
@@ -187,7 +187,7 @@ class SocialProfileCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppTheme.espacioEntreCampos),
                   ...(_getDiscrepancyMessages(profile.discrepancyDetails!)
                       .map((msg) => Padding(
                             padding: const EdgeInsets.only(top: 4),
@@ -379,28 +379,28 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
             Text(
               'Add Social Media Profile',
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             Text(
               'DS-160 requires disclosure of social media accounts used in the last 5 years.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Platform selector
             Text(
               'Platform',
               style: theme.textTheme.labelLarge,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -435,7 +435,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
               },
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: AppTheme.espacioEntreSecciones),
 
             // Username field
             TextFormField(
@@ -450,7 +450,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Submit button
             SizedBox(

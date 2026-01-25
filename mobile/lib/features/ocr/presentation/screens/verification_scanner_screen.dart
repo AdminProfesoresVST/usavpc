@@ -113,7 +113,7 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
                   style: AppTheme.h2NavyBold.copyWith(color: AppTheme.inkInverse), // 16px Bold White
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppTheme.espacioEntreCampos),
                 Text(
                   _isScanning ? l10n.searchingMRZ : l10n.detected,
                   style: AppTheme.bodyWhiteRegular.copyWith(letterSpacing: 1.2), // 14px White

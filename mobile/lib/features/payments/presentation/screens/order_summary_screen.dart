@@ -172,7 +172,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: AppTheme.espacioEntreGrupos),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

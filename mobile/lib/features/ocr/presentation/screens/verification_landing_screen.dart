@@ -71,17 +71,17 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppTheme.espacioEntreSecciones),
                   Text(
                     l10n.scanDocument, // "Upload ID"
                     style: AppTheme.h1NavyBold, // STRICT 18px
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppTheme.espacioEntreGrupos),
                   Text(
                     l10n.scanDocumentSubtitle,
                     style: AppTheme.labelRegular.copyWith(height: 1.5),
                   ),
-                  const SizedBox(height: 48),
+                  SizedBox(height: AppTheme.espacioHero),
 
                   // DASHED CONTAINER
                   CustomPaint(
@@ -105,12 +105,12 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                                   ),
                                   child: Icon(LucideIcons.uploadCloud, size: 40, color: AppTheme.navyPrimary),
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: AppTheme.espacioEntreSecciones),
                                 Text(
                                   l10n.uploadImage, // "Tap to upload photo"
                                   style: AppTheme.h2NavyBold, // 16px
                                 ),
-                                const SizedBox(height: 8),
+                                SizedBox(height: AppTheme.espacioEntreCampos),
                                 Text(
                                   "PNG, JPG or PDF (max. 800x400px)", // Matches reference
                                   style: AppTheme.captionGreyRegular,
@@ -119,7 +119,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                             ),
                           ),
 
-                          const SizedBox(height: 32),
+                          SizedBox(height: AppTheme.espacioEntreBloques),
 
                           // 2. Divider
                           Row(
@@ -133,7 +133,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                             ],
                           ),
 
-                          const SizedBox(height: 32),
+                          SizedBox(height: AppTheme.espacioEntreBloques),
 
                           // 3. Camera Button
                           SizedBox(

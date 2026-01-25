@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
             : Text(
                 text,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontSize: 16, // Keeping 16 for main buttons, but derived from theme font family
+                  fontSize: AppTheme.fuenteSubtitle, // Keeping 16 for main buttons, but derived from theme font family
                   fontWeight: FontWeight.w600,
                   color: textColor ?? AppTheme.inkInverse,
                 ),

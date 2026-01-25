@@ -54,14 +54,14 @@ class RiskAuditScreen extends ConsumerWidget {
                         l10n.approvalProbability,
                         style: AppTheme.labelRegular,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppTheme.espacioEntreSecciones),
                       Text(
                         '${evaluation.score}%',
                           style: AppTheme.h1NavyBold.copyWith(
                             color: isHighApproval ? AppTheme.navyPrimary : AppTheme.actionBlue
                           ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppTheme.espacioEntreCampos),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
@@ -78,19 +78,19 @@ class RiskAuditScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppTheme.espacioEntreCards),
 
                 // Factors
                 Text(l10n.factorAnalysis, style: AppTheme.h2NavyBold),
-                const SizedBox(height: 16),
+                SizedBox(height: AppTheme.espacioEntreSecciones),
                 
                 ...evaluation.positiveFactors.map((f) => _buildFactorTile(context, f, true)),
                  if (evaluation.negativeFactors.isNotEmpty) ...[
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppTheme.espacioEntreCampos),
                     ...evaluation.negativeFactors.map((f) => _buildFactorTile(context, f, false)),
                  ],
 
-                const SizedBox(height: 32),
+                SizedBox(height: AppTheme.espacioEntreBloques),
                 
                 ElevatedButton(
                   onPressed: () {
@@ -103,7 +103,7 @@ class RiskAuditScreen extends ConsumerWidget {
                   ),
                   child: Text(l10n.continueToSimulator, style: AppTheme.bodyWhiteRegular),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: AppTheme.espacioEntreGrupos),
                 TextButton(
                   onPressed: () => context.go('/'),
                   child: Text(l10n.backToHome),

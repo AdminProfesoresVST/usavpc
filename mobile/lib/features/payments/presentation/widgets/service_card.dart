@@ -36,12 +36,12 @@ class ServiceCard extends StatelessWidget {
                     title,
                     style: AppTheme.labelBold,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppTheme.espacioEntreCampos),
                   Text(
                     price,
                     style: AppTheme.h2NavyBold.copyWith(color: AppTheme.actionBlue),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppTheme.espacioEntreCampos),
                   Text(
                     description,
                     style: AppTheme.captionGreyRegular,

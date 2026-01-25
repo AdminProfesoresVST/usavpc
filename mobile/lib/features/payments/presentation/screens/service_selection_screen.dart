@@ -72,24 +72,24 @@ class ServiceSelectionScreen extends ConsumerWidget {
                             const SizedBox(width: 4),
                             Text(
                               l10n.officialGuide,
-                              style: AppTheme.captionWhiteBold.copyWith(fontSize: 10),
+                              style: AppTheme.captionWhiteBold.copyWith(fontSize: AppTheme.fuenteCaption),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 12), // Reduced from 16
+                      SizedBox(height: AppTheme.espacioEntreGrupos), // Reduced from 16
                       Text(
                         l10n.heroTitle,
-                        style: AppTheme.h1WhiteBold.copyWith(fontSize: 20), // Reduced header size
+                        style: AppTheme.h1WhiteBold.copyWith(fontSize: AppTheme.fuenteH1), // Reduced header size
                       ),
-                      const SizedBox(height: 4), // Reduced from 8
+                      SizedBox(height: AppTheme.espacioEntreLabelInput), // Reduced from 8
                       Text(
                         l10n.heroSubtitle,
                         style: AppTheme.bodyWhiteRegular.copyWith(color: AppTheme.inkInverse.withOpacity(0.7), fontSize: 13),
                         maxLines: 1, 
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 16), // Reduced from 24
+                      SizedBox(height: AppTheme.espacioEntreSecciones), // Reduced from 24
                     ],
                   ),
                 ),
@@ -99,10 +99,10 @@ class ServiceSelectionScreen extends ConsumerWidget {
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0), // Reduced top from 24
                   child: Text(
                     l10n.howItWorks,
-                    style: AppTheme.h2NavyBold.copyWith(fontSize: 16),
+                    style: AppTheme.h2NavyBold.copyWith(fontSize: AppTheme.fuenteSubtitle),
                   ),
                 ),
-                const SizedBox(height: 12), // Reduced from 16
+                SizedBox(height: AppTheme.espacioEntreGrupos), // Reduced from 16
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -128,7 +128,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                       ),
                       Text(
                         l10n.viewAll,
-                        style: AppTheme.captionNavyBold.copyWith(fontSize: 12),
+                        style: AppTheme.captionNavyBold.copyWith(fontSize: AppTheme.fuenteLabel),
                       ),
                     ],
                   ),
@@ -149,7 +149,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         onTap: () => _handleNavigation(context, ref, '/visa/select'),
                       ),
                       
-                      const SizedBox(height: 8), // Reduced from 12
+                      SizedBox(height: AppTheme.espacioEntreCampos), // Reduced from 12
 
                       // Card 2: Simulator
                       _ServiceCard(
@@ -160,7 +160,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         onTap: () => _handleSimulatorTap(context, ref),
                       ),
 
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppTheme.espacioEntreCampos),
 
                       // Card 3: Audit (Checklist)
                       _ServiceCard(
@@ -170,7 +170,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         onTap: () => _handleNavigation(context, ref, '/quick-check'),
                       ),
 
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppTheme.espacioEntreCampos),
 
                       // Card 4: Cost Calculator
                       _ServiceCard(
@@ -180,7 +180,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         onTap: () => _handleNavigation(context, ref, '/cost/calculate'),
                       ),
 
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppTheme.espacioEntreCampos),
 
                       // Card 5: Travel Ban
                       _ServiceCard(
@@ -193,7 +193,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                   ),
                 ),
 
-                const SizedBox(height: 16), // Reduced from 40
+                SizedBox(height: AppTheme.espacioEntreSecciones), // Reduced from 40
 
                 // 5. Trust Signal
                 Center(
@@ -313,7 +313,7 @@ class _StepItem extends StatelessWidget {
             Text(
               title,
               style: AppTheme.captionNavyBold.copyWith(
-                fontSize: 11,
+                fontSize: AppTheme.fuenteCaption,
               ),
             ),
             const SizedBox(height: 2),
@@ -415,7 +415,7 @@ class _ServiceCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: AppTheme.captionGreyRegular.copyWith(fontSize: 11),
+                        style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

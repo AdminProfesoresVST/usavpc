@@ -32,7 +32,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             ),
           ),
           
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // Option 1: Turismo (B1/B2)
           _CompactVisaTile(
@@ -42,7 +42,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             onTap: () => context.push('/identity/start'),
           ),
           
-          const SizedBox(height: 12),
+          SizedBox(height: AppTheme.espacioEntreGrupos),
 
           // Option 2: Trabajo
           _CompactVisaTile(
@@ -52,7 +52,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             onTap: () => context.push('/identity/start?type=h2'),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: AppTheme.espacioEntreGrupos),
 
           // Option 3: Estudiante
           _CompactVisaTile(
@@ -108,7 +108,7 @@ class _CompactVisaTile extends StatelessWidget {
                         title,
                         style: AppTheme.labelBold,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppTheme.espacioEntreLabelInput),
                       Text(
                         description,
                         style: AppTheme.captionGreyRegular,

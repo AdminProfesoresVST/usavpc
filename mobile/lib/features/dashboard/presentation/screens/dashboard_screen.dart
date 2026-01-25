@@ -28,9 +28,9 @@ class DashboardScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildStatusCard(context, data, l10n),
-              const SizedBox(height: 24),
+              SizedBox(height: AppTheme.espacioEntreCards),
               Text(l10n.nextSteps, style: AppTheme.h2NavyBold),
-              const SizedBox(height: 16),
+              SizedBox(height: AppTheme.espacioEntreSecciones),
               ...data.nextSteps.map((step) => _buildActionTile(
                 context, 
                 icon: _getIcon(step.iconCode), 
@@ -78,13 +78,13 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppTheme.espacioEntreSecciones),
             LinearProgressIndicator(
               value: data.progress,
               backgroundColor: AppTheme.softBlue,
               valueColor: AlwaysStoppedAnimation<Color>(statusColor),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

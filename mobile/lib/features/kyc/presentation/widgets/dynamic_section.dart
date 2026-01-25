@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 class DynamicSection extends StatelessWidget {
   final Map<String, dynamic> schema;
@@ -20,7 +21,7 @@ class DynamicSection extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       shrinkWrap: true,
       itemCount: fields.length,
-      separatorBuilder: (ctx, i) => const SizedBox(height: 16),
+      separatorBuilder: (ctx, i) => SizedBox(height: AppTheme.espacioEntreSecciones),
       itemBuilder: (context, index) {
         final field = fields[index] as Map<String, dynamic>;
         final type = field['type'];

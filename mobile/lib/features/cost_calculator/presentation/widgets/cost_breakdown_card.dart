@@ -79,7 +79,7 @@ class CostBreakdownCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppTheme.espacioEntreCampos),
                 Text(
                   '\$${calculation.totalUsd}',
                   style: theme.textTheme.displayMedium?.copyWith(
@@ -87,7 +87,7 @@ class CostBreakdownCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppTheme.espacioEntreLabelInput),
                 Text(
                   'USD',
                   style: theme.textTheme.titleSmall?.copyWith(
@@ -157,7 +157,7 @@ class CostBreakdownCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppTheme.espacioEntreCampos),
                 Text(
                   '• MRV fee is non-refundable once paid\n'
                   '• Integrity Fee may be refunded with proof of timely departure\n'
@@ -226,7 +226,7 @@ class CostBreakdownCard extends StatelessWidget {
                           'Refundable',
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: AppTheme.successGreen,
-                            fontSize: 10,
+                            fontSize: AppTheme.fuenteCaption,
                           ),
                         ),
                       ),
@@ -246,7 +246,7 @@ class CostBreakdownCard extends StatelessWidget {
                           'Optional',
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: AppTheme.infoBlue,
-                            fontSize: 10,
+                            fontSize: AppTheme.fuenteCaption,
                           ),
                         ),
                       ),

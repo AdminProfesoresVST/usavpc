@@ -182,7 +182,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                             ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppTheme.espacioEntreCampos),
                       LinearProgressIndicator(
                         value: automationState.progress,
                         backgroundColor: AppTheme.inkInverse24,
@@ -226,7 +226,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                           l10n.consoleOutput,
                           style: AppTheme.captionWhiteBold,
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: AppTheme.espacioEntreLabelInput),
                         Expanded(
                           child: ListView.builder(
                             reverse: true,

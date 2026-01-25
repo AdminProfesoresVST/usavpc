@@ -114,11 +114,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         children: [
           // Identity Card (Compact)
           _buildIdentityCard(context, l10n, fullName, nationality, passportNumber, dob, email),
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // Expediente Digital
           _buildSectionHeader(l10n.digitalFile),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           _buildMenuItem(Icons.assignment_outlined, l10n.ds160Responses, 
               formData != null ? l10n.fieldsCount(formData.keys.length) : l10n.noData,
               () => _showDS160Data(context, formData)),
@@ -130,28 +130,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               simulatorHistory.isNotEmpty ? l10n.sessionsCount(simulatorHistory.length) : l10n.noSessions,
               () => _showSimulatorHistory(context, simulatorHistory, simulatorScore)),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // Cuenta
           _buildSectionHeader(l10n.accountSection),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           _buildMenuItem(Icons.person_outline, l10n.basicInfo, email,
               () => _showBasicInfo(context, profile, email)),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // Seguridad
           _buildSectionHeader(l10n.securitySection),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           _buildMenuItem(Icons.lock_outline, l10n.changePassword, l10n.updateAccess,
               () => _handlePasswordReset(context)),
           _buildBiometricsSwitch(l10n),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // Configuración
           _buildSectionHeader(l10n.settingsOption),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           _buildMenuItem(Icons.language_outlined, l10n.languageSettingTitle, "ES / EN",
               () => _showLanguageSelector(context)),
           _buildMenuItem(Icons.help_outline, l10n.helpOption, "soporte@usavpc.org",
@@ -159,7 +159,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           _buildMenuItem(Icons.description_outlined, l10n.legal, l10n.termsAndPrivacy,
               () => _showLegalDocs(context)),
 
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // Sign Out Button (Navy, not Red)
           SizedBox(
@@ -176,7 +176,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: AppTheme.espacioEntreCards),
         ],
       ),
     );
@@ -216,7 +216,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Text(name, style: AppTheme.bodyWhiteBold),
                     const SizedBox(height: 2),
                     Text(email, style: AppTheme.captionWhiteRegular),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppTheme.espacioEntreLabelInput),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
@@ -230,7 +230,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppTheme.espacioEntreGrupos),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -250,7 +250,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       children: [
         Text(label, style: AppTheme.captionWhiteBold.copyWith(fontSize: 9, color: AppTheme.inkInverse70)),
         const SizedBox(height: 2),
-        Text(value, style: AppTheme.captionWhiteRegular.copyWith(fontSize: 11)),
+        Text(value, style: AppTheme.captionWhiteRegular.copyWith(fontSize: AppTheme.fuenteCaption)),
       ],
     );
   }
@@ -271,7 +271,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
         leading: Icon(icon, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
         title: Text(title, style: AppTheme.labelBold.copyWith(fontSize: 13)),
-        subtitle: Text(subtitle, style: AppTheme.captionGreyRegular.copyWith(fontSize: 11)),
+        subtitle: Text(subtitle, style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption)),
         trailing: trailing ?? const Icon(Icons.chevron_right, color: AppTheme.dividerGrey, size: 18),
       ),
     );
@@ -293,7 +293,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 12),
         secondary: Icon(Icons.fingerprint, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
         title: Text(l10n.biometricsLabel, style: AppTheme.labelBold.copyWith(fontSize: 13)),
-        subtitle: Text(_biometricsEnabled ? l10n.activated : l10n.deactivated, style: AppTheme.captionGreyRegular.copyWith(fontSize: 11)),
+        subtitle: Text(_biometricsEnabled ? l10n.activated : l10n.deactivated, style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption)),
       ),
     );
   }
@@ -371,7 +371,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           child: Image.network(passportUrl, height: 180, fit: BoxFit.cover,
             errorBuilder: (_, __, ___) => Container(height: 180, color: AppTheme.backgroundGrey, child: const Center(child: Icon(Icons.broken_image)))),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppTheme.espacioEntreGrupos),
         Text(l10n.scannedPassport, style: AppTheme.labelBold),
       ],
     ));
@@ -385,9 +385,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.history, size: AppTheme.iconoGrande, color: AppTheme.dividerGrey),
-              const SizedBox(height: 12),
+              SizedBox(height: AppTheme.espacioEntreGrupos),
               Text(l10n.noPracticeSessions, style: AppTheme.captionGreyRegular),
-              const SizedBox(height: 16),
+              SizedBox(height: AppTheme.espacioEntreSecciones),
               ElevatedButton(
                 onPressed: () { Navigator.pop(context); context.push('/simulator/chat'); },
                 child: Text(l10n.startSimulation),
@@ -494,8 +494,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label.toUpperCase(), style: AppTheme.captionGreyBold.copyWith(fontSize: 10)),
-          Flexible(child: Text(value, style: AppTheme.labelRegular.copyWith(fontSize: 12), textAlign: TextAlign.right)),
+          Text(label.toUpperCase(), style: AppTheme.captionGreyBold.copyWith(fontSize: AppTheme.fuenteCaption)),
+          Flexible(child: Text(value, style: AppTheme.labelRegular.copyWith(fontSize: AppTheme.fuenteLabel), textAlign: TextAlign.right)),
         ],
       ),
     );

@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               children: [
                  Image.asset('assets/images/logo.png', height: 60),
-                 const SizedBox(height: 24),
+                 SizedBox(height: AppTheme.espacioEntreCards),
                  
                  Card(
                   elevation: 2,
@@ -81,7 +81,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             l10n.registerTitle,
                             style: AppTheme.h1NavyBold,
                           ),
-                          const SizedBox(height: 24),
+                          SizedBox(height: AppTheme.espacioEntreCards),
                           
                           TextFormField(
                             controller: _emailController,
@@ -92,7 +92,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: AppTheme.espacioEntreSecciones),
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(labelText: l10n.passwordLabel),
@@ -103,7 +103,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               return null;
                             },
                           ),
-                           const SizedBox(height: 16),
+                           SizedBox(height: AppTheme.espacioEntreSecciones),
                           TextFormField(
                             controller: _confirmPasswordController,
                             decoration: InputDecoration(labelText: l10n.confirmPasswordLabel),
@@ -113,7 +113,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 24),
+                          SizedBox(height: AppTheme.espacioEntreCards),
                           if (isLoading)
                             const CircularProgressIndicator()
                           else
@@ -126,7 +126,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     child: Text(l10n.registerButton),
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: AppTheme.espacioEntreSecciones),
                                 TextButton(
                                   onPressed: () => context.pop(),
                                   child: Text(l10n.alreadyHaveAccount),

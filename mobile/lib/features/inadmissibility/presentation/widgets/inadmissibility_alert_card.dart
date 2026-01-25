@@ -80,7 +80,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                           _buildSeverityBadge(theme, flag.severity, color),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppTheme.espacioEntreLabelInput),
                       Text(
                         'Detected Issue',
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -122,7 +122,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                 ),
                 
                 if (flag.detectedFromField != null) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppTheme.espacioEntreGrupos),
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -164,7 +164,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
 
                 // Waiver suggestion
                 if (flag.suggestedWaiver != null) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppTheme.espacioEntreSecciones),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -205,7 +205,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                           ],
                         ),
                         if (flag.waiverNotes != null) ...[
-                          const SizedBox(height: 8),
+                          SizedBox(height: AppTheme.espacioEntreCampos),
                           Text(
                             flag.waiverNotes!,
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -264,7 +264,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
         style: theme.textTheme.labelSmall?.copyWith(
           color: color,
           fontWeight: FontWeight.bold,
-          fontSize: 10,
+          fontSize: AppTheme.fuenteCaption,
         ),
       ),
     );

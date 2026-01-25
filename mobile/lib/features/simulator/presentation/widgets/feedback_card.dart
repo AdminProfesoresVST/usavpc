@@ -66,7 +66,7 @@ class FeedbackCard extends StatelessWidget {
             style: AppTheme.labelRegular.copyWith(fontWeight: FontWeight.w500),
           ),
           if (feedback.recommendation.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

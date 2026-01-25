@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/utils/visa_localization.dart';
@@ -158,7 +159,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                         'Form: ${category.formEngine.value}',
                         style: AppTheme.bodyWhiteRegular.copyWith(
                           color: AppTheme.inkInverse70,
-                          fontSize: 12,
+                          fontSize: AppTheme.fuenteLabel,
                         ),
                       ),
                   ],
@@ -182,7 +183,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           ClipRRect(
             borderRadius: AppTheme.smallRadius,
             child: LinearProgressIndicator(
@@ -211,19 +212,19 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               size: 80,
               color: AppTheme.successGreen,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
             Text(
               l10n.noPrerequisities,
               style: AppTheme.h1NavyBold,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.espacioEntreGrupos),
             Text(
               l10n.noPrerequisitiesDesc,
               textAlign: TextAlign.center,
               style: AppTheme.labelRegular,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: AppTheme.espacioEntreBloques),
             SizedBox(
               width: double.infinity,
               height: AppTheme.alturaBotonGrande,
@@ -300,7 +301,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.espacioEntreGrupos),
             
             // Continue button
             SizedBox(

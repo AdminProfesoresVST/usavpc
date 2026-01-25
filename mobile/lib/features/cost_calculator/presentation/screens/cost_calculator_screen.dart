@@ -97,7 +97,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                 ],
               ),
             ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
           // Crossing Type
           ListTile(
             contentPadding: EdgeInsets.zero,
@@ -112,7 +112,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           ),
           
            if (_isFlight) ...[
-             const SizedBox(height: 16),
+             SizedBox(height: AppTheme.espacioEntreSecciones),
              Text(
                l10n.flightCostEstimate,
                style: AppTheme.captionGreyRegular,
@@ -122,13 +122,13 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           // ...
           Text(
             l10n.includesHotelCosts,
-            style: AppTheme.captionGreyRegular.copyWith(fontSize: 10),
+            style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption),
           ),   // Visa Category
             Text(
               l10n.visaCategory,
               style: AppTheme.h2NavyBold,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             _buildCategoryDropdown(context, categories, l10n),
 
             const SizedBox(height: 20),
@@ -138,10 +138,10 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
               l10n.additionalOptions,
               style: AppTheme.h2NavyBold,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppTheme.espacioEntreCampos),
             _buildOptionsCard(context, l10n),
 
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Calculate Button
             SizedBox(
@@ -162,13 +162,13 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: AppTheme.espacioEntreCards),
 
             // Result
             if (_calculationRequested && _selectedCategory != null)
               _buildCalculationResult(),
 
-            const SizedBox(height: 32),
+            SizedBox(height: AppTheme.espacioEntreBloques),
 
             // Fee summary cards
             _buildFeeSummaryCards(context, l10n),
@@ -363,7 +363,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           l10n.feeSchedule,
           style: AppTheme.h2NavyBold,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppTheme.espacioEntreGrupos),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -389,11 +389,11 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                       children: [
                         Text(
                           fee.$1,
-                          style: AppTheme.captionGreyRegular.copyWith(fontSize: 10),
+                          style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption),
                         ),
                         Text(
                           fee.$2,
-                          style: AppTheme.h2NavyBold.copyWith(fontSize: 14),
+                          style: AppTheme.h2NavyBold.copyWith(fontSize: AppTheme.fuenteBody),
                         ),
                       ],
                     ),
@@ -444,12 +444,12 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppTheme.espacioEntreCards),
                 Text(
                   l10n.understandingVisaFees,
                   style: AppTheme.h1NavyBold,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppTheme.espacioEntreSecciones),
                 _buildInfoSection(
                   l10n.mrvFeeInfoTitle,
                   l10n.mrvFeeInfoDescription,
@@ -484,7 +484,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             title,
             style: AppTheme.labelBold,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
           Text(
             content,
             style: AppTheme.bodyPrimaryRegular,

@@ -113,7 +113,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
                   style: (isSelected
                           ? AppTheme.captionWhiteRegular
                           : AppTheme.captionGreyRegular)
-                      .copyWith(fontSize: 10),
+                      .copyWith(fontSize: AppTheme.fuenteCaption),
                 ),
               ],
             ),

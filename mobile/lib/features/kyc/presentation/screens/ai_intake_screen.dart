@@ -383,7 +383,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
           : Column(
               children: [
                 // PREMIUM SPACER (Replaces Debug Dashboard)
-                const SizedBox(height: 16),
+                SizedBox(height: AppTheme.espacioEntreSecciones),
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
@@ -566,7 +566,7 @@ class _ChatBubble extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppTheme.espacioEntreGrupos),
                   ...message.tips!.map((tip) => Padding(
                     padding: const EdgeInsetsDirectional.only(bottom: 8),
                     child: Row(
@@ -584,7 +584,7 @@ class _ChatBubble extends StatelessWidget {
                     ),
                   )),
                   if (message.example != null) ...[
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppTheme.espacioEntreCampos),
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -608,7 +608,7 @@ class _ChatBubble extends StatelessWidget {
                 ],
               ),
             ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppTheme.espacioEntreCampos),
         ],
       ),
     );
