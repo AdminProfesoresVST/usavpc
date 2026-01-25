@@ -270,6 +270,8 @@ class AppTheme {
   static const double fuenteLabel = _sizeLabel;
   /// 12px - Textos pequeños, captions, badges
   static const double fuenteCaption = _sizeCaption;
+  /// 8px - Badges muy pequeños, indicadores mínimos
+  static const double fuenteMini = 8.0;
 
   // --- H1: Títulos Grandes (18px) ---
   static TextStyle get h1NavyBold => GoogleFonts.roboto(

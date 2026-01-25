@@ -406,7 +406,7 @@ class _ServiceCard extends StatelessWidget {
                                 badgeText!,
                                 style: AppTheme.labelBold.copyWith(
                                   color: badgeColor,
-                                  fontSize: 8, // Very small badge
+                                  fontSize: AppTheme.fuenteMini, // Very small badge
                                 ),
                               ),
                             ),
