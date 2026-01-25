@@ -18,7 +18,7 @@ class UserBubble extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         margin: const EdgeInsets.only(bottom: 16, left: 48),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: AppTheme.paddingCampo,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

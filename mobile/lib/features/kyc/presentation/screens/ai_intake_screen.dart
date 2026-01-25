@@ -483,7 +483,7 @@ class _ChatBubble extends StatelessWidget {
     
     if (message.isAction) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: AppTheme.paddingVertical,
         child: ElevatedButton(
           onPressed: onAction,
           style: ElevatedButton.styleFrom(
@@ -504,7 +504,7 @@ class _ChatBubble extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsetsDirectional.only(bottom: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: AppTheme.paddingCampo,
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
             decoration: BoxDecoration(
               color: isUser ? AppTheme.navyPrimary : AppTheme.inkInverse,

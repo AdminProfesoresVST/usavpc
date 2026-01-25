@@ -18,7 +18,7 @@ class ConsulBubble extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.85,
         ),
         margin: const EdgeInsets.only(bottom: 16, right: 40),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: AppTheme.paddingCampo,
         decoration: BoxDecoration(
           color: AppTheme.inkSecondary,
           borderRadius: BorderRadius.only(

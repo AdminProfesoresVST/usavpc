@@ -126,7 +126,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                             children: [
                               Expanded(child: Divider(color: AppTheme.inkSecondary)),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                padding: AppTheme.paddingHorizontal,
                                 child: Text("OR", style: AppTheme.captionGreyRegular.copyWith(fontWeight: FontWeight.bold)),
                               ),
                               Expanded(child: Divider(color: AppTheme.inkSecondary)),
@@ -143,7 +143,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.navyPrimary, // Navy Button
                                 foregroundColor: AppTheme.inkInverse,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: AppTheme.paddingVertical,
                                 shape: RoundedRectangleBorder(borderRadius: AppTheme.inputRadius),
                                 elevation: AppTheme.elevacionNula,
                               ),

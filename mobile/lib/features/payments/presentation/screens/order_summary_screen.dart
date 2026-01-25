@@ -138,7 +138,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                 ),
                 const Divider(),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: AppTheme.paddingVertical,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

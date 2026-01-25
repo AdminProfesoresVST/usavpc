@@ -219,7 +219,7 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
                   hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
                   filled: true,
                   fillColor: AppTheme.dividerGreyLight,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: AppTheme.paddingCampo,
                   border: OutlineInputBorder(
                     borderRadius: AppTheme.badgeRadius,
                     borderSide: BorderSide(color: AppTheme.cardBorderColor),
@@ -274,7 +274,7 @@ class _ChatBubble extends StatelessWidget {
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsetsDirectional.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: AppTheme.paddingCampo,
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
           color: isUser ? AppTheme.navyPrimary : AppTheme.inkInverse,

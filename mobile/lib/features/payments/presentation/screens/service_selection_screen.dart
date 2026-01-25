@@ -104,7 +104,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                 ),
                 SizedBox(height: AppTheme.espacioEntreGrupos), // Reduced from 16
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: AppTheme.paddingHorizontalAmplio,
                   child: Row(
                     children: [
                       _StepItem(icon: Icons.document_scanner, title: l10n.stepScan, subtitle: l10n.stepScanSubtitle, isFirst: true),
@@ -135,7 +135,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: AppTheme.paddingHorizontalAmplio,
                   child: Column(
                     children: [
                       // Card 1: New Application

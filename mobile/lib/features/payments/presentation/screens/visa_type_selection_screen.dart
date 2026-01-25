@@ -18,11 +18,11 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppHeader(title: l10n.visaTypeLabel),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        padding: AppTheme.paddingPantalla,
         children: [
           // Elegant Header
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: AppTheme.paddingVertical,
             child: Text(
               l10n.eligibilitySubtitle,
               style: AppTheme.bodyPrimaryRegular.copyWith(

@@ -254,7 +254,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
 
   Widget _buildSeverityBadge(ThemeData theme, Severity severity, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: AppTheme.paddingBadge,
       decoration: BoxDecoration(
         color: color.withOpacity(0.2),
         borderRadius: AppTheme.inputRadius,

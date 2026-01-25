@@ -217,7 +217,7 @@ class SocialProfileCard extends StatelessWidget {
 
   Widget _buildStatusBadge(ThemeData theme, AuditStatus status, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: AppTheme.paddingBadge,
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: AppTheme.inputRadius,

@@ -56,7 +56,7 @@ class ServiceCard extends StatelessWidget {
                 top: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: AppTheme.paddingBadge,
                   decoration: BoxDecoration(
                     color: AppTheme.successGreen,
                     borderRadius: BorderRadius.only(

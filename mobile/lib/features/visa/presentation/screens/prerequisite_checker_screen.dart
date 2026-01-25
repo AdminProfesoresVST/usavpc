@@ -69,7 +69,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                   itemBuilder: (context, index) {
                     final form = prerequisites[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: AppTheme.paddingHorizontal,
                       child: DocumentCheckCard(
                         form: form,
                         validation: null, // Would come from provider

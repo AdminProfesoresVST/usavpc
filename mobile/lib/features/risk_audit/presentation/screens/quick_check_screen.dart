@@ -251,7 +251,7 @@ class _RadioOption extends StatelessWidget {
       onTap: onTap,
       borderRadius: AppTheme.smallRadius,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: AppTheme.paddingListItem,
         decoration: BoxDecoration(
           color: selected ? AppTheme.navyPrimary.withOpacity(0.05) : AppTheme.inkInverse,
           border: Border.all(

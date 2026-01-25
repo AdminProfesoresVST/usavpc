@@ -186,6 +186,22 @@ class AppTheme {
   /// 32px - Padding extra grande (estados vacíos)
   static const EdgeInsets paddingExtraGrande = EdgeInsets.all(32.0);
   
+  // --- PADDINGS SYMMETRIC (horizontal/vertical específicos) ---
+  /// Horizontal 16px - Margen lateral estándar
+  static const EdgeInsets paddingHorizontal = EdgeInsets.symmetric(horizontal: 16.0);
+  /// Horizontal 20px - Margen lateral amplio (pantallas)
+  static const EdgeInsets paddingHorizontalAmplio = EdgeInsets.symmetric(horizontal: 20.0);
+  /// Vertical 16px - Separación vertical estándar
+  static const EdgeInsets paddingVertical = EdgeInsets.symmetric(vertical: 16.0);
+  /// H:16, V:12 - Contenido de inputs/campos
+  static const EdgeInsets paddingCampo = EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0);
+  /// H:12, V:12 - Items de lista cuadrados
+  static const EdgeInsets paddingListItem = EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0);
+  /// H:8, V:4 - Badges/chips compactos
+  static const EdgeInsets paddingBadge = EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0);
+  /// H:20, V:24 - Contenido de pantalla principal
+  static const EdgeInsets paddingPantalla = EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0);
+  
   // ═══════════════════════════════════════════════════════════════════════════
   // 5. 🔣 TAMAÑO DE ICONOS
   // ═══════════════════════════════════════════════════════════════════════════

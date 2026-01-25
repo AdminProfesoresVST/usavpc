@@ -353,7 +353,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
       borderRadius: AppTheme.inputRadius,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: AppTheme.paddingVertical,
         decoration: BoxDecoration(
           color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
           borderRadius: AppTheme.inputRadius,

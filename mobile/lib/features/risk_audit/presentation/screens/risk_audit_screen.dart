@@ -98,7 +98,7 @@ class RiskAuditScreen extends ConsumerWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.navyPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: AppTheme.paddingVertical,
                     shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
                   ),
                   child: Text(l10n.continueToSimulator, style: AppTheme.bodyWhiteRegular),

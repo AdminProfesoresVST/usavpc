@@ -196,7 +196,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
         children: [
           // Avatar & Status Area (Compact)
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: AppTheme.paddingVertical,
             decoration: BoxDecoration(
               color: AppTheme.inkInverse,
               boxShadow: [

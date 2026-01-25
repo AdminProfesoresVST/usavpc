@@ -109,7 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final passportImageUrl = app?['passport_image_url'] as String?;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: AppTheme.paddingCampo,
       child: Column(
         children: [
           // Identity Card (Compact)

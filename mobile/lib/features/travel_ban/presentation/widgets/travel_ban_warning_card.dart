@@ -130,7 +130,7 @@ class TravelBanWarningCard extends StatelessWidget {
           // Blocked categories if applicable
           if (result.blockedCategories != null && result.blockedCategories!.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: AppTheme.paddingHorizontal,
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -221,7 +221,7 @@ class RestrictionStatusBadge extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: AppTheme.paddingBadge,
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: AppTheme.badgeRadius,
