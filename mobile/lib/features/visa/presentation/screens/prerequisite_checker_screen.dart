@@ -226,7 +226,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: AppTheme.alturaBotonGrande,
               child: ElevatedButton.icon(
                 onPressed: () => context.push('/identity/start'),
                 icon: const Icon(Icons.arrow_forward),
@@ -235,7 +235,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                   backgroundColor: AppTheme.navyPrimary,
                   foregroundColor: AppTheme.inkInverse,
                   shape: RoundedRectangleBorder(
-                    borderRadius: AppTheme.inputRadius,
+                    borderRadius: AppTheme.buttonRadius,
                   ),
                   textStyle: AppTheme.h2WhiteBold,
                 ),

@@ -164,7 +164,7 @@ class AppTheme {
   static const double iconoGrande = 48.0;
   
   // ═══════════════════════════════════════════════════════════════════════════
-  // 6. 📏 ALTURAS DE COMPONENTES
+  // 6. 📏 ALTURAS DE COMPONENTES y botones
   // ═══════════════════════════════════════════════════════════════════════════
   // 📍 Estos valores controlan la altura de botones, inputs y dropdowns.
   
