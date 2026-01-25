@@ -6,6 +6,8 @@ import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/core/widgets/app_alerts.dart';
 import 'package:mobile/features/risk_audit/presentation/providers/application_provider.dart';
+import 'package:mobile/features/visa/presentation/providers/visa_providers.dart';
+import 'package:mobile/features/visa/data/helpers/visa_localization_helper.dart';
 
 /// Quick check screen with full i18n support.
 /// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
@@ -57,33 +59,75 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Question 1: Visa Type
+              // Question 1: Visa Type (loaded from Supabase)
               Text(
                 l10n.visaTypeLabel,
                 style: AppTheme.h2NavyBold,
               ),
               const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppTheme.dividerGrey),
-                  borderRadius: AppTheme.smallRadius,
-                  color: AppTheme.inkInverse,
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedVisaType,
-                    isExpanded: true,
-                    items: [
-                      DropdownMenuItem(value: 'B1/B2', child: Text(l10n.visaB1B2)),
-                      DropdownMenuItem(value: 'F1', child: Text(l10n.visaF1)),
-                      DropdownMenuItem(value: 'H2', child: Text(l10n.visaH2)),
-                    ],
-                    onChanged: (val) {
-                      if (val != null) setState(() => _selectedVisaType = val);
+              Consumer(
+                builder: (context, ref, _) {
+                  final categoriesAsync = ref.watch(visaCategoriesProvider);
+                  return categoriesAsync.when(
+                    loading: () => Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppTheme.dividerGrey),
+                        borderRadius: AppTheme.smallRadius,
+                        color: AppTheme.inkInverse,
+                      ),
+                      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                    ),
+                    error: (e, _) => Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppTheme.errorRed),
+                        borderRadius: AppTheme.smallRadius,
+                        color: AppTheme.inkInverse,
+                      ),
+                      child: Text('Error: $e', style: TextStyle(color: AppTheme.errorRed)),
+                    ),
+                    data: (categories) {
+                      // Asegurar que el valor seleccionado existe en la lista
+                      if (!categories.any((c) => c.code == _selectedVisaType) && categories.isNotEmpty) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) {
+                            setState(() => _selectedVisaType = categories.first.code);
+                          }
+                        });
+                      }
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppTheme.dividerGrey),
+                          borderRadius: AppTheme.smallRadius,
+                          color: AppTheme.inkInverse,
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: categories.any((c) => c.code == _selectedVisaType) 
+                                ? _selectedVisaType 
+                                : (categories.isNotEmpty ? categories.first.code : null),
+                            isExpanded: true,
+                            menuMaxHeight: 400, // Altura máxima del menú
+                            items: categories.map((category) {
+                              return DropdownMenuItem(
+                                value: category.code,
+                                child: Text(
+                                  VisaLocalizationHelper.getLocalizedName(l10n, category.code),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (val) {
+                              if (val != null) setState(() => _selectedVisaType = val);
+                            },
+                          ),
+                        ),
+                      );
                     },
-                  ),
-                ),
+                  );
+                },
               ),
               const SizedBox(height: 24),
 
