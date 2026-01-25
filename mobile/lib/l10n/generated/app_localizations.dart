@@ -1981,6 +1981,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading...'**
   String get loading;
+
+  /// No description provided for @formDS2019Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate of Eligibility'**
+  String get formDS2019Name;
+
+  /// No description provided for @formDS2019Help.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued by your program sponsor (e.g. Au Pair agency).'**
+  String get formDS2019Help;
+
+  /// No description provided for @formI129SName.
+  ///
+  /// In en, this message translates to:
+  /// **'Blanket L Petition'**
+  String get formI129SName;
+
+  /// No description provided for @formI129SHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Required for Blanket L applications.'**
+  String get formI129SHelp;
+
+  /// No description provided for @formI20Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate of Eligibility'**
+  String get formI20Name;
+
+  /// No description provided for @formI20HelpAcademic.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued by your school after acceptance.'**
+  String get formI20HelpAcademic;
+
+  /// No description provided for @formI20HelpVocational.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued by your vocational school after acceptance.'**
+  String get formI20HelpVocational;
+
+  /// No description provided for @formI797Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice of Action (Approval)'**
+  String get formI797Name;
+
+  /// No description provided for @formI797Help.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval notice from USCIS (I-797A or I-797B).'**
+  String get formI797Help;
+
+  /// No description provided for @issuedByProgramSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Sponsor'**
+  String get issuedByProgramSponsor;
+
+  /// No description provided for @issuedByEmployer.
+  ///
+  /// In en, this message translates to:
+  /// **'Employer'**
+  String get issuedByEmployer;
+
+  /// No description provided for @issuedByDHSSEVPSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'DHS/SEVP School'**
+  String get issuedByDHSSEVPSchool;
+
+  /// No description provided for @planDiyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'US Visa Strategy Review (DIY)'**
+  String get planDiyTitle;
+
+  /// No description provided for @planDiyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehensive analysis and VisaScore™ report. Best for self-starters.'**
+  String get planDiyDesc;
+
+  /// No description provided for @planFullTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'US Visa Full Service'**
+  String get planFullTitle;
+
+  /// No description provided for @planFullDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete application management and priority review.'**
+  String get planFullDesc;
+
+  /// No description provided for @planSimulatorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Interview Simulator'**
+  String get planSimulatorTitle;
+
+  /// No description provided for @planSimulatorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'30 Days of unlimited practice with our AI Officer.'**
+  String get planSimulatorDesc;
+
+  /// No description provided for @featureAIRiskAssessment.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Risk Assessment'**
+  String get featureAIRiskAssessment;
+
+  /// No description provided for @featureVisaScoreReport.
+  ///
+  /// In en, this message translates to:
+  /// **'VisaScore™ Report'**
+  String get featureVisaScoreReport;
+
+  /// No description provided for @featureDocumentChecklist.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Checklist'**
+  String get featureDocumentChecklist;
+
+  /// No description provided for @featureEmailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Support'**
+  String get featureEmailSupport;
+
+  /// No description provided for @featureEverythingInDIY.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything in DIY'**
+  String get featureEverythingInDIY;
+
+  /// No description provided for @featureDS160AutoFill.
+  ///
+  /// In en, this message translates to:
+  /// **'DS-160 Auto-Fill'**
+  String get featureDS160AutoFill;
+
+  /// No description provided for @featureInterviewPrepGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Interview Prep Guide'**
+  String get featureInterviewPrepGuide;
+
+  /// No description provided for @featurePrioritySupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Support'**
+  String get featurePrioritySupport;
+
+  /// No description provided for @featureMoneyBackGuarantee.
+  ///
+  /// In en, this message translates to:
+  /// **'Money-Back Guarantee'**
+  String get featureMoneyBackGuarantee;
+
+  /// No description provided for @featureUnlimitedPracticeSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited Practice Sessions'**
+  String get featureUnlimitedPracticeSessions;
+
+  /// No description provided for @featureRealConsulScenarios.
+  ///
+  /// In en, this message translates to:
+  /// **'Real Consul Scenarios'**
+  String get featureRealConsulScenarios;
+
+  /// No description provided for @featurePerformanceAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Analytics'**
+  String get featurePerformanceAnalytics;
+
+  /// No description provided for @featureWeaknessAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Weakness Analysis'**
+  String get featureWeaknessAnalysis;
+
+  /// No description provided for @restrictionTotalBan.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Ban'**
+  String get restrictionTotalBan;
+
+  /// No description provided for @restrictionPartialBan.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial Restriction'**
+  String get restrictionPartialBan;
+
+  /// No description provided for @restrictionEnhancedVetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhanced Vetting'**
+  String get restrictionEnhancedVetting;
+
+  /// No description provided for @restrictionCompleteEntryProhibition.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete entry prohibition'**
+  String get restrictionCompleteEntryProhibition;
 }
 
 class _AppLocalizationsDelegate

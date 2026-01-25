@@ -343,6 +343,47 @@
   "openingTerms": "Abriendo términos...",
   "openingPrivacy": "Abriendo política...",
   "emailCopied": "Email copiado",
-  "loading": "Cargando..."
+  "loading": "Cargando...",
+  
+  "formDS2019Name": "Certificado de Elegibilidad",
+  "formDS2019Help": "Emitido por el patrocinador de tu programa (ej. agencia Au Pair).",
+  "formI129SName": "Petición L en Bloque",
+  "formI129SHelp": "Requerido para aplicaciones L en bloque.",
+  "formI20Name": "Certificado de Elegibilidad",
+  "formI20HelpAcademic": "Emitido por tu escuela después de la aceptación.",
+  "formI20HelpVocational": "Emitido por tu escuela vocacional después de la aceptación.",
+  "formI797Name": "Notificación de Acción (Aprobación)",
+  "formI797Help": "Aviso de aprobación de USCIS (I-797A o I-797B).",
+  
+  "issuedByProgramSponsor": "Patrocinador del Programa",
+  "issuedByEmployer": "Empleador",
+  "issuedByDHSSEVPSchool": "Escuela DHS/SEVP",
+  "issuedByUSCIS": "USCIS",
+  
+  "planDiyTitle": "Revisión de Estrategia de Visa (DIY)",
+  "planDiyDesc": "Análisis completo e informe VisaScore™. Ideal para autodidactas.",
+  "planFullTitle": "Servicio Completo de Visa US",
+  "planFullDesc": "Gestión completa de la aplicación y revisión prioritaria.",
+  "planSimulatorTitle": "Simulador de Entrevista IA",
+  "planSimulatorDesc": "30 días de práctica ilimitada con nuestro Oficial IA.",
+  
+  "featureAIRiskAssessment": "Evaluación de Riesgo IA",
+  "featureVisaScoreReport": "Informe VisaScore™",
+  "featureDocumentChecklist": "Lista de Documentos",
+  "featureEmailSupport": "Soporte por Email",
+  "featureEverythingInDIY": "Todo lo del plan DIY",
+  "featureDS160AutoFill": "Auto-llenado DS-160",
+  "featureInterviewPrepGuide": "Guía de Preparación para Entrevista",
+  "featurePrioritySupport": "Soporte Prioritario",
+  "featureMoneyBackGuarantee": "Garantía de Devolución",
+  "featureUnlimitedPracticeSessions": "Sesiones de Práctica Ilimitadas",
+  "featureRealConsulScenarios": "Escenarios Consulares Reales",
+  "featurePerformanceAnalytics": "Análisis de Desempeño",
+  "featureWeaknessAnalysis": "Análisis de Debilidades",
+  
+  "restrictionTotalBan": "Prohibición Total",
+  "restrictionPartialBan": "Restricción Parcial",
+  "restrictionEnhancedVetting": "Verificación Reforzada",
+  "restrictionCompleteEntryProhibition": "Prohibición completa de entrada"
 }
 

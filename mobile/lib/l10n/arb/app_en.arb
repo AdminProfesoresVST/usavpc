@@ -707,7 +707,48 @@
   "openingTerms": "Opening terms...",
   "openingPrivacy": "Opening privacy policy...",
   "emailCopied": "Email copied",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  
+  "formDS2019Name": "Certificate of Eligibility",
+  "formDS2019Help": "Issued by your program sponsor (e.g. Au Pair agency).",
+  "formI129SName": "Blanket L Petition",
+  "formI129SHelp": "Required for Blanket L applications.",
+  "formI20Name": "Certificate of Eligibility",
+  "formI20HelpAcademic": "Issued by your school after acceptance.",
+  "formI20HelpVocational": "Issued by your vocational school after acceptance.",
+  "formI797Name": "Notice of Action (Approval)",
+  "formI797Help": "Approval notice from USCIS (I-797A or I-797B).",
+  
+  "issuedByProgramSponsor": "Program Sponsor",
+  "issuedByEmployer": "Employer",
+  "issuedByDHSSEVPSchool": "DHS/SEVP School",
+  "issuedByUSCIS": "USCIS",
+  
+  "planDiyTitle": "US Visa Strategy Review (DIY)",
+  "planDiyDesc": "Comprehensive analysis and VisaScore™ report. Best for self-starters.",
+  "planFullTitle": "US Visa Full Service",
+  "planFullDesc": "Complete application management and priority review.",
+  "planSimulatorTitle": "AI Interview Simulator",
+  "planSimulatorDesc": "30 Days of unlimited practice with our AI Officer.",
+  
+  "featureAIRiskAssessment": "AI Risk Assessment",
+  "featureVisaScoreReport": "VisaScore™ Report",
+  "featureDocumentChecklist": "Document Checklist",
+  "featureEmailSupport": "Email Support",
+  "featureEverythingInDIY": "Everything in DIY",
+  "featureDS160AutoFill": "DS-160 Auto-Fill",
+  "featureInterviewPrepGuide": "Interview Prep Guide",
+  "featurePrioritySupport": "Priority Support",
+  "featureMoneyBackGuarantee": "Money-Back Guarantee",
+  "featureUnlimitedPracticeSessions": "Unlimited Practice Sessions",
+  "featureRealConsulScenarios": "Real Consul Scenarios",
+  "featurePerformanceAnalytics": "Performance Analytics",
+  "featureWeaknessAnalysis": "Weakness Analysis",
+  
+  "restrictionTotalBan": "Total Ban",
+  "restrictionPartialBan": "Partial Restriction",
+  "restrictionEnhancedVetting": "Enhanced Vetting",
+  "restrictionCompleteEntryProhibition": "Complete entry prohibition"
 }
 
 

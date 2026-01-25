@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/utils/visa_localization.dart';
+import 'package:mobile/core/utils/prerequisite_localization.dart';
 
 import '../../data/models/prerequisite_form.dart';
 
@@ -145,7 +146,11 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          widget.form.formName,
+                          PrerequisiteLocalization.getFormName(
+                            widget.form.formCode,
+                            widget.form.formName,
+                            l10n,
+                          ),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -211,7 +216,11 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      widget.form.helpText!,
+                      PrerequisiteLocalization.getHelpText(
+                        widget.form.formCode,
+                        widget.form.helpText!,
+                        l10n,
+                      ),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.primary,
                       ),

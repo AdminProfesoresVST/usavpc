@@ -6,6 +6,7 @@ import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/features/payments/presentation/providers/payments_provider.dart';
+import 'package:mobile/core/utils/plan_localization.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 /// Production-ready order summary with Stripe payment integration and full i18n.
@@ -110,7 +111,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
           }
 
           final items = [
-            {'name': selectedPlan.title, 'price': selectedPlan.price},
+            {'name': PlanLocalization.getTitle(selectedPlan.id, selectedPlan.title, l10n), 'price': selectedPlan.price},
             {'name': l10n.priorityProcessing, 'price': 10.00},
           ];
 
@@ -155,7 +156,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                   child: ElevatedButton.icon(
                     onPressed: _isProcessing 
                         ? null 
-                        : () => _processPayment(total, selectedPlan.title),
+                        : () => _processPayment(total, PlanLocalization.getTitle(selectedPlan.id, selectedPlan.title, l10n)),
                     icon: _isProcessing 
                         ? const SizedBox(
                             width: 20, 

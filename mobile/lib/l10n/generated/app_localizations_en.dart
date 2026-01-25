@@ -1004,4 +1004,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading => 'Loading...';
+
+  @override
+  String get formDS2019Name => 'Certificate of Eligibility';
+
+  @override
+  String get formDS2019Help =>
+      'Issued by your program sponsor (e.g. Au Pair agency).';
+
+  @override
+  String get formI129SName => 'Blanket L Petition';
+
+  @override
+  String get formI129SHelp => 'Required for Blanket L applications.';
+
+  @override
+  String get formI20Name => 'Certificate of Eligibility';
+
+  @override
+  String get formI20HelpAcademic => 'Issued by your school after acceptance.';
+
+  @override
+  String get formI20HelpVocational =>
+      'Issued by your vocational school after acceptance.';
+
+  @override
+  String get formI797Name => 'Notice of Action (Approval)';
+
+  @override
+  String get formI797Help => 'Approval notice from USCIS (I-797A or I-797B).';
+
+  @override
+  String get issuedByProgramSponsor => 'Program Sponsor';
+
+  @override
+  String get issuedByEmployer => 'Employer';
+
+  @override
+  String get issuedByDHSSEVPSchool => 'DHS/SEVP School';
+
+  @override
+  String get planDiyTitle => 'US Visa Strategy Review (DIY)';
+
+  @override
+  String get planDiyDesc =>
+      'Comprehensive analysis and VisaScore™ report. Best for self-starters.';
+
+  @override
+  String get planFullTitle => 'US Visa Full Service';
+
+  @override
+  String get planFullDesc =>
+      'Complete application management and priority review.';
+
+  @override
+  String get planSimulatorTitle => 'AI Interview Simulator';
+
+  @override
+  String get planSimulatorDesc =>
+      '30 Days of unlimited practice with our AI Officer.';
+
+  @override
+  String get featureAIRiskAssessment => 'AI Risk Assessment';
+
+  @override
+  String get featureVisaScoreReport => 'VisaScore™ Report';
+
+  @override
+  String get featureDocumentChecklist => 'Document Checklist';
+
+  @override
+  String get featureEmailSupport => 'Email Support';
+
+  @override
+  String get featureEverythingInDIY => 'Everything in DIY';
+
+  @override
+  String get featureDS160AutoFill => 'DS-160 Auto-Fill';
+
+  @override
+  String get featureInterviewPrepGuide => 'Interview Prep Guide';
+
+  @override
+  String get featurePrioritySupport => 'Priority Support';
+
+  @override
+  String get featureMoneyBackGuarantee => 'Money-Back Guarantee';
+
+  @override
+  String get featureUnlimitedPracticeSessions => 'Unlimited Practice Sessions';
+
+  @override
+  String get featureRealConsulScenarios => 'Real Consul Scenarios';
+
+  @override
+  String get featurePerformanceAnalytics => 'Performance Analytics';
+
+  @override
+  String get featureWeaknessAnalysis => 'Weakness Analysis';
+
+  @override
+  String get restrictionTotalBan => 'Total Ban';
+
+  @override
+  String get restrictionPartialBan => 'Partial Restriction';
+
+  @override
+  String get restrictionEnhancedVetting => 'Enhanced Vetting';
+
+  @override
+  String get restrictionCompleteEntryProhibition =>
+      'Complete entry prohibition';
 }

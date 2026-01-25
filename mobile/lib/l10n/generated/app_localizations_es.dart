@@ -1011,4 +1011,117 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get loading => 'Cargando...';
+
+  @override
+  String get formDS2019Name => 'Certificado de Elegibilidad';
+
+  @override
+  String get formDS2019Help =>
+      'Emitido por el patrocinador de tu programa (ej. agencia Au Pair).';
+
+  @override
+  String get formI129SName => 'Petición L en Bloque';
+
+  @override
+  String get formI129SHelp => 'Requerido para aplicaciones L en bloque.';
+
+  @override
+  String get formI20Name => 'Certificado de Elegibilidad';
+
+  @override
+  String get formI20HelpAcademic =>
+      'Emitido por tu escuela después de la aceptación.';
+
+  @override
+  String get formI20HelpVocational =>
+      'Emitido por tu escuela vocacional después de la aceptación.';
+
+  @override
+  String get formI797Name => 'Notificación de Acción (Aprobación)';
+
+  @override
+  String get formI797Help => 'Aviso de aprobación de USCIS (I-797A o I-797B).';
+
+  @override
+  String get issuedByProgramSponsor => 'Patrocinador del Programa';
+
+  @override
+  String get issuedByEmployer => 'Empleador';
+
+  @override
+  String get issuedByDHSSEVPSchool => 'Escuela DHS/SEVP';
+
+  @override
+  String get planDiyTitle => 'Revisión de Estrategia de Visa (DIY)';
+
+  @override
+  String get planDiyDesc =>
+      'Análisis completo e informe VisaScore™. Ideal para autodidactas.';
+
+  @override
+  String get planFullTitle => 'Servicio Completo de Visa US';
+
+  @override
+  String get planFullDesc =>
+      'Gestión completa de la aplicación y revisión prioritaria.';
+
+  @override
+  String get planSimulatorTitle => 'Simulador de Entrevista IA';
+
+  @override
+  String get planSimulatorDesc =>
+      '30 días de práctica ilimitada con nuestro Oficial IA.';
+
+  @override
+  String get featureAIRiskAssessment => 'Evaluación de Riesgo IA';
+
+  @override
+  String get featureVisaScoreReport => 'Informe VisaScore™';
+
+  @override
+  String get featureDocumentChecklist => 'Lista de Documentos';
+
+  @override
+  String get featureEmailSupport => 'Soporte por Email';
+
+  @override
+  String get featureEverythingInDIY => 'Todo lo del plan DIY';
+
+  @override
+  String get featureDS160AutoFill => 'Auto-llenado DS-160';
+
+  @override
+  String get featureInterviewPrepGuide => 'Guía de Preparación para Entrevista';
+
+  @override
+  String get featurePrioritySupport => 'Soporte Prioritario';
+
+  @override
+  String get featureMoneyBackGuarantee => 'Garantía de Devolución';
+
+  @override
+  String get featureUnlimitedPracticeSessions =>
+      'Sesiones de Práctica Ilimitadas';
+
+  @override
+  String get featureRealConsulScenarios => 'Escenarios Consulares Reales';
+
+  @override
+  String get featurePerformanceAnalytics => 'Análisis de Desempeño';
+
+  @override
+  String get featureWeaknessAnalysis => 'Análisis de Debilidades';
+
+  @override
+  String get restrictionTotalBan => 'Prohibición Total';
+
+  @override
+  String get restrictionPartialBan => 'Restricción Parcial';
+
+  @override
+  String get restrictionEnhancedVetting => 'Verificación Reforzada';
+
+  @override
+  String get restrictionCompleteEntryProhibition =>
+      'Prohibición completa de entrada';
 }

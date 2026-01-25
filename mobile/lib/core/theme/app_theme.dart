@@ -148,7 +148,7 @@ class AppTheme {
   
   /// 📏 ESPACIO ENTRE SECCIONES (Separación entre grupos de elementos)
   /// Usado en: Espacio entre secciones en formularios, pantallas largas.
-  static const double espacioSecciones = 24.0;
+  static const double espacioSecciones = 20.0;
   
   // ═══════════════════════════════════════════════════════════════════════════
   // 5. 🔣 TAMAÑO DE ICONOS
@@ -172,7 +172,7 @@ class AppTheme {
   static const double _sizeH1 = 18.0;      // Títulos de Pantalla
   static const double _sizeH2 = 16.0;      // Subtítulos
   static const double _sizeBody = 14.0;    // Texto normal
-  static const double _sizeLabel = 14.0;   // Etiquetas y Botones
+  static const double _sizeLabel = 13.0;   // Etiquetas y Botones
   static const double _sizeCaption = 12.0; // Textos pequeños
 
   // --- H1: Títulos Grandes (18px) ---
@@ -190,7 +190,7 @@ class AppTheme {
   // --- H2: Subtítulos (16px) ---
   static TextStyle get h2NavyBold => GoogleFonts.roboto(
     fontSize: _sizeH2, 
-    fontWeight: FontWeight.w700, 
+    fontWeight: FontWeight.w600, 
     color: navyPrimary
   );
   static TextStyle get h2WhiteBold => GoogleFonts.roboto(
@@ -297,7 +297,7 @@ class AppTheme {
       suffixIcon: suffixIcon,
       filled: true,
       fillColor: surfaceWhite,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       border: OutlineInputBorder(
         borderRadius: inputRadius, 
         borderSide: const BorderSide(color: dividerGrey)
@@ -375,7 +375,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonRadiusValue) // Radio del botón
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
           textStyle: GoogleFonts.roboto( // Tipografía del botón
             fontSize: 14, // Tamaño de texto ligeramente mayor para legibilidad
             fontWeight: FontWeight.w600
@@ -389,7 +389,7 @@ class AppTheme {
         filled: true,
         fillColor: surfaceWhite,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         labelStyle: labelRegular,
         floatingLabelStyle: const TextStyle(color: actionBlue, fontWeight: FontWeight.bold),
         border: OutlineInputBorder(borderRadius: inputRadius, borderSide: const BorderSide(color: dividerGrey)),
