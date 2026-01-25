@@ -144,7 +144,7 @@ class SocialProfileCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             'Delete',
-                            style: TextStyle(color: AppTheme.errorRed),
+                            style: AppTheme.labelRegular.copyWith(color: AppTheme.errorRed),
                           ),
                         ],
                       ),

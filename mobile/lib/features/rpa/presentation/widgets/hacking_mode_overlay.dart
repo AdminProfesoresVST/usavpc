@@ -50,11 +50,9 @@ class _HackingModeOverlayState extends State<HackingModeOverlay>
                 opacity: _random.nextDouble(),
                 child: Text(
                   _codes[_random.nextInt(_codes.length)],
-                  style: const TextStyle(
+                  style: AppTheme.captionGreyBold.copyWith(
                     color: AppTheme.successGreen,
                     fontFamily: 'Courier',
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
