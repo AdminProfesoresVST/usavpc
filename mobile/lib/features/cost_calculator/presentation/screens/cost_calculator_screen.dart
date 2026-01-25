@@ -45,13 +45,13 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: AppTheme.paddingEstandar,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header Card - Standard Navy Card
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: AppTheme.paddingMedio,
               decoration: BoxDecoration(
                 color: AppTheme.navyPrimary,
                 borderRadius: AppTheme.cardRadius,
@@ -66,7 +66,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: AppTheme.paddingPequeno,
                     decoration: BoxDecoration(
                       color: AppTheme.inkInverse.withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -74,7 +74,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                     child: const Icon(
                       Icons.calculate_outlined,
                       color: AppTheme.inkInverse,
-                      size: 24,
+                      size: AppTheme.iconoNavegacion,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -283,7 +283,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
 
   Widget _buildOptionsCard(BuildContext context, dynamic l10n) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         borderRadius: AppTheme.inputRadius,
@@ -370,7 +370,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           children: fees.map((fee) {
             return Container(
               width: (MediaQuery.of(context).size.width - 48) / 2,
-              padding: const EdgeInsets.all(12),
+              padding: AppTheme.paddingPequeno,
               decoration: BoxDecoration(
                 color: AppTheme.inkInverse,
                 borderRadius: AppTheme.inputRadius,
@@ -381,7 +381,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(fee.$3, size: 20, color: fee.$4),
+                  Icon(fee.$3, size: AppTheme.iconoEnTarjeta, color: fee.$4),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
@@ -430,7 +430,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
         builder: (context, scrollController) {
           return SingleChildScrollView(
             controller: scrollController,
-            padding: const EdgeInsets.all(24),
+            padding: AppTheme.paddingGrande,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

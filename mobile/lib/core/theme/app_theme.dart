@@ -172,18 +172,63 @@ class AppTheme {
   /// Usado en: Espacio entre secciones en formularios, pantallas largas.
   static const double espacioSecciones = 20.0;
   
+  // --- PADDINGS PREDEFINIDOS (EdgeInsets.all) ---
+  /// 8px - Padding compacto (chips, badges)
+  static const EdgeInsets paddingCompacto = EdgeInsets.all(8.0);
+  /// 12px - Padding pequeño (items de lista, campos)
+  static const EdgeInsets paddingPequeno = EdgeInsets.all(12.0);
+  /// 16px - Padding estándar (tarjetas, secciones)
+  static const EdgeInsets paddingEstandar = EdgeInsets.all(16.0);
+  /// 20px - Padding mediano (formularios)
+  static const EdgeInsets paddingMedio = EdgeInsets.all(20.0);
+  /// 24px - Padding grande (pantallas principales)
+  static const EdgeInsets paddingGrande = EdgeInsets.all(24.0);
+  /// 32px - Padding extra grande (estados vacíos)
+  static const EdgeInsets paddingExtraGrande = EdgeInsets.all(32.0);
+  
   // ═══════════════════════════════════════════════════════════════════════════
   // 5. 🔣 TAMAÑO DE ICONOS
   // ═══════════════════════════════════════════════════════════════════════════
   
-  /// Íconos en listas de servicios, tarjetas pequeñas
+  /// 16px - Íconos pequeños inline (sufijos, indicadores)
+  static const double iconoPequeno = 16.0;
+  
+  /// 18px - Íconos en badges, chips
+  static const double iconoMini = 18.0;
+  
+  /// 20px - Íconos en listas de servicios, tarjetas pequeñas
   static const double iconoEnTarjeta = 20.0;
   
-  /// Íconos en botones de navegación inferior
+  /// 24px - Íconos en botones de navegación inferior
   static const double iconoNavegacion = 24.0;
   
-  /// Íconos grandes (pantallas de bienvenida, estados vacíos)
+  /// 32px - Íconos medianos en headers, acciones
+  static const double iconoMediano = 32.0;
+  
+  /// 48px - Íconos grandes (pantallas de bienvenida, estados vacíos)
   static const double iconoGrande = 48.0;
+  
+  /// 80px - Íconos hero (pantallas de éxito/error)
+  static const double iconoHero = 80.0;
+  
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 5.5 🌫️ ELEVACIONES (Sombras de Material Design)
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  /// 0 - Sin elevación (elementos planos)
+  static const double elevacionNula = 0.0;
+  
+  /// 1 - Elevación sutil (cards en listas)
+  static const double elevacionSutil = 1.0;
+  
+  /// 2 - Elevación baja (tarjetas, inputs)
+  static const double elevacionBaja = 2.0;
+  
+  /// 4 - Elevación media (FAB, dialogs)
+  static const double elevacionMedia = 4.0;
+  
+  /// 8 - Elevación alta (modales, drawers)
+  static const double elevacionAlta = 8.0;
   
   // ═══════════════════════════════════════════════════════════════════════════
   // 6. 📏 ALTURAS DE COMPONENTES y botones

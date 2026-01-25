@@ -40,7 +40,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
               borderRadius: BorderRadius.only(
@@ -59,7 +59,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                   child: Icon(
                     _getTypeIcon(flag.flagType),
                     color: color,
-                    size: 24,
+                    size: AppTheme.iconoNavegacion,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -92,7 +92,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                 ),
                 if (flag.userAcknowledged)
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: AppTheme.paddingCompacto,
                     decoration: BoxDecoration(
                       color: AppTheme.successGreen.withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -100,7 +100,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                     child: const Icon(
                       Icons.check,
                       color: AppTheme.successGreen,
-                      size: 18,
+                      size: AppTheme.iconoMini,
                     ),
                   ),
               ],
@@ -109,7 +109,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
 
           // Description
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -124,7 +124,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                 if (flag.detectedFromField != null) ...[
                   SizedBox(height: AppTheme.espacioEntreGrupos),
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: AppTheme.paddingPequeno,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surfaceContainerHighest,
                       borderRadius: AppTheme.buttonRadius,
@@ -166,7 +166,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                 if (flag.suggestedWaiver != null) ...[
                   SizedBox(height: AppTheme.espacioEntreSecciones),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: AppTheme.paddingEstandar,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -191,7 +191,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                               child: const Icon(
                                 Icons.lightbulb_outline,
                                 color: AppTheme.infoBlue,
-                                size: 18,
+                                size: AppTheme.iconoMini,
                               ),
                             ),
                             const SizedBox(width: 8),

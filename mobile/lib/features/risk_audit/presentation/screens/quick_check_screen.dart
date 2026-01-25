@@ -41,7 +41,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppHeader(title: l10n.preliminaryAuditTitle),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: AppTheme.paddingGrande,
         child: Form(
           key: _formKey,
           child: Column(
@@ -79,7 +79,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                       child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                     ),
                     error: (e, _) => Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: AppTheme.paddingPequeno,
                       decoration: BoxDecoration(
                         border: Border.all(color: AppTheme.errorRed),
                         borderRadius: AppTheme.smallRadius,
@@ -197,7 +197,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                     backgroundColor: AppTheme.actionBlue,
                     foregroundColor: AppTheme.inkInverse,
                      shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
-                     elevation: 0,
+                     elevation: AppTheme.elevacionNula,
                   ),
                   child: quickCheckState.isLoading
                       ? const SizedBox(
@@ -265,7 +265,7 @@ class _RadioOption extends StatelessWidget {
             Icon(
               selected ? Icons.radio_button_checked : Icons.radio_button_off,
               color: selected ? AppTheme.navyPrimary : AppTheme.inkSecondary,
-              size: 18,
+              size: AppTheme.iconoMini,
             ),
             const SizedBox(width: 8),
             Expanded(

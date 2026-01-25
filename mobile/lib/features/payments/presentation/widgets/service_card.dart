@@ -20,7 +20,7 @@ class ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
+      elevation: AppTheme.elevacionMedia,
       shape: RoundedRectangleBorder(borderRadius: AppTheme.inputRadius),
       child: InkWell(
         onTap: onTap,
@@ -28,7 +28,7 @@ class ServiceCard extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: AppTheme.paddingEstandar,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

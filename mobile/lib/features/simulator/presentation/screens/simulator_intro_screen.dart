@@ -51,7 +51,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
       backgroundColor: AppTheme.inkInverse,
       appBar: AppBar(
         backgroundColor: AppTheme.inkInverse,
-        elevation: 0,
+        elevation: AppTheme.elevacionNula,
         iconTheme: const IconThemeData(color: AppTheme.navyPrimary),
         actions: [
           IconButton(
@@ -68,13 +68,13 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
              children: [
                const Spacer(),
                Container(
-                 padding: const EdgeInsets.all(24),
+                 padding: AppTheme.paddingGrande,
                  decoration: BoxDecoration(
                    color: AppTheme.navyPrimary.withOpacity(0.04), // Subtle background
                    shape: BoxShape.circle,
                    border: Border.all(color: AppTheme.navyPrimary.withOpacity(0.1)),
                  ),
-                 child: const Icon(Icons.mic_none_outlined, size: 48, color: AppTheme.navyPrimary),
+                 child: const Icon(Icons.mic_none_outlined, size: AppTheme.iconoGrande, color: AppTheme.navyPrimary),
                ),
                SizedBox(height: AppTheme.espacioHero),
                Text(
@@ -99,7 +99,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                        foregroundColor: AppTheme.inkInverse,
                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                        shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
-                       elevation: 1,
+                       elevation: AppTheme.elevacionSutil,
                      ),
                      child: Text(l10n.enableMicrophone),
                    ),
@@ -111,7 +111,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                      style: ElevatedButton.styleFrom(
                        backgroundColor: AppTheme.navyPrimary, 
                        foregroundColor: AppTheme.inkInverse,
-                       elevation: 4,
+                       elevation: AppTheme.elevacionMedia,
                        shadowColor: AppTheme.navyPrimary.withOpacity(0.4),
                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                        shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),

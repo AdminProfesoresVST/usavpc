@@ -55,7 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       appBar: AppHeader(title: l10n.loginTitle),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: AppTheme.paddingGrande,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -70,10 +70,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               
               // Form Card
               Card(
-                elevation: 2,
+                elevation: AppTheme.elevacionBaja,
                 shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: AppTheme.paddingGrande,
                   child: Form(
                     key: _formKey,
                     child: Column(

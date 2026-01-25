@@ -23,7 +23,7 @@ class DashboardScreen extends ConsumerWidget {
       appBar: AppHeader(title: l10n.dashboardTitle),
       body: dashboardAsync.when(
         data: (data) => SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: AppTheme.paddingEstandar,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,7 +58,7 @@ class DashboardScreen extends ConsumerWidget {
     return Container(
       decoration: AppTheme.standardCardDecoration,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: AppTheme.paddingEstandar,
         child: Column(
           children: [
             Row(

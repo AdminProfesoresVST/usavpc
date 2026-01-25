@@ -147,7 +147,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppHeader(title: l10n.confirmDataTitle),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: AppTheme.paddingGrande,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

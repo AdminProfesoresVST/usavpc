@@ -94,7 +94,7 @@ class _CompactVisaTile extends StatelessWidget {
           onTap: onTap,
           borderRadius: AppTheme.buttonRadius,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: AppTheme.paddingEstandar,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

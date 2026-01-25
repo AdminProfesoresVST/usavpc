@@ -98,7 +98,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                             child: Column(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(20),
+                                  padding: AppTheme.paddingMedio,
                                   decoration: BoxDecoration(
                                     color: AppTheme.backgroundGrey,
                                     shape: BoxShape.circle,
@@ -145,7 +145,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                                 foregroundColor: AppTheme.inkInverse,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: AppTheme.inputRadius),
-                                elevation: 0,
+                                elevation: AppTheme.elevacionNula,
                               ),
                               child: Text(
                                 l10n.useCamera, // "Open camera"

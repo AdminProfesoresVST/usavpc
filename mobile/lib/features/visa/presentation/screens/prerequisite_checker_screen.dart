@@ -113,8 +113,8 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     final progress = totalRequired > 0 ? completedCount / totalRequired : 0.0;
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
+      margin: AppTheme.paddingEstandar,
+      padding: AppTheme.paddingMedio,
       decoration: BoxDecoration(
         color: AppTheme.navyPrimary,
         borderRadius: AppTheme.cardRadius,
@@ -132,7 +132,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: AppTheme.paddingPequeno,
                 decoration: BoxDecoration(
                   color: AppTheme.inkInverse.withOpacity(0.1),
                   shape: BoxShape.circle,
@@ -203,13 +203,13 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
   Widget _buildNoPrerequisitesView(BuildContext context, dynamic l10n) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: AppTheme.paddingExtraGrande,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.check_circle_outline,
-              size: 80,
+              size: AppTheme.iconoHero,
               color: AppTheme.successGreen,
             ),
             SizedBox(height: AppTheme.espacioEntreCards),
@@ -255,7 +255,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     );
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         boxShadow: [
@@ -286,7 +286,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                     allMandatoryComplete
                         ? Icons.check_circle
                         : Icons.pending,
-                    size: 18,
+                    size: AppTheme.iconoMini,
                     color: allMandatoryComplete ? AppTheme.successGreen : AppTheme.warningOrange,
                   ),
                   const SizedBox(width: 8),

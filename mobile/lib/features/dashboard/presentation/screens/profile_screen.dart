@@ -78,7 +78,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       appBar: AppBar(
         title: Text(l10n.profileTitle, style: AppTheme.h1WhiteBold),
         backgroundColor: AppTheme.navyPrimary,
-        elevation: 0,
+        elevation: AppTheme.elevacionNula,
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppTheme.inkInverse),
       ),
@@ -186,7 +186,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildIdentityCard(BuildContext context, dynamic l10n, String name, String nat, String passport, String dob, String email) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: AppTheme.navyPrimary,
         borderRadius: AppTheme.inputRadius,
@@ -337,7 +337,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Expanded(
               child: SingleChildScrollView(
                 controller: scrollController,
-                padding: const EdgeInsets.all(16),
+                padding: AppTheme.paddingEstandar,
                 child: content,
               ),
             ),
@@ -398,7 +398,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             children: [
               if (score != null) 
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: AppTheme.paddingPequeno,
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(color: AppTheme.softBlue, borderRadius: AppTheme.buttonRadius),
                   child: Row(

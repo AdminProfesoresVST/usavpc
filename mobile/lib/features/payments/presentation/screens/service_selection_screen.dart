@@ -25,7 +25,7 @@ class ServiceSelectionScreen extends ConsumerWidget {
           SliverAppBar(
             floating: true,
             pinned: true,
-            elevation: 0,
+            elevation: AppTheme.elevacionNula,
             backgroundColor: AppTheme.navyPrimary,
             title: Row(
               children: [
@@ -366,7 +366,7 @@ class _ServiceCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: AppTheme.buttonRadius,
           child: Padding(
-            padding: const EdgeInsets.all(12), // Reduced from 16
+            padding: AppTheme.paddingPequeno, // Reduced from 16
             child: Row(
               children: [
                 // Icon Circle

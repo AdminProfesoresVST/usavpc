@@ -36,13 +36,13 @@ class RiskAuditScreen extends ConsumerWidget {
           final isHighApproval = evaluation.score > 70;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: AppTheme.paddingGrande,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Score Card
                 Container(
-                  padding: const EdgeInsets.all(32),
+                  padding: AppTheme.paddingExtraGrande,
                   decoration: BoxDecoration(
                     color: AppTheme.inkInverse,
                     borderRadius: AppTheme.badgeRadius,
@@ -119,7 +119,7 @@ class RiskAuditScreen extends ConsumerWidget {
   Widget _buildFactorTile(BuildContext context, String text, bool isPositive) {
     return Container(
       margin: const EdgeInsetsDirectional.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         borderRadius: AppTheme.inputRadius,

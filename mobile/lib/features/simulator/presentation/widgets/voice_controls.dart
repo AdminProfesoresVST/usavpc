@@ -34,7 +34,7 @@ class VoiceControls extends StatelessWidget {
           onTap: onToggleListening,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
               color: isListening ? AppTheme.errorRed : AppTheme.navyPrimary,
               shape: BoxShape.circle,
@@ -42,7 +42,7 @@ class VoiceControls extends StatelessWidget {
             child: Icon(
               isListening ? Icons.mic : Icons.mic_none,
               color: AppTheme.inkInverse,
-              size: 32,
+              size: AppTheme.iconoMediano,
             ),
           ),
         ),

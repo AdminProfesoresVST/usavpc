@@ -45,12 +45,12 @@ class SocialProfileCard extends StatelessWidget {
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             child: Row(
               children: [
                 // Platform icon
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: AppTheme.paddingPequeno,
                   decoration: BoxDecoration(
                     color: _getPlatformColor(profile.platform).withOpacity(0.1),
                     borderRadius: AppTheme.inputRadius,
@@ -159,7 +159,7 @@ class SocialProfileCard extends StatelessWidget {
           if (profile.hasDiscrepancies && profile.discrepancyDetails != null) ...[
             const Divider(height: 1),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: AppTheme.paddingEstandar,
               decoration: BoxDecoration(
                 color: AppTheme.warningOrange.withOpacity(0.05),
                 borderRadius: BorderRadius.only(
@@ -175,7 +175,7 @@ class SocialProfileCard extends StatelessWidget {
                       Icon(
                         Icons.warning_amber,
                         color: AppTheme.warningOrange,
-                        size: 20,
+                        size: AppTheme.iconoEnTarjeta,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -481,7 +481,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
       label: Text(platform.displayName),
       avatar: Icon(
         _getPlatformIcon(platform),
-        size: 18,
+        size: AppTheme.iconoMini,
       ),
       onSelected: (selected) {
         setState(() {

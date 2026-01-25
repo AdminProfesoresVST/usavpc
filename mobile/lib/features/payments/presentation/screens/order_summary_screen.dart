@@ -118,7 +118,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
           double total = items.fold(0, (sum, item) => sum + (item['price'] as double));
 
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: AppTheme.paddingEstandar,
             child: Column(
               children: [
                 Expanded(

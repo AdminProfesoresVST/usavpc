@@ -66,7 +66,7 @@ class TravelBanWarningCard extends StatelessWidget {
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
               color: iconColor.withOpacity(0.1),
               borderRadius: BorderRadius.only(
@@ -77,7 +77,7 @@ class TravelBanWarningCard extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: AppTheme.paddingCompacto,
                   decoration: BoxDecoration(
                     color: iconColor.withOpacity(0.2),
                     shape: BoxShape.circle,
@@ -118,7 +118,7 @@ class TravelBanWarningCard extends StatelessWidget {
           
           // Message
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             child: Text(
               result.message ?? 'Visa processing is currently restricted.',
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -147,7 +147,7 @@ class TravelBanWarningCard extends StatelessWidget {
           
           // Actions
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

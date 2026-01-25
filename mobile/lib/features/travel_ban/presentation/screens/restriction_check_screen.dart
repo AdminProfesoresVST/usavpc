@@ -37,13 +37,13 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
         foregroundColor: AppTheme.inkInverse,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: AppTheme.paddingEstandar,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header - Standard Navy Card
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: AppTheme.paddingMedio,
               decoration: BoxDecoration(
                 color: AppTheme.navyPrimary,
                 borderRadius: AppTheme.cardRadius,
@@ -58,7 +58,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: AppTheme.paddingPequeno,
                     decoration: BoxDecoration(
                       color: AppTheme.inkInverse.withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -66,7 +66,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                     child: const Icon(
                       Icons.travel_explore,
                       color: AppTheme.inkInverse,
-                      size: 32,
+                      size: AppTheme.iconoMediano,
                     ),
                   ),
                   const SizedBox(width: 16),

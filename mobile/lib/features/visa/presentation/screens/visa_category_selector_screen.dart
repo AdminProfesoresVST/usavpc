@@ -30,7 +30,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
         children: [
           // Form Engine Tabs
           Container(
-            margin: const EdgeInsets.all(16),
+            margin: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
               color: AppTheme.surfaceWhite,
               borderRadius: AppTheme.cardRadius,
@@ -97,7 +97,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
             Icon(
               icon,
               color: isSelected ? AppTheme.inkInverse : AppTheme.navyPrimary.withOpacity(0.6),
-              size: 20,
+              size: AppTheme.iconoEnTarjeta,
             ),
             const SizedBox(width: 8),
             Column(
@@ -232,7 +232,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     // Custom "Code Badge" for the icon slot
     final codeBadge = Container(
       constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-      padding: const EdgeInsets.all(8),
+      padding: AppTheme.paddingCompacto,
       decoration: BoxDecoration(
         color: AppTheme.navyPrimary.withOpacity(0.08),
         borderRadius: AppTheme.buttonRadius,

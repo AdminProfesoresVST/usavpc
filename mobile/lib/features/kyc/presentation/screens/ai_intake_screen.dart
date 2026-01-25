@@ -387,7 +387,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.all(16),
+                    padding: AppTheme.paddingEstandar,
                     itemCount: _messages.length,
                     itemBuilder: (context, index) => _ChatBubble(
                       message: _messages[index],
@@ -403,7 +403,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
 
   Widget _buildInputArea(dynamic l10n) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         boxShadow: [
@@ -526,7 +526,7 @@ class _ChatBubble extends StatelessWidget {
           if (message.tips != null && message.tips!.isNotEmpty)
             Container(
               margin: const EdgeInsetsDirectional.only(bottom: 8, top: 4),
-              padding: const EdgeInsets.all(16),
+              padding: AppTheme.paddingEstandar,
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
               decoration: BoxDecoration(
                 color: AppTheme.inkInverse,
@@ -586,7 +586,7 @@ class _ChatBubble extends StatelessWidget {
                   if (message.example != null) ...[
                     SizedBox(height: AppTheme.espacioEntreCampos),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: AppTheme.paddingCompacto,
                       decoration: BoxDecoration(
                         color: AppTheme.backgroundGrey,
                         borderRadius: AppTheme.smallRadius,

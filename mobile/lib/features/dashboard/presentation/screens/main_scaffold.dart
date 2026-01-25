@@ -49,7 +49,7 @@ class MainScaffold extends StatelessWidget {
           unselectedItemColor: AppTheme.inkSecondary,
           selectedLabelStyle: AppTheme.captionNavyBold.copyWith(color: AppTheme.navyPrimary),
           unselectedLabelStyle: AppTheme.captionGreyRegular,
-          elevation: 0,
+          elevation: AppTheme.elevacionNula,
         ),
       ),
     );

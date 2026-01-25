@@ -246,7 +246,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                       )
                     : ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
+                        padding: AppTheme.paddingEstandar,
                         itemCount: _messages.length,
                         itemBuilder: (context, index) {
                           final message = _messages[index];
@@ -279,7 +279,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                        child: Icon(
                          _isListening ? Icons.stop : Icons.mic,
                          color: _isListening ? AppTheme.errorRed : AppTheme.inkSecondary,
-                         size: 18,
+                         size: AppTheme.iconoMini,
                        ),
                      ),
                    ),
@@ -313,7 +313,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                                      child: Icon(
                                        Icons.send_rounded,
                                        color: AppTheme.actionBlue,
-                                       size: 20,
+                                       size: AppTheme.iconoEnTarjeta,
                                      ),
                                    ),
                                  )

@@ -79,12 +79,12 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               topRight: AppTheme.radiusBotonEsquina,
             ),
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: AppTheme.paddingEstandar,
               child: Row(
                 children: [
                   // Status indicator
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: AppTheme.paddingCompacto,
                     decoration: BoxDecoration(
                       color: statusColor.withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -200,7 +200,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           // Help text
           if (widget.form.helpText != null)
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: AppTheme.paddingPequeno,
               decoration: BoxDecoration(
                 color: colorScheme.primaryContainer.withOpacity(0.3),
                 borderRadius: AppTheme.buttonRadius,
@@ -210,7 +210,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                 children: [
                   Icon(
                     Icons.lightbulb_outline,
-                    size: 18,
+                    size: AppTheme.iconoMini,
                     color: colorScheme.primary,
                   ),
                   const SizedBox(width: 8),
@@ -323,7 +323,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
             children: [
               Icon(
                 Icons.business,
-                size: 16,
+                size: AppTheme.iconoPequeno,
                 color: colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 8),
@@ -368,7 +368,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
             Icon(
               icon,
               color: isSelected ? color : AppTheme.dividerGrey,
-              size: 20,
+              size: AppTheme.iconoEnTarjeta,
             ),
             const SizedBox(width: 8),
             Text(

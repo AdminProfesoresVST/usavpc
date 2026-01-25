@@ -35,7 +35,7 @@ class FeedbackCard extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: AppTheme.inputRadius,
@@ -68,7 +68,7 @@ class FeedbackCard extends StatelessWidget {
           if (feedback.recommendation.isNotEmpty) ...[
             SizedBox(height: AppTheme.espacioEntreCampos),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: AppTheme.paddingCompacto,
               decoration: BoxDecoration(
                 color: AppTheme.inkInverse.withOpacity(0.6),
                 borderRadius: AppTheme.smallRadius,
@@ -76,7 +76,7 @@ class FeedbackCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.lightbulb, size: 16, color: AppTheme.actionBlue),
+                  const Icon(Icons.lightbulb, size: AppTheme.iconoPequeno, color: AppTheme.actionBlue),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

@@ -59,7 +59,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       appBar: AppHeader(title: l10n.registerTitle),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: AppTheme.paddingGrande,
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -68,10 +68,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                  SizedBox(height: AppTheme.espacioEntreCards),
                  
                  Card(
-                  elevation: 2,
+                  elevation: AppTheme.elevacionBaja,
                   shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
                   child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: AppTheme.paddingGrande,
                     child: Form(
                       key: _formKey,
                       child: Column(

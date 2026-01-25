@@ -186,7 +186,7 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.all(16),
+              padding: AppTheme.paddingEstandar,
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 return _ChatBubble(message: _messages[index]);
@@ -201,7 +201,7 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
 
   Widget _buildInputArea(dynamic l10n) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         boxShadow: [

@@ -36,7 +36,7 @@ class CostBreakdownCard extends StatelessWidget {
         children: [
           // Header with total
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: AppTheme.paddingGrande,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -100,7 +100,7 @@ class CostBreakdownCard extends StatelessWidget {
 
           // Fee breakdown
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             child: Column(
               children: [
                 ...calculation.breakdown.map((item) => _buildFeeRow(
@@ -130,7 +130,7 @@ class CostBreakdownCard extends StatelessWidget {
 
           // Notes section
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
               borderRadius: BorderRadius.only(
@@ -145,7 +145,7 @@ class CostBreakdownCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.info_outline,
-                      size: 18,
+                      size: AppTheme.iconoMini,
                       color: colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
@@ -185,14 +185,14 @@ class CostBreakdownCard extends StatelessWidget {
         children: [
           // Icon based on fee type
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: AppTheme.paddingCompacto,
             decoration: BoxDecoration(
               color: _getFeeColor(item.feeType).withOpacity(0.1),
               borderRadius: AppTheme.buttonRadius,
             ),
             child: Icon(
               _getFeeIcon(item.feeType),
-              size: 18,
+              size: AppTheme.iconoMini,
               color: _getFeeColor(item.feeType),
             ),
           ),
@@ -311,7 +311,7 @@ class CostBreakdownCard extends StatelessWidget {
     
     return Container(
       margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(12),
+      padding: AppTheme.paddingPequeno,
       decoration: BoxDecoration(
         color: AppTheme.successGreenLight,
         borderRadius: AppTheme.buttonRadius,
@@ -319,7 +319,7 @@ class CostBreakdownCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.replay, size: 18, color: AppTheme.successGreen),
+          Icon(Icons.replay, size: AppTheme.iconoMini, color: AppTheme.successGreen),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
