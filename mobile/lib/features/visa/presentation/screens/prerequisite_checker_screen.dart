@@ -31,7 +31,6 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     
     final prerequisitesAsync = ref.watch(prerequisiteFormsProvider(widget.visaCategoryCode));
     final categoryAsync = ref.watch(visaCategoryByCodeProvider(widget.visaCategoryCode));

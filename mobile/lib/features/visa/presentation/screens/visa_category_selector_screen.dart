@@ -16,8 +16,6 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final selectedFormEngine = ref.watch(selectedFormEngineProvider);
 
     return Scaffold(

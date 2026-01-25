@@ -53,8 +53,6 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
     
     final statusColor = _getStatusColor(widget.validation?.validationStatus);
@@ -186,8 +184,6 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
   }
 
   Widget _buildExpandedContent(BuildContext context, dynamic l10n) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -373,7 +369,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
+              style: AppTheme.labelRegular.copyWith(
                 color: isSelected ? color : AppTheme.dividerGrey,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
