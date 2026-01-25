@@ -520,10 +520,7 @@ class _ChatBubble extends StatelessWidget {
             ),
             child: Text(
               message.text,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: isUser ? AppTheme.inkInverse : AppTheme.inkSecondary,
-                height: 1.4,
-              ),
+              style: isUser ? AppTheme.bodyWhiteRegular : AppTheme.bodyPrimaryRegular,
             ),
           ),
           if (message.tips != null && message.tips!.isNotEmpty)

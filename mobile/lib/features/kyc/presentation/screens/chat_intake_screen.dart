@@ -216,7 +216,7 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: l10n.typeYourResponse,
-                  hintStyle: TextStyle(color: AppTheme.inkSecondary),
+                  hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
                   filled: true,
                   fillColor: AppTheme.dividerGreyLight,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -291,10 +291,7 @@ class _ChatBubble extends StatelessWidget {
         ),
         child: Text(
           message.text,
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: isUser ? AppTheme.inkInverse : AppTheme.inkSecondary,
-            height: 1.4,
-          ),
+          style: isUser ? AppTheme.bodyWhiteRegular : AppTheme.bodyPrimaryRegular,
         ),
       ),
     );
