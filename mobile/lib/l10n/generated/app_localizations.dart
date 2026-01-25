@@ -1771,6 +1771,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Canadian/Mexican professionals under USMCA'**
   String get visaTNDesc;
+
+  /// No description provided for @visaF2AName.
+  ///
+  /// In en, this message translates to:
+  /// **'Second Preference 2A'**
+  String get visaF2AName;
+
+  /// No description provided for @visaF2ADesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Spouse and minor children of LPR'**
+  String get visaF2ADesc;
+
+  /// No description provided for @visaF2BName.
+  ///
+  /// In en, this message translates to:
+  /// **'Second Preference 2B'**
+  String get visaF2BName;
+
+  /// No description provided for @visaF2BDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmarried adult children of LPR'**
+  String get visaF2BDesc;
+
+  /// No description provided for @visaF3Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Third Preference Family'**
+  String get visaF3Name;
+
+  /// No description provided for @visaF3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Married adult children of US citizens'**
+  String get visaF3Desc;
+
+  /// No description provided for @visaF4Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Fourth Preference Family'**
+  String get visaF4Name;
+
+  /// No description provided for @visaF4Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Siblings of adult US citizens'**
+  String get visaF4Desc;
+
+  /// No description provided for @runAudit.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Audit'**
+  String get runAudit;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @addProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Profile'**
+  String get addProfile;
+
+  /// No description provided for @selectPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a platform'**
+  String get selectPlatform;
+
+  /// No description provided for @learnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn More'**
+  String get learnMore;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorGeneric(Object error);
+
+  /// No description provided for @biometrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometrics'**
+  String get biometrics;
+
+  /// No description provided for @biometricsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometrics enabled'**
+  String get biometricsEnabled;
+
+  /// No description provided for @biometricsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometrics disabled'**
+  String get biometricsDisabled;
+
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @noFormData.
+  ///
+  /// In en, this message translates to:
+  /// **'No form data'**
+  String get noFormData;
+
+  /// No description provided for @noDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents'**
+  String get noDocuments;
+
+  /// No description provided for @scannedPassport.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned Passport'**
+  String get scannedPassport;
+
+  /// No description provided for @noPracticeSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No practice sessions'**
+  String get noPracticeSessions;
+
+  /// No description provided for @startSimulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Simulation'**
+  String get startSimulation;
+
+  /// No description provided for @currentScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Score: '**
+  String get currentScore;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @recoveryLinkWillBeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'A recovery link will be sent to:\n{email}'**
+  String recoveryLinkWillBeSent(Object email);
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @linkSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Link sent to {email}'**
+  String linkSentTo(Object email);
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @languageChangeRequiresRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Language change requires restart'**
+  String get languageChangeRequiresRestart;
+
+  /// No description provided for @openingTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening terms...'**
+  String get openingTerms;
+
+  /// No description provided for @openingPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening privacy policy...'**
+  String get openingPrivacy;
+
+  /// No description provided for @emailCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Email copied'**
+  String get emailCopied;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
 }
 
 class _AppLocalizationsDelegate

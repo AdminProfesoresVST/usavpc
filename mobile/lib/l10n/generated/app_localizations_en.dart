@@ -892,4 +892,116 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visaTNDesc => 'Canadian/Mexican professionals under USMCA';
+
+  @override
+  String get visaF2AName => 'Second Preference 2A';
+
+  @override
+  String get visaF2ADesc => 'Spouse and minor children of LPR';
+
+  @override
+  String get visaF2BName => 'Second Preference 2B';
+
+  @override
+  String get visaF2BDesc => 'Unmarried adult children of LPR';
+
+  @override
+  String get visaF3Name => 'Third Preference Family';
+
+  @override
+  String get visaF3Desc => 'Married adult children of US citizens';
+
+  @override
+  String get visaF4Name => 'Fourth Preference Family';
+
+  @override
+  String get visaF4Desc => 'Siblings of adult US citizens';
+
+  @override
+  String get runAudit => 'Run Audit';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get addProfile => 'Add Profile';
+
+  @override
+  String get selectPlatform => 'Please select a platform';
+
+  @override
+  String get learnMore => 'Learn More';
+
+  @override
+  String errorGeneric(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get biometrics => 'Biometrics';
+
+  @override
+  String get biometricsEnabled => 'Biometrics enabled';
+
+  @override
+  String get biometricsDisabled => 'Biometrics disabled';
+
+  @override
+  String get enabled => 'Enabled';
+
+  @override
+  String get disabled => 'Disabled';
+
+  @override
+  String get noFormData => 'No form data';
+
+  @override
+  String get noDocuments => 'No documents';
+
+  @override
+  String get scannedPassport => 'Scanned Passport';
+
+  @override
+  String get noPracticeSessions => 'No practice sessions';
+
+  @override
+  String get startSimulation => 'Start Simulation';
+
+  @override
+  String get currentScore => 'Current Score: ';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String recoveryLinkWillBeSent(Object email) {
+    return 'A recovery link will be sent to:\n$email';
+  }
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String linkSentTo(Object email) {
+    return 'Link sent to $email';
+  }
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get languageChangeRequiresRestart =>
+      'Language change requires restart';
+
+  @override
+  String get openingTerms => 'Opening terms...';
+
+  @override
+  String get openingPrivacy => 'Opening privacy policy...';
+
+  @override
+  String get emailCopied => 'Email copied';
+
+  @override
+  String get loading => 'Loading...';
 }

@@ -50,6 +50,11 @@ class VisaLocalization {
       case 'R1': return l10n.visaR1Name;
       // NAFTA
       case 'TN': return l10n.visaTNName;
+      // Family Preference (Immigrant)
+      case 'F2A': return l10n.visaF2AName;
+      case 'F2B': return l10n.visaF2BName;
+      case 'F3': return l10n.visaF3Name;
+      case 'F4': return l10n.visaF4Name;
       default: return defaultName;
     }
   }
@@ -103,6 +108,11 @@ class VisaLocalization {
       case 'R1': return l10n.visaR1Desc;
       // NAFTA
       case 'TN': return l10n.visaTNDesc;
+      // Family Preference (Immigrant)
+      case 'F2A': return l10n.visaF2ADesc;
+      case 'F2B': return l10n.visaF2BDesc;
+      case 'F3': return l10n.visaF3Desc;
+      case 'F4': return l10n.visaF4Desc;
       default: return defaultDesc;
     }
   }

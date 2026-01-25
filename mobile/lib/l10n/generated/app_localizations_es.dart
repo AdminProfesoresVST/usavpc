@@ -898,4 +898,117 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get visaTNDesc => 'Profesionales canadienses/mexicanos bajo T-MEC';
+
+  @override
+  String get visaF2AName => 'Segunda Preferencia 2A';
+
+  @override
+  String get visaF2ADesc => 'Cónyuge e hijos menores de residente permanente';
+
+  @override
+  String get visaF2BName => 'Segunda Preferencia 2B';
+
+  @override
+  String get visaF2BDesc => 'Hijos adultos solteros de residente permanente';
+
+  @override
+  String get visaF3Name => 'Tercera Preferencia Familiar';
+
+  @override
+  String get visaF3Desc =>
+      'Hijos adultos casados de ciudadanos estadounidenses';
+
+  @override
+  String get visaF4Name => 'Cuarta Preferencia Familiar';
+
+  @override
+  String get visaF4Desc => 'Hermanos de ciudadanos estadounidenses adultos';
+
+  @override
+  String get runAudit => 'Ejecutar Auditoría';
+
+  @override
+  String get edit => 'Editar';
+
+  @override
+  String get addProfile => 'Agregar Perfil';
+
+  @override
+  String get selectPlatform => 'Por favor selecciona una plataforma';
+
+  @override
+  String get learnMore => 'Más Información';
+
+  @override
+  String errorGeneric(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get biometrics => 'Biometría';
+
+  @override
+  String get biometricsEnabled => 'Biometría activada';
+
+  @override
+  String get biometricsDisabled => 'Biometría desactivada';
+
+  @override
+  String get enabled => 'Activado';
+
+  @override
+  String get disabled => 'Desactivado';
+
+  @override
+  String get noFormData => 'Sin datos de formulario';
+
+  @override
+  String get noDocuments => 'Sin documentos';
+
+  @override
+  String get scannedPassport => 'Pasaporte Escaneado';
+
+  @override
+  String get noPracticeSessions => 'Sin sesiones de práctica';
+
+  @override
+  String get startSimulation => 'Iniciar Simulación';
+
+  @override
+  String get currentScore => 'Puntaje Actual: ';
+
+  @override
+  String get changePassword => 'Cambiar Contraseña';
+
+  @override
+  String recoveryLinkWillBeSent(Object email) {
+    return 'Se enviará un enlace de recuperación a:\n$email';
+  }
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String linkSentTo(Object email) {
+    return 'Enlace enviado a $email';
+  }
+
+  @override
+  String get send => 'Enviar';
+
+  @override
+  String get languageChangeRequiresRestart =>
+      'Cambio de idioma requiere reinicio';
+
+  @override
+  String get openingTerms => 'Abriendo términos...';
+
+  @override
+  String get openingPrivacy => 'Abriendo política...';
+
+  @override
+  String get emailCopied => 'Email copiado';
+
+  @override
+  String get loading => 'Cargando...';
 }
