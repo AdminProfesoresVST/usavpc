@@ -34,22 +34,17 @@ class ServiceCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: AppTheme.labelBold,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     price,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: AppTheme.h2NavyBold.copyWith(color: AppTheme.actionBlue),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     description,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: AppTheme.captionGreyRegular,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -63,7 +58,7 @@ class ServiceCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiary,
+                    color: AppTheme.successGreen,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(12),
                       bottomLeft: Radius.circular(12),
@@ -71,9 +66,7 @@ class ServiceCard extends StatelessWidget {
                   ),
                   child: Text(
                     'Popular',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onTertiary,
-                        ),
+                    style: AppTheme.captionWhiteBold,
                   ),
                 ),
               ),

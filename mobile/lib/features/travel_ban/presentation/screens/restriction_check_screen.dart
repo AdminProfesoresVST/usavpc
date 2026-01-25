@@ -25,7 +25,6 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final restrictedCountries = ref.watch(allRestrictedCountriesProvider);
     final categories = ref.watch(visaCategoriesProvider);
 
@@ -315,11 +314,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
           children: [
             Text(
               value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color, // Keep number colored
-              ),
+              style: AppTheme.h1NavyBold.copyWith(color: color),
             ),
             const SizedBox(height: 4),
             Text(

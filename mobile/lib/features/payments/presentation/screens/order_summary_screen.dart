@@ -142,7 +142,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.total, style: context.textTheme.headlineSmall),
+                      Text(l10n.total, style: AppTheme.h2NavyBold),
                       Text(
                         '\$${total.toStringAsFixed(2)}',
                         style: AppTheme.h1NavyBold,

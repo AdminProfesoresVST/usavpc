@@ -206,10 +206,8 @@ class ServiceSelectionScreen extends ConsumerWidget {
                         const SizedBox(width: 4),
                         Text(
                           l10n.securityNote,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: AppTheme.inkSecondary,
+                          style: AppTheme.captionGreyRegular.copyWith(
                             fontWeight: FontWeight.w500,
-                            fontSize: 10,
                           ),
                         ),
                       ],
@@ -314,10 +312,8 @@ class _StepItem extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               title,
-              style: context.textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppTheme.navyPrimary,
-                fontSize: 11, // Reduced font
+              style: AppTheme.captionNavyBold.copyWith(
+                fontSize: 11,
               ),
             ),
             const SizedBox(height: 2),

@@ -25,9 +25,8 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
               l10n.eligibilitySubtitle,
-              style: context.textTheme.bodyMedium?.copyWith(
+              style: AppTheme.bodyPrimaryRegular.copyWith(
                 color: AppTheme.inkSecondary,
-                height: 1.5,
               ),
               textAlign: TextAlign.center,
             ),
@@ -107,17 +106,12 @@ class _CompactVisaTile extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: context.textTheme.titleSmall?.copyWith(
-                          color: AppTheme.navyPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppTheme.labelBold,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         description,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: AppTheme.inkSecondary,
-                        ),
+                        style: AppTheme.captionGreyRegular,
                       ),
                     ],
                   ),
