@@ -166,7 +166,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () => _handleLogout(context),
-              icon: const Icon(Icons.logout, size: 18),
+              icon: const Icon(Icons.logout, size: AppTheme.iconoMini),
               label: Text(l10n.logoutOption),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppTheme.navyPrimary,
@@ -272,7 +272,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         leading: Icon(icon, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
         title: Text(title, style: AppTheme.labelBold.copyWith(fontSize: 13)),
         subtitle: Text(subtitle, style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption)),
-        trailing: trailing ?? const Icon(Icons.chevron_right, color: AppTheme.dividerGrey, size: 18),
+        trailing: trailing ?? const Icon(Icons.chevron_right, color: AppTheme.dividerGrey, size: AppTheme.iconoMini),
       ),
     );
   }
@@ -506,7 +506,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       dense: true,
       onTap: onTap,
       title: Text(title, style: AppTheme.labelRegular),
-      trailing: selected ? const Icon(Icons.check_circle, color: AppTheme.navyPrimary, size: 18) : null,
+      trailing: selected ? const Icon(Icons.check_circle, color: AppTheme.navyPrimary, size: AppTheme.iconoMini) : null,
     );
   }
 

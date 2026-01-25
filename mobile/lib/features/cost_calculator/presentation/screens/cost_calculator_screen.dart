@@ -339,7 +339,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
     return calculation.when(
       loading: () => const Center(
         child: Padding(
-          padding: EdgeInsets.all(32),
+          padding: AppTheme.paddingExtraGrande,
           child: CircularProgressIndicator(),
         ),
       ),

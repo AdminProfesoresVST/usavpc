@@ -307,7 +307,7 @@ class _StepItem extends StatelessWidget {
                 color: AppTheme.navyPrimary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: AppTheme.navyPrimary, size: 18),
+              child: Icon(icon, color: AppTheme.navyPrimary, size: AppTheme.iconoMini),
             ),
             const SizedBox(height: 6),
             Text(

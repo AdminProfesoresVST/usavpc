@@ -140,7 +140,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                 child: const Icon(
                   Icons.checklist_rounded,
                   color: AppTheme.inkInverse,
-                  size: 28,
+                  size: AppTheme.iconoNavegacion,
                 ),
               ),
               const SizedBox(width: 16),

@@ -154,7 +154,7 @@ class TravelBanWarningCard extends StatelessWidget {
                 if (onLearnMore != null)
                   TextButton.icon(
                     onPressed: onLearnMore,
-                    icon: const Icon(Icons.info_outline, size: 18),
+                    icon: const Icon(Icons.info_outline, size: AppTheme.iconoMini),
                     label: const Text('Learn More'),
                     style: TextButton.styleFrom(
                       foregroundColor: iconColor,
@@ -230,7 +230,7 @@ class RestrictionStatusBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: color),
+          Icon(icon, size: AppTheme.iconoPequeno, color: color),
           if (showLabel) ...[
             const SizedBox(width: 4),
             Text(

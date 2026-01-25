@@ -58,7 +58,7 @@ class SocialProfileCard extends StatelessWidget {
                   child: Icon(
                     _getPlatformIcon(profile.platform),
                     color: _getPlatformColor(profile.platform),
-                    size: 28,
+                    size: AppTheme.iconoNavegacion,
                   ),
                 ),
                 const SizedBox(width: 16),

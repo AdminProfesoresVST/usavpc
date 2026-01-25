@@ -51,7 +51,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: AppTheme.paddingCompacto,
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.2),
                     shape: BoxShape.circle,
@@ -131,7 +131,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.info_outline, size: 18),
+                        const Icon(Icons.info_outline, size: AppTheme.iconoMini),
                         const SizedBox(width: 8),
                         Expanded(
                           child: RichText(
@@ -183,7 +183,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(6),
+                              padding: AppTheme.paddingCompacto,
                               decoration: BoxDecoration(
                                 color: AppTheme.infoBlue.withOpacity(0.1),
                                 borderRadius: AppTheme.smallRadius,
@@ -231,14 +231,14 @@ class InadmissibilityAlertCard extends StatelessWidget {
                   if (onLearnMore != null)
                     TextButton.icon(
                       onPressed: onLearnMore,
-                      icon: const Icon(Icons.open_in_new, size: 18),
+                      icon: const Icon(Icons.open_in_new, size: AppTheme.iconoMini),
                       label: const Text('Learn More'),
                     ),
                   const SizedBox(width: 8),
                   if (onAcknowledge != null)
                     FilledButton.icon(
                       onPressed: onAcknowledge,
-                      icon: const Icon(Icons.check, size: 18),
+                      icon: const Icon(Icons.check, size: AppTheme.iconoMini),
                       label: const Text('I Understand'),
                       style: FilledButton.styleFrom(
                         backgroundColor: color,

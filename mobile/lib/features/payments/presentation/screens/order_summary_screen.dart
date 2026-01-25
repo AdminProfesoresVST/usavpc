@@ -176,7 +176,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.lock, size: 14, color: AppTheme.inkSecondary),
+                    Icon(Icons.lock, size: AppTheme.iconoPequeno, color: AppTheme.inkSecondary),
                     const SizedBox(width: 4),
                     Text(
                       l10n.securePayment,

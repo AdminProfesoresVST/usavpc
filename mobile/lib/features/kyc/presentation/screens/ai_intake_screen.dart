@@ -548,12 +548,12 @@ class _ChatBubble extends StatelessWidget {
                    Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: AppTheme.paddingCompacto,
                         decoration: BoxDecoration(
                           color: AppTheme.navyPrimary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.tips_and_updates, size: 14, color: AppTheme.navyPrimary),
+                        child: Icon(Icons.tips_and_updates, size: AppTheme.iconoPequeno, color: AppTheme.navyPrimary),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -593,7 +593,7 @@ class _ChatBubble extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                           Icon(Icons.edit_note, size: 14, color: AppTheme.inkSecondary),
+                           Icon(Icons.edit_note, size: AppTheme.iconoPequeno, color: AppTheme.inkSecondary),
                            const SizedBox(width: 6),
                            Expanded(
                              child: Text(

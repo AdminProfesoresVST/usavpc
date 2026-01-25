@@ -122,7 +122,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                        children: [
                          Text(l10n.startInterview.toUpperCase()),
                          const SizedBox(width: 8),
-                         const Icon(Icons.arrow_forward, size: 18),
+                         const Icon(Icons.arrow_forward, size: AppTheme.iconoMini),
                        ],
                      ),
                    ),
