@@ -94,7 +94,9 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
       bottomNavigationBar: prerequisitesAsync.when(
         loading: () => null,
         error: (_, __) => null,
-        data: (prerequisites) => _buildBottomBar(context, prerequisites, l10n),
+        data: (prerequisites) => prerequisites.isEmpty 
+            ? null  // No mostrar bottom bar si no hay prerrequisitos (el botón ya está en el body)
+            : _buildBottomBar(context, prerequisites, l10n),
       ),
     );
   }
