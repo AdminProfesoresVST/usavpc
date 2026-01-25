@@ -16,7 +16,7 @@ class MainScaffold extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.black12, width: 0.5)),
+          border: Border(top: BorderSide(color: AppTheme.inkPrimary12, width: 0.5)),
         ),
         child: BottomNavigationBar(
           items: const [
@@ -44,9 +44,9 @@ class MainScaffold extends StatelessWidget {
             );
           },
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
+          backgroundColor: AppTheme.inkInverse,
           selectedItemColor: const Color(0xFF112E51), // Strict Navy
-          unselectedItemColor: Colors.grey.shade400,
+          unselectedItemColor: AppTheme.inkSecondary,
           selectedLabelStyle: AppTheme.captionNavyBold.copyWith(color: const Color(0xFF112E51)),
           unselectedLabelStyle: AppTheme.captionGreyRegular,
           elevation: 0,

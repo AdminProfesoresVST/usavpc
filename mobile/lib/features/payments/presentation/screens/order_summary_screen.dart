@@ -68,7 +68,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('✅ ${l10n.paymentCompleted}'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppTheme.successGreen,
           ),
         );
         context.go('/dashboard');
@@ -160,14 +160,14 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                         ? const SizedBox(
                             width: 20, 
                             height: 20, 
-                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.inkInverse),
                           )
                         : const Icon(Icons.payment),
                     label: Text(_isProcessing ? l10n.processing : l10n.payButton('\$${total.toStringAsFixed(2)}')),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.navyPrimary,
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: Colors.grey,
+                      foregroundColor: AppTheme.inkInverse,
+                      disabledBackgroundColor: AppTheme.dividerGrey,
                     ),
                   ),
                 ),
@@ -175,7 +175,7 @@ class _OrderSummaryScreenState extends ConsumerState<OrderSummaryScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.lock, size: 14, color: Colors.grey.shade600),
+                    Icon(Icons.lock, size: 14, color: AppTheme.inkSecondary),
                     const SizedBox(width: 4),
                     Text(
                       l10n.securePayment,

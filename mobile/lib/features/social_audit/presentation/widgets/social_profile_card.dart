@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 import '../../data/models/social_media_profile.dart';
 
@@ -139,11 +140,11 @@ class SocialProfileCard extends StatelessWidget {
                       value: 'delete',
                       child: Row(
                         children: [
-                          Icon(Icons.delete, color: Colors.red.shade400),
+                          Icon(Icons.delete, color: AppTheme.errorRed),
                           const SizedBox(width: 8),
                           Text(
                             'Delete',
-                            style: TextStyle(color: Colors.red.shade400),
+                            style: TextStyle(color: AppTheme.errorRed),
                           ),
                         ],
                       ),
@@ -160,7 +161,7 @@ class SocialProfileCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.05),
+                color: AppTheme.warningOrange.withOpacity(0.05),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(14),
                   bottomRight: Radius.circular(14),
@@ -173,7 +174,7 @@ class SocialProfileCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.warning_amber,
-                        color: Colors.orange.shade700,
+                        color: AppTheme.warningOrange,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -181,7 +182,7 @@ class SocialProfileCard extends StatelessWidget {
                         'Discrepancies Detected',
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.orange.shade700,
+                          color: AppTheme.warningOrange,
                         ),
                       ),
                     ],
@@ -198,7 +199,7 @@ class SocialProfileCard extends StatelessWidget {
                                   child: Text(
                                     msg,
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.orange.shade800,
+                                      color: AppTheme.warningOrange,
                                     ),
                                   ),
                                 ),
@@ -261,13 +262,13 @@ class SocialProfileCard extends StatelessWidget {
   Color _getAuditStatusColor(AuditStatus status) {
     switch (status) {
       case AuditStatus.pending:
-        return Colors.grey;
+        return AppTheme.dividerGrey;
       case AuditStatus.matched:
-        return Colors.green;
+        return AppTheme.successGreen;
       case AuditStatus.discrepancy:
-        return Colors.orange;
+        return AppTheme.warningOrange;
       case AuditStatus.alert:
-        return Colors.red;
+        return AppTheme.errorRed;
     }
   }
 
@@ -280,11 +281,11 @@ class SocialProfileCard extends StatelessWidget {
       case SocialPlatform.instagram:
         return const Color(0xFFE4405F);
       case SocialPlatform.twitter:
-        return Colors.black;
+        return AppTheme.inkPrimary;
       case SocialPlatform.tiktok:
-        return Colors.black;
+        return AppTheme.inkPrimary;
       case SocialPlatform.other:
-        return Colors.grey;
+        return AppTheme.dividerGrey;
     }
   }
 
@@ -373,7 +374,7 @@ class _AddSocialProfileSheetState extends State<AddSocialProfileSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: AppTheme.inkSecondary,
                   borderRadius: AppTheme.smallRadius,
                 ),
               ),

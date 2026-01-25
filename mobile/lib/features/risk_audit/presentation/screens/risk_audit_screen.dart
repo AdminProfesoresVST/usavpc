@@ -44,9 +44,9 @@ class RiskAuditScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppTheme.inkInverse,
                     borderRadius: AppTheme.badgeRadius,
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))],
+                    boxShadow: [BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))],
                   ),
                   child: Column(
                     children: [
@@ -121,9 +121,9 @@ class RiskAuditScreen extends ConsumerWidget {
       margin: const EdgeInsetsDirectional.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         borderRadius: AppTheme.inputRadius,
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: AppTheme.dividerGrey),
       ),
       child: Row(
         children: [

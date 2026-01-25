@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 import '../../data/models/inadmissibility_flag.dart';
 
@@ -93,12 +94,12 @@ class InadmissibilityAlertCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: AppTheme.successGreen.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.check,
-                      color: Colors.green,
+                      color: AppTheme.successGreen,
                       size: 18,
                     ),
                   ),
@@ -169,12 +170,12 @@ class InadmissibilityAlertCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.blue.withOpacity(0.1),
-                          Colors.blue.withOpacity(0.05),
+                          AppTheme.infoBlue.withOpacity(0.1),
+                          AppTheme.infoBlue.withOpacity(0.05),
                         ],
                       ),
                       borderRadius: AppTheme.inputRadius,
-                      border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                      border: Border.all(color: AppTheme.infoBlue.withOpacity(0.2)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,12 +185,12 @@ class InadmissibilityAlertCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
+                                color: AppTheme.infoBlue.withOpacity(0.1),
                                 borderRadius: AppTheme.smallRadius,
                               ),
                               child: const Icon(
                                 Icons.lightbulb_outline,
-                                color: Colors.blue,
+                                color: AppTheme.infoBlue,
                                 size: 18,
                               ),
                             ),
@@ -198,7 +199,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                               'Suggested Waiver: ${flag.suggestedWaiver}',
                               style: theme.textTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue,
+                                color: AppTheme.infoBlue,
                               ),
                             ),
                           ],
@@ -208,7 +209,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
                           Text(
                             flag.waiverNotes!,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.blue.shade700,
+                              color: AppTheme.infoBlue,
                             ),
                           ),
                         ],
@@ -272,13 +273,13 @@ class InadmissibilityAlertCard extends StatelessWidget {
   Color _getSeverityColor(Severity severity) {
     switch (severity) {
       case Severity.critical:
-        return Colors.red;
+        return AppTheme.errorRed;
       case Severity.high:
-        return Colors.orange;
+        return AppTheme.warningOrange;
       case Severity.medium:
-        return Colors.amber.shade700;
+        return AppTheme.warningOrange;
       case Severity.low:
-        return Colors.green;
+        return AppTheme.successGreen;
     }
   }
 

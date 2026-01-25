@@ -113,13 +113,13 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.1),
+                                  color: AppTheme.errorRed.withOpacity(0.1),
                                   borderRadius: AppTheme.smallRadius,
                                 ),
                                 child: Text(
                                   l10n.required,
                                   style: theme.textTheme.labelSmall?.copyWith(
-                                    color: Colors.red,
+                                    color: AppTheme.errorRed,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -131,13 +131,13 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.1),
+                                  color: AppTheme.dividerGrey.withOpacity(0.1),
                                   borderRadius: AppTheme.smallRadius,
                                 ),
                                 child: Text(
                                   l10n.optional,
                                   style: theme.textTheme.labelSmall?.copyWith(
-                                    color: Colors.grey,
+                                    color: AppTheme.dividerGrey,
                                   ),
                                 ),
                               ),
@@ -240,7 +240,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                   Icons.check_circle_outline,
                   _hasDocument,
                   () => _setHasDocument(true),
-                  Colors.green,
+                  AppTheme.successGreen,
                 ),
               ),
               const SizedBox(width: 12),
@@ -251,7 +251,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                   Icons.cancel_outlined,
                   !_hasDocument,
                   () => _setHasDocument(false),
-                  Colors.red,
+                  AppTheme.errorRed,
                 ),
               ),
             ],
@@ -349,7 +349,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
           borderRadius: AppTheme.inputRadius,
           border: Border.all(
-            color: isSelected ? color : Colors.grey.shade300,
+            color: isSelected ? color : AppTheme.inkSecondary,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -358,14 +358,14 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
           children: [
             Icon(
               icon,
-              color: isSelected ? color : Colors.grey,
+              color: isSelected ? color : AppTheme.dividerGrey,
               size: 20,
             ),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? color : Colors.grey,
+                color: isSelected ? color : AppTheme.dividerGrey,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -406,16 +406,16 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
   Color _getStatusColor(PrerequisiteStatus? status) {
     switch (status) {
       case PrerequisiteStatus.valid:
-        return Colors.green;
+        return AppTheme.successGreen;
       case PrerequisiteStatus.incomplete:
-        return Colors.orange;
+        return AppTheme.warningOrange;
       case PrerequisiteStatus.blocked:
-        return Colors.red;
+        return AppTheme.errorRed;
       case PrerequisiteStatus.pending:
       case PrerequisiteStatus.skipped:
       case PrerequisiteStatus.notApplicable:
       case null:
-        return Colors.grey;
+        return AppTheme.dividerGrey;
     }
   }
 

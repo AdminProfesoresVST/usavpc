@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 import 'dart:math';
 
 class HackingModeOverlay extends StatefulWidget {
@@ -50,7 +51,7 @@ class _HackingModeOverlayState extends State<HackingModeOverlay>
                 child: Text(
                   _codes[_random.nextInt(_codes.length)],
                   style: const TextStyle(
-                    color: Colors.green,
+                    color: AppTheme.successGreen,
                     fontFamily: 'Courier',
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

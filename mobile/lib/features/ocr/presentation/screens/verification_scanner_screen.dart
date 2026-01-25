@@ -40,7 +40,7 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('❌ Scan incomplete. Please rescan passport clearly.'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppTheme.errorRed,
             duration: Duration(seconds: 2),
           ),
         );
@@ -70,7 +70,7 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
     final l10n = context.l10n;
     
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppTheme.inkPrimary,
       body: Stack(
         children: [
           Positioned.fill(
@@ -82,7 +82,7 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
           Positioned.fill(
              child: CustomPaint(
                painter: ScannerOverlayPainter(
-                 borderColor: Colors.white, // Strict Palette
+                 borderColor: AppTheme.inkInverse, // Strict Palette
                  overlayColor: const Color.fromRGBO(13, 36, 73, 0.85), // Deep Navy Mask
                ),
              ),
@@ -93,9 +93,9 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
             start: 16,
             child: SafeArea(
               child: CircleAvatar(
-                backgroundColor: Colors.black45,
+                backgroundColor: AppTheme.inkPrimary.withOpacity(0.45),
                 child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white, size: 20),
+                  icon: const Icon(Icons.close, color: AppTheme.inkInverse, size: 20),
                   onPressed: () => context.pop(),
                 ),
               ),
@@ -110,7 +110,7 @@ class _VerificationScannerScreenState extends ConsumerState<VerificationScannerS
               children: [
                 Text(
                   l10n.passportScanInstructions,
-                  style: AppTheme.h2NavyBold.copyWith(color: Colors.white), // 16px Bold White
+                  style: AppTheme.h2NavyBold.copyWith(color: AppTheme.inkInverse), // 16px Bold White
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),

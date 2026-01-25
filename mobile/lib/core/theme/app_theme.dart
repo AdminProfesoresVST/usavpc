@@ -51,8 +51,20 @@ class AppTheme {
   /// Texto Inverso (Sobre fondos oscuros) - Blanco
   static const inkInverse = Color(0xFFFFFFFF);
   
+  /// Blanco con opacidad 70% (para subtítulos sobre fondos oscuros)
+  static const inkInverse70 = Color(0xB3FFFFFF);
+  
+  /// Blanco con opacidad 24% (para bordes sutiles sobre fondos oscuros)
+  static const inkInverse24 = Color(0x3DFFFFFF);
+  
   /// Borde de Tarjetas - Gris muy sutil
   static const cardBorderColor = Color(0xFFEEEEEE);
+  
+  /// Gris muy claro para fondos de inputs
+  static const dividerGreyLight = Color(0xFFFAFAFA);
+  
+  /// Negro con opacidad 12% (para bordes muy sutiles)
+  static const inkPrimary12 = Color(0x1F000000);
   
   // ═══════════════════════════════════════════════════════════════════════════
   // 2. 🚦 COLORES SEMÁNTICOS (Estados y Alertas)

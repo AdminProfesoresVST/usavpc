@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CameraMRZWidget extends StatefulWidget {
@@ -63,7 +64,7 @@ class _CameraMRZWidgetState extends State<CameraMRZWidget> {
   @override
   Widget build(BuildContext context) {
     if (_controller == null || !_controller!.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator(color: Colors.white));
+      return const Center(child: CircularProgressIndicator(color: AppTheme.inkInverse));
     }
     return CameraPreview(_controller!);
   }

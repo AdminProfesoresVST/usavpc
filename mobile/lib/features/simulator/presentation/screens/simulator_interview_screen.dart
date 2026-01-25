@@ -182,12 +182,12 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
     final l10n = context.l10n;
     
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.inkInverse,
       appBar: AppHeader(
         title: l10n.interviewInProgress,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Colors.white),
+            icon: const Icon(Icons.settings_outlined, color: AppTheme.inkInverse),
             onPressed: () => context.push('/profile'),
           ),
         ],
@@ -198,10 +198,10 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.inkInverse,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.shade100,
+                  color: AppTheme.dividerGrey,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -242,7 +242,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                         child: Text(
                           l10n.connectingToOfficer,
                           style: TextStyle(
-                            color: Colors.grey.shade500,
+                            color: AppTheme.inkSecondary,
                             fontSize: 16,
                           ),
                         ),
@@ -264,8 +264,8 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
           Container(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey.shade200, width: 1)),
+              color: AppTheme.inkInverse,
+              border: Border(top: BorderSide(color: AppTheme.cardBorderColor, width: 1)),
             ),
             child: Row(
                children: [
@@ -276,12 +276,12 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                        width: 36,
                        height: 36,
                        decoration: BoxDecoration(
-                         color: _isListening ? Colors.red.shade50 : Colors.grey.shade100,
+                         color: _isListening ? AppTheme.errorRedLight : AppTheme.dividerGrey,
                          shape: BoxShape.circle,
                        ),
                        child: Icon(
                          _isListening ? Icons.stop : Icons.mic,
-                         color: _isListening ? Colors.red : Colors.grey.shade600,
+                         color: _isListening ? AppTheme.errorRed : AppTheme.inkSecondary,
                          size: 18,
                        ),
                      ),
@@ -292,16 +292,16 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                      child: Container(
                        height: 40,
                        decoration: BoxDecoration(
-                         color: Colors.grey.shade50,
+                         color: AppTheme.dividerGreyLight,
                          borderRadius: AppTheme.badgeRadius,
-                         border: Border.all(color: Colors.grey.shade200),
+                         border: Border.all(color: AppTheme.cardBorderColor),
                        ),
                        child: TextField(
                          controller: _textController,
                          style: const TextStyle(fontSize: 14, color: AppTheme.navyPrimary),
                          decoration: InputDecoration(
                            hintText: _isListening ? l10n.listening : l10n.typeYourResponse,
-                           hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade400),
+                           hintStyle: TextStyle(fontSize: 14, color: AppTheme.inkSecondary),
                            border: InputBorder.none,
                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                            isDense: true,

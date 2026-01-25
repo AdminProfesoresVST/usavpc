@@ -62,7 +62,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
     final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
 
     return Scaffold(
-      backgroundColor: Colors.white, // Pure White per reference
+      backgroundColor: AppTheme.inkInverse, // Pure White per reference
       appBar: AppHeader(title: l10n.verificationTitle),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.navyPrimary))
@@ -85,7 +85,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
 
                   // DASHED CONTAINER
                   CustomPaint(
-                    painter: DottedBorderPainter(color: Colors.grey.shade300, radius: 24),
+                    painter: DottedBorderPainter(color: AppTheme.inkSecondary, radius: 24),
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
@@ -124,12 +124,12 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                           // 2. Divider
                           Row(
                             children: [
-                              Expanded(child: Divider(color: Colors.grey.shade300)),
+                              Expanded(child: Divider(color: AppTheme.inkSecondary)),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text("OR", style: AppTheme.captionGreyRegular.copyWith(fontWeight: FontWeight.bold)),
                               ),
-                              Expanded(child: Divider(color: Colors.grey.shade300)),
+                              Expanded(child: Divider(color: AppTheme.inkSecondary)),
                             ],
                           ),
 
@@ -142,14 +142,14 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                               onPressed: () => context.push('/identity/capture?type=$visaType'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.navyPrimary, // Navy Button
-                                foregroundColor: Colors.white,
+                                foregroundColor: AppTheme.inkInverse,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: AppTheme.inputRadius),
                                 elevation: 0,
                               ),
                               child: Text(
                                 l10n.useCamera, // "Open camera"
-                                style: AppTheme.h2NavyBold.copyWith(color: Colors.white), // 16px
+                                style: AppTheme.h2NavyBold.copyWith(color: AppTheme.inkInverse), // 16px
                               ),
                             ),
                           ),

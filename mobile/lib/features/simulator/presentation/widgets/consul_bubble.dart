@@ -20,14 +20,14 @@ class ConsulBubble extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16, right: 40),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
+          color: AppTheme.inkSecondary,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4),
             topRight: Radius.circular(16),
             bottomLeft: Radius.circular(16),
             bottomRight: Radius.circular(16),
           ),
-          border: Border.all(color: Colors.grey.shade200, width: 1),
+          border: Border.all(color: AppTheme.inkSecondary, width: 1),
         ),
         child: Text(
           text,

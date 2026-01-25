@@ -26,7 +26,7 @@ class VisaTypeSelectionScreen extends ConsumerWidget {
             child: Text(
               l10n.eligibilitySubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade600,
+                color: AppTheme.inkSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -85,9 +85,9 @@ class _CompactVisaTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         borderRadius: AppTheme.buttonRadius,
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppTheme.cardBorderColor),
       ),
       child: Material(
         color: Colors.transparent,
@@ -116,7 +116,7 @@ class _CompactVisaTile extends StatelessWidget {
                       Text(
                         description,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade500,
+                          color: AppTheme.inkSecondary,
                         ),
                       ),
                     ],
@@ -124,7 +124,7 @@ class _CompactVisaTile extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.only(top: 2),
-                  child: Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+                  child: Icon(Icons.chevron_right, color: AppTheme.inkSecondary, size: 20),
                 ),
               ],
             ),

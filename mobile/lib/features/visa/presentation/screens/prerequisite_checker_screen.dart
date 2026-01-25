@@ -42,7 +42,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
         title: Text(l10n.documentChecklist),
         centerTitle: true,
         backgroundColor: AppTheme.navyPrimary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.inkInverse,
       ),
       body: prerequisitesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -132,12 +132,12 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: AppTheme.inkInverse.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.checklist_rounded,
-                  color: Colors.white,
+                  color: AppTheme.inkInverse,
                   size: 28,
                 ),
               ),
@@ -156,7 +156,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                       Text(
                         'Form: ${category.formEngine.value}',
                         style: AppTheme.bodyWhiteRegular.copyWith(
-                          color: Colors.white70,
+                          color: AppTheme.inkInverse70,
                           fontSize: 12,
                         ),
                       ),
@@ -187,9 +187,9 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
-              backgroundColor: Colors.white24,
+              backgroundColor: AppTheme.inkInverse24,
               valueColor: AlwaysStoppedAnimation<Color>(
-                progress >= 1.0 ? Colors.greenAccent : Colors.white,
+                progress >= 1.0 ? AppTheme.successGreen : AppTheme.inkInverse,
               ),
             ),
           ),
@@ -208,7 +208,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
             Icon(
               Icons.check_circle_outline,
               size: 80,
-              color: Colors.green,
+              color: AppTheme.successGreen,
             ),
             const SizedBox(height: 24),
             Text(
@@ -234,7 +234,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                 label: Text(l10n.continueToApp),
                  style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.navyPrimary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.inkInverse,
                   shape: RoundedRectangleBorder(
                     borderRadius: AppTheme.inputRadius,
                   ),
@@ -257,10 +257,10 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppTheme.inkPrimary.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, -4),
           ),
@@ -275,8 +275,8 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: allMandatoryComplete
-                    ? Colors.green.withOpacity(0.1)
-                    : Colors.orange.withOpacity(0.1),
+                    ? AppTheme.successGreen.withOpacity(0.1)
+                    : AppTheme.warningOrange.withOpacity(0.1),
                 borderRadius: AppTheme.buttonRadius,
               ),
               child: Row(
@@ -287,7 +287,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                         ? Icons.check_circle
                         : Icons.pending,
                     size: 18,
-                    color: allMandatoryComplete ? Colors.green : Colors.orange,
+                    color: allMandatoryComplete ? AppTheme.successGreen : AppTheme.warningOrange,
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -295,7 +295,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                         ? l10n.prerequisitesVerified
                         : l10n.missingDocuments,
                     style: AppTheme.captionNavyBold.copyWith(
-                      color: allMandatoryComplete ? Colors.green : Colors.orange,
+                      color: allMandatoryComplete ? AppTheme.successGreen : AppTheme.warningOrange,
                     ),
                   ),
                 ],
@@ -315,7 +315,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
                 label: Text(l10n.continueToApp),
                  style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.navyPrimary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.inkInverse,
                   shape: RoundedRectangleBorder(
                     borderRadius: AppTheme.inputRadius,
                   ),

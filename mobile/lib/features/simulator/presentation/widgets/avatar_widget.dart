@@ -62,7 +62,7 @@ class AvatarWidget extends StatelessWidget {
   Color _getColor(BuildContext context) {
     switch (state) {
       case AvatarState.idle:
-        return Colors.grey.shade200;
+        return AppTheme.inkSecondary;
       case AvatarState.speaking:
         return AppTheme.actionBlue; // Was Green
       case AvatarState.thinking:

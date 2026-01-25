@@ -38,7 +38,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
     
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.white)
+      ..setBackgroundColor(AppTheme.inkInverse)
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
@@ -164,7 +164,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.greenAccent),
+                            icon: const Icon(Icons.arrow_back, color: AppTheme.successGreen),
                             onPressed: () => context.pop(),
                           ),
                           Text(
@@ -185,9 +185,9 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                       const SizedBox(height: 8),
                       LinearProgressIndicator(
                         value: automationState.progress,
-                        backgroundColor: Colors.white24,
+                        backgroundColor: AppTheme.inkInverse24,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          automationState.error != null ? Colors.red : Colors.greenAccent,
+                          automationState.error != null ? AppTheme.errorRed : AppTheme.successGreen,
                         ),
                       ),
                     ],
@@ -199,7 +199,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
+                      border: Border.all(color: AppTheme.successGreen.withValues(alpha: 0.3)),
                       borderRadius: AppTheme.smallRadius,
                     ),
                     child: ClipRRect(
@@ -216,7 +216,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppTheme.navyPrimary,
-                      border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.5)),
+                      border: Border.all(color: AppTheme.successGreen.withValues(alpha: 0.5)),
                       borderRadius: AppTheme.smallRadius,
                     ),
                     child: Column(
@@ -237,7 +237,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                               return Text(
                                 log,
                                 style: AppTheme.captionWhiteRegular.copyWith(
-                                  color: isError ? Colors.red : Colors.green.shade300,
+                                  color: isError ? AppTheme.errorRed : AppTheme.successGreen,
                                   fontFamily: 'Courier',
                                 ),
                               );

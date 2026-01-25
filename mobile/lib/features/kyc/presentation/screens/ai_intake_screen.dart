@@ -405,9 +405,9 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2)),
+          BoxShadow(color: AppTheme.inkPrimary.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2)),
         ],
       ),
       child: SafeArea(
@@ -418,9 +418,9 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: l10n.typeYourResponse,
-                  hintStyle: AppTheme.labelRegular.copyWith(color: Colors.grey.shade400),
+                  hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
                   filled: true,
-                  fillColor: Colors.grey.shade50,
+                  fillColor: AppTheme.dividerGreyLight,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Reduced vertical
                   border: OutlineInputBorder(
                     borderRadius: AppTheme.badgeRadius, // Reduced from 24
@@ -443,9 +443,9 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.inkInverse),
                       )
-                    : const Icon(Icons.send, color: Colors.white, size: 20),
+                    : const Icon(Icons.send, color: AppTheme.inkInverse, size: 20),
               ),
             ),
           ],
@@ -491,7 +491,7 @@ class _ChatBubble extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
           ),
-          child: Text(l10n.viewMyApplication, style: AppTheme.h2NavyBold.copyWith(color: Colors.white)),
+          child: Text(l10n.viewMyApplication, style: AppTheme.h2NavyBold.copyWith(color: AppTheme.inkInverse)),
         ),
       );
     }
@@ -507,7 +507,7 @@ class _ChatBubble extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
             decoration: BoxDecoration(
-              color: isUser ? AppTheme.navyPrimary : Colors.white,
+              color: isUser ? AppTheme.navyPrimary : AppTheme.inkInverse,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(16),
                 topRight: const Radius.circular(16),
@@ -515,13 +515,13 @@ class _ChatBubble extends StatelessWidget {
                 bottomRight: isUser ? Radius.zero : const Radius.circular(16),
               ),
               boxShadow: isUser ? null : [
-                BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
+                BoxShadow(color: AppTheme.inkPrimary.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
               ],
             ),
             child: Text(
               message.text,
               style: context.textTheme.bodyMedium?.copyWith(
-                color: isUser ? Colors.white : Colors.grey.shade700,
+                color: isUser ? AppTheme.inkInverse : AppTheme.inkSecondary,
                 height: 1.4,
               ),
             ),
@@ -532,7 +532,7 @@ class _ChatBubble extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.inkInverse,
                 borderRadius: const BorderRadiusDirectional.only(
                   topEnd: Radius.circular(12),
                   bottomStart: Radius.circular(12),
@@ -580,7 +580,7 @@ class _ChatBubble extends StatelessWidget {
                         Expanded(
                           child: Text(
                             tip, 
-                            style: AppTheme.labelRegular.copyWith(color:Colors.grey.shade800),
+                            style: AppTheme.labelRegular.copyWith(color:AppTheme.inkSecondary),
                           ),
                         ),
                       ],
@@ -596,12 +596,12 @@ class _ChatBubble extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                           Icon(Icons.edit_note, size: 14, color: Colors.grey.shade600),
+                           Icon(Icons.edit_note, size: 14, color: AppTheme.inkSecondary),
                            const SizedBox(width: 6),
                            Expanded(
                              child: Text(
                                '${l10n.example}: ${message.example}', 
-                               style: AppTheme.captionGreyRegular.copyWith(fontStyle: FontStyle.italic, color: Colors.grey.shade700)
+                               style: AppTheme.captionGreyRegular.copyWith(fontStyle: FontStyle.italic, color: AppTheme.inkSecondary)
                              ),
                            ),
                         ],

@@ -35,7 +35,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
         title: Text(l10n.travelBanTitle),
         centerTitle: true,
         backgroundColor: AppTheme.navyPrimary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.inkInverse,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -61,12 +61,12 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: AppTheme.inkInverse.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.travel_explore,
-                      color: Colors.white,
+                      color: AppTheme.inkInverse,
                       size: 32,
                     ),
                   ),
@@ -82,7 +82,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                         const SizedBox(height: 4),
                         Text(
                           l10n.checkYourEligibilitySubtitle,
-                          style: AppTheme.bodyWhiteRegular.copyWith(fontSize: 13, color: Colors.white70),
+                          style: AppTheme.bodyWhiteRegular.copyWith(fontSize: 13, color: AppTheme.inkInverse70),
                         ),
                       ],
                     ),
@@ -123,7 +123,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
                 label: Text(l10n.checkRestrictions),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.navyPrimary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.inkInverse,
                   shape: RoundedRectangleBorder(
                     borderRadius: AppTheme.inputRadius,
                   ),
@@ -167,7 +167,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
         hintText: l10n.selectCountry,
         prefixIcon: const Icon(Icons.flag_outlined, color: AppTheme.navyPrimary),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppTheme.inkInverse,
         border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
       ),
       items: _buildCountryItems(restrictedCountries),
@@ -221,7 +221,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
           hintText: l10n.selectCategory,
           prefixIcon: const Icon(Icons.badge_outlined, color: AppTheme.navyPrimary),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppTheme.inkInverse,
           border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
         ),
         items: cats.map((cat) {
@@ -283,9 +283,9 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
             const SizedBox(height: 12),
             Row(
               children: [
-                  _buildStatCard(l10n.totalBan, totalBan.toString(), Colors.red, Colors.red.shade50),
-                  _buildStatCard(l10n.partial, partial.toString(), Colors.orange, Colors.orange.shade50),
-                  _buildStatCard(l10n.paused, pause.toString(), Colors.grey, Colors.grey.shade200),
+                  _buildStatCard(l10n.totalBan, totalBan.toString(), AppTheme.errorRed, AppTheme.errorRedLight),
+                  _buildStatCard(l10n.partial, partial.toString(), AppTheme.warningOrange, AppTheme.warningOrangeLight),
+                  _buildStatCard(l10n.paused, pause.toString(), AppTheme.dividerGrey, AppTheme.cardBorderColor),
               ],
             ),
           ],
@@ -300,12 +300,12 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.inkInverse,
           borderRadius: AppTheme.inputRadius,
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: AppTheme.cardBorderColor),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: AppTheme.inkPrimary.withOpacity(0.03),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),

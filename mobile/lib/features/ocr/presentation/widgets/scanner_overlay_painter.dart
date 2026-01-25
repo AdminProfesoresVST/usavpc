@@ -10,7 +10,7 @@ class ScannerOverlayPainter extends CustomPainter {
 
   ScannerOverlayPainter({
     this.overlayColor = const Color.fromRGBO(13, 36, 73, 0.8), // Navy 80%
-    this.borderColor = Colors.white, // Strictly White per style guide
+    this.borderColor = AppTheme.inkInverse, // Strictly White per style guide
     this.borderRadius = 12.0,
   });
 

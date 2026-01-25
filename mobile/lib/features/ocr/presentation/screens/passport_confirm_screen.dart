@@ -185,19 +185,19 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                 onPressed: _isLoading ? null : _confirmAndProceed,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.navyPrimary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.inkInverse,
                   shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
                 ),
                 child: _isLoading
                     ? const SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.inkInverse),
                       )
                     : Text(
                         l10n.confirmAndContinue,
                         style: AppTheme.h2NavyBold.copyWith(
-                          color: Colors.white,
+                          color: AppTheme.inkInverse,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -218,10 +218,10 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
           labelText: label,
           prefixIcon: Icon(icon, color: AppTheme.navyPrimary),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppTheme.inkInverse,
           border: OutlineInputBorder(
             borderRadius: AppTheme.buttonRadius,
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: BorderSide(color: AppTheme.inkSecondary),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: AppTheme.buttonRadius,

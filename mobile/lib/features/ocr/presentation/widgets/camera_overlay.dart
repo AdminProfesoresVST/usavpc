@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 class CameraOverlay extends StatelessWidget {
   const CameraOverlay({super.key});
@@ -15,7 +16,7 @@ class CameraOverlay extends StatelessWidget {
 class OverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black54;
+    final paint = Paint()..color = AppTheme.inkPrimary54;
     
     // Draw semi-transparent background
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
@@ -32,7 +33,7 @@ class OverlayPainter extends CustomPainter {
     
     // Draw border
     final borderPaint = Paint()
-      ..color = Colors.white
+      ..color = AppTheme.inkInverse
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 

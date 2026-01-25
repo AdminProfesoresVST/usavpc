@@ -203,9 +203,9 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -2)),
+          BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -2)),
         ],
       ),
       child: SafeArea(
@@ -216,17 +216,17 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: l10n.typeYourResponse,
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
+                  hintStyle: TextStyle(color: AppTheme.inkSecondary),
                   filled: true,
-                  fillColor: Colors.grey.shade50,
+                  fillColor: AppTheme.dividerGreyLight,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: AppTheme.badgeRadius,
-                    borderSide: BorderSide(color: Colors.grey.shade200),
+                    borderSide: BorderSide(color: AppTheme.cardBorderColor),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: AppTheme.badgeRadius,
-                    borderSide: BorderSide(color: Colors.grey.shade200),
+                    borderSide: BorderSide(color: AppTheme.cardBorderColor),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: AppTheme.badgeRadius,
@@ -245,7 +245,7 @@ Begin by introducing yourself briefly as their assistant and asking for their cu
               ),
               child: IconButton(
                 onPressed: _handleSend,
-                icon: const Icon(Icons.send, color: Colors.white, size: 20),
+                icon: const Icon(Icons.send, color: AppTheme.inkInverse, size: 20),
               ),
             ),
           ],
@@ -277,7 +277,7 @@ class _ChatBubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
         decoration: BoxDecoration(
-          color: isUser ? AppTheme.navyPrimary : Colors.white,
+          color: isUser ? AppTheme.navyPrimary : AppTheme.inkInverse,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -286,13 +286,13 @@ class _ChatBubble extends StatelessWidget {
           ),
           boxShadow: [
             if (!isUser)
-              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+              BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
           ],
         ),
         child: Text(
           message.text,
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isUser ? Colors.white : Colors.grey.shade700,
+            color: isUser ? AppTheme.inkInverse : AppTheme.inkSecondary,
             height: 1.4,
           ),
         ),

@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Text(
               'Non-government service provider / Proveedor privado',
               textAlign: TextAlign.center,
-              style: AppTheme.captionGreyRegular.copyWith(color: Colors.white24),
+              style: AppTheme.captionGreyRegular.copyWith(color: AppTheme.inkInverse24),
             ),
           ),
         ],

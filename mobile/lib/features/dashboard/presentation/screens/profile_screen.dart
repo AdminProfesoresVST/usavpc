@@ -79,7 +79,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         backgroundColor: AppTheme.navyPrimary,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: AppTheme.inkInverse),
       ),
       body: profileAsync.when(
         data: (data) => _buildBody(context, data, l10n),
@@ -124,7 +124,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           _buildMenuItem(Icons.folder_outlined, "Mis Documentos", 
               passportImageUrl != null ? "1 Documento" : "Sin documentos",
               () => _showDocuments(context, passportImageUrl),
-              trailing: passportImageUrl != null ? const Icon(Icons.check_circle, color: Colors.green, size: 14) : null),
+              trailing: passportImageUrl != null ? const Icon(Icons.check_circle, color: AppTheme.successGreen, size: 14) : null),
           _buildMenuItem(Icons.history_outlined, "Historial de Simulaciones", 
               simulatorHistory.isNotEmpty ? "${simulatorHistory.length} sesiones" : "Sin sesiones",
               () => _showSimulatorHistory(context, simulatorHistory, simulatorScore)),
@@ -201,7 +201,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundColor: Colors.white,
+                backgroundColor: AppTheme.inkInverse,
                 child: Text(
                   name.isNotEmpty ? name[0] : 'U',
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.navyPrimary),
@@ -212,17 +212,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(name, style: const TextStyle(color: AppTheme.inkInverse, fontWeight: FontWeight.bold, fontSize: 14)),
                     const SizedBox(height: 2),
-                    Text(email, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 11)),
+                    Text(email, style: TextStyle(color: AppTheme.inkInverse.withOpacity(0.7), fontSize: 11)),
                     const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: AppTheme.inkInverse.withOpacity(0.15),
                         borderRadius: AppTheme.smallRadius,
                       ),
-                      child: const Text("VERIFIED", style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
+                      child: const Text("VERIFIED", style: TextStyle(color: AppTheme.inkInverse, fontSize: 9, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -247,9 +247,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 9, fontWeight: FontWeight.bold)),
+        Text(label, style: TextStyle(color: AppTheme.inkInverse.withOpacity(0.5), fontSize: 9, fontWeight: FontWeight.bold)),
         const SizedBox(height: 2),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500)),
+        Text(value, style: const TextStyle(color: AppTheme.inkInverse, fontSize: 11, fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -259,7 +259,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         borderRadius: AppTheme.buttonRadius,
         border: Border.all(color: AppTheme.dividerGrey),
       ),
@@ -280,7 +280,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         borderRadius: AppTheme.buttonRadius,
         border: Border.all(color: AppTheme.dividerGrey),
       ),
@@ -311,7 +311,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _showBottomSheet(BuildContext context, String title, Widget content) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.inkInverse,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       builder: (context) => DraggableScrollableSheet(

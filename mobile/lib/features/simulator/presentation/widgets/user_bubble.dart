@@ -48,7 +48,7 @@ class UserBubble extends StatelessWidget {
             fontFamily: 'PublicSans',
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: Colors.white,
+            color: AppTheme.inkInverse,
             height: 1.4,
           ),
         ),

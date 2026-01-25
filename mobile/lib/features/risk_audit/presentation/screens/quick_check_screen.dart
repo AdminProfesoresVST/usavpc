@@ -66,9 +66,9 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppTheme.dividerGrey),
                   borderRadius: AppTheme.smallRadius,
-                  color: Colors.white,
+                  color: AppTheme.inkInverse,
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -126,7 +126,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                     hintText: l10n.ds160CodeHint,
                     border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    fillColor: Colors.white,
+                    fillColor: AppTheme.inkInverse,
                     filled: true,
                   ),
                   validator: (value) {
@@ -151,7 +151,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   onPressed: quickCheckState.isLoading ? null : _submitForm,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.actionBlue,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppTheme.inkInverse,
                      shape: RoundedRectangleBorder(borderRadius: AppTheme.smallRadius),
                      elevation: 0,
                   ),
@@ -161,7 +161,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                           height: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(AppTheme.inkInverse),
                           ),
                         )
                       : Text(
@@ -209,9 +209,9 @@ class _RadioOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.navyPrimary.withOpacity(0.05) : Colors.white,
+          color: selected ? AppTheme.navyPrimary.withOpacity(0.05) : AppTheme.inkInverse,
           border: Border.all(
-            color: selected ? AppTheme.navyPrimary : Colors.grey.shade300,
+            color: selected ? AppTheme.navyPrimary : AppTheme.dividerGrey,
             width: selected ? 2 : 1
           ),
           borderRadius: AppTheme.smallRadius,
@@ -220,7 +220,7 @@ class _RadioOption extends StatelessWidget {
           children: [
             Icon(
               selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? AppTheme.navyPrimary : Colors.grey.shade400,
+              color: selected ? AppTheme.navyPrimary : AppTheme.inkSecondary,
               size: 18,
             ),
             const SizedBox(width: 8),

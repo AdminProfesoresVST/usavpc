@@ -36,7 +36,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
         title: Text(l10n.costCalculatorTitle),
         centerTitle: true,
         backgroundColor: AppTheme.navyPrimary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.inkInverse,
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -68,12 +68,12 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: AppTheme.inkInverse.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.calculate_outlined,
-                      color: Colors.white,
+                      color: AppTheme.inkInverse,
                       size: 24,
                     ),
                   ),
@@ -153,7 +153,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                 label: Text(l10n.calculateTotalCost),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.navyPrimary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.inkInverse,
                   shape: RoundedRectangleBorder(
                     borderRadius: AppTheme.inputRadius,
                   ),
@@ -204,7 +204,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
         hintText: l10n.selectCountry,
         prefixIcon: const Icon(Icons.public, color: AppTheme.navyPrimary),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppTheme.inkInverse,
         border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
       ),
       items: countries.map((c) {
@@ -237,7 +237,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
           hintText: l10n.selectCategory,
           prefixIcon: const Icon(Icons.badge_outlined, color: AppTheme.navyPrimary),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppTheme.inkInverse,
           border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
         ),
         items: cats.map((cat) {
@@ -280,7 +280,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.inkInverse,
         borderRadius: AppTheme.inputRadius,
         border: Border.all(color: AppTheme.dividerGrey),
       ),
@@ -366,11 +366,11 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
               width: (MediaQuery.of(context).size.width - 48) / 2,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.inkInverse,
                 borderRadius: AppTheme.inputRadius,
                 border: Border.all(color: AppTheme.dividerGrey),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+                  BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
                 ],
               ),
               child: Row(
@@ -432,7 +432,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: AppTheme.dividerGrey,
                       borderRadius: AppTheme.smallRadius,
                     ),
                   ),

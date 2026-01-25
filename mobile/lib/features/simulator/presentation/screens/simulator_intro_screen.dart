@@ -48,9 +48,9 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
     final l10n = context.l10n;
     
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.inkInverse,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.inkInverse,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppTheme.navyPrimary),
         actions: [
@@ -90,7 +90,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                Text(
                  l10n.simulatorDescription,
                  style: context.textTheme.bodyMedium?.copyWith(
-                   color: Colors.grey.shade600,
+                   color: AppTheme.inkSecondary,
                    height: 1.6,
                  ),
                  textAlign: TextAlign.center,
@@ -103,7 +103,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                      onPressed: _requestPermissions,
                      style: ElevatedButton.styleFrom(
                        backgroundColor: AppTheme.actionBlue,
-                       foregroundColor: Colors.white,
+                       foregroundColor: AppTheme.inkInverse,
                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                        shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
                        elevation: 1,
@@ -117,7 +117,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                      onPressed: () => context.push('/simulator/chat'),
                      style: ElevatedButton.styleFrom(
                        backgroundColor: AppTheme.navyPrimary, 
-                       foregroundColor: Colors.white,
+                       foregroundColor: AppTheme.inkInverse,
                        elevation: 4,
                        shadowColor: AppTheme.navyPrimary.withOpacity(0.4),
                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),

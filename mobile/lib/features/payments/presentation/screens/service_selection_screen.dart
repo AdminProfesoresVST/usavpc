@@ -298,7 +298,7 @@ class _StepItem extends StatelessWidget {
           borderRadius: AppTheme.buttonRadius,
           border: Border.all(color: AppTheme.cardBorderColor),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+            BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
           ],
         ),
         child: Column(
@@ -362,7 +362,7 @@ class _ServiceCard extends StatelessWidget {
         borderRadius: AppTheme.buttonRadius, // Slightly reduced radius
         border: Border.all(color: AppTheme.cardBorderColor),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2)),
+          BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 2)),
         ],
       ),
       child: Material(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
@@ -36,7 +37,7 @@ class CustomButton extends StatelessWidget {
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.inkInverse),
                 ),
               )
             : Text(
@@ -44,7 +45,7 @@ class CustomButton extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   fontSize: 16, // Keeping 16 for main buttons, but derived from theme font family
                   fontWeight: FontWeight.w600,
-                  color: textColor ?? Colors.white,
+                  color: textColor ?? AppTheme.inkInverse,
                 ),
               ),
       ),

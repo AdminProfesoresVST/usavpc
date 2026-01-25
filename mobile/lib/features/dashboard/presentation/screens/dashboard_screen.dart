@@ -48,11 +48,11 @@ class DashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildStatusCard(BuildContext context, DashboardData data, dynamic l10n) {
-    Color statusColor = Colors.amber;
+    Color statusColor = AppTheme.warningOrange;
     if (data.status == 'PAID' || data.status == 'SUBMITTED') {
-      statusColor = Colors.green;
+      statusColor = AppTheme.successGreen;
     } else if (data.status == 'REJECTED') {
-      statusColor = Colors.red;
+      statusColor = AppTheme.errorRed;
     }
 
     return Container(

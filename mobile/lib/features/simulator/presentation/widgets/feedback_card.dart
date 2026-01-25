@@ -23,12 +23,12 @@ class FeedbackCard extends StatelessWidget {
         break;
       case 'bad':
       case 'mala':
-        cardColor = Colors.grey.shade100; // Was Red.shade50
+        cardColor = AppTheme.inkSecondary; // Was Red.shade50
         icon = Icons.cancel;
         title = "Needs Improvement";
         break;
       default: // ok, regular
-        cardColor = Colors.white; // Was Amber.shade50
+        cardColor = AppTheme.inkInverse; // Was Amber.shade50
         icon = Icons.info;
         title = "Acceptable";
     }
@@ -70,7 +70,7 @@ class FeedbackCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.6),
+                color: AppTheme.inkInverse.withOpacity(0.6),
                 borderRadius: AppTheme.smallRadius,
               ),
               child: Row(

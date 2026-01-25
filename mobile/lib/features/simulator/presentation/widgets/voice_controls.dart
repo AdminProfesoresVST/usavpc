@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/app_theme.dart';
 
 class VoiceControls extends StatelessWidget {
   final bool isListening;
@@ -35,12 +36,12 @@ class VoiceControls extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isListening ? Colors.red : Theme.of(context).primaryColor,
+              color: isListening ? AppTheme.errorRed : Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
             child: Icon(
               isListening ? Icons.mic : Icons.mic_none,
-              color: Colors.white,
+              color: AppTheme.inkInverse,
               size: 32,
             ),
           ),

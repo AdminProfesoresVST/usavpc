@@ -32,13 +32,13 @@ class TravelBanWarningCard extends StatelessWidget {
         Icons.block_rounded,
       ),
       RestrictionLevel.partialRestriction => (
-        Colors.orange.shade100,
-        Colors.orange.shade800,
+        AppTheme.warningOrangeLight,
+        AppTheme.warningOrange,
         Icons.warning_amber_rounded,
       ),
       RestrictionLevel.immigrantPause => (
-        Colors.amber.shade100,
-        Colors.amber.shade800,
+        AppTheme.warningOrangeLight,
+        AppTheme.warningOrange,
         Icons.pause_circle_outline_rounded,
       ),
       RestrictionLevel.none => (
@@ -199,22 +199,22 @@ class RestrictionStatusBadge extends StatelessWidget {
     
     final (color, icon, label) = switch (level) {
       RestrictionLevel.totalBan => (
-        Colors.red,
+        AppTheme.errorRed,
         Icons.block,
         'Banned',
       ),
       RestrictionLevel.partialRestriction => (
-        Colors.orange,
+        AppTheme.warningOrange,
         Icons.warning_amber,
         'Restricted',
       ),
       RestrictionLevel.immigrantPause => (
-        Colors.amber,
+        AppTheme.warningOrange,
         Icons.pause_circle,
         'Paused',
       ),
       RestrictionLevel.none => (
-        Colors.green,
+        AppTheme.successGreen,
         Icons.check_circle,
         'Allowed',
       ),
