@@ -36,7 +36,7 @@ class VoiceControls extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isListening ? AppTheme.errorRed : Theme.of(context).primaryColor,
+              color: isListening ? AppTheme.errorRed : AppTheme.navyPrimary,
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -84,7 +84,7 @@ class _WaveBarState extends State<_WaveBar> with SingleTickerProviderStateMixin 
         return Container(
           width: 4,
           height: 10 + (20 * _controller.value),
-          color: Theme.of(context).primaryColor,
+          color: AppTheme.navyPrimary,
         );
       },
     );

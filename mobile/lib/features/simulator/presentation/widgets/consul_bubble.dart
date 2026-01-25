@@ -31,14 +31,7 @@ class ConsulBubble extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(
-            fontFamily: 'PublicSans',
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: AppTheme.navyPrimary,
-            height: 1.5,
-            letterSpacing: 0.1,
-          ),
+          style: AppTheme.bodyPrimaryRegular.copyWith(color: AppTheme.navyPrimary),
         ),
       ),
     );

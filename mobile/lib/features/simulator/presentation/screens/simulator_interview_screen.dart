@@ -241,10 +241,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                     ? Center(
                         child: Text(
                           l10n.connectingToOfficer,
-                          style: TextStyle(
-                            color: AppTheme.inkSecondary,
-                            fontSize: 16,
-                          ),
+                          style: AppTheme.bodyPrimaryRegular.copyWith(color: AppTheme.inkSecondary),
                         ),
                       )
                     : ListView.builder(
@@ -298,10 +295,10 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                        ),
                        child: TextField(
                          controller: _textController,
-                         style: const TextStyle(fontSize: 14, color: AppTheme.navyPrimary),
+                         style: AppTheme.labelRegular.copyWith(color: AppTheme.navyPrimary),
                          decoration: InputDecoration(
                            hintText: _isListening ? l10n.listening : l10n.typeYourResponse,
-                           hintStyle: TextStyle(fontSize: 14, color: AppTheme.inkSecondary),
+                           hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
                            border: InputBorder.none,
                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                            isDense: true,
