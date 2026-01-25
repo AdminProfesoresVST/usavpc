@@ -228,9 +228,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               width: double.infinity,
               height: 56,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  // Navigate to form
-                },
+                onPressed: () => context.push('/identity/start'),
                 icon: const Icon(Icons.arrow_forward),
                 label: Text(l10n.continueToApp),
                  style: ElevatedButton.styleFrom(
