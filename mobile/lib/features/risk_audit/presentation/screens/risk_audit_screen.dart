@@ -132,7 +132,7 @@ class RiskAuditScreen extends ConsumerWidget {
             color: isPositive ? AppTheme.navyPrimary : AppTheme.actionBlue,
           ),
           const SizedBox(width: 16),
-          Expanded(child: Text(text, style: context.textTheme.bodyMedium)),
+          Expanded(child: Text(text, style: AppTheme.bodyPrimaryRegular)),
         ],
       ),
     );

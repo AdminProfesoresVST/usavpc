@@ -303,7 +303,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       alignment: Alignment.centerLeft,
       child: Text(
         title.toUpperCase(),
-        style: TextStyle(color: AppTheme.inkSecondary, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+        style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
       ),
     );
   }
@@ -372,7 +372,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             errorBuilder: (_, __, ___) => Container(height: 180, color: AppTheme.backgroundGrey, child: const Center(child: Icon(Icons.broken_image)))),
         ),
         const SizedBox(height: 12),
-        Text(l10n.scannedPassport, style: const TextStyle(fontWeight: FontWeight.w500)),
+        Text(l10n.scannedPassport, style: AppTheme.labelBold),
       ],
     ));
   }

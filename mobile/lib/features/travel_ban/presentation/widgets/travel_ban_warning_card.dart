@@ -138,7 +138,7 @@ class TravelBanWarningCard extends StatelessWidget {
                   return Chip(
                     label: Text(cat),
                     backgroundColor: iconColor.withOpacity(0.1),
-                    labelStyle: TextStyle(color: iconColor, fontSize: 12),
+                    labelStyle: AppTheme.captionGreyRegular.copyWith(color: iconColor),
                     side: BorderSide(color: iconColor.withOpacity(0.3)),
                   );
                 }).toList(),
