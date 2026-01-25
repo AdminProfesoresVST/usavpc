@@ -52,3 +52,49 @@ INSERT INTO public.profiles (id, email, role, first_name, last_name)
 VALUES 
   ('00000000-0000-0000-0000-000000000004', 'dev_fresh@example.com', 'client', 'Dev', 'Fresh')
 ON CONFLICT (id) DO NOTHING;
+
+-- ==========================================
+-- VISA SERVICE DATA (Added 2026-01-24)
+-- ==========================================
+
+-- 1. Visa Categories
+INSERT INTO public.visa_categories (code, name, description, visa_type, form_engine, base_fee_usd, requires_sevis, requires_petition, is_fiance_visa)
+VALUES
+  ('B1/B2', 'Visitor Business/Tourism', 'For temporary business or tourism purposes', 'non_immigrant', 'DS-160', 185, false, false, false),
+  ('F1', 'Student (Academic)', 'For academic studies in US institutions', 'non_immigrant', 'DS-160', 185, true, false, false),
+  ('M1', 'Student (Vocational)', 'For vocational or non-academic studies', 'non_immigrant', 'DS-160', 185, true, false, false),
+  ('J1', 'Exchange Visitor', 'For work-and-travel, au pair, or research exchange', 'non_immigrant', 'DS-160', 185, true, false, false),
+  ('H1B', 'Specialty Occupation', 'For professionals in specialty occupations', 'non_immigrant', 'DS-160', 205, false, true, false),
+  ('L1', 'Intracompany Transferee', 'For transfer of employees within multinational companies', 'non_immigrant', 'DS-160', 205, false, true, false),
+  ('O1', 'Extraordinary Ability', 'For individuals with extraordinary ability or achievement', 'non_immigrant', 'DS-160', 205, false, true, false),
+  ('P1', 'Athlete/Entertainer', 'For athletes, entertainers, and artists', 'non_immigrant', 'DS-160', 205, false, true, false),
+  ('K1', 'Fiancé(e)', 'For fiancé(e) of US citizen', 'non_immigrant', 'DS-160', 265, false, true, true),
+  ('E1/E2', 'Treaty Trader/Investor', 'For investors from treaty countries', 'non_immigrant', 'DS-160', 315, false, false, false),
+  ('IR1', 'Spouse of US Citizen', 'Immediate relative spouse visa', 'immigrant', 'DS-260', 325, false, true, false),
+  ('CR1', 'Spouse (Conditional)', 'Conditional resident spouse visa', 'immigrant', 'DS-260', 325, false, true, false);
+
+-- 2. Country Restrictions (Sample 2026 Data)
+INSERT INTO public.country_restrictions (country_code, country_name, restriction_level, restricted_categories, notes)
+VALUES
+  ('CU', 'Cuba', 'total_ban', NULL, 'State Sponsor of Terrorism designation. Full suspension.'),
+  ('IR', 'Iran', 'partial_restriction', ARRAY['F1', 'M1', 'J1'], 'Student visa restrictions for specific technology fields.'),
+  ('RU', 'Russia', 'immigrant_pause', NULL, 'Immigrant visa processing paused. Non-immigrant requires interview in 3rd country.'),
+  ('VE', 'Venezuela', 'partial_restriction', ARRAY['B1/B2'], 'Reciprocity fee increase and B1/B2 limitations.');
+
+-- 3. Visa Fees
+INSERT INTO public.visa_fees (fee_type, amount_usd, visa_category_code, description, is_refundable)
+VALUES
+  ('integrity_fee', 250, NULL, 'USCIS Asylum Program Fee (Petition based)', false),
+  ('sevis_i901', 350, 'F1', 'SEVIS I-901 Fee for Academic Students', false),
+  ('sevis_i901', 350, 'M1', 'SEVIS I-901 Fee for Vocational Students', false),
+  ('sevis_i901', 220, 'J1', 'SEVIS I-901 Fee for Exchange Visitors', false),
+  ('i94_land', 24, NULL, 'I-94 Land Border Crossing Fee', false);
+
+-- 4. Prerequisites
+INSERT INTO public.prerequisites (visa_category_code, document_type, description, is_mandatory, validation_regex)
+VALUES
+  ('F1', 'I-20', 'Certificate of Eligibility for Nonimmigrant Student Status', true, '^N[0-9]{10}$'),
+  ('M1', 'I-20', 'Certificate of Eligibility for Nonimmigrant Student Status', true, '^N[0-9]{10}$'),
+  ('J1', 'DS-2019', 'Certificate of Eligibility for Exchange Visitor Status', true, '^N[0-9]{10}$'),
+  ('H1B', 'I-797', 'Notice of Action (Approval Notice)', true, '^WAC[0-9]{10}$'),
+  ('L1', 'I-129S', 'Nonimmigrant Petition Based on Blanket L Petition', true, NULL);

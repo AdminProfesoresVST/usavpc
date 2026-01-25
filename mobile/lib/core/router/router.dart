@@ -22,6 +22,10 @@ import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart
 import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart';
 import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart';
 import 'package:mobile/features/onboarding/presentation/screens/splash_screen.dart';
+import 'package:mobile/features/visa/presentation/screens/visa_category_selector_screen.dart';
+import 'package:mobile/features/visa/presentation/screens/prerequisite_checker_screen.dart';
+import 'package:mobile/features/travel_ban/presentation/screens/restriction_check_screen.dart';
+import 'package:mobile/features/cost_calculator/presentation/screens/cost_calculator_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -195,6 +199,27 @@ GoRouter goRouter(Ref ref) {
            final type = state.uri.queryParameters['type'] ?? 'b1b2';
            return ChatIntakeScreen(visaType: type);
         },
+      ),
+
+      // VISA SERVICES ROUTES
+      GoRoute(
+        path: '/visa/select',
+        builder: (context, state) => const VisaCategorySelectorScreen(),
+      ),
+      GoRoute(
+        path: '/visa/prerequisites',
+        builder: (context, state) {
+          final code = state.uri.queryParameters['code'] ?? 'B1/B2';
+          return PrerequisiteCheckerScreen(visaCategoryCode: code);
+        },
+      ),
+      GoRoute(
+        path: '/travel-ban/check',
+        builder: (context, state) => const RestrictionCheckScreen(),
+      ),
+      GoRoute(
+        path: '/cost/calculate',
+        builder: (context, state) => const CostCalculatorScreen(),
       ),
     ],
   );
