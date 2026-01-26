@@ -20,7 +20,7 @@ class CostBreakdownCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: AppTheme.paddingCampo,
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: AppTheme.badgeRadius,

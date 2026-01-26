@@ -421,7 +421,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                   hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
                   filled: true,
                   fillColor: AppTheme.dividerGreyLight,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Reduced vertical
+                  contentPadding: AppTheme.paddingCampo, // Reduced vertical
                   border: OutlineInputBorder(
                     borderRadius: AppTheme.badgeRadius, // Reduced from 24
                     borderSide: BorderSide.none,
@@ -488,7 +488,7 @@ class _ChatBubble extends StatelessWidget {
           onPressed: onAction,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.navyPrimary,
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            padding: AppTheme.paddingPantalla,
             shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
           ),
           child: Text(l10n.viewMyApplication, style: AppTheme.h2NavyBold.copyWith(color: AppTheme.inkInverse)),

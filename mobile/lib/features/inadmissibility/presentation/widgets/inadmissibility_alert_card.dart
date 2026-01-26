@@ -22,7 +22,7 @@ class InadmissibilityAlertCard extends StatelessWidget {
     final color = _getSeverityColor(flag.severity);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: AppTheme.paddingCampo,
       decoration: BoxDecoration(
         color: color.withOpacity(0.05),
         borderRadius: AppTheme.cardRadius,

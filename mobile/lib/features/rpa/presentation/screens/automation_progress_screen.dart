@@ -197,7 +197,7 @@ class _AutomationProgressScreenState extends ConsumerState<AutomationProgressScr
                 Expanded(
                   flex: 3,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    margin: AppTheme.paddingCompacto,
                     decoration: BoxDecoration(
                       border: Border.all(color: AppTheme.successGreen.withValues(alpha: 0.3)),
                       borderRadius: AppTheme.smallRadius,

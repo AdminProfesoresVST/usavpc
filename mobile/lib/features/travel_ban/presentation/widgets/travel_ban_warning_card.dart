@@ -49,7 +49,7 @@ class TravelBanWarningCard extends StatelessWidget {
     };
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: AppTheme.paddingCampo,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: AppTheme.cardRadius,

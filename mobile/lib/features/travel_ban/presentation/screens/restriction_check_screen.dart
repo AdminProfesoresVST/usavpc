@@ -296,8 +296,8 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
   Widget _buildStatCard(String label, String value, Color color, Color bg) {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        margin: AppTheme.paddingCompacto,
+        padding: AppTheme.paddingEstandar,
         decoration: BoxDecoration(
           color: AppTheme.inkInverse,
           borderRadius: AppTheme.inputRadius,

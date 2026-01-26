@@ -171,7 +171,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppTheme.navyPrimary,
                 side: const BorderSide(color: AppTheme.navyPrimary),
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: AppTheme.paddingListItem,
                 shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
               ),
             ),
@@ -218,7 +218,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Text(email, style: AppTheme.captionWhiteRegular),
                     SizedBox(height: AppTheme.espacioEntreLabelInput),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: AppTheme.paddingBadge,
                       decoration: BoxDecoration(
                         color: AppTheme.inkInverse24,
                         borderRadius: AppTheme.smallRadius,
@@ -258,7 +258,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   // ============== MENU ITEM (COMPACT) ==============
   Widget _buildMenuItem(IconData icon, String title, String subtitle, VoidCallback onTap, {Widget? trailing}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: AppTheme.espacioEntreCampos),
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         borderRadius: AppTheme.buttonRadius,
@@ -268,7 +268,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         dense: true,
         visualDensity: VisualDensity.compact,
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        contentPadding: AppTheme.paddingHorizontal,
         leading: Icon(icon, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
         title: Text(title, style: AppTheme.labelBold.copyWith(fontSize: 13)),
         subtitle: Text(subtitle, style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption)),
@@ -279,7 +279,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Widget _buildBiometricsSwitch(dynamic l10n) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: AppTheme.espacioEntreCampos),
       decoration: BoxDecoration(
         color: AppTheme.inkInverse,
         borderRadius: AppTheme.buttonRadius,
@@ -290,7 +290,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         value: _biometricsEnabled,
         onChanged: _toggleBiometrics,
         activeTrackColor: AppTheme.navyPrimary,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        contentPadding: AppTheme.paddingPequeno,
         secondary: Icon(Icons.fingerprint, color: AppTheme.navyPrimary, size: AppTheme.iconoEnTarjeta),
         title: Text(l10n.biometricsLabel, style: AppTheme.labelBold.copyWith(fontSize: 13)),
         subtitle: Text(_biometricsEnabled ? l10n.activated : l10n.deactivated, style: AppTheme.captionGreyRegular.copyWith(fontSize: AppTheme.fuenteCaption)),
@@ -324,13 +324,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           children: [
             // Handle
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
+              margin: AppTheme.paddingCompacto,
               width: 32, height: 4,
               decoration: BoxDecoration(color: AppTheme.dividerGrey, borderRadius: AppTheme.smallRadius),
             ),
             // Title
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: AppTheme.paddingCampo,
               child: Text(title, style: AppTheme.h2NavyBold),
             ),
             // Content
@@ -399,7 +399,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               if (score != null) 
                 Container(
                   padding: AppTheme.paddingPequeno,
-                  margin: const EdgeInsets.only(bottom: 12),
+                  margin: EdgeInsets.only(bottom: AppTheme.espacioEntreGrupos),
                   decoration: BoxDecoration(color: AppTheme.softBlue, borderRadius: AppTheme.buttonRadius),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -485,8 +485,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Widget _buildInfoRow(String label, String value) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: EdgeInsets.only(bottom: AppTheme.espacioEntreCampos),
+      padding: AppTheme.paddingPequeno,
       decoration: BoxDecoration(
         color: AppTheme.backgroundGrey,
         borderRadius: AppTheme.smallRadius,

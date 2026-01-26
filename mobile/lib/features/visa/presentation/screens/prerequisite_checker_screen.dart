@@ -64,7 +64,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
               // List of prerequisites
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 100),
+                  padding: EdgeInsets.only(bottom: 100),
                   itemCount: prerequisites.length,
                   itemBuilder: (context, index) {
                     final form = prerequisites[index];
@@ -272,7 +272,7 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
           children: [
             // Status indicator
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: AppTheme.paddingCampo,
               decoration: BoxDecoration(
                 color: allMandatoryComplete
                     ? AppTheme.successGreen.withOpacity(0.1)

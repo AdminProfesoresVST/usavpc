@@ -25,7 +25,7 @@ class SocialProfileCard extends StatelessWidget {
     final statusColor = _getAuditStatusColor(profile.auditStatus);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: AppTheme.paddingCampo,
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: AppTheme.cardRadius,

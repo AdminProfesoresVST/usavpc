@@ -67,7 +67,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.navyPrimary))
           : SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+              padding: AppTheme.paddingExtraGrande,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,7 +88,7 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
                     painter: DottedBorderPainter(color: AppTheme.inkSecondary, radius: 24),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+                      padding: AppTheme.paddingExtraGrande,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

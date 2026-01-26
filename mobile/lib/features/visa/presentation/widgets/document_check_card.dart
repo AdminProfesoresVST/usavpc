@@ -281,7 +281,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
               child: Column(
                 children: widget.form.requiredFields.map((field) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: EdgeInsets.only(bottom: AppTheme.espacioEntreGrupos),
                     child: TextFormField(
                       controller: _controllers[field],
                       decoration: AppTheme.inputDecoration(

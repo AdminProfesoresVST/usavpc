@@ -62,7 +62,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          padding: AppTheme.paddingExtraGrande,
           child: Column(
              mainAxisAlignment: MainAxisAlignment.center,
              children: [
@@ -97,7 +97,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                      style: ElevatedButton.styleFrom(
                        backgroundColor: AppTheme.actionBlue,
                        foregroundColor: AppTheme.inkInverse,
-                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                       padding: AppTheme.paddingGrande,
                        shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
                        elevation: AppTheme.elevacionSutil,
                      ),
@@ -113,7 +113,7 @@ class _SimulatorIntroScreenState extends ConsumerState<SimulatorIntroScreen> {
                        foregroundColor: AppTheme.inkInverse,
                        elevation: AppTheme.elevacionMedia,
                        shadowColor: AppTheme.navyPrimary.withOpacity(0.4),
-                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                       padding: AppTheme.paddingPantalla,
                        shape: RoundedRectangleBorder(borderRadius: AppTheme.badgeRadius),
                        textStyle: AppTheme.labelBold.copyWith(color: AppTheme.inkInverse),
                      ),

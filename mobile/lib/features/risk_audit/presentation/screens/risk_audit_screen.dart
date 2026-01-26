@@ -63,7 +63,7 @@ class RiskAuditScreen extends ConsumerWidget {
                       ),
                       SizedBox(height: AppTheme.espacioEntreCampos),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        padding: AppTheme.paddingCampo,
                         decoration: BoxDecoration(
                           color: AppTheme.softBlue,
                           borderRadius: AppTheme.badgeRadius,

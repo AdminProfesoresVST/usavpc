@@ -66,7 +66,7 @@ class DashboardScreen extends ConsumerWidget {
               children: [
                 Text(l10n.applicationStatus, style: AppTheme.labelBold),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: AppTheme.paddingPequeno,
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.2),
                     borderRadius: AppTheme.badgeRadius,
@@ -128,7 +128,7 @@ class DashboardScreen extends ConsumerWidget {
     required String iconCode,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: AppTheme.espacioEntreGrupos),
       decoration: AppTheme.standardCardDecoration,
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: AppTheme.cardRadius),

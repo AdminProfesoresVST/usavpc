@@ -70,7 +70,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                   final categoriesAsync = ref.watch(visaCategoriesProvider);
                   return categoriesAsync.when(
                     loading: () => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      padding: AppTheme.paddingEstandar,
                       decoration: BoxDecoration(
                         border: Border.all(color: AppTheme.dividerGrey),
                         borderRadius: AppTheme.smallRadius,
@@ -97,7 +97,7 @@ class _QuickCheckScreenState extends ConsumerState<QuickCheckScreen> {
                         });
                       }
                       return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: AppTheme.paddingBadge,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppTheme.dividerGrey),
                           borderRadius: AppTheme.smallRadius,

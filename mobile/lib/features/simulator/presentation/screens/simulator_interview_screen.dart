@@ -300,7 +300,7 @@ class _SimulatorInterviewScreenState extends ConsumerState<SimulatorInterviewScr
                            hintText: _isListening ? l10n.listening : l10n.typeYourResponse,
                            hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
                            border: InputBorder.none,
-                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                           contentPadding: AppTheme.paddingCampo,
                            isDense: true,
                            suffixIcon: _textController.text.isNotEmpty
                                ? GestureDetector(

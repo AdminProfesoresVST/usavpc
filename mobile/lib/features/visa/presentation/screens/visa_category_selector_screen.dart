@@ -86,7 +86,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
       borderRadius: AppTheme.cardRadius,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: AppTheme.paddingVertical,
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.navyPrimary : AppTheme.surfaceWhite,
           borderRadius: AppTheme.inputRadius, // Slightly less than container (16-2)
@@ -147,7 +147,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
         final grouped = _groupByFee(categories);
 
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+          padding: EdgeInsets.fromLTRB(AppTheme.marginPantalla, 0, AppTheme.marginPantalla, 100),
           itemCount: grouped.length,
           itemBuilder: (context, index) {
             final entry = grouped.entries.elementAt(index);
@@ -181,11 +181,11 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: AppTheme.paddingListItem,
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: AppTheme.paddingPequeno,
                 decoration: BoxDecoration(
                   color: AppTheme.navyPrimary,
                   borderRadius: AppTheme.cardRadius,
@@ -247,7 +247,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: AppTheme.espacioEntreCampos),
       child: StandardServiceCard(
         title: VisaLocalization.getVisaName(category.code, category.name, l10n),
         description: VisaLocalization.getVisaDescription(category.code, category.description ?? '', l10n),
