@@ -10,7 +10,7 @@ import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobile/features/payments/presentation/screens/service_selection_screen.dart';
 import 'package:mobile/features/payments/presentation/screens/visa_type_selection_screen.dart';
 import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
-import 'package:mobile/features/kyc/presentation/screens/form_wizard_screen.dart';
+
 import 'package:mobile/features/kyc/presentation/screens/ai_intake_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_landing_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_scanner_screen.dart';
@@ -26,7 +26,8 @@ import 'package:mobile/features/visa/presentation/screens/visa_category_selector
 import 'package:mobile/features/visa/presentation/screens/prerequisite_checker_screen.dart';
 import 'package:mobile/features/travel_ban/presentation/screens/restriction_check_screen.dart';
 import 'package:mobile/features/cost_calculator/presentation/screens/cost_calculator_screen.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/features/help/presentation/screens/help_topic_screen.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'router.g.dart';
@@ -64,47 +65,6 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
-        path: '/services',
-        builder: (context, state) => const ServiceSelectionScreen(),
-      ),
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => MainScaffold(navigationShell: navigationShell),
-        branches: [
-          // Branch 1: Inicio (Dashboard)
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/dashboard',
-                builder: (context, state) => const DashboardScreen(),
-              ),
-            ],
-          ),
-          // Branch 2: Servicios (Service Selection) - User asked "Where are services?"
-          StatefulShellBranch(
-            routes: [
-               GoRoute(
-                path: '/services_tab', // Distinct path for tab
-                builder: (context, state) => const ServiceSelectionScreen(),
-              ),
-            ],
-          ),
-          // Branch 3: Placeholder (Keep 3 branches for nav balance, but Profile accessed via push)
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/profile_tab', // Placeholder - actual Profile is standalone
-                builder: (context, state) => const ProfileScreen(),
-              ),
-            ],
-          ),
-        ],
-      ),
-      // STANDALONE PROFILE (No BottomNavBar)
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
-      ),
-      GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
@@ -112,36 +72,21 @@ GoRouter goRouter(Ref ref) {
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
       ),
-      GoRoute(
-        path: '/payment',
-        builder: (context, state) => const ServiceSelectionScreen(),
-      ),
-      GoRoute(
-        path: '/visa-type',
-        builder: (context, state) => const VisaTypeSelectionScreen(),
-      ),
-      GoRoute(
-        path: '/checkout',
-        builder: (context, state) => const OrderSummaryScreen(),
-      ),
+      // Immersive Flows (No Shell)
       GoRoute(
         path: '/kyc',
-         builder: (context, state) {
+        builder: (context, state) {
            final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
            return ChatIntakeScreen(visaType: type);
         },
       ),
       GoRoute(
         path: '/kyc/chat',
-        builder: (context, state) {
-            // FIXED: Use the new AI Intake Screen which has the DB logic
-            return const AiIntakeScreen();
-        },
+        builder: (context, state) => const AiIntakeScreen(),
       ),
       GoRoute(
         path: '/kyc/confirm',
         builder: (context, state) {
-           // ZERO TOLERANCE: Check query params instead of fragile extra object
            final p = state.uri.queryParameters;
            if (p['passport'] != null) {
              return PassportConfirmScreen(
@@ -157,7 +102,6 @@ GoRouter goRouter(Ref ref) {
                ),
              );
            }
-           // Fallback: If no data, go to new Chat Intake
            final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
            return ChatIntakeScreen(visaType: type);
         },
@@ -180,18 +124,9 @@ GoRouter goRouter(Ref ref) {
           ),
         ],
       ),
-      // Alias for legacy support if needed, but better to migrate
       GoRoute(
         path: '/sim',
         redirect: (_, __) => '/simulator', 
-      ),
-      GoRoute(
-        path: '/quick-check',
-        builder: (context, state) => const QuickCheckScreen(),
-      ),
-      GoRoute(
-        path: '/risk-audit',
-        builder: (context, state) => const RiskAuditScreen(),
       ),
       GoRoute(
         path: '/chat-intake',
@@ -200,26 +135,138 @@ GoRouter goRouter(Ref ref) {
            return ChatIntakeScreen(visaType: type);
         },
       ),
+      
+      // UNIFIED SHELL
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => MainScaffold(navigationShell: navigationShell),
+        branches: [
+          // Branch 0: Dashboard (Home)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/dashboard',
+                builder: (context, state) => const DashboardScreen(),
+              ),
+            ],
+          ),
+          // Branch 1: Services (Public Catalog + Tools)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/services',
+                redirect: (context, state) {
+                   // User Request: "the icon that says services... should take me to the simulator if logged in"
+                   final isLoggedIn = ref.read(authStateProvider).value != null;
+                   // FIX: Only redirect if explicitly hitting the tab root, NOT subroutes
+                   if (isLoggedIn && state.uri.toString() == '/services') {
+                     return '/simulator/chat';
+                   }
+                   return null;
+                },
+                builder: (context, state) => const ServiceSelectionScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'visa/select',
+                    builder: (context, state) => const VisaCategorySelectorScreen(),
+                  ),
+                  GoRoute(
+                    path: 'visa/prerequisites',
+                    builder: (context, state) {
+                      final code = state.uri.queryParameters['code'] ?? 'B1/B2';
+                      return PrerequisiteCheckerScreen(visaCategoryCode: code);
+                    },
+                  ),
+                  GoRoute(
+                    path: 'visa-type',
+                    builder: (context, state) => const VisaTypeSelectionScreen(),
+                  ),
+                  GoRoute(
+                    path: 'cost/calculate',
+                    builder: (context, state) => const CostCalculatorScreen(),
+                  ),
+                  GoRoute(
+                    path: 'travel-ban/check',
+                    builder: (context, state) => const RestrictionCheckScreen(),
+                  ),
+                  GoRoute(
+                    path: 'quick-check',
+                    builder: (context, state) => const QuickCheckScreen(),
+                  ),
+                  GoRoute(
+                    path: 'risk-audit',
+                    builder: (context, state) => const RiskAuditScreen(),
+                  ),
+                  GoRoute(
+                    path: 'payment',
+                    builder: (context, state) => const ServiceSelectionScreen(), // Alias
+                  ),
+                  GoRoute(
+                    path: 'checkout',
+                    builder: (context, state) => const OrderSummaryScreen(),
+                  ),
+                   GoRoute(
+                    path: 'help/:topic',
+                    builder: (context, state) {
+                      final topicStr = state.pathParameters['topic'] ?? 'scan';
+                      final topic = HelpTopic.values.firstWhere(
+                        (e) => e.name == topicStr,
+                        orElse: () => HelpTopic.scan,
+                      );
+                      return HelpTopicScreen(topic: topic);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // Branch 2: Profile
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
+              ),
+            ],
+          ),
+        ],
+      ),
 
-      // VISA SERVICES ROUTES
+      // LEGACY REDIRECTS (Maintain backward compatibility)
+      GoRoute(
+        path: '/profile_tab',
+        redirect: (_, __) => '/profile',
+      ),
+      GoRoute(
+        path: '/services_tab',
+        redirect: (_, __) => '/services',
+      ),
       GoRoute(
         path: '/visa/select',
-        builder: (context, state) => const VisaCategorySelectorScreen(),
+        redirect: (context, state) => state.uri.replace(path: '/services/visa/select').toString(),
       ),
       GoRoute(
         path: '/visa/prerequisites',
-        builder: (context, state) {
-          final code = state.uri.queryParameters['code'] ?? 'B1/B2';
-          return PrerequisiteCheckerScreen(visaCategoryCode: code);
-        },
-      ),
-      GoRoute(
-        path: '/travel-ban/check',
-        builder: (context, state) => const RestrictionCheckScreen(),
+        redirect: (context, state) => state.uri.replace(path: '/services/visa/prerequisites').toString(),
       ),
       GoRoute(
         path: '/cost/calculate',
-        builder: (context, state) => const CostCalculatorScreen(),
+        redirect: (context, state) => state.uri.replace(path: '/services/cost/calculate').toString(),
+      ),
+      GoRoute(
+        path: '/travel-ban/check',
+         redirect: (context, state) => state.uri.replace(path: '/services/travel-ban/check').toString(),
+      ),
+      GoRoute(
+        path: '/quick-check',
+         redirect: (context, state) => state.uri.replace(path: '/services/quick-check').toString(),
+      ),
+      GoRoute(
+        path: '/risk-audit',
+         redirect: (context, state) => state.uri.replace(path: '/services/risk-audit').toString(),
+      ),
+      GoRoute(
+        path: '/payment',
+         redirect: (context, state) => state.uri.replace(path: '/services').toString(),
       ),
     ],
   );
