@@ -1,0 +1,130 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
+import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/core/widgets/app_header.dart';
+
+/// Visa type selection screen with full i18n support.
+/// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
+class VisaTypeSelectionScreen extends ConsumerWidget {
+  const VisaTypeSelectionScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundGrey,
+      appBar: AppHeader(title: l10n.visaTypeLabel),
+      body: ListView(
+        padding: AppTheme.paddingPantalla,
+        children: [
+          // Elegant Header
+          Padding(
+            padding: AppTheme.paddingVertical,
+            child: Text(
+              l10n.eligibilitySubtitle,
+              style: AppTheme.bodyPrimaryRegular.copyWith(
+                color: AppTheme.inkSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          
+          SizedBox(height: AppTheme.espacioEntreSecciones),
+
+          // Option 1: Turismo (B1/B2)
+          _CompactVisaTile(
+            title: l10n.visaB1B2,
+            description: l10n.newVisaSubtitle,
+            icon: Icons.beach_access_outlined,
+            onTap: () => context.push('/identity/start'),
+          ),
+          
+          SizedBox(height: AppTheme.espacioEntreGrupos),
+
+          // Option 2: Trabajo
+          _CompactVisaTile(
+            title: l10n.visaH2,
+            description: l10n.interviewSimulatorSubtitle,
+            icon: Icons.work_outline,
+            onTap: () => context.push('/identity/start?type=h2'),
+          ),
+
+          SizedBox(height: AppTheme.espacioEntreGrupos),
+
+          // Option 3: Estudiante
+          _CompactVisaTile(
+            title: l10n.visaF1,
+            description: l10n.documentAuditSubtitle,
+            icon: Icons.school_outlined,
+            onTap: () => context.push('/identity/start?type=f1'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactVisaTile extends StatelessWidget {
+  final String title;
+  final String description;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _CompactVisaTile({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.inkInverse,
+        borderRadius: AppTheme.buttonRadius,
+        border: Border.all(color: AppTheme.cardBorderColor),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppTheme.buttonRadius,
+          child: Padding(
+            padding: AppTheme.paddingEstandar,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, color: AppTheme.navyPrimary, size: AppTheme.iconoMediano),
+                const SizedBox(width: AppTheme.espacioEntreGrupos),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppTheme.labelBold,
+                      ),
+                      SizedBox(height: AppTheme.espacioEntreLabelInput),
+                      Text(
+                        description,
+                        style: AppTheme.captionGreyRegular,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(top: 2),
+                  child: Icon(Icons.chevron_right, color: AppTheme.inkSecondary, size: AppTheme.iconoEnTarjeta),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -56,14 +56,14 @@ CREATE POLICY "Public read" ON ds260_questions FOR SELECT USING (true);
 -- =====================================================
 
 -- SECCIÓN 1: Personal Information (Parte 1)
-INSERT INTO ds260_questions (field_key, section, section_order, question_formal, question_friendly, question_simple, question_context, tips, input_type, options, required) VALUES
+INSERT INTO ds260_questions (field_key, section, section_order, question_formal, question_friendly, question_simple, question_context, tips, input_type, options, required, skip_if_ocr) VALUES
 ('surnames', 'personal_1', 1, 
  'Indique sus apellidos exactamente como aparecen en el pasaporte.',
  '¿Cuáles son tus apellidos? Escríbelos tal cual están en tu pasaporte.',
  'Escribe tus apellidos.',
  'Esta información debe coincidir exactamente con tu documento de viaje para evitar problemas.',
  ARRAY['Usa mayúsculas preferiblemente', 'Copialo directo del pasaporte'],
- 'text', NULL, true),
+ 'text', NULL, true, true),
 
 ('given_names', 'personal_1', 2, 
  'Indique sus nombres de pila exactamente como aparecen en el pasaporte.',
@@ -71,7 +71,7 @@ INSERT INTO ds260_questions (field_key, section, section_order, question_formal,
  'Escribe tus nombres.',
  'Incluye todos tus nombres si tienes más de uno.',
  ARRAY['No uses apodos', 'Incluye segundo nombre si tienes'],
- 'text', NULL, true),
+ 'text', NULL, true, true),
 
 ('full_name_native', 'personal_1', 3, 
  'Nombre completo en alfabeto nativo (si aplica).',
@@ -79,7 +79,7 @@ INSERT INTO ds260_questions (field_key, section, section_order, question_formal,
  'Tu nombre en tu idioma original si usas otro alfabeto.',
  'Para la mayoría de los solicitantes de habla hispana, esto no aplica.',
  ARRAY['Si usas alfabeto latino, selecciona No Aplica'],
- 'text', NULL, false),
+ 'text', NULL, false, false),
 
 ('dob', 'personal_1', 4, 
  'Fecha de nacimiento.',
@@ -87,7 +87,7 @@ INSERT INTO ds260_questions (field_key, section, section_order, question_formal,
  'Tu fecha de nacimiento.',
  'Debe coincidir con la de tu pasaporte.',
  ARRAY['Día/Mes/Año'],
- 'date', NULL, true),
+ 'date', NULL, true, true),
 
 ('city_of_birth', 'personal_1', 5, 
  'Ciudad de nacimiento.',
@@ -95,7 +95,7 @@ INSERT INTO ds260_questions (field_key, section, section_order, question_formal,
  'Escribe la ciudad donde naciste.',
  'Tal como aparece en tu acta de nacimiento.',
  ARRAY['Solo la ciudad, evita abreviaturas'],
- 'text', NULL, true),
+ 'text', NULL, true, true),
 
 ('state_of_birth', 'personal_1', 6, 
  'Estado o Provincia de nacimiento.',
@@ -103,7 +103,7 @@ INSERT INTO ds260_questions (field_key, section, section_order, question_formal,
  'El estado donde naciste.',
  'Si tu país no tiene estados, puedes indicarlo.',
  ARRAY['Estado completo'],
- 'text', NULL, true),
+ 'text', NULL, true, true),
 
 ('country_of_birth', 'personal_1', 7, 
  'País o Región de nacimiento.',
@@ -111,17 +111,17 @@ INSERT INTO ds260_questions (field_key, section, section_order, question_formal,
  'El país de tu nacimiento.',
  'Selecciona el país de la lista.',
  ARRAY['Selecciona de la lista oficial'],
- 'text', NULL, true);
+ 'text', NULL, true, true);
 
 -- SECCIÓN 1: Personal Information (Parte 2)
-INSERT INTO ds260_questions (field_key, section, section_order, question_formal, question_friendly, question_simple, question_context, tips, input_type, options, required, depends_on, depends_on_value) VALUES
+INSERT INTO ds260_questions (field_key, section, section_order, question_formal, question_friendly, question_simple, question_context, tips, input_type, options, required, depends_on, depends_on_value, skip_if_ocr) VALUES
 ('nationality', 'personal_2', 1, 
  'Nacionalidad.',
  '¿Cuál es tu nacionalidad actual?',
  'Tu nacionalidad.',
  'Generalmente corresponde al pasaporte que estás usando/tramitando.',
  ARRAY['País actual de ciudadanía'],
- 'text', NULL, true, NULL, NULL),
+ 'text', NULL, true, NULL, NULL, true),
 
 ('other_nationality', 'personal_2', 2, 
  '¿Tiene o ha tenido alguna nacionalidad distinta a la indicada anteriormente?',

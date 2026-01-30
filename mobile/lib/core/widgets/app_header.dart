@@ -52,14 +52,14 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       backgroundColor: AppTheme.navyPrimary,
-      foregroundColor: Colors.white,
+      foregroundColor: AppTheme.inkInverse,
       centerTitle: centerTitle,
       elevation: 0,
       leading: leading,
       actions: actions,
       automaticallyImplyLeading: automaticallyImplyLeading,
       bottom: bottom,
-      iconTheme: const IconThemeData(color: Colors.white, size: 20),
+      iconTheme: const IconThemeData(color: AppTheme.inkInverse, size: AppTheme.iconoEnTarjeta),
     );
   }
 
@@ -96,12 +96,12 @@ class AppHeaderWithProgress extends StatelessWidget implements PreferredSizeWidg
           if (subtitle != null)
             Text(
               subtitle!,
-              style: AppTheme.captionWhiteRegular.copyWith(color: Colors.white70),
+              style: AppTheme.captionWhiteRegular.copyWith(color: AppTheme.inkInverse70),
             ),
         ],
       ),
       backgroundColor: AppTheme.navyPrimary,
-      foregroundColor: Colors.white,
+      foregroundColor: AppTheme.inkInverse,
       centerTitle: true,
       elevation: 0,
       actions: actions,
@@ -110,8 +110,8 @@ class AppHeaderWithProgress extends StatelessWidget implements PreferredSizeWidg
               preferredSize: const Size.fromHeight(4),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: Colors.white24,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                backgroundColor: AppTheme.inkInverse24,
+                valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.inkInverse),
               ),
             )
           : null,

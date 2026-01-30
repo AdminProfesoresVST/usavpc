@@ -1,33 +1,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:mobile/features/dashboard/presentation/screens/main_scaffold.dart';
-import 'package:mobile/features/dashboard/presentation/screens/profile_screen.dart';
-import 'package:mobile/features/auth/presentation/screens/login_screen.dart';
-import 'package:mobile/features/auth/presentation/screens/register_screen.dart';
-import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
-import 'package:mobile/features/payments/presentation/screens/service_selection_screen.dart';
-import 'package:mobile/features/payments/presentation/screens/visa_type_selection_screen.dart';
-import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
+import 'package:mobile/screens/dashboard_screen.dart';
+import 'package:mobile/screens/main_scaffold.dart';
+import 'package:mobile/screens/profile_screen.dart';
+import 'package:mobile/screens/login_screen.dart';
+import 'package:mobile/screens/register_screen.dart';
+import 'package:mobile/providers/auth_provider.dart';
+import 'package:mobile/screens/service_selection_screen.dart';
+import 'package:mobile/screens/visa_type_selection_screen.dart';
+import 'package:mobile/screens/order_summary_screen.dart';
 
-import 'package:mobile/features/kyc/presentation/screens/ai_intake_screen.dart';
-import 'package:mobile/features/kyc/presentation/screens/ds260_intake_screen.dart';
-import 'package:mobile/features/ocr/presentation/screens/verification_landing_screen.dart';
-import 'package:mobile/features/ocr/presentation/screens/verification_scanner_screen.dart';
-import 'package:mobile/features/ocr/presentation/screens/passport_confirm_screen.dart';
-import 'package:mobile/features/ocr/logic/mrz_parser.dart';
-import 'package:mobile/features/simulator/presentation/screens/simulator_intro_screen.dart';
-import 'package:mobile/features/simulator/presentation/screens/simulator_interview_screen.dart';
-import 'package:mobile/features/kyc/presentation/screens/chat_intake_screen.dart';
-import 'package:mobile/features/risk_audit/presentation/screens/quick_check_screen.dart';
-import 'package:mobile/features/risk_audit/presentation/screens/risk_audit_screen.dart';
-import 'package:mobile/features/onboarding/presentation/screens/splash_screen.dart';
-import 'package:mobile/features/visa/presentation/screens/visa_category_selector_screen.dart';
-import 'package:mobile/features/visa/presentation/screens/prerequisite_checker_screen.dart';
-import 'package:mobile/features/travel_ban/presentation/screens/restriction_check_screen.dart';
-import 'package:mobile/features/cost_calculator/presentation/screens/cost_calculator_screen.dart';
-import 'package:mobile/features/help/presentation/screens/help_topic_screen.dart';
+import 'package:mobile/screens/ds160_intake_screen.dart';
+import 'package:mobile/screens/ds260_intake_screen.dart';
+import 'package:mobile/screens/verification_landing_screen.dart';
+import 'package:mobile/screens/verification_scanner_screen.dart';
+import 'package:mobile/screens/passport_confirm_screen.dart';
+import 'package:mobile/services/mrz_parser.dart';
+import 'package:mobile/screens/simulator_intro_screen.dart';
+import 'package:mobile/screens/ds160_interview_simulator_screen.dart';
+import 'package:mobile/screens/quick_check_screen.dart';
+import 'package:mobile/screens/risk_audit_screen.dart';
+import 'package:mobile/screens/splash_screen.dart';
+import 'package:mobile/screens/visa_category_selector_screen.dart';
+import 'package:mobile/screens/prerequisite_checker_screen.dart';
+import 'package:mobile/screens/restriction_check_screen.dart';
+import 'package:mobile/screens/cost_calculator_screen.dart';
+import 'package:mobile/screens/help_topic_screen.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -76,14 +75,11 @@ GoRouter goRouter(Ref ref) {
       // Immersive Flows (No Shell)
       GoRoute(
         path: '/kyc',
-        builder: (context, state) {
-           final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
-           return ChatIntakeScreen(visaType: type);
-        },
+        redirect: (context, state) => '/kyc/chat', // Default to DS-160 Intake
       ),
       GoRoute(
         path: '/kyc/chat',
-        builder: (context, state) => const AiIntakeScreen(),
+        builder: (context, state) => const Ds160IntakeScreen(),
       ),
       GoRoute(
         path: '/kyc/ds260',
@@ -108,7 +104,7 @@ GoRouter goRouter(Ref ref) {
              );
            }
            final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
-           return ChatIntakeScreen(visaType: type);
+           return const Ds160IntakeScreen();
         },
       ),
       GoRoute(
@@ -125,7 +121,7 @@ GoRouter goRouter(Ref ref) {
         routes: [
            GoRoute(
             path: 'chat',
-            builder: (context, state) => const SimulatorInterviewScreen(),
+            builder: (context, state) => const Ds160InterviewSimulatorScreen(),
           ),
         ],
       ),
@@ -133,12 +129,9 @@ GoRouter goRouter(Ref ref) {
         path: '/sim',
         redirect: (_, __) => '/simulator', 
       ),
-      GoRoute(
+       GoRoute(
         path: '/chat-intake',
-        builder: (context, state) {
-           final type = state.uri.queryParameters['type'] ?? 'b1b2';
-           return ChatIntakeScreen(visaType: type);
-        },
+         redirect: (context, state) => '/kyc/chat',
       ),
       
       // UNIFIED SHELL

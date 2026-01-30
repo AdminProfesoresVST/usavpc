@@ -46,7 +46,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stepResultsSubtitle => 'Get Report';
 
   @override
-  String get popularServices => 'Popular Services';
+  String get popularServices => 'Services';
+
+  @override
+  String get helpScanTitle => 'Document Scanning';
+
+  @override
+  String get helpScanDesc =>
+      'Our OCR technology automatically extracts your data from your passport to avoid manual errors.';
+
+  @override
+  String get helpScanBullet1 => 'Place your passport on a flat surface.';
+
+  @override
+  String get helpScanBullet2 => 'Ensure good lighting without glare.';
+
+  @override
+  String get helpScanButton => 'Start Scanning';
+
+  @override
+  String get helpSimulateTitle => 'AI Interview Simulator';
+
+  @override
+  String get helpSimulateDesc =>
+      'Practice with our Virtual Consular Agent trained on thousands of real cases.';
+
+  @override
+  String get helpSimulateBullet1 =>
+      'Receive personalized questions based on your profile.';
+
+  @override
+  String get helpSimulateBullet2 => 'Get immediate feedback on your answers.';
+
+  @override
+  String get helpSimulateButton => 'Start Simulator';
+
+  @override
+  String get helpResultsTitle => 'Results & Analysis';
+
+  @override
+  String get helpResultsDesc =>
+      'Get a detailed risk analysis before your real appointment.';
+
+  @override
+  String get helpResultsBullet1 =>
+      'Identify potential red flags in your application.';
+
+  @override
+  String get helpResultsBullet2 =>
+      'Receive recommendations to improve your chances.';
+
+  @override
+  String get helpResultsButton => 'View My Services';
 
   @override
   String get viewAll => 'View all';
@@ -1199,6 +1250,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ds160Data => 'DS-160 Data';
 
   @override
+  String get socialMediaProfiles => 'Social Media Profiles';
+
+  @override
+  String get socialMediaDisclaimer =>
+      'DS-160 requires disclosure of social media accounts used in the last 5 years.';
+
+  @override
+  String get addSocialProfile => 'Add Social Media Profile';
+
+  @override
+  String get platform => 'Platform';
+
+  @override
+  String get profileUrl => 'Profile URL';
+
+  @override
+  String get usernameOptional => 'Username (optional)';
+
+  @override
+  String get enterValidUrl => 'Enter a valid URL';
+
+  @override
+  String get discrepanciesDetected => 'Discrepancies Detected';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get mismatch => 'Mismatch';
+
+  @override
+  String get alert => 'Alert';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String suggestedWaiver(String waiver) {
+    return 'Suggested Waiver: $waiver';
+  }
+
+  @override
+  String get detectedFrom => 'Detected from: ';
+
+  @override
+  String get iUnderstand => 'I Understand';
+
+  @override
+  String get detectedIssue => 'Detected Issue';
+
+  @override
+  String get profileUrlRequired => 'Profile URL is required';
+
+  @override
+  String get employmentHistoryMismatch =>
+      'Employment history does not match DS-160 declaration';
+
+  @override
   String sessionNumber(int number) {
     return 'Session $number';
   }
@@ -1312,4 +1421,103 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get i94FeeInfoDescription =>
       'Increased from USD 6 to USD 24 in 2026. Only applies if entering the US by land.';
+
+  @override
+  String get guestLabel => 'Guest';
+
+  @override
+  String get notAvailableAndDash => '---';
+
+  @override
+  String get notAvailableShort => 'N/A';
+
+  @override
+  String get supportEmail => 'support@usavpc.org';
+
+  @override
+  String get languageLabel => 'ES / EN';
+
+  @override
+  String get formLabel => 'Form';
+
+  @override
+  String get errorCriticalNoQuestions =>
+      'CRITICAL ERROR: No Questions found in Database (0). Seeding required.';
+
+  @override
+  String get errorNoQuestionsAvailable =>
+      'CRITICAL: No questions available to render.';
+
+  @override
+  String errorDbAuth(Object error) {
+    return 'DB Auth Error: Maybe RLS? $error';
+  }
+
+  @override
+  String get errorMissingQuestionText => 'Error: Missing Question Text';
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get cancelLabel => 'Cancel';
+
+  @override
+  String get noStepsAvailable => 'No steps available.';
+
+  @override
+  String get sexLabel => 'Sex';
+
+  @override
+  String get expiryDateLabel => 'Expiry Date';
+
+  @override
+  String get errorDatabaseUnique =>
+      'Database Error: Unique constraint missing. Fixed in logic.';
+
+  @override
+  String get uploadFormatInfo => 'PNG, JPG or PDF (max. 800x400px)';
+
+  @override
+  String get orSeparator => 'OR';
+
+  @override
+  String get scanIncompleteError =>
+      '❌ Scan incomplete. Please rescan passport clearly.';
+
+  @override
+  String get subscriptionTitle => 'Premium Access';
+
+  @override
+  String get subscriptionSubtitle => 'Unlock all services';
+
+  @override
+  String get planMonthly => 'Monthly Plan';
+
+  @override
+  String get planYearly => 'Yearly Plan';
+
+  @override
+  String get priceMonthly => '\$100/mo';
+
+  @override
+  String get priceYearly => '\$250/yr';
+
+  @override
+  String get bestValue => 'Best Value';
+
+  @override
+  String get selectPlan => 'Select Plan';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get services => 'Services';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get ds260IntakeTitle => 'DS-260 INTAKE';
 }

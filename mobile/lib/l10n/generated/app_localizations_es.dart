@@ -46,7 +46,59 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stepResultsSubtitle => 'Obtén Reporte';
 
   @override
-  String get popularServices => 'Servicios Populares';
+  String get popularServices => 'Servicios';
+
+  @override
+  String get helpScanTitle => 'Escaneo de Documentos';
+
+  @override
+  String get helpScanDesc =>
+      'Nuestra tecnología OCR extrae automáticamente tus datos del pasaporte para evitar errores manuales.';
+
+  @override
+  String get helpScanBullet1 => 'Coloca tu pasaporte en una superficie plana.';
+
+  @override
+  String get helpScanBullet2 => 'Asegura buena iluminación sin reflejos.';
+
+  @override
+  String get helpScanButton => 'Comenzar Escaneo';
+
+  @override
+  String get helpSimulateTitle => 'Simulador de Entrevista AI';
+
+  @override
+  String get helpSimulateDesc =>
+      'Practica con nuestro Agente Consular Virtual entrenado con miles de casos reales.';
+
+  @override
+  String get helpSimulateBullet1 =>
+      'Recibe preguntas personalizadas según tu perfil.';
+
+  @override
+  String get helpSimulateBullet2 =>
+      'Obtén feedback inmediato sobre tus respuestas.';
+
+  @override
+  String get helpSimulateButton => 'Iniciar Simulador';
+
+  @override
+  String get helpResultsTitle => 'Resultados y Análisis';
+
+  @override
+  String get helpResultsDesc =>
+      'Obtén un análisis de riesgos detallado antes de ir a tu cita real.';
+
+  @override
+  String get helpResultsBullet1 =>
+      'Identifica posibles banderas rojas en tu solicitud.';
+
+  @override
+  String get helpResultsBullet2 =>
+      'Recibe recomendaciones para mejorar tus probabilidades.';
+
+  @override
+  String get helpResultsButton => 'Ver Mis Servicios';
 
   @override
   String get viewAll => 'Ver todos';
@@ -998,13 +1050,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageChangeRequiresRestart =>
-      'Cambio de idioma requiere reinicio';
+      'Cambiar idioma requiere reinicio';
 
   @override
   String get openingTerms => 'Abriendo términos...';
 
   @override
-  String get openingPrivacy => 'Abriendo política...';
+  String get openingPrivacy => 'Abriendo política de privacidad...';
 
   @override
   String get emailCopied => 'Email copiado';
@@ -1209,12 +1261,70 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ds160Data => 'Datos DS-160';
 
   @override
+  String get socialMediaProfiles => 'Perfiles de Redes Sociales';
+
+  @override
+  String get socialMediaDisclaimer =>
+      'El DS-160 requiere declarar cuentas de redes sociales usadas en los últimos 5 años.';
+
+  @override
+  String get addSocialProfile => 'Agregar Perfil Social';
+
+  @override
+  String get platform => 'Plataforma';
+
+  @override
+  String get profileUrl => 'URL del Perfil';
+
+  @override
+  String get usernameOptional => 'Usuario (opcional)';
+
+  @override
+  String get enterValidUrl => 'Ingrese una URL válida';
+
+  @override
+  String get discrepanciesDetected => 'Discrepancias Detectadas';
+
+  @override
+  String get pending => 'Pendiente';
+
+  @override
+  String get mismatch => 'Discrepancia';
+
+  @override
+  String get alert => 'Alerta';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String suggestedWaiver(String waiver) {
+    return 'Waiver Sugerido: $waiver';
+  }
+
+  @override
+  String get detectedFrom => 'Detectado en: ';
+
+  @override
+  String get iUnderstand => 'Entendido';
+
+  @override
+  String get detectedIssue => 'Problema Detectado';
+
+  @override
+  String get profileUrlRequired => 'La URL del perfil es requerida';
+
+  @override
+  String get employmentHistoryMismatch =>
+      'El historial laboral no coincide con la declaración DS-160';
+
+  @override
   String sessionNumber(int number) {
     return 'Sesión $number';
   }
 
   @override
-  String get accountInfo => 'Información de Cuenta';
+  String get accountInfo => 'Información de la Cuenta';
 
   @override
   String get email => 'Email';
@@ -1238,7 +1348,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String passwordResetDialogContent(String email) {
-    return 'Se enviará un enlace de recuperación a:\n$email';
+    return 'Un enlace de recuperación será enviado a:\n$email';
   }
 
   @override
@@ -1254,10 +1364,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get viewDocument => 'Ver documento';
 
   @override
-  String get spanishLanguage => '🇪🇸  Español';
+  String get spanishLanguage => '🇪🇸 Español';
 
   @override
-  String get englishLanguage => '🇺🇸  English';
+  String get englishLanguage => '🇺🇸 English';
 
   @override
   String get roundTrip => 'Ida y Vuelta';
@@ -1266,7 +1376,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get oneWay => 'Solo Ida';
 
   @override
-  String get flightCostEstimate => 'Estimación de Costo de Vuelo';
+  String get flightCostEstimate => 'Costo Estimado de Vuelo';
 
   @override
   String get includesHotelCosts =>
@@ -1276,10 +1386,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sevisFeeIncluded => 'Tarifa SEVIS Incluida';
 
   @override
-  String get j1SevisFee => 'SEVIS J-1: USD 220';
+  String get j1SevisFee => 'J-1 SEVIS: USD 220';
 
   @override
-  String get fmSevisFee => 'SEVIS F/M: USD 350';
+  String get fmSevisFee => 'F/M SEVIS: USD 350';
 
   @override
   String get mrvFeeLabel => 'Tarifa MRV';
@@ -1301,10 +1411,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mrvFeeInfoDescription =>
-      'La tarifa de Visa de Lectura Mecánica se paga al programar su entrevista. Varía según la categoría de visa.';
+      'La tarifa de Visa Legible por Máquina se paga al programar su entrevista. Varía según la categoría de visa.';
 
   @override
-  String get integrityFeeInfoTitle => 'Tarifa de Integridad (NUEVA)';
+  String get integrityFeeInfoTitle => 'Tarifa de Integridad de Visa (NUEVO)';
 
   @override
   String get integrityFeeInfoDescription =>
@@ -1315,12 +1425,111 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sevisFeeInfoDescription =>
-      'Requerida para estudiantes y visitantes de intercambio. Pague en fmjfee.com ANTES de su entrevista.';
+      'Requerida para estudiantes y visitantes de intercambio. Pagar en fmjfee.com ANTES de su entrevista.';
 
   @override
-  String get i94FeeInfoTitle => 'Tarifa I-94 Frontera Terrestre';
+  String get i94FeeInfoTitle => 'Tarifa Frontera Terrestre I-94';
 
   @override
   String get i94FeeInfoDescription =>
-      'Aumentó de USD 6 a USD 24 en 2026. Solo aplica si entra a EE.UU. por tierra.';
+      'Incrementado de USD 6 a USD 24 en 2026. Solo aplica si entra a EE.UU. por tierra.';
+
+  @override
+  String get guestLabel => 'Invitado';
+
+  @override
+  String get notAvailableAndDash => '---';
+
+  @override
+  String get notAvailableShort => 'N/A';
+
+  @override
+  String get supportEmail => 'soporte@usavpc.org';
+
+  @override
+  String get languageLabel => 'ES / EN';
+
+  @override
+  String get formLabel => 'Formulario';
+
+  @override
+  String get errorCriticalNoQuestions =>
+      'ERROR CRÍTICO: No se encontraron preguntas en la base de datos (0). Se requiere seeding.';
+
+  @override
+  String get errorNoQuestionsAvailable =>
+      'CRÍTICO: No hay preguntas disponibles para mostrar.';
+
+  @override
+  String errorDbAuth(Object error) {
+    return 'Error de Autenticación de BD: ¿Quizás RLS? $error';
+  }
+
+  @override
+  String get errorMissingQuestionText => 'Error: Falta texto de pregunta';
+
+  @override
+  String get continueLabel => 'Continuar';
+
+  @override
+  String get cancelLabel => 'Cancelar';
+
+  @override
+  String get noStepsAvailable => 'No hay pasos disponibles.';
+
+  @override
+  String get sexLabel => 'Sexo';
+
+  @override
+  String get expiryDateLabel => 'Fecha de Expiración';
+
+  @override
+  String get errorDatabaseUnique =>
+      'Error de base de datos: Falta restricción única. Corregido en lógica.';
+
+  @override
+  String get uploadFormatInfo => 'PNG, JPG o PDF (máx. 800x400px)';
+
+  @override
+  String get orSeparator => 'O';
+
+  @override
+  String get scanIncompleteError =>
+      '❌ Escaneo incompleto. Por favor vuelva a escanear el pasaporte claramente.';
+
+  @override
+  String get subscriptionTitle => 'Acceso Premium';
+
+  @override
+  String get subscriptionSubtitle => 'Desbloquea todos los servicios';
+
+  @override
+  String get planMonthly => 'Plan Mensual';
+
+  @override
+  String get planYearly => 'Plan Anual';
+
+  @override
+  String get priceMonthly => '\$100/mes';
+
+  @override
+  String get priceYearly => '\$250/año';
+
+  @override
+  String get bestValue => 'Mejor Valor';
+
+  @override
+  String get selectPlan => 'Elegir Plan';
+
+  @override
+  String get home => 'Inicio';
+
+  @override
+  String get services => 'Servicios';
+
+  @override
+  String get profile => 'Perfil';
+
+  @override
+  String get ds260IntakeTitle => 'FORMULARIO DS-260';
 }

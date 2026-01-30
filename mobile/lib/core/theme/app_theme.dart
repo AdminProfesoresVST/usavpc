@@ -374,6 +374,24 @@ class AppTheme {
     fontWeight: FontWeight.w700, 
     color: inkInverse
   );
+
+  static TextStyle get bodyBold => GoogleFonts.roboto(
+    fontSize: _sizeBody, 
+    fontWeight: FontWeight.w700, 
+    color: inkPrimary
+  );
+  
+  static TextStyle get bodyBoldNavy => GoogleFonts.roboto(
+    fontSize: _sizeBody, 
+    fontWeight: FontWeight.w700, 
+    color: navyPrimary
+  );
+  
+  static TextStyle get bodyBoldBlue => GoogleFonts.roboto(
+    fontSize: _sizeBody, 
+    fontWeight: FontWeight.w700, 
+    color: actionBlue
+  );
   
   // --- LABEL: Etiquetas y Botones (14px) ---
   static TextStyle get labelBold => GoogleFonts.roboto(

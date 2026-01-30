@@ -173,8 +173,98 @@ abstract class AppLocalizations {
   /// Section title for services
   ///
   /// In en, this message translates to:
-  /// **'Popular Services'**
+  /// **'Services'**
   String get popularServices;
+
+  /// No description provided for @helpScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Scanning'**
+  String get helpScanTitle;
+
+  /// No description provided for @helpScanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Our OCR technology automatically extracts your data from your passport to avoid manual errors.'**
+  String get helpScanDesc;
+
+  /// No description provided for @helpScanBullet1.
+  ///
+  /// In en, this message translates to:
+  /// **'Place your passport on a flat surface.'**
+  String get helpScanBullet1;
+
+  /// No description provided for @helpScanBullet2.
+  ///
+  /// In en, this message translates to:
+  /// **'Ensure good lighting without glare.'**
+  String get helpScanBullet2;
+
+  /// No description provided for @helpScanButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Scanning'**
+  String get helpScanButton;
+
+  /// No description provided for @helpSimulateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Interview Simulator'**
+  String get helpSimulateTitle;
+
+  /// No description provided for @helpSimulateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice with our Virtual Consular Agent trained on thousands of real cases.'**
+  String get helpSimulateDesc;
+
+  /// No description provided for @helpSimulateBullet1.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive personalized questions based on your profile.'**
+  String get helpSimulateBullet1;
+
+  /// No description provided for @helpSimulateBullet2.
+  ///
+  /// In en, this message translates to:
+  /// **'Get immediate feedback on your answers.'**
+  String get helpSimulateBullet2;
+
+  /// No description provided for @helpSimulateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Simulator'**
+  String get helpSimulateButton;
+
+  /// No description provided for @helpResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Results & Analysis'**
+  String get helpResultsTitle;
+
+  /// No description provided for @helpResultsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a detailed risk analysis before your real appointment.'**
+  String get helpResultsDesc;
+
+  /// No description provided for @helpResultsBullet1.
+  ///
+  /// In en, this message translates to:
+  /// **'Identify potential red flags in your application.'**
+  String get helpResultsBullet1;
+
+  /// No description provided for @helpResultsBullet2.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive recommendations to improve your chances.'**
+  String get helpResultsBullet2;
+
+  /// No description provided for @helpResultsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'View My Services'**
+  String get helpResultsButton;
 
   /// Link to view all services
   ///
@@ -2342,6 +2432,114 @@ abstract class AppLocalizations {
   /// **'DS-160 Data'**
   String get ds160Data;
 
+  /// Section title
+  ///
+  /// In en, this message translates to:
+  /// **'Social Media Profiles'**
+  String get socialMediaProfiles;
+
+  /// Disclaimer text
+  ///
+  /// In en, this message translates to:
+  /// **'DS-160 requires disclosure of social media accounts used in the last 5 years.'**
+  String get socialMediaDisclaimer;
+
+  /// Dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Social Media Profile'**
+  String get addSocialProfile;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get platform;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Profile URL'**
+  String get profileUrl;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Username (optional)'**
+  String get usernameOptional;
+
+  /// Validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid URL'**
+  String get enterValidUrl;
+
+  /// Alert title
+  ///
+  /// In en, this message translates to:
+  /// **'Discrepancies Detected'**
+  String get discrepanciesDetected;
+
+  /// Status
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// Status
+  ///
+  /// In en, this message translates to:
+  /// **'Mismatch'**
+  String get mismatch;
+
+  /// Status
+  ///
+  /// In en, this message translates to:
+  /// **'Alert'**
+  String get alert;
+
+  /// Action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Waiver text
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Waiver: {waiver}'**
+  String suggestedWaiver(String waiver);
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Detected from: '**
+  String get detectedFrom;
+
+  /// Button label
+  ///
+  /// In en, this message translates to:
+  /// **'I Understand'**
+  String get iUnderstand;
+
+  /// Label
+  ///
+  /// In en, this message translates to:
+  /// **'Detected Issue'**
+  String get detectedIssue;
+
+  /// Validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Profile URL is required'**
+  String get profileUrlRequired;
+
+  /// Fallback error message
+  ///
+  /// In en, this message translates to:
+  /// **'Employment history does not match DS-160 declaration'**
+  String get employmentHistoryMismatch;
+
   /// No description provided for @sessionNumber.
   ///
   /// In en, this message translates to:
@@ -2551,6 +2749,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Increased from USD 6 to USD 24 in 2026. Only applies if entering the US by land.'**
   String get i94FeeInfoDescription;
+
+  /// No description provided for @guestLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guestLabel;
+
+  /// No description provided for @notAvailableAndDash.
+  ///
+  /// In en, this message translates to:
+  /// **'---'**
+  String get notAvailableAndDash;
+
+  /// No description provided for @notAvailableShort.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notAvailableShort;
+
+  /// No description provided for @supportEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'support@usavpc.org'**
+  String get supportEmail;
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ES / EN'**
+  String get languageLabel;
+
+  /// No description provided for @formLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Form'**
+  String get formLabel;
+
+  /// No description provided for @errorCriticalNoQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL ERROR: No Questions found in Database (0). Seeding required.'**
+  String get errorCriticalNoQuestions;
+
+  /// No description provided for @errorNoQuestionsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL: No questions available to render.'**
+  String get errorNoQuestionsAvailable;
+
+  /// No description provided for @errorDbAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'DB Auth Error: Maybe RLS? {error}'**
+  String errorDbAuth(Object error);
+
+  /// No description provided for @errorMissingQuestionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Missing Question Text'**
+  String get errorMissingQuestionText;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
+
+  /// No description provided for @cancelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelLabel;
+
+  /// No description provided for @noStepsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No steps available.'**
+  String get noStepsAvailable;
+
+  /// No description provided for @sexLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get sexLabel;
+
+  /// No description provided for @expiryDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry Date'**
+  String get expiryDateLabel;
+
+  /// No description provided for @errorDatabaseUnique.
+  ///
+  /// In en, this message translates to:
+  /// **'Database Error: Unique constraint missing. Fixed in logic.'**
+  String get errorDatabaseUnique;
+
+  /// No description provided for @uploadFormatInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'PNG, JPG or PDF (max. 800x400px)'**
+  String get uploadFormatInfo;
+
+  /// No description provided for @orSeparator.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orSeparator;
+
+  /// No description provided for @scanIncompleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Scan incomplete. Please rescan passport clearly.'**
+  String get scanIncompleteError;
+
+  /// No description provided for @subscriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Access'**
+  String get subscriptionTitle;
+
+  /// No description provided for @subscriptionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock all services'**
+  String get subscriptionSubtitle;
+
+  /// No description provided for @planMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Plan'**
+  String get planMonthly;
+
+  /// No description provided for @planYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly Plan'**
+  String get planYearly;
+
+  /// No description provided for @priceMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'\$100/mo'**
+  String get priceMonthly;
+
+  /// No description provided for @priceYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'\$250/yr'**
+  String get priceYearly;
+
+  /// No description provided for @bestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Value'**
+  String get bestValue;
+
+  /// No description provided for @selectPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Plan'**
+  String get selectPlan;
+
+  /// Bottom navigation home label
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// Bottom navigation services label
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get services;
+
+  /// Bottom navigation profile label
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// DS-260 intake screen title
+  ///
+  /// In en, this message translates to:
+  /// **'DS-260 INTAKE'**
+  String get ds260IntakeTitle;
 }
 
 class _AppLocalizationsDelegate
