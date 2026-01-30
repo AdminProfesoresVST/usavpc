@@ -67,6 +67,8 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       // 0. READ QUERY PARAMS (Immediate Cache)
       final state = GoRouterState.of(context);
       final params = state.uri.queryParameters;
+      final formType = params['form'] ?? 'ds160'; // ds160 or ds260
+      final tableName = formType == 'ds260' ? 'ds260_questions' : 'ds160_questions';
       
       if (params.isNotEmpty) {
         // Map param keys to DB keys
@@ -114,9 +116,9 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
          }
       }
 
-      // Fetch raw questions - REMOVED is_active filter to ensure visibility if seed was partial
+      // Fetch raw questions from the selected table
       final rawQuestions = await supabase
-          .from('ds160_questions')
+          .from(tableName)
           .select()
           .order('section')
           .order('section_order');
@@ -129,7 +131,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
            // ZERO TOLERANCE: Do not fake data. Report the missing data.
            AppToast.show(
              context, 
-             context.l10n.errorCriticalNoQuestions, 
+             'Error: No questions found in $tableName', 
              isError: true
            );
         }
@@ -137,18 +139,30 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         return;
       }
 
-
-
       // 4. Custom Local Sort (Because alphabetical 'section' sort fails: 'previous' comes before 'personal'?)
     // Define the correct flow order explicitly
     final sectionOrder = {
       'personal': 1,
+      'personal_1': 1, // DS-260 alias
+      'personal_2': 2, // DS-260 alias
       'address': 2,
+      'contact': 3, // DS-260 uses 'contact' for address/phone
       'passport': 3,
       'travel': 4,
+      'travel_history': 4, // DS-260 alias
       'family': 5,
+      'family_parents': 5, // DS-260
+      'family_spouse': 6,
+      'family_children': 7,
       'work': 6,
+      'work_education': 8, // DS-260
       'security': 7,
+      'security_health': 9,
+      'security_criminal': 10,
+      'security_security': 11,
+      'security_immigration': 12,
+      'security_misc': 13,
+      'ssn': 14,
     };
 
     // Sort: 1. Defined Section Order, 2. Section Order (Db field), 3. ID (fallback)
@@ -397,7 +411,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppHeaderWithProgress(
 
-        title: _formData['form'] == 'ds260' || GoRouterState.of(context).uri.queryParameters['form'] == 'ds260' 
+        title: (_formData['form'] == 'ds260' || GoRouterState.of(context).uri.queryParameters['form'] == 'ds260')
             ? 'Asistente DS-260' 
             : l10n.ds160Assistant,
         subtitle: totalQuestions > 0 
