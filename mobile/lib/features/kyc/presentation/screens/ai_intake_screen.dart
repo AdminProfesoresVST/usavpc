@@ -64,6 +64,20 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
 
   Future<void> _loadQuestions() async {
     try {
+      // 0. READ QUERY PARAMS (Immediate Cache)
+      final state = GoRouterState.of(context);
+      final params = state.uri.queryParameters;
+      
+      if (params.isNotEmpty) {
+        // Map param keys to DB keys
+        if (params['surname'] != null) _formData['surname'] = params['surname'];
+        if (params['given_name'] != null) _formData['given_name'] = params['given_name'];
+        if (params['dob'] != null) _formData['birth_date'] = params['dob'];
+        if (params['nationality'] != null) _formData['nationality'] = params['nationality'];
+        if (params['passport'] != null) _formData['passport_number'] = params['passport'];
+        if (params['sex'] != null) _formData['sex'] = params['sex'];
+      }
+
       final supabase = ref.read(supabaseClientProvider);
       
       final userId = supabase.auth.currentUser?.id;
@@ -73,22 +87,31 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
             .select('form_data')
             .eq('user_id', userId)
             .maybeSingle();
+            
         if (app != null && app['form_data'] != null) {
-          _formData = Map<String, dynamic>.from(app['form_data']);
+          final dbData = Map<String, dynamic>.from(app['form_data']);
+          // Merge: DB data overwrites params (source of truth), but params fill gaps
+          _formData.addAll(dbData);
         }
+      }
 
       // SMART SKIP V2: Auto-fill fields based on Nationality (Latin Alphabet)
-      final nat = _formData['nationality']?.toString().toUpperCase();
-      if (nat != null && _latinNationalities.contains(nat)) {
+      // Normalize common variations
+      String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
+      if (nat.contains('DOMINICA')) nat = 'DOM';
+      else if (nat.contains('MEXIC')) nat = 'MEX';
+      else if (nat.contains('ARGENT')) nat = 'ARG';
+      else if (nat.contains('COLOMB')) nat = 'COL';
+      // Add more as needed, or just rely on the extensive list if exact match
+      
+      if (_latinNationalities.contains(nat) || _latinNationalities.contains(_formData['nationality'])) {
          if (!_formData.containsKey('native_alphabet_name')) {
-            debugPrint('VERIFICATION: Auto-filling native_alphabet_name for Latin Nationality: $nat');
             _formData['native_alphabet_name'] = 'Does Not Apply'; 
          }
          // Telecode is rarely used in LatAm
          if (!_formData.containsKey('telecode_name')) {
             _formData['telecode_name'] = 'No';
          }
-      }
       }
 
       // Fetch raw questions - REMOVED is_active filter to ensure visibility if seed was partial
@@ -106,7 +129,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
            // ZERO TOLERANCE: Do not fake data. Report the missing data.
            AppToast.show(
              context, 
-             'CRITICAL ERROR: No Questions found in Database (0). Seeding required.', 
+             context.l10n.errorCriticalNoQuestions, 
              isError: true
            );
         }
@@ -114,7 +137,8 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         return;
       }
 
-      debugPrint('VERIFICATION: Total raw questions fetched: $totalFetched');
+
+
       // 4. Custom Local Sort (Because alphabetical 'section' sort fails: 'previous' comes before 'personal'?)
     // Define the correct flow order explicitly
     final sectionOrder = {
@@ -144,7 +168,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     });
 
       if (totalFetched > 0) {
-        debugPrint('VERIFICATION: Sample Question Keys: ${rawQuestions.first.keys.toList()}');
+
       }
 
       // Filter Logic
@@ -163,13 +187,13 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         if (hasData && dataValue != null && dataValue.toString().isNotEmpty) {
            // A. Forced Skip (Zero Tolerance for Name/Passport redundancy)
            if (_alwaysSkipKeys.contains(fieldKey) || _alwaysSkipKeys.contains(normalizedKey)) {
-             debugPrint('VERIFICATION: Smart Skipping $fieldKey (Found OCR data: $normalizedKey)');
+
              return false;
            }
 
            // B. DB Flag Skip
            if (q['skip_if_ocr'] == true) {
-             debugPrint('VERIFICATION: Skipping $fieldKey (DB Flag + Data Present)');
+
              return false;
            }
         }
@@ -187,17 +211,17 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         return true;
       }).toList().cast<Map<String, dynamic>>();
 
-      debugPrint('VERIFICATION: Questions after filtering: ${filteredQuestions.length}');
+
       _debugFetched = totalFetched;
       _debugFiltered = filteredQuestions.length;
 
-      debugPrint('VERIFICATION: Questions after filtering: ${filteredQuestions.length}');
+
       _debugFetched = totalFetched;
       _debugFiltered = filteredQuestions.length;
 
       // FORCE RAW if filter is too aggressive
       if (filteredQuestions.isEmpty && totalFetched > 0) {
-         debugPrint('VERIFICATION: All filtered! Forcing raw questions to avoid empty screen.');
+
          _questions = rawQuestions.toList().cast<Map<String, dynamic>>();
       } else {
          _questions = filteredQuestions;
@@ -206,23 +230,23 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       // NO HARDCODED FALLBACKS ALLOWED
       if (_questions.isEmpty) {
          _debugError = 'DB returned 0 questions (Raw=$totalFetched)';
-         debugPrint('VERIFICATION FAILURE: Questions list is EMPTY after all checks.');
+
          if (mounted) {
-            AppToast.show(context, 'CRITICAL: No questions available to render.', isError: true);
+            AppToast.show(context, context.l10n.errorNoQuestionsAvailable, isError: true);
          }
          setState(() => _isLoading = false);
          return;
       }
       
-      debugPrint('VERIFICATION SUCCESS: Starting chat with ${_questions.length} questions.');
+
       setState(() => _isLoading = false);
       _askNextQuestion();
     } catch (e) {
       _debugError = e.toString();
-      debugPrint('DEBUG: Error loading questions: $e');
+
       if (mounted) {
         setState(() => _isLoading = false);
-        AppToast.show(context, 'DB Auth Error: Maybe RLS? ${e.toString()}', isError: true);
+        AppToast.show(context, context.l10n.errorDbAuth(e.toString()), isError: true);
       }
     }
   }
@@ -271,7 +295,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       // Robust casting with fallbacks
       final tips = question['tips'] is List ? (question['tips'] as List).map((e) => e.toString()).toList() : <String>[];
       final example = question['example_good']?.toString();
-      final questionText = question['question_friendly']?.toString() ?? 'Error: Missing Question Text';
+      final questionText = question['question_friendly']?.toString() ?? context.l10n.errorMissingQuestionText;
       
       _addBotMessage(questionText, tips: tips, example: example);
     } catch (e) {
@@ -280,12 +304,12 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
   }
 
   Future<void> _handleSend() async {
-    debugPrint('DEBUG: _handleSend called. isSending: $_isSending');
+
     if (_isSending) return;
     
     // GUARD: If no questions, simply complete
     if (_questions.isEmpty || _currentQuestionIndex >= _questions.length) {
-       debugPrint('DEBUG: No questions left or empty list. Completing.');
+
        _completeIntake();
        return;
     }
@@ -300,7 +324,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     try {
       final question = _questions[_currentQuestionIndex];
       final fieldKey = question['field_key'] as String;
-      debugPrint('DEBUG: Answering question: $fieldKey with "$text"');
+
 
       // ... regex validation ...
 
@@ -309,7 +333,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
       final supabase = ref.read(supabaseClientProvider);
       final userId = supabase.auth.currentUser?.id;
       if (userId != null) {
-        debugPrint('DEBUG: Saving to DB for user: $userId');
+
         // Manual upsert logic to avoid 42P10 (No unique constraint)
         final existing = await supabase
             .from('applications')
@@ -332,13 +356,13 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
               .from('applications')
               .insert(dataToSave);
         }
-        debugPrint('DEBUG: Save success.');
+
       }
 
       _currentQuestionIndex++;
       _askNextQuestion();
     } catch (e) {
-       debugPrint('DEBUG: Error in _handleSend: $e');
+
        if (mounted) _addBotMessage(context.l10n.savingError(e.toString()));
     } finally {
       setState(() => _isSending = false);
@@ -372,7 +396,10 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppHeaderWithProgress(
-        title: l10n.ds160Assistant,
+
+        title: _formData['form'] == 'ds260' || GoRouterState.of(context).uri.queryParameters['form'] == 'ds260' 
+            ? 'Asistente DS-260' 
+            : l10n.ds160Assistant,
         subtitle: totalQuestions > 0 
             ? l10n.questionProgress(answeredQuestions + 1, totalQuestions)
             : null,
@@ -431,7 +458,7 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                 onSubmitted: (_) => _handleSend(),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: AppTheme.espacioEntreCampos),
             Container(
               decoration: const BoxDecoration(
                 color: AppTheme.navyPrimary,
@@ -441,11 +468,11 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
                 onPressed: _isSending ? null : _handleSend,
                 icon: _isSending
                     ? const SizedBox(
-                        width: 20,
-                        height: 20,
+                        width: AppTheme.iconoEnTarjeta,
+                        height: AppTheme.iconoEnTarjeta,
                         child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.inkInverse),
                       )
-                    : const Icon(Icons.send, color: AppTheme.inkInverse, size: 20),
+                    : const Icon(Icons.send, color: AppTheme.inkInverse, size: AppTheme.iconoEnTarjeta),
               ),
             ),
           ],
@@ -503,7 +530,7 @@ class _ChatBubble extends StatelessWidget {
         crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsetsDirectional.only(bottom: 4),
+            margin: const EdgeInsetsDirectional.only(bottom: AppTheme.espacioEntreLabelInput),
             padding: AppTheme.paddingCampo,
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
             decoration: BoxDecoration(
@@ -525,7 +552,7 @@ class _ChatBubble extends StatelessWidget {
           ),
           if (message.tips != null && message.tips!.isNotEmpty)
             Container(
-              margin: const EdgeInsetsDirectional.only(bottom: 8, top: 4),
+              margin: const EdgeInsetsDirectional.only(bottom: AppTheme.espacioEntreCampos, top: AppTheme.espacioEntreLabelInput),
               padding: AppTheme.paddingEstandar,
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.78),
               decoration: BoxDecoration(
@@ -539,7 +566,7 @@ class _ChatBubble extends StatelessWidget {
                    BoxShadow(color: AppTheme.navyPrimary.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
                 ],
                 border: BorderDirectional(
-                  start: BorderSide(color: AppTheme.navyPrimary, width: 4),
+                  start: BorderSide(color: AppTheme.navyPrimary, width: AppTheme.radiusDetalles),
                 ),
               ),
               child: Column(
@@ -555,7 +582,7 @@ class _ChatBubble extends StatelessWidget {
                         ),
                         child: Icon(Icons.tips_and_updates, size: AppTheme.iconoPequeno, color: AppTheme.navyPrimary),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppTheme.espacioEntreCampos),
                       Text(
                         l10n.tips.toUpperCase(), 
                         style: AppTheme.captionGreyRegular.copyWith(
@@ -568,12 +595,12 @@ class _ChatBubble extends StatelessWidget {
                   ),
                   SizedBox(height: AppTheme.espacioEntreGrupos),
                   ...message.tips!.map((tip) => Padding(
-                    padding: const EdgeInsetsDirectional.only(bottom: 8),
+                    padding: const EdgeInsetsDirectional.only(bottom: AppTheme.espacioEntreCampos),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('•', style: AppTheme.h2NavyBold),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppTheme.espacioEntreCampos),
                         Expanded(
                           child: Text(
                             tip, 
@@ -594,7 +621,7 @@ class _ChatBubble extends StatelessWidget {
                       child: Row(
                         children: [
                            Icon(Icons.edit_note, size: AppTheme.iconoPequeno, color: AppTheme.inkSecondary),
-                           const SizedBox(width: 6),
+                           const SizedBox(width: AppTheme.paddingHorizontalInput),
                            Expanded(
                              child: Text(
                                '${l10n.example}: ${message.example}', 
