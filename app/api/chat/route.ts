@@ -380,8 +380,19 @@ export async function POST(req: Request) {
                 simulator_turns: currentTurns + 1
             }).eq("id", application.id);
 
+            // CRITICAL FIX: Wrap response in JSON string format expected by Mobile (AiRepository.dart)
+            // Mobile parses: { consul_response: "...", feedback: {...} } from the response text
+            const simulatorJsonResponse = JSON.stringify({
+                consul_response: finalObj.response,
+                feedback: finalObj.feedback ? {
+                    message: finalObj.feedback,
+                    score_delta: finalObj.score_delta,
+                    score: finalObj.current_score
+                } : null
+            });
+
             return NextResponse.json({
-                response: finalObj.response,
+                response: simulatorJsonResponse, // Now mobile can parse this correctly
                 nextStep: null, // No nextStep struct for simulator
                 meta: {
                     action: finalObj.action,
