@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
-import 'package:mobile/core/network/supabase_client.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/core/widgets/app_toast.dart';
 import 'package:mobile/features/ocr/logic/mrz_parser.dart';
@@ -73,19 +74,13 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
     final l10n = context.l10n;
     
     try {
-      final supabase = ref.read(supabaseClientProvider);
-      final userId = supabase.auth.currentUser?.id;
-      if (userId == null) throw Exception(l10n.userNotAuthenticated);
-
-      // Manual upsert logic to avoid 42P10 (No unique constraint on user_id)
-      final existing = await supabase
-          .from('applications')
-          .select('id')
-          .eq('user_id', userId)
-          .maybeSingle();
+      final dashboardRepo = ref.read(dashboardRepositoryProvider);
+      
+      // Check existing application via Repository
+      final profileData = await dashboardRepo.getProfileData();
+      final existing = profileData['app'];
 
       final dataToSave = {
-        'user_id': userId,
         'form_data': {
           'surname': _surnameController.text.toUpperCase(),
           'given_name': _givenNameController.text.toUpperCase(),
@@ -101,22 +96,20 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
       };
 
       if (existing != null) {
-        // Update existing application
-        await supabase
-            .from('applications')
-            .update(dataToSave)
-            .eq('id', existing['id']);
+        await dashboardRepo.updateApplication(dataToSave);
       } else {
-        // Create new application
-        await supabase
-            .from('applications')
-            .insert(dataToSave);
+        await dashboardRepo.createApplication(dataToSave);
       }
 
       if (mounted) {
         // Navigate immediately - User requested no "Success" toast
         if (mounted) {
-          context.push(Uri(path: '/kyc/chat', queryParameters: {
+          final formType = GoRouterState.of(context).uri.queryParameters['form'] ?? 'ds160';
+          final targetPath = formType == 'ds260' ? '/kyc/ds260' : '/kyc/chat';
+
+          context.push(Uri(path: targetPath, queryParameters: {
+            // Preserve logic
+            ...GoRouterState.of(context).uri.queryParameters,
             'surname': _surnameController.text.toUpperCase(),
             'given_name': _givenNameController.text.toUpperCase(),
             'dob': _birthDateController.text,
@@ -130,7 +123,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
     } catch (e) {
       if (mounted) {
         final errorMsg = e.toString().contains('42P10') 
-            ? 'Database Error: Unique constraint missing. Fixed in logic.' 
+            ? l10n.errorDatabaseUnique 
             : l10n.error(e.toString());
         AppToast.show(context, errorMsg, isError: true);
       }
@@ -143,9 +136,12 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     
+    final formType = GoRouterState.of(context).uri.queryParameters['form']?.toUpperCase();
+    final title = formType != null ? '${l10n.confirmDataTitle} ($formType)' : l10n.confirmDataTitle;
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
-      appBar: AppHeader(title: l10n.confirmDataTitle),
+      appBar: AppHeader(title: title),
       body: SingleChildScrollView(
         padding: AppTheme.paddingGrande,
         child: Column(
@@ -164,9 +160,9 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
             _buildField(l10n.passportNumberLabel, _passportNumberController, Icons.credit_card),
              Row(
               children: [
-                Expanded(child: _buildField('Sex (M/F)', _sexController, Icons.person)), // TODO: i18n
-                const SizedBox(width: 16),
-                Expanded(child: _buildField('Expiry Date', _expiryDateController, Icons.calendar_today)), // TODO: i18n
+                Expanded(child: _buildField(l10n.sexLabel, _sexController, Icons.person)),
+                SizedBox(width: AppTheme.paddingTarjetas),
+                Expanded(child: _buildField(l10n.expiryDateLabel, _expiryDateController, Icons.calendar_today)),
               ],
             ),
 
@@ -180,7 +176,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
             // Confirm Button
             SizedBox(
               width: double.infinity,
-              height: 52,
+              height: AppTheme.alturaBotonGrande,
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _confirmAndProceed,
                 style: ElevatedButton.styleFrom(
@@ -190,8 +186,8 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
                 ),
                 child: _isLoading
                     ? const SizedBox(
-                        width: 24,
-                        height: 24,
+                        width: AppTheme.iconoEnTarjeta,
+                        height: AppTheme.iconoEnTarjeta,
                         child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.inkInverse),
                       )
                     : Text(
@@ -211,7 +207,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
 
   Widget _buildField(String label, TextEditingController controller, IconData icon) {
     return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: 16),
+      padding: const EdgeInsetsDirectional.only(bottom: AppTheme.paddingTarjetas),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
@@ -225,7 +221,7 @@ class _PassportConfirmScreenState extends ConsumerState<PassportConfirmScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: AppTheme.buttonRadius,
-            borderSide: const BorderSide(color: AppTheme.navyPrimary, width: 2),
+            borderSide: const BorderSide(color: AppTheme.navyPrimary, width: AppTheme.alturaBotonPequeno),
           ),
         ),
         textCapitalization: TextCapitalization.characters,

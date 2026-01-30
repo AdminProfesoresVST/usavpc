@@ -12,6 +12,7 @@ import 'package:mobile/features/payments/presentation/screens/visa_type_selectio
 import 'package:mobile/features/payments/presentation/screens/order_summary_screen.dart';
 
 import 'package:mobile/features/kyc/presentation/screens/ai_intake_screen.dart';
+import 'package:mobile/features/kyc/presentation/screens/ds260_intake_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_landing_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/verification_scanner_screen.dart';
 import 'package:mobile/features/ocr/presentation/screens/passport_confirm_screen.dart';
@@ -83,6 +84,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: '/kyc/chat',
         builder: (context, state) => const AiIntakeScreen(),
+      ),
+      GoRoute(
+        path: '/kyc/ds260',
+        builder: (context, state) => const Ds260IntakeScreen(),
       ),
       GoRoute(
         path: '/kyc/confirm',
