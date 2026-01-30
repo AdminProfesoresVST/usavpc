@@ -78,6 +78,11 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
         if (params['nationality'] != null) _formData['nationality'] = params['nationality'];
         if (params['passport'] != null) _formData['passport_number'] = params['passport'];
         if (params['sex'] != null) _formData['sex'] = params['sex'];
+        
+        // DEBUG: Verify params loaded
+        if (mounted) {
+           AppToast.show(context, 'Loaded ${params.length} params from navigation', isError: false);
+        }
       }
 
       final supabase = ref.read(supabaseClientProvider);
@@ -307,12 +312,16 @@ class _AiIntakeScreenState extends ConsumerState<AiIntakeScreen> {
 
       final question = _questions[_currentQuestionIndex];
       // Robust casting with fallbacks
-      final tips = question['tips'] is List ? (question['tips'] as List).map((e) => e.toString()).toList() : <String>[];
+      final tipsList = question['tips'] as List?;
+      final tips = tipsList?.map((e) => e.toString()).toList() ?? <String>[];
       final example = question['example_good']?.toString();
       final questionText = question['question_friendly']?.toString() ?? context.l10n.errorMissingQuestionText;
       
       _addBotMessage(questionText, tips: tips, example: example);
     } catch (e) {
+      if (mounted) {
+         AppToast.show(context, 'Error displaying question: $e', isError: true);
+      }
       setState(() => _debugError = 'AskNext Crash: $e');
     }
   }
