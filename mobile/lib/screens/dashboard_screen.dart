@@ -660,6 +660,7 @@ class _MiniRiskGauge extends StatelessWidget {
     final probability = riskState.visaApprovalProbability;
     final category = riskState.riskCategory;
     final color = _getRiskColor(category);
+    final percentage = (probability * 100).toInt();
     
     return Expanded(
       child: GestureDetector(
@@ -669,32 +670,38 @@ class _MiniRiskGauge extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppTheme.inkInverse,
             borderRadius: AppTheme.buttonRadius,
-            border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+            border: Border.all(color: AppTheme.cardBorderColor),
             boxShadow: [
-              BoxShadow(color: color.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2)),
+              BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
             ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Mini Circular Gauge
-              SizedBox(
+              // Icon with subtle risk indicator overlay
+              Container(
                 width: 32,
                 height: 32,
+                decoration: BoxDecoration(
+                  color: AppTheme.navyPrimary.withOpacity(0.08),
+                  shape: BoxShape.circle,
+                ),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    CircularProgressIndicator(
-                      value: probability,
-                      strokeWidth: 3,
-                      backgroundColor: AppTheme.dividerGrey,
-                      valueColor: AlwaysStoppedAnimation<Color>(color),
-                    ),
-                    Text(
-                      '${(probability * 100).toInt()}',
-                      style: AppTheme.captionNavyBold.copyWith(
-                        fontSize: 9,
-                        color: color,
+                    Icon(Icons.analytics_outlined, color: AppTheme.navyPrimary, size: AppTheme.iconoMini),
+                    // Small status dot
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 1.5),
+                        ),
                       ),
                     ),
                   ],
@@ -708,11 +715,21 @@ class _MiniRiskGauge extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2),
-              Text(
-                _getRiskLabel(category),
-                style: AppTheme.captionGreyRegular.copyWith(fontSize: 9, color: color),
-                textAlign: TextAlign.center,
-                maxLines: 1,
+              // Subtle percentage badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$percentage%',
+                  style: AppTheme.captionGreyRegular.copyWith(
+                    fontSize: 9,
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),
@@ -729,13 +746,5 @@ class _MiniRiskGauge extends StatelessWidget {
       case RiskCategory.critical: return AppTheme.errorRed;
     }
   }
-  
-  String _getRiskLabel(RiskCategory category) {
-    switch (category) {
-      case RiskCategory.low: return 'Bajo';
-      case RiskCategory.moderate: return 'Moderado';
-      case RiskCategory.high: return 'Alto';
-      case RiskCategory.critical: return '214(b)';
-    }
-  }
 }
+
