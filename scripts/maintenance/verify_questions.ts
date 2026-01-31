@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { DS160StateMachine } from './lib/ai/state-machine';
+import { DS160StateMachine } from '../../lib/ai/state-machine';
 
 // Mock env
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
