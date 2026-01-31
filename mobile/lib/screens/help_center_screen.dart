@@ -89,7 +89,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     },
     {
       'question': '¿Cuánto cuesta la visa de turista?',
-      'answer': 'El costo del trámite (MRV fee) para la visa B1/B2 es de $185 dólares. Este pago no es reembolsable, incluso si te niegan la visa. Se paga antes de agendar la cita y es válido por un año.',
+      'answer': 'El costo del trámite (MRV fee) para la visa B1/B2 es de \\$185 dólares. Este pago no es reembolsable, incluso si te niegan la visa. Se paga antes de agendar la cita y es válido por un año.',
     },
     
     // === PROBLEMAS COMUNES ===
