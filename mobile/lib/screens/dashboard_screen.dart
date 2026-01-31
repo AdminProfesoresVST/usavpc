@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +7,7 @@ import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/providers/dashboard_provider.dart';
 import 'package:mobile/models/dashboard_data.dart';
+import 'package:mobile/providers/subscription_plans_provider.dart';
 
 /// Production-ready dashboard with functional action tiles and full i18n.
 /// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
@@ -168,7 +168,7 @@ class DashboardScreen extends ConsumerWidget {
               SizedBox(height: AppTheme.espacioEntreSecciones),
 
               // 4. Premium Access Section
-              _buildSubscriptionSection(context, l10n),
+              _buildSubscriptionSection(context, l10n, ref),
               SizedBox(height: AppTheme.espacioEntreBloques),
             ],
           ),
@@ -179,36 +179,47 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSubscriptionSection(BuildContext context, dynamic l10n) {
+  Widget _buildSubscriptionSection(BuildContext context, dynamic l10n, WidgetRef ref) {
+    final plansAsync = ref.watch(subscriptionPlansProvider);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l10n.subscriptionTitle, style: AppTheme.h2NavyBold),
         SizedBox(height: AppTheme.espacioEntreGrupos),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: _SubscriptionCard(
-                  title: l10n.planMonthly,
-                  price: l10n.priceMonthly,
-                  isBestValue: false,
-                  onTap: () => _handleNavigation(context, '/services/payment?plan=monthly'),
-                ),
+        plansAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Text('Error: $e'),
+          data: (plans) {
+            final monthly = plans.firstWhere((p) => p.id == 'monthly', orElse: () => plans.first);
+            final yearly = plans.firstWhere((p) => p.id == 'yearly', orElse: () => plans.last);
+            
+            return IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _SubscriptionCard(
+                      title: monthly.title,
+                      price: monthly.priceFormatted,
+                      isBestValue: false,
+                      onTap: () => _handleNavigation(context, '/services/payment?plan=monthly'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _SubscriptionCard(
+                      title: yearly.title,
+                      price: yearly.priceFormatted,
+                      isBestValue: true,
+                      badgeText: yearly.savingsText ?? l10n.bestValue,
+                      onTap: () => _handleNavigation(context, '/services/payment?plan=yearly'),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _SubscriptionCard(
-                  title: l10n.planYearly,
-                  price: l10n.priceYearly,
-                  isBestValue: true,
-                  badgeText: l10n.bestValue,
-                  onTap: () => _handleNavigation(context, '/services/payment?plan=yearly'),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ],
     );
