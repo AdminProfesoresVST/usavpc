@@ -1532,4 +1532,86 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ds260IntakeTitle => 'FORMULARIO DS-260';
+
+  @override
+  String get riskCommand => 'Riesgo';
+
+  @override
+  String get riskCommandTitle => 'Centro de Riesgo';
+
+  @override
+  String get analyzingProfile => 'Analizando perfil...';
+
+  @override
+  String get visaApprovalProbability => 'PROBABILIDAD DE APROBACIÓN';
+
+  @override
+  String get frictionMap => 'MAPA DE FRICCIÓN';
+
+  @override
+  String get redFlagFeed => 'ALERTAS DETECTADAS';
+
+  @override
+  String get redFlagClear => 'LIMPIO';
+
+  @override
+  String redFlagAlerts(int count) {
+    return '$count ALERTAS';
+  }
+
+  @override
+  String get noRedFlagsDetected =>
+      'No se detectaron alertas en el perfil actual.';
+
+  @override
+  String get practiceWithSimulator => 'Practicar Entrevista';
+
+  @override
+  String get practiceWithSimulatorDesc =>
+      'Practica con nuestro Oficial Consular IA para mejorar tus habilidades de entrevista.';
+
+  @override
+  String get goToSimulator => 'IR AL SIMULADOR';
+
+  @override
+  String get riskLow => 'RIESGO BAJO';
+
+  @override
+  String get riskModerate => 'MODERADO';
+
+  @override
+  String get riskHigh => 'RIESGO ALTO';
+
+  @override
+  String get riskCritical => '214(b) INMINENTE';
+
+  @override
+  String get riskLowDesc => 'Vínculos fuertes demostrados. Perfil favorable.';
+
+  @override
+  String get riskModerateDesc =>
+      'Algunas preocupaciones. Se recomienda documentación adicional.';
+
+  @override
+  String get riskHighDesc =>
+      'Múltiples banderas rojas detectadas. Requiere revisión.';
+
+  @override
+  String get riskCriticalDesc =>
+      'El perfil indica alta probabilidad de rechazo 214(b).';
+
+  @override
+  String get axisEconomic => 'Económico';
+
+  @override
+  String get axisSocial => 'Social';
+
+  @override
+  String get axisDocuments => 'Documentos';
+
+  @override
+  String get axisConsistency => 'Consistencia';
+
+  @override
+  String get axisTravel => 'Viajes';
 }

@@ -2935,6 +2935,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'DS-260 INTAKE'**
   String get ds260IntakeTitle;
+
+  /// Bottom navigation risk command label
+  ///
+  /// In en, this message translates to:
+  /// **'Risk'**
+  String get riskCommand;
+
+  /// Risk dashboard screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Risk Command'**
+  String get riskCommandTitle;
+
+  /// Loading state in risk dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing profile...'**
+  String get analyzingProfile;
+
+  /// Risk gauge title
+  ///
+  /// In en, this message translates to:
+  /// **'VISA APPROVAL PROBABILITY'**
+  String get visaApprovalProbability;
+
+  /// Radar chart section title
+  ///
+  /// In en, this message translates to:
+  /// **'FRICTION MAP'**
+  String get frictionMap;
+
+  /// Alerts section title
+  ///
+  /// In en, this message translates to:
+  /// **'RED FLAG FEED'**
+  String get redFlagFeed;
+
+  /// No red flags badge
+  ///
+  /// In en, this message translates to:
+  /// **'CLEAR'**
+  String get redFlagClear;
+
+  /// Red flag count badge
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ALERTS'**
+  String redFlagAlerts(int count);
+
+  /// Empty red flags message
+  ///
+  /// In en, this message translates to:
+  /// **'No red flags detected in current profile.'**
+  String get noRedFlagsDetected;
+
+  /// Simulator section title
+  ///
+  /// In en, this message translates to:
+  /// **'Practice Interview'**
+  String get practiceWithSimulator;
+
+  /// Simulator section description
+  ///
+  /// In en, this message translates to:
+  /// **'Practice with our AI Consular Officer to improve your interview skills.'**
+  String get practiceWithSimulatorDesc;
+
+  /// Navigate to simulator button
+  ///
+  /// In en, this message translates to:
+  /// **'GO TO SIMULATOR'**
+  String get goToSimulator;
+
+  /// Risk category label
+  ///
+  /// In en, this message translates to:
+  /// **'LOW RISK'**
+  String get riskLow;
+
+  /// Risk category label
+  ///
+  /// In en, this message translates to:
+  /// **'MODERATE'**
+  String get riskModerate;
+
+  /// Risk category label
+  ///
+  /// In en, this message translates to:
+  /// **'HIGH RISK'**
+  String get riskHigh;
+
+  /// Risk category label
+  ///
+  /// In en, this message translates to:
+  /// **'214(b) IMMINENT'**
+  String get riskCritical;
+
+  /// Risk category description
+  ///
+  /// In en, this message translates to:
+  /// **'Strong ties demonstrated. Favorable profile.'**
+  String get riskLowDesc;
+
+  /// Risk category description
+  ///
+  /// In en, this message translates to:
+  /// **'Some concerns. Additional documentation recommended.'**
+  String get riskModerateDesc;
+
+  /// Risk category description
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple red flags detected. Review required.'**
+  String get riskHighDesc;
+
+  /// Risk category description
+  ///
+  /// In en, this message translates to:
+  /// **'Profile indicates high probability of 214(b) refusal.'**
+  String get riskCriticalDesc;
+
+  /// Radar chart axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Economic'**
+  String get axisEconomic;
+
+  /// Radar chart axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Social'**
+  String get axisSocial;
+
+  /// Radar chart axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get axisDocuments;
+
+  /// Radar chart axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get axisConsistency;
+
+  /// Radar chart axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get axisTravel;
 }
 
 class _AppLocalizationsDelegate

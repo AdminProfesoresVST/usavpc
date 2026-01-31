@@ -1520,4 +1520,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ds260IntakeTitle => 'DS-260 INTAKE';
+
+  @override
+  String get riskCommand => 'Risk';
+
+  @override
+  String get riskCommandTitle => 'Risk Command';
+
+  @override
+  String get analyzingProfile => 'Analyzing profile...';
+
+  @override
+  String get visaApprovalProbability => 'VISA APPROVAL PROBABILITY';
+
+  @override
+  String get frictionMap => 'FRICTION MAP';
+
+  @override
+  String get redFlagFeed => 'RED FLAG FEED';
+
+  @override
+  String get redFlagClear => 'CLEAR';
+
+  @override
+  String redFlagAlerts(int count) {
+    return '$count ALERTS';
+  }
+
+  @override
+  String get noRedFlagsDetected => 'No red flags detected in current profile.';
+
+  @override
+  String get practiceWithSimulator => 'Practice Interview';
+
+  @override
+  String get practiceWithSimulatorDesc =>
+      'Practice with our AI Consular Officer to improve your interview skills.';
+
+  @override
+  String get goToSimulator => 'GO TO SIMULATOR';
+
+  @override
+  String get riskLow => 'LOW RISK';
+
+  @override
+  String get riskModerate => 'MODERATE';
+
+  @override
+  String get riskHigh => 'HIGH RISK';
+
+  @override
+  String get riskCritical => '214(b) IMMINENT';
+
+  @override
+  String get riskLowDesc => 'Strong ties demonstrated. Favorable profile.';
+
+  @override
+  String get riskModerateDesc =>
+      'Some concerns. Additional documentation recommended.';
+
+  @override
+  String get riskHighDesc => 'Multiple red flags detected. Review required.';
+
+  @override
+  String get riskCriticalDesc =>
+      'Profile indicates high probability of 214(b) refusal.';
+
+  @override
+  String get axisEconomic => 'Economic';
+
+  @override
+  String get axisSocial => 'Social';
+
+  @override
+  String get axisDocuments => 'Documents';
+
+  @override
+  String get axisConsistency => 'Consistency';
+
+  @override
+  String get axisTravel => 'Travel';
 }

@@ -31,7 +31,7 @@ class MainScaffold extends StatelessWidget {
             BottomNavigationBarItem(
               icon: const Icon(Icons.shield_outlined),
               activeIcon: const Icon(Icons.shield),
-              label: 'Risk',
+              label: l10n.riskCommand,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_outline),

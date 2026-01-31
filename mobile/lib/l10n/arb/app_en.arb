@@ -951,7 +951,82 @@
   "@profile": {"description": "Bottom navigation profile label"},
   
   "ds260IntakeTitle": "DS-260 INTAKE",
-  "@ds260IntakeTitle": {"description": "DS-260 intake screen title"}
+  "@ds260IntakeTitle": {"description": "DS-260 intake screen title"},
+  
+  "riskCommand": "Risk",
+  "@riskCommand": {"description": "Bottom navigation risk command label"},
+  
+  "riskCommandTitle": "Risk Command",
+  "@riskCommandTitle": {"description": "Risk dashboard screen title"},
+  
+  "analyzingProfile": "Analyzing profile...",
+  "@analyzingProfile": {"description": "Loading state in risk dashboard"},
+  
+  "visaApprovalProbability": "VISA APPROVAL PROBABILITY",
+  "@visaApprovalProbability": {"description": "Risk gauge title"},
+  
+  "frictionMap": "FRICTION MAP",
+  "@frictionMap": {"description": "Radar chart section title"},
+  
+  "redFlagFeed": "RED FLAG FEED",
+  "@redFlagFeed": {"description": "Alerts section title"},
+  
+  "redFlagClear": "CLEAR",
+  "@redFlagClear": {"description": "No red flags badge"},
+  
+  "redFlagAlerts": "{count} ALERTS",
+  "@redFlagAlerts": {"description": "Red flag count badge", "placeholders": {"count": {"type": "int"}}},
+  
+  "noRedFlagsDetected": "No red flags detected in current profile.",
+  "@noRedFlagsDetected": {"description": "Empty red flags message"},
+  
+  "practiceWithSimulator": "Practice Interview",
+  "@practiceWithSimulator": {"description": "Simulator section title"},
+  
+  "practiceWithSimulatorDesc": "Practice with our AI Consular Officer to improve your interview skills.",
+  "@practiceWithSimulatorDesc": {"description": "Simulator section description"},
+  
+  "goToSimulator": "GO TO SIMULATOR",
+  "@goToSimulator": {"description": "Navigate to simulator button"},
+  
+  "riskLow": "LOW RISK",
+  "@riskLow": {"description": "Risk category label"},
+  
+  "riskModerate": "MODERATE",
+  "@riskModerate": {"description": "Risk category label"},
+  
+  "riskHigh": "HIGH RISK",
+  "@riskHigh": {"description": "Risk category label"},
+  
+  "riskCritical": "214(b) IMMINENT",
+  "@riskCritical": {"description": "Risk category label"},
+  
+  "riskLowDesc": "Strong ties demonstrated. Favorable profile.",
+  "@riskLowDesc": {"description": "Risk category description"},
+  
+  "riskModerateDesc": "Some concerns. Additional documentation recommended.",
+  "@riskModerateDesc": {"description": "Risk category description"},
+  
+  "riskHighDesc": "Multiple red flags detected. Review required.",
+  "@riskHighDesc": {"description": "Risk category description"},
+  
+  "riskCriticalDesc": "Profile indicates high probability of 214(b) refusal.",
+  "@riskCriticalDesc": {"description": "Risk category description"},
+  
+  "axisEconomic": "Economic",
+  "@axisEconomic": {"description": "Radar chart axis label"},
+  
+  "axisSocial": "Social",
+  "@axisSocial": {"description": "Radar chart axis label"},
+  
+  "axisDocuments": "Documents",
+  "@axisDocuments": {"description": "Radar chart axis label"},
+  
+  "axisConsistency": "Consistency",
+  "@axisConsistency": {"description": "Radar chart axis label"},
+  
+  "axisTravel": "Travel",
+  "@axisTravel": {"description": "Radar chart axis label"}
 }
 
 

@@ -1,27 +1,22 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/models/consular_risk_state.dart';
 import 'package:mobile/providers/consular_risk_provider.dart';
 
 /// Consular Risk Real-Time Dashboard
-/// Uses AppTheme design system for UI consistency.
+/// Uses AppTheme design system and l10n for UI consistency.
 /// Implements consular-singularity-engine skill requirements.
-class ConsularRiskDashboardScreen extends ConsumerStatefulWidget {
+class ConsularRiskDashboardScreen extends ConsumerWidget {
   const ConsularRiskDashboardScreen({super.key});
 
   @override
-  ConsumerState<ConsularRiskDashboardScreen> createState() => _ConsularRiskDashboardScreenState();
-}
-
-class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashboardScreen> {
-  List<String>? _simulationQuestions;
-  bool _isSimulating = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final riskState = ref.watch(consularRiskProvider);
+    final l10n = context.l10n;
     
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
@@ -32,10 +27,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
           children: [
             Icon(Icons.shield, color: AppTheme.inkInverse, size: 20),
             const SizedBox(width: 8),
-            Text(
-              'Risk Command',
-              style: AppTheme.h1WhiteBold,
-            ),
+            Text(l10n.riskCommandTitle, style: AppTheme.h1WhiteBold),
           ],
         ),
         centerTitle: true,
@@ -48,10 +40,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                 children: [
                   CircularProgressIndicator(color: AppTheme.actionBlue),
                   const SizedBox(height: 16),
-                  Text(
-                    'Analyzing profile...',
-                    style: AppTheme.captionGreyRegular,
-                  ),
+                  Text(l10n.analyzingProfile, style: AppTheme.captionGreyRegular),
                 ],
               ),
             )
@@ -60,26 +49,13 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // === PROBABILITY GAUGE ===
-                  _buildProbabilityGauge(riskState),
+                  _buildProbabilityGauge(context, riskState),
                   SizedBox(height: AppTheme.espacioEntreTarjetas),
-                  
-                  // === RADAR CHART - FRICTION MAP ===
-                  _buildFrictionMapCard(riskState.frictionMap),
+                  _buildFrictionMapCard(context, riskState.frictionMap),
                   SizedBox(height: AppTheme.espacioEntreTarjetas),
-                  
-                  // === RED FLAG FEED ===
-                  _buildRedFlagFeed(riskState.redFlags),
+                  _buildRedFlagFeed(context, riskState.redFlags),
                   SizedBox(height: AppTheme.espacioEntreTarjetas),
-                  
-                  // === SENTENCE SIMULATOR ===
-                  _buildSentenceSimulator(),
-                  
-                  if (_simulationQuestions != null) ...[
-                    const SizedBox(height: 16),
-                    _buildSimulationResults(),
-                  ],
-                  
+                  _buildSimulatorSection(context),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -87,10 +63,11 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
     );
   }
 
-  Widget _buildProbabilityGauge(ConsularRiskState state) {
+  Widget _buildProbabilityGauge(BuildContext context, ConsularRiskState state) {
     final probability = state.visaApprovalProbability;
     final category = state.riskCategory;
     final color = _getRiskColor(category);
+    final l10n = context.l10n;
     
     return Container(
       padding: AppTheme.paddingMedio,
@@ -98,7 +75,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
       child: Column(
         children: [
           Text(
-            'VISA APPROVAL PROBABILITY',
+            l10n.visaApprovalProbability,
             style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
           ),
           const SizedBox(height: 16),
@@ -120,10 +97,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                 children: [
                   Text(
                     '${(probability * 100).toInt()}%',
-                    style: AppTheme.h1NavyBold.copyWith(
-                      fontSize: 36,
-                      color: color,
-                    ),
+                    style: AppTheme.h1NavyBold.copyWith(fontSize: 36, color: color),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -132,7 +106,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                       borderRadius: AppTheme.badgeRadius,
                     ),
                     child: Text(
-                      category.label,
+                      _getRiskLabel(context, category),
                       style: AppTheme.captionNavyBold.copyWith(
                         color: color,
                         fontSize: 10,
@@ -146,7 +120,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
           ),
           const SizedBox(height: 16),
           Text(
-            category.description,
+            _getRiskDescription(context, category),
             textAlign: TextAlign.center,
             style: AppTheme.captionGreyRegular,
           ),
@@ -155,7 +129,16 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
     );
   }
 
-  Widget _buildFrictionMapCard(FrictionMapData frictionMap) {
+  Widget _buildFrictionMapCard(BuildContext context, FrictionMapData frictionMap) {
+    final l10n = context.l10n;
+    final labels = [
+      l10n.axisEconomic,
+      l10n.axisSocial,
+      l10n.axisDocuments,
+      l10n.axisConsistency,
+      l10n.axisTravel,
+    ];
+    
     return Container(
       padding: AppTheme.paddingMedio,
       decoration: AppTheme.standardCardDecoration,
@@ -167,7 +150,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
               Icon(Icons.radar, color: AppTheme.inkSecondary, size: 18),
               const SizedBox(width: 8),
               Text(
-                'FRICTION MAP',
+                l10n.frictionMap,
                 style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
               ),
             ],
@@ -177,16 +160,14 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
             height: 200,
             child: CustomPaint(
               size: const Size(double.infinity, 200),
-              painter: RadarChartPainter(frictionMap),
+              painter: RadarChartPainter(frictionMap, labels),
             ),
           ),
           const SizedBox(height: 16),
-          // Legend
           Wrap(
             spacing: 12,
             runSpacing: 8,
             children: List.generate(5, (i) {
-              final labels = FrictionMapData.axisLabels;
               final values = frictionMap.toRadarValues();
               return _buildLegendItem(labels[i], values[i]);
             }),
@@ -209,21 +190,17 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
         Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(
-          '$label: ${(value * 100).toInt()}%',
-          style: AppTheme.captionGreyRegular,
-        ),
+        Text('$label: ${(value * 100).toInt()}%', style: AppTheme.captionGreyRegular),
       ],
     );
   }
 
-  Widget _buildRedFlagFeed(List<RedFlagAlert> redFlags) {
+  Widget _buildRedFlagFeed(BuildContext context, List<RedFlagAlert> redFlags) {
+    final l10n = context.l10n;
+    
     return Container(
       decoration: AppTheme.standardCardDecoration,
       child: Column(
@@ -240,7 +217,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'RED FLAG FEED',
+                  l10n.redFlagFeed,
                   style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
                 ),
                 const Spacer(),
@@ -253,7 +230,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                     borderRadius: AppTheme.badgeRadius,
                   ),
                   child: Text(
-                    redFlags.isEmpty ? 'CLEAR' : '${redFlags.length} ALERTS',
+                    redFlags.isEmpty ? l10n.redFlagClear : l10n.redFlagAlerts(redFlags.length),
                     style: AppTheme.captionNavyBold.copyWith(
                       color: redFlags.isEmpty ? AppTheme.successGreen : AppTheme.errorRed,
                       fontSize: 10,
@@ -266,10 +243,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
           if (redFlags.isEmpty)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Text(
-                'No red flags detected in current profile.',
-                style: AppTheme.captionGreyRegular,
-              ),
+              child: Text(l10n.noRedFlagsDetected, style: AppTheme.captionGreyRegular),
             )
           else
             ListView.separated(
@@ -296,15 +270,8 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
         children: [
           Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: AppTheme.smallRadius,
-            ),
-            child: Icon(
-              isCritical ? Icons.error : Icons.warning,
-              color: color,
-              size: 16,
-            ),
+            decoration: BoxDecoration(color: bgColor, borderRadius: AppTheme.smallRadius),
+            child: Icon(isCritical ? Icons.error : Icons.warning, color: color, size: 16),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -316,10 +283,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                   style: AppTheme.captionNavyBold.copyWith(color: color),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  alert.description,
-                  style: AppTheme.captionGreyRegular,
-                ),
+                Text(alert.description, style: AppTheme.captionGreyRegular),
               ],
             ),
           ),
@@ -328,7 +292,9 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
     );
   }
 
-  Widget _buildSentenceSimulator() {
+  Widget _buildSimulatorSection(BuildContext context) {
+    final l10n = context.l10n;
+    
     return Container(
       padding: AppTheme.paddingMedio,
       decoration: AppTheme.navyHeaderCardDecoration,
@@ -337,45 +303,31 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
         children: [
           Row(
             children: [
-              Icon(Icons.psychology, color: AppTheme.inkInverse, size: 20),
+              Icon(Icons.record_voice_over, color: AppTheme.inkInverse, size: 20),
               const SizedBox(width: 8),
               Text(
-                'ADVERSARIAL SIMULATION',
+                l10n.practiceWithSimulator,
                 style: AppTheme.captionWhiteBold.copyWith(letterSpacing: 1),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          Text(
-            'Run a 3-question stress test based on detected vulnerabilities.',
-            style: AppTheme.captionWhiteRegular,
-          ),
+          Text(l10n.practiceWithSimulatorDesc, style: AppTheme.captionWhiteRegular),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: _isSimulating ? null : _runSimulation,
-              icon: _isSimulating
-                  ? SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2, 
-                        color: AppTheme.navyPrimary,
-                      ),
-                    )
-                  : Icon(Icons.play_arrow, size: 18, color: AppTheme.navyPrimary),
+              onPressed: () => context.push('/simulator/chat'),
+              icon: Icon(Icons.play_arrow, size: 18, color: AppTheme.navyPrimary),
               label: Text(
-                _isSimulating ? 'SIMULATING...' : 'START INTERROGATION',
+                l10n.goToSimulator,
                 style: AppTheme.labelBold.copyWith(color: AppTheme.navyPrimary),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.inkInverse,
                 foregroundColor: AppTheme.navyPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: AppTheme.buttonRadius,
-                ),
+                shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
               ),
             ),
           ),
@@ -384,91 +336,32 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
     );
   }
 
-  Widget _buildSimulationResults() {
-    return Container(
-      padding: AppTheme.paddingEstandar,
-      decoration: AppTheme.standardCardDecoration.copyWith(
-        border: Border.all(color: AppTheme.actionBlue.withOpacity(0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.question_answer, color: AppTheme.actionBlue, size: 16),
-              const SizedBox(width: 8),
-              Text(
-                'SIMULATED QUESTIONS',
-                style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ...List.generate(_simulationQuestions!.length, (i) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: AppTheme.softBlue,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${i + 1}',
-                        style: AppTheme.captionNavyBold.copyWith(
-                          color: AppTheme.actionBlue,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      _simulationQuestions![i],
-                      style: AppTheme.bodyPrimaryRegular,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
+  String _getRiskLabel(BuildContext context, RiskCategory category) {
+    final l10n = context.l10n;
+    switch (category) {
+      case RiskCategory.low: return l10n.riskLow;
+      case RiskCategory.moderate: return l10n.riskModerate;
+      case RiskCategory.high: return l10n.riskHigh;
+      case RiskCategory.critical: return l10n.riskCritical;
+    }
   }
 
-  Future<void> _runSimulation() async {
-    setState(() {
-      _isSimulating = true;
-      _simulationQuestions = null;
-    });
-    
-    await Future.delayed(const Duration(seconds: 2));
-    
-    final questions = await ref.read(consularRiskProvider.notifier).runSentenceSimulation();
-    
-    setState(() {
-      _isSimulating = false;
-      _simulationQuestions = questions;
-    });
+  String _getRiskDescription(BuildContext context, RiskCategory category) {
+    final l10n = context.l10n;
+    switch (category) {
+      case RiskCategory.low: return l10n.riskLowDesc;
+      case RiskCategory.moderate: return l10n.riskModerateDesc;
+      case RiskCategory.high: return l10n.riskHighDesc;
+      case RiskCategory.critical: return l10n.riskCriticalDesc;
+    }
   }
 
   Color _getRiskColor(RiskCategory category) {
     switch (category) {
-      case RiskCategory.low:
-        return AppTheme.successGreen;
-      case RiskCategory.moderate:
-        return AppTheme.warningOrange;
-      case RiskCategory.high:
-        return const Color(0xFFE65100); // Deep orange
-      case RiskCategory.critical:
-        return AppTheme.errorRed;
+      case RiskCategory.low: return AppTheme.successGreen;
+      case RiskCategory.moderate: return AppTheme.warningOrange;
+      case RiskCategory.high: return const Color(0xFFE65100);
+      case RiskCategory.critical: return AppTheme.errorRed;
     }
   }
 }
@@ -476,8 +369,9 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 /// Custom painter for radar chart using AppTheme colors
 class RadarChartPainter extends CustomPainter {
   final FrictionMapData data;
+  final List<String> labels;
   
-  RadarChartPainter(this.data);
+  RadarChartPainter(this.data, this.labels);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -486,7 +380,6 @@ class RadarChartPainter extends CustomPainter {
     final values = data.toRadarValues();
     const sides = 5;
     
-    // Draw grid circles
     final gridPaint = Paint()
       ..color = AppTheme.dividerGrey
       ..style = PaintingStyle.stroke
@@ -499,17 +392,12 @@ class RadarChartPainter extends CustomPainter {
         final angle = (j * 2 * math.pi / sides) - (math.pi / 2);
         final x = center.dx + r * math.cos(angle);
         final y = center.dy + r * math.sin(angle);
-        if (j == 0) {
-          path.moveTo(x, y);
-        } else {
-          path.lineTo(x, y);
-        }
+        if (j == 0) { path.moveTo(x, y); } else { path.lineTo(x, y); }
       }
       path.close();
       canvas.drawPath(path, gridPaint);
     }
     
-    // Draw axis lines
     for (int i = 0; i < sides; i++) {
       final angle = (i * 2 * math.pi / sides) - (math.pi / 2);
       final x = center.dx + radius * math.cos(angle);
@@ -517,7 +405,6 @@ class RadarChartPainter extends CustomPainter {
       canvas.drawLine(center, Offset(x, y), gridPaint);
     }
     
-    // Draw data polygon
     final dataPath = Path();
     final dataPaint = Paint()
       ..color = AppTheme.actionBlue.withOpacity(0.25)
@@ -532,17 +419,12 @@ class RadarChartPainter extends CustomPainter {
       final r = radius * values[i];
       final x = center.dx + r * math.cos(angle);
       final y = center.dy + r * math.sin(angle);
-      if (i == 0) {
-        dataPath.moveTo(x, y);
-      } else {
-        dataPath.lineTo(x, y);
-      }
+      if (i == 0) { dataPath.moveTo(x, y); } else { dataPath.lineTo(x, y); }
     }
     dataPath.close();
     canvas.drawPath(dataPath, dataPaint);
     canvas.drawPath(dataPath, dataStrokePaint);
     
-    // Draw data points
     final pointPaint = Paint()
       ..color = AppTheme.actionBlue
       ..style = PaintingStyle.fill;
@@ -555,8 +437,6 @@ class RadarChartPainter extends CustomPainter {
       canvas.drawCircle(Offset(x, y), 4, pointPaint);
     }
     
-    // Draw labels
-    final labels = FrictionMapData.axisLabels;
     final textStyle = TextStyle(
       color: AppTheme.inkSecondary,
       fontSize: 10,
@@ -570,15 +450,9 @@ class RadarChartPainter extends CustomPainter {
       final y = center.dy + labelRadius * math.sin(angle);
       
       final textSpan = TextSpan(text: labels[i], style: textStyle);
-      final textPainter = TextPainter(
-        text: textSpan,
-        textDirection: TextDirection.ltr,
-      );
+      final textPainter = TextPainter(text: textSpan, textDirection: TextDirection.ltr);
       textPainter.layout();
-      textPainter.paint(
-        canvas,
-        Offset(x - textPainter.width / 2, y - textPainter.height / 2),
-      );
+      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
     }
   }
 

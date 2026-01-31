@@ -631,6 +631,32 @@
   "home": "Inicio",
   "services": "Servicios",
   "profile": "Perfil",
-  "ds260IntakeTitle": "FORMULARIO DS-260"
+  "ds260IntakeTitle": "FORMULARIO DS-260",
+  
+  "riskCommand": "Riesgo",
+  "riskCommandTitle": "Centro de Riesgo",
+  "analyzingProfile": "Analizando perfil...",
+  "visaApprovalProbability": "PROBABILIDAD DE APROBACIÓN",
+  "frictionMap": "MAPA DE FRICCIÓN",
+  "redFlagFeed": "ALERTAS DETECTADAS",
+  "redFlagClear": "LIMPIO",
+  "redFlagAlerts": "{count} ALERTAS",
+  "noRedFlagsDetected": "No se detectaron alertas en el perfil actual.",
+  "practiceWithSimulator": "Practicar Entrevista",
+  "practiceWithSimulatorDesc": "Practica con nuestro Oficial Consular IA para mejorar tus habilidades de entrevista.",
+  "goToSimulator": "IR AL SIMULADOR",
+  "riskLow": "RIESGO BAJO",
+  "riskModerate": "MODERADO",
+  "riskHigh": "RIESGO ALTO",
+  "riskCritical": "214(b) INMINENTE",
+  "riskLowDesc": "Vínculos fuertes demostrados. Perfil favorable.",
+  "riskModerateDesc": "Algunas preocupaciones. Se recomienda documentación adicional.",
+  "riskHighDesc": "Múltiples banderas rojas detectadas. Requiere revisión.",
+  "riskCriticalDesc": "El perfil indica alta probabilidad de rechazo 214(b).",
+  "axisEconomic": "Económico",
+  "axisSocial": "Social",
+  "axisDocuments": "Documentos",
+  "axisConsistency": "Consistencia",
+  "axisTravel": "Viajes"
 }
 
