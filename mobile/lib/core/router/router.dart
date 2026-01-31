@@ -27,6 +27,7 @@ import 'package:mobile/screens/prerequisite_checker_screen.dart';
 import 'package:mobile/screens/restriction_check_screen.dart';
 import 'package:mobile/screens/cost_calculator_screen.dart';
 import 'package:mobile/screens/help_topic_screen.dart';
+import 'package:mobile/screens/premium_checkout_screen.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -196,7 +197,10 @@ GoRouter goRouter(Ref ref) {
                   ),
                   GoRoute(
                     path: 'payment',
-                    builder: (context, state) => const ServiceSelectionScreen(), // Alias
+                    builder: (context, state) {
+                      final plan = state.uri.queryParameters['plan'] ?? 'monthly';
+                      return PremiumCheckoutScreen(planId: plan);
+                    },
                   ),
                   GoRoute(
                     path: 'checkout',

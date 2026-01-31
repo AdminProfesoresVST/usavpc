@@ -412,86 +412,155 @@ class _SubscriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: isBestValue ? AppTheme.navyPrimary : AppTheme.surfaceWhite,
-            borderRadius: AppTheme.cardRadius,
-            border: Border.all(
-              color: isBestValue ? AppTheme.navyPrimary : AppTheme.cardBorderColor,
-              width: isBestValue ? 2 : 1,
+    final features = isBestValue
+      ? ['Todo ilimitado', 'Soporte prioritario', 'Sin anuncios']
+      : ['Simulador IA', 'Tips básicos'];
+      
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: isBestValue 
+            ? LinearGradient(
+                colors: [
+                  AppTheme.navyPrimary,
+                  AppTheme.navyPrimary.withBlue(100),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+          color: isBestValue ? null : AppTheme.surfaceWhite,
+          borderRadius: BorderRadius.circular(16),
+          border: isBestValue 
+            ? null 
+            : Border.all(color: AppTheme.cardBorderColor),
+          boxShadow: [
+            BoxShadow(
+              color: isBestValue 
+                ? AppTheme.navyPrimary.withValues(alpha: 0.3)
+                : AppTheme.inkPrimary.withValues(alpha: 0.05),
+              blurRadius: isBestValue ? 20 : 8,
+              offset: const Offset(0, 8),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.inkPrimary.withValues(alpha: 0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: AppTheme.cardRadius,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    if (isBestValue) const SizedBox(height: 12), // Space for badge
-                    Text(
-                      title,
-                      style: isBestValue 
-                        ? AppTheme.labelRegular.copyWith(color: AppTheme.inkInverse.withValues(alpha: 0.8))
-                        : AppTheme.labelRegular,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      price,
-                      style: isBestValue 
-                        ? AppTheme.h1WhiteBold.copyWith(fontSize: 20)
-                        : AppTheme.h1NavyBold.copyWith(fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          ],
         ),
-        if (isBestValue && badgeText != null)
-          Positioned(
-            top: -10,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFD700), // Gold
-                  borderRadius: AppTheme.badgeRadius,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isBestValue) const SizedBox(height: 8),
+                  // Title
+                  Text(
+                    title,
+                    style: isBestValue 
+                      ? AppTheme.labelRegular.copyWith(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontSize: 12,
+                        )
+                      : AppTheme.labelRegular.copyWith(fontSize: 12),
+                  ),
+                  const SizedBox(height: 4),
+                  // Price
+                  Text(
+                    price,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: isBestValue ? Colors.white : AppTheme.navyPrimary,
                     ),
-                  ],
-                ),
-                child: Text(
-                  badgeText!,
-                  style: AppTheme.labelBold.copyWith(
-                    color: AppTheme.navyPrimary,
-                    fontSize: 10,
+                  ),
+                  const SizedBox(height: 12),
+                  // Features
+                  ...features.map((feature) => Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          size: 14,
+                          color: isBestValue 
+                            ? const Color(0xFFFFD700) 
+                            : AppTheme.accentGreen,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            feature,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isBestValue 
+                                ? Colors.white.withValues(alpha: 0.9)
+                                : AppTheme.inkSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+                  const SizedBox(height: 8),
+                  // CTA Button
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isBestValue 
+                        ? Colors.white
+                        : AppTheme.navyPrimary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      'Elegir',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: isBestValue 
+                          ? AppTheme.navyPrimary 
+                          : Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Best Value Badge
+            if (isBestValue && badgeText != null)
+              Positioned(
+                top: -10,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFD700),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFFFD700).withValues(alpha: 0.4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      badgeText!,
+                      style: AppTheme.labelBold.copyWith(
+                        color: AppTheme.navyPrimary,
+                        fontSize: 10,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        ),
+      ),
     );
   }
 }
