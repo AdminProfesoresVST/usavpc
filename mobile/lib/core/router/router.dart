@@ -28,6 +28,7 @@ import 'package:mobile/screens/restriction_check_screen.dart';
 import 'package:mobile/screens/cost_calculator_screen.dart';
 import 'package:mobile/screens/help_topic_screen.dart';
 import 'package:mobile/screens/premium_checkout_screen.dart';
+import 'package:mobile/screens/admin_payment_config_screen.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -133,6 +134,11 @@ GoRouter goRouter(Ref ref) {
        GoRoute(
         path: '/chat-intake',
          redirect: (context, state) => '/kyc/chat',
+      ),
+      // Admin Routes
+      GoRoute(
+        path: '/admin/payments',
+        builder: (context, state) => const AdminPaymentConfigScreen(),
       ),
       
       // UNIFIED SHELL
