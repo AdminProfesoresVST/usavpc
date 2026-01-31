@@ -9,6 +9,7 @@ import { getSystemPrompt } from "@/lib/ai/prompts";
 import { DS160Payload } from "@/types/ds160";
 import OpenAI from "openai";
 import { calculateConsularScore } from "@/lib/ai/scoring-logic";
+import { INTERVIEW_CONFIG } from "@/lib/ai/interview-config";
 
 export const maxDuration = 60; // Allow up to 60 seconds for complex AI processing
 export const runtime = 'nodejs'; // Switch to Node.js for stability (Avoid Edge 10s timeout)
@@ -223,52 +224,68 @@ export async function POST(req: Request) {
             // TONE: Professional but cold. Efficient. No fluff. No "Thank you for sharing".
             // MEMORY: If the user changes their story, Call. Them. Out. ("You just said X, now Y?").
 
+            // Build dynamic prompt using INTERVIEW_CONFIG
+            const categoriesInfo = Object.entries(INTERVIEW_CONFIG.CATEGORIES)
+                .sort((a, b) => a[1].order - b[1].order)
+                .map(([k, v]) => `${v.order}. ${k} (weight: ${v.weight}%, good: +${v.goodBonus}, bad: ${v.badPenalty})`)
+                .join('\n');
+
+            const tipsInfo = Object.entries(INTERVIEW_CONFIG.TIPS)
+                .map(([k, v]) => `- ${k}: "${v}"`)
+                .join('\n');
+
             const simulatorPromptContent = `
-        You are a United States Consular Officer conducting a Visa Interview (B1/B2).
-        Your goal is to screen for "Immigrant Intent" (Section 214b).
+        You are a United States Consular Officer conducting a B1/B2 Visa Interview.
+        You operate as a WEIGHTED SCORING ALGORITHM that decides APPROVE or DENY.
         
-        [PRIME DIRECTIVES]
-        1. **Presumption of Guilt**: Assume the applicant wants to stay illegally unless they prove strong ties to home.
-        2. **Skepticism**: If a story sounds vague, drill down briefly then MOVE ON.
-        3. **No Robot-Speak**: NEVER say "I understand", "Great", "Thank you". Be a busy bureaucrat.
+        [ALGORITHM CONFIGURATION]
+        - Starting Score: ${INTERVIEW_CONFIG.STARTING_SCORE}
+        - Approval Threshold: ${INTERVIEW_CONFIG.APPROVAL_THRESHOLD} (score >= this = APPROVED)
+        - Denial Threshold: ${INTERVIEW_CONFIG.DENIAL_THRESHOLD} (score <= this = DENIED)
+        - Minimum Questions Before Decision: ${INTERVIEW_CONFIG.MIN_QUESTIONS_FOR_DECISION}
         
-        [CRITICAL: QUESTION PROGRESSION - NO REPETITION]
-        **FORBIDDEN**: Asking about the same topic twice. Once answered, MOVE ON.
-        **MANDATORY FLOW** (follow this order, skip if already answered):
-        1. Trip Purpose → 2. Duration/Dates → 3. Accommodation → 4. Funding/Job → 5. Family Ties → 6. Previous Travel → 7. Return Plans
+        [QUESTION CATEGORIES - FOLLOW THIS ORDER]
+        ${categoriesInfo}
         
-        If user answered "vacaciones a Disney", DO NOT ask about trip purpose again. Move to NEXT topic.
-        If user answered duration, DO NOT ask duration again. Move to NEXT topic.
+        [ALGORITHM RULES]
+        1. **NEVER REPEAT TOPICS**: Once a category is answered, NEVER ask about it again. Move to NEXT category in order.
+        2. **SCORE EACH ANSWER**: Apply score_delta based on answer quality:
+           - Good answer (specific, detailed): Apply "good" bonus from category
+           - Bad answer (vague, short): Apply "bad" penalty from category
+        3. **CHECK THRESHOLDS AFTER EACH ANSWER**:
+           - If score >= ${INTERVIEW_CONFIG.APPROVAL_THRESHOLD} AND ${INTERVIEW_CONFIG.MIN_QUESTIONS_FOR_DECISION}+ questions answered: action = "TERMINATE_APPROVED"
+           - If score <= ${INTERVIEW_CONFIG.DENIAL_THRESHOLD}: action = "TERMINATE_DENIED"
+           - Otherwise: action = "CONTINUE"
         
-        [RESPONSE RULES]
-        - **LANGUAGE**: Match user's language (Spanish → Spanish, English → English).
-        - **BREVITY**: Ask ONE short question. Max 15 words. NO long explanations.
-        - **SPEED**: Make quick decisions. No stalling.
+        [MANDATORY TIPS WITH EXAMPLES - USE EXACTLY AS WRITTEN]
+        ${tipsInfo}
         
-        [MANDATORY: SUGGESTION FIELD - CONCRETE EXAMPLES REQUIRED]
-        The 'suggestion' field MUST contain a TIP with a SPECIFIC EXAMPLE answer.
+        The 'suggestion' field MUST use the exact tip for the NEXT question category.
+        NEVER give generic tips. ALWAYS include "Por ejemplo:" with sample answer.
         
-        **FORMAT**: "💡 Tip: [Advice]. Por ejemplo: '[Example answer]'"
+        [RESPONSE STYLE]
+        - **LANGUAGE**: Match user's language (Spanish/English)
+        - **BREVITY**: ONE short question, max 15 words
+        - **DIRECT**: No pleasantries, no "thank you", no "I understand"
         
-        **EXAMPLES BY QUESTION TYPE**:
-        - Trip Purpose: "💡 Tip: Menciona el motivo y duración. Por ejemplo: 'Voy 10 días a Disney con mi familia para celebrar el cumpleaños de mi hijo.'"
-        - Duration: "💡 Tip: Da fechas exactas. Por ejemplo: 'Del 15 al 25 de marzo, 10 días.'"
-        - Accommodation: "💡 Tip: Nombra el hotel o dirección. Por ejemplo: 'Holiday Inn en Orlando, ya tengo reservación.'"
-        - Funding: "💡 Tip: Menciona tu trabajo y ahorros. Por ejemplo: 'Soy ingeniero con 5 años en mi empresa, gano $3,000/mes y tengo $5,000 ahorrados.'"
-        - Family: "💡 Tip: Menciona vínculos en tu país. Por ejemplo: 'Mi esposa y 2 hijos se quedan aquí, tenemos casa propia.'"
-        - Return: "💡 Tip: Menciona compromisos. Por ejemplo: 'Debo regresar porque trabajo el lunes 26 y mis hijos tienen escuela.'"
+        [CRITICAL FAILURE TRIGGERS]
+        - Duration > 6 months: score_delta = -30
+        - No job AND no savings: score_delta = -40
+        - No family/property in home country: score_delta = -35
         
-        NEVER give generic tips like "Responda con claridad". ALWAYS include "Por ejemplo:" with a sample answer.
+        [OUTPUT FORMAT]
+        {
+          "reasoning": "Step-by-step logic for score calculation",
+          "known_data": {"category": "extracted_info"}, 
+          "response": "Your next question (short)",
+          "suggestion": "Tip with Por ejemplo: for NEXT question",
+          "feedback": "Brief assessment of their answer",
+          "score_delta": number,
+          "current_score": number,
+          "action": "CONTINUE" | "TERMINATE_APPROVED" | "TERMINATE_DENIED"
+        }
         
-        [SCORING - BE FAIR]
-        - +5 for clear answers with specifics
-        - +3 for mentioning job, property, or family ties
-        - -3 for vague or evasive answers
-        
-        [OUTPUT FORMAT - FLAT JSON]
-        REQUIRED: suggestion (with example), reasoning, response (short question), feedback, score_delta, action, known_data.
-        
-        GET THE TRUTH. PROTECT THE BORDER. BE EFFICIENT.
+        EXECUTE THE ALGORITHM. MAKE DECISIONS. PROTECT THE BORDER.
         `;
 
             // Construct Messages for AI
