@@ -308,26 +308,52 @@ export async function POST(req: Request) {
                     });
                     finalObj = repairObj;
                 } catch (retryError) {
-                    console.error("Agent 5 Repair Failed. STRICT FAILURE MODE (No Fallbacks).");
+                    console.error("Agent 5 Repair Failed. Using generateText fallback...");
 
-                    // STRICT NO-FALLBACK POLICY:
-                    // If the AI fails twice to produce valid JSON, we generally throw 500.
-                    // However, to keep the chat alive without being "ugly", we can return a hardcoded Spanish error 
-                    // asking the user to rephrase, BUT NEVER an invented English question.
+                    // FALLBACK: Use generateText instead of generateObject (more flexible, no schema validation)
+                    try {
+                        const { generateText } = await import('ai');
+                        const isSpanishSession = effectiveLocale === 'es' || effectiveHistory.some((m: any) => m.role === 'user' && (m.content || "").match(/[áéíóúñ¿¡]/));
 
-                    // "Lo siento, no entendí su respuesta. ¿Puede repetirla?"
-                    const isSpanishSession = effectiveLocale === 'es' || effectiveHistory.some((m: any) => m.role === 'user' && (m.content || "").match(/[áéíóúñ¿¡]/));
+                        const fallbackPrompt = isSpanishSession
+                            ? `Eres un oficial consular de EE.UU. evaluando una visa B1/B2. El aplicante dijo: "${answer}". Responde con UNA pregunta de seguimiento breve y profesional en español. Solo la pregunta, sin explicaciones.`
+                            : `You are a US consular officer evaluating a B1/B2 visa. The applicant said: "${answer}". Respond with ONE brief follow-up question in English. Just the question, no explanations.`;
 
-                    finalObj = {
-                        reasoning: "Critical AI JSON Failure.",
-                        response: isSpanishSession ? "No entendí. ¿Puede repetir eso?" : "I did not understand. Please repeat.",
-                        feedback: isSpanishSession ? "Intente ser más claro." : "Be clearer.",
-                        score_delta: 0,
-                        action: "CONTINUE",
-                        current_score: currentScore,
-                        known_data: {},
-                        suggestion: null
-                    };
+                        const { text: fallbackResponse } = await generateText({
+                            model: openaiModelProvider('gpt-4o-mini'),
+                            prompt: fallbackPrompt,
+                        });
+
+                        finalObj = {
+                            reasoning: "Used generateText fallback due to schema validation failure.",
+                            internal_monologue: "Fallback mode - simplified processing.",
+                            suspicion_level: 30,
+                            is_lying: false,
+                            response: fallbackResponse || (isSpanishSession ? "Cuénteme más sobre su viaje." : "Tell me more about your trip."),
+                            feedback: isSpanishSession ? "Responda con claridad y confianza." : "Answer clearly and confidently.",
+                            suggestion: null,
+                            score_delta: 0,
+                            action: "CONTINUE" as const,
+                            current_score: currentScore,
+                            known_data: {},
+                        };
+                    } catch (textError) {
+                        console.error("Final fallback failed:", textError);
+                        const isSpanishSession = effectiveLocale === 'es';
+                        finalObj = {
+                            reasoning: "All AI calls failed.",
+                            internal_monologue: "System error.",
+                            suspicion_level: 0,
+                            is_lying: false,
+                            response: isSpanishSession ? "Cuénteme más sobre el propósito de su viaje." : "Tell me more about the purpose of your trip.",
+                            feedback: isSpanishSession ? "Sea específico." : "Be specific.",
+                            suggestion: null,
+                            score_delta: 0,
+                            action: "CONTINUE" as const,
+                            current_score: currentScore,
+                            known_data: {},
+                        };
+                    }
                 }
             }
 
