@@ -33,6 +33,8 @@
   "@stepResults": {"description": "Step 3 title"},
   
   "stepResultsSubtitle": "Get Report",
+  "successProbability": "Probability",
+  "seeRiskDetails": "See Details",
   "@stepResultsSubtitle": {"description": "Step 3 subtitle"},
   
   "popularServices": "Services",

@@ -46,6 +46,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stepResultsSubtitle => 'Obtén Reporte';
 
   @override
+  String get successProbability => 'Probabilidad';
+
+  @override
+  String get seeRiskDetails => 'Ver Detalles';
+
+  @override
   String get popularServices => 'Servicios';
 
   @override

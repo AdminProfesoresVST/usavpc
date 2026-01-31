@@ -13,6 +13,8 @@
   "stepSimulateSubtitle": "Entrevista AI",
   "stepResults": "Resultados",
   "stepResultsSubtitle": "Obtén Reporte",
+  "successProbability": "Probabilidad",
+  "seeRiskDetails": "Ver Detalles",
   "popularServices": "Servicios",
   
   "helpScanTitle": "Escaneo de Documentos",

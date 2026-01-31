@@ -170,6 +170,18 @@ abstract class AppLocalizations {
   /// **'Get Report'**
   String get stepResultsSubtitle;
 
+  /// No description provided for @successProbability.
+  ///
+  /// In en, this message translates to:
+  /// **'Probability'**
+  String get successProbability;
+
+  /// No description provided for @seeRiskDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'See Details'**
+  String get seeRiskDetails;
+
   /// Section title for services
   ///
   /// In en, this message translates to:

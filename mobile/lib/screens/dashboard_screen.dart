@@ -699,14 +699,14 @@ class _MiniRiskGauge extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                context.l10n.stepResults,
+                context.l10n.successProbability,
                 style: AppTheme.captionWhiteBold.copyWith(
                   fontSize: AppTheme.fuenteCaption,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
-                context.l10n.stepResultsSubtitle,
+                context.l10n.seeRiskDetails,
                 style: AppTheme.captionGreyRegular.copyWith(
                   fontSize: 9,
                   color: Colors.white.withOpacity(0.7),
