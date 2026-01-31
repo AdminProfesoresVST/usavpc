@@ -664,47 +664,55 @@ class _MiniRiskGauge extends StatelessWidget {
       child: GestureDetector(
         onTap: () => GoRouter.of(context).go('/services'),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
           decoration: BoxDecoration(
-            color: AppTheme.inkInverse,
+            color: AppTheme.navyPrimary, // Navy background
             borderRadius: AppTheme.buttonRadius,
-            border: Border.all(color: AppTheme.cardBorderColor),
             boxShadow: [
-              BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2)),
+              BoxShadow(color: AppTheme.navyPrimary.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 3)),
             ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              // Semi-circular gauge
+              // Semi-circular gauge (white on navy)
               SizedBox(
-                width: 60,
-                height: 35,
+                width: 50,
+                height: 28,
                 child: CustomPaint(
                   painter: _SemiCircleGaugePainter(
                     progress: probability,
-                    progressColor: AppTheme.navyPrimary,
-                    backgroundColor: AppTheme.dividerGrey,
+                    progressColor: Colors.white,
+                    backgroundColor: Colors.white.withOpacity(0.25),
                   ),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
                       '$percentage%',
-                      style: AppTheme.captionNavyBold.copyWith(
-                        fontSize: 11,
+                      style: AppTheme.captionWhiteBold.copyWith(
+                        fontSize: 10,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
                 context.l10n.stepResults,
-                style: AppTheme.captionNavyBold.copyWith(
+                style: AppTheme.captionWhiteBold.copyWith(
                   fontSize: AppTheme.fuenteCaption,
                 ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                context.l10n.stepResultsSubtitle,
+                style: AppTheme.captionGreyRegular.copyWith(
+                  fontSize: 9,
+                  color: Colors.white.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
               ),
             ],
           ),
