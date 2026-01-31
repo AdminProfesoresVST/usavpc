@@ -30,6 +30,7 @@ import 'package:mobile/screens/help_topic_screen.dart';
 import 'package:mobile/screens/premium_checkout_screen.dart';
 import 'package:mobile/screens/admin_payment_config_screen.dart';
 import 'package:mobile/screens/help_center_screen.dart';
+import 'package:mobile/screens/consular_risk_dashboard_screen.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -141,6 +142,11 @@ GoRouter goRouter(Ref ref) {
         path: '/admin/payments',
         builder: (context, state) => const AdminPaymentConfigScreen(),
       ),
+      // Consular Risk Command Dashboard
+      GoRoute(
+        path: '/risk-command',
+        builder: (context, state) => const ConsularRiskDashboardScreen(),
+      ),
       
       // UNIFIED SHELL
       StatefulShellRoute.indexedStack(
@@ -161,11 +167,11 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: '/services',
                 redirect: (context, state) {
-                   // User Request: "the icon that says services... should take me to the simulator if logged in"
+                   // User Request: Services tab -> Risk Command instead of simulator
                    final isLoggedIn = ref.read(authStateProvider).value != null;
                    // FIX: Only redirect if explicitly hitting the tab root, NOT subroutes
                    if (isLoggedIn && state.uri.toString() == '/services') {
-                     return '/simulator/chat';
+                     return '/risk-command';
                    }
                    return null;
                 },
