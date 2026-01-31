@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mobile/providers/dashboard_provider.dart';
 import 'package:mobile/models/dashboard_data.dart';
+import 'package:mobile/widgets/document_checklist.dart';
 
 // Helper Provider for Profile Data
 final profileDataProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
@@ -117,7 +118,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
           // 2. Application Status (Transplanted from Dashboard)
           _buildStatusCard(context, dashboardData, l10n),
-          SizedBox(height: AppTheme.espacioEntreCards),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
+          
+          // 2.5 Document Checklist (Real progress based on uploaded docs)
+          const DocumentChecklist(formType: 'DS160'),
+          SizedBox(height: AppTheme.espacioEntreSecciones),
 
           // 3. Next Steps (Transplanted)
           Align(alignment: Alignment.centerLeft, child: Text(l10n.nextSteps, style: AppTheme.h2NavyBold)),
