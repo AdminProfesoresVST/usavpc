@@ -148,6 +148,24 @@
   "statusNotStarted": "Not Started",
   "@statusNotStarted": {"description": "Status label"},
   
+  "statusDocumentsScanned": "Documents Scanned",
+  "@statusDocumentsScanned": {"description": "Status for OCR_COMPLETE"},
+  
+  "statusVerified": "Verified",
+  "@statusVerified": {"description": "Status for VERIFIED"},
+  
+  "statusInProgress": "In Progress",
+  "@statusInProgress": {"description": "Status for IN_PROGRESS or fallback"},
+  
+  "statusComplete": "Complete",
+  "@statusComplete": {"description": "Status for COMPLETE"},
+  
+  "statusRejected": "Rejected",
+  "@statusRejected": {"description": "Status for REJECTED"},
+  
+  "statusDenied": "Denied",
+  "@statusDenied": {"description": "Status for DENIED"},
+  
   "profileTitle": "Profile",
   "@profileTitle": {"description": "Profile screen title"},
   

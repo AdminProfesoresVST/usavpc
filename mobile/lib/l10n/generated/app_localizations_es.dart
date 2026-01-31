@@ -203,6 +203,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statusNotStarted => 'Sin Iniciar';
 
   @override
+  String get statusDocumentsScanned => 'Documentos Escaneados';
+
+  @override
+  String get statusVerified => 'Verificado';
+
+  @override
+  String get statusInProgress => 'En Progreso';
+
+  @override
+  String get statusComplete => 'Completado';
+
+  @override
+  String get statusRejected => 'Rechazado';
+
+  @override
+  String get statusDenied => 'Denegado';
+
+  @override
   String get profileTitle => 'Perfil';
 
   @override

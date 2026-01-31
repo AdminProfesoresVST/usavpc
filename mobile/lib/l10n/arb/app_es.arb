@@ -66,6 +66,12 @@
   "statusPaid": "Pagado",
   "statusSubmitted": "Enviado",
   "statusNotStarted": "Sin Iniciar",
+  "statusDocumentsScanned": "Documentos Escaneados",
+  "statusVerified": "Verificado",
+  "statusInProgress": "En Progreso",
+  "statusComplete": "Completado",
+  "statusRejected": "Rechazado",
+  "statusDenied": "Denegado",
   
   "profileTitle": "Perfil",
   "settingsOption": "Configuración",

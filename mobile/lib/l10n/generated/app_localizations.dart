@@ -458,6 +458,42 @@ abstract class AppLocalizations {
   /// **'Not Started'**
   String get statusNotStarted;
 
+  /// Status for OCR_COMPLETE
+  ///
+  /// In en, this message translates to:
+  /// **'Documents Scanned'**
+  String get statusDocumentsScanned;
+
+  /// Status for VERIFIED
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get statusVerified;
+
+  /// Status for IN_PROGRESS or fallback
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// Status for COMPLETE
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get statusComplete;
+
+  /// Status for REJECTED
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get statusRejected;
+
+  /// Status for DENIED
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get statusDenied;
+
   /// Profile screen title
   ///
   /// In en, this message translates to:
