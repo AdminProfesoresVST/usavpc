@@ -7,11 +7,11 @@ description: Gestor de cambios y estabilidad. Mantiene un registro detallado de 
 
 ## Filosofía: "Primero, no hacer daño" (Primum non nocere)
 
-El código que funciona es **sagrado**. Nunca se modifica una función que ya cumple su propósito solo por "estética" o "preferencia", a menos que sea una optimización crítica solicitada explícitamente.
+El código que funciona es **sagrado**. Nunca se modifica una función que ya cumple su propósito solo por "estética" o "preferencia", a menos que sea una optimización crítica solicitada explícitamente o exista una **instrucción directa del usuario** para hacerlo.
 
 > [!CAUTION]
 > Antes de tocar código funcional, pregúntate: "¿Esto ya funciona?" 
-> Si la respuesta es SÍ y no hay bug reportado → **NO TOCAR.**
+> Si la respuesta es SÍ y no hay bug reportado → **NO TOCAR** (Salvo instrucción explícita del usuario).
 
 ## Regla 1: La Bitácora de Cambios (The Why-Log)
 
