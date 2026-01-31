@@ -222,26 +222,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(l10n.applicationStatus, style: AppTheme.labelBold),
-                  Container(
-                    padding: AppTheme.paddingPequeno,
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.15),
-                      borderRadius: AppTheme.badgeRadius,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(statusInfo.icon, size: 14, color: statusColor),
-                        const SizedBox(width: 4),
-                        Text(
-                          statusText,
-                          style: AppTheme.captionNavyBold.copyWith(
-                            color: statusColor,
-                            fontSize: 12,
+                  Expanded(
+                    child: Text(l10n.applicationStatus, style: AppTheme.labelBold),
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Container(
+                      padding: AppTheme.paddingPequeno,
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.15),
+                        borderRadius: AppTheme.badgeRadius,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(statusInfo.icon, size: 14, color: statusColor),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              statusText,
+                              style: AppTheme.captionNavyBold.copyWith(
+                                color: statusColor,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
