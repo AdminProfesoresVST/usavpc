@@ -127,7 +127,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
                     const SizedBox(width: 8),
                     Text(
                       'Pago 100% seguro y encriptado',
-                      style: AppTheme.captionSecondary,
+                      style: AppTheme.captionGreyRegular,
                     ),
                   ],
                 ),
@@ -313,7 +313,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: AppTheme.captionSecondary,
+                      style: AppTheme.captionGreyRegular,
                     ),
                   ],
                 ),
@@ -385,7 +385,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
                 )
               : Text(
                   'Continuar con el Pago',
-                  style: AppTheme.buttonWhiteBold.copyWith(
+                  style: AppTheme.bodyWhiteBold.copyWith(
                     fontSize: 16,
                     color: isEnabled ? Colors.white : AppTheme.inkSecondary,
                   ),
@@ -430,7 +430,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
             const SizedBox(height: 8),
             Text(
               'Tu suscripción Premium está activa',
-              style: AppTheme.bodySecondary,
+              style: AppTheme.captionGreyRegular,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
