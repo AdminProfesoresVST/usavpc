@@ -351,7 +351,7 @@ class _AdminPaymentConfigScreenState extends ConsumerState<AdminPaymentConfigScr
                           '• App Store: Crea productos en App Store Connect y copia los IDs aquí.\n'
                           '• PayPal: Obtén las credenciales de tu cuenta PayPal Business.\n'
                           '• Sandbox: Activa para pruebas, desactiva para pagos reales.',
-                          style: AppTheme.bodyGreyRegular.copyWith(fontSize: 13),
+                          style: AppTheme.captionGreyRegular.copyWith(fontSize: 13),
                         ),
                       ],
                     ),
@@ -410,7 +410,7 @@ class _AdminPaymentConfigScreenState extends ConsumerState<AdminPaymentConfigScr
                 Expanded(
                   child: Text(
                     title,
-                    style: AppTheme.h3NavyBold,
+                    style: AppTheme.h2NavyBold.copyWith(fontSize: 18),
                   ),
                 ),
                 Switch(
