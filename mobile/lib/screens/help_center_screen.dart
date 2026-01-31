@@ -1,124 +1,88 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'help_center_screen.g.dart';
 
 /// ═══════════════════════════════════════════════════════════════════════════
 /// ❓ CENTRO DE AYUDA - FAQ Screen
 /// ═══════════════════════════════════════════════════════════════════════════
 /// 
-/// Contains hero section and 20 frequently asked questions about US visa
-/// applications, written in simple, understandable language for everyone.
+/// Contains hero section and FAQs fetched from database.
+/// Follows Real Data Architect skill: No hardcoded data in UI.
 /// 
 /// Created: 2026-01-31
+/// Modified: 2026-01-31 - Refactored to fetch FAQs from Supabase
 /// ═══════════════════════════════════════════════════════════════════════════
 
-class HelpCenterScreen extends StatefulWidget {
+// ═══════════════════════════════════════════════════════════════════════════
+// DOMAIN: FAQ Entity
+// ═══════════════════════════════════════════════════════════════════════════
+class Faq {
+  final String id;
+  final String question;
+  final String answer;
+  final String category;
+  final int displayOrder;
+  
+  Faq({
+    required this.id,
+    required this.question,
+    required this.answer,
+    required this.category,
+    required this.displayOrder,
+  }) : assert(question.isNotEmpty, 'FAQ question cannot be empty'),
+       assert(answer.isNotEmpty, 'FAQ answer cannot be empty');
+  
+  factory Faq.fromJson(Map<String, dynamic> json) {
+    return Faq(
+      id: json['id'] as String,
+      question: json['question'] as String,
+      answer: json['answer'] as String,
+      category: json['category'] as String? ?? 'general',
+      displayOrder: json['display_order'] as int? ?? 0,
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DATA LAYER: Provider connected to Supabase
+// ═══════════════════════════════════════════════════════════════════════════
+@riverpod
+Future<List<Faq>> faqs(Ref ref) async {
+  final supabase = Supabase.instance.client;
+  
+  final response = await supabase
+      .from('faqs')
+      .select()
+      .eq('is_active', true)
+      .order('display_order', ascending: true);
+  
+  return (response as List)
+      .map((json) => Faq.fromJson(json as Map<String, dynamic>))
+      .toList();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PRESENTATION LAYER: HelpCenterScreen
+// ═══════════════════════════════════════════════════════════════════════════
+class HelpCenterScreen extends ConsumerStatefulWidget {
   const HelpCenterScreen({super.key});
 
   @override
-  State<HelpCenterScreen> createState() => _HelpCenterScreenState();
+  ConsumerState<HelpCenterScreen> createState() => _HelpCenterScreenState();
 }
 
-class _HelpCenterScreenState extends State<HelpCenterScreen> {
+class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
   int? _expandedIndex;
-
-  // 20 FAQs in simple, understandable language
-  static const List<Map<String, String>> _faqs = [
-    // === SOBRE LA APP ===
-    {
-      'question': '¿Qué es esta aplicación y cómo me ayuda?',
-      'answer': 'Esta aplicación es tu asistente personal para preparar tu solicitud de visa estadounidense. Te guía paso a paso para llenar formularios, practicar para la entrevista en el consulado, y tener todo listo antes de tu cita. Es como tener un experto en visas en tu bolsillo.',
-    },
-    {
-      'question': '¿Tengo que pagar para usar la app?',
-      'answer': 'Puedes comenzar gratis y explorar los servicios básicos. Para acceder al simulador de entrevista con inteligencia artificial y otras herramientas premium, ofrecemos planes mensuales o anuales. El plan anual te ahorra dinero a largo plazo.',
-    },
-    {
-      'question': '¿Mis datos están seguros aquí?',
-      'answer': 'Absolutamente. Usamos la misma tecnología de seguridad que usan los bancos. Tus datos personales están encriptados y nunca los compartimos con terceros. Solo tú puedes ver tu información.',
-    },
-    
-    // === SOBRE EL FORMULARIO DS-160 ===
-    {
-      'question': '¿Qué es el formulario DS-160?',
-      'answer': 'Es el formulario oficial que debes llenar en línea antes de solicitar una visa de no inmigrante (como turista, estudiante o trabajo). Contiene preguntas sobre tu identidad, historial de viajes, empleo y propósito del viaje. Sin este formulario completo, no puedes agendar tu cita en la embajada.',
-    },
-    {
-      'question': '¿Cuánto tiempo toma llenar el DS-160?',
-      'answer': 'Normalmente toma entre 1 y 2 horas si tienes toda tu información lista. Con nuestra app, el proceso es más rápido porque te guiamos pregunta por pregunta y guardamos tu progreso automáticamente. Puedes pausar y continuar cuando quieras.',
-    },
-    {
-      'question': '¿Qué documentos necesito para llenar el DS-160?',
-      'answer': 'Necesitas: tu pasaporte vigente, fechas de viajes anteriores a EE.UU. (si aplica), información de tu empleo actual, dirección donde te hospedarás en EE.UU., y datos de un contacto en Estados Unidos. Ten todo a la mano antes de empezar.',
-    },
-    {
-      'question': '¿Qué pasa si me equivoco en el DS-160?',
-      'answer': 'No te preocupes. Antes de enviar el formulario, puedes revisar y corregir cualquier error. Nuestra app te alerta si detecta información incompleta o inconsistente. Una vez enviado, ya no se puede modificar, pero puedes empezar uno nuevo si es necesario.',
-    },
-    
-    // === SOBRE LA ENTREVISTA ===
-    {
-      'question': '¿Es obligatoria la entrevista en el consulado?',
-      'answer': 'En la mayoría de los casos, sí. La entrevista es donde el oficial consular decide si aprueba tu visa. Hay excepciones para renovaciones o ciertos solicitantes, pero la primera vez casi siempre requiere entrevista presencial.',
-    },
-    {
-      'question': '¿Qué preguntas me harán en la entrevista?',
-      'answer': 'Las preguntas más comunes son: ¿Por qué quiere viajar a Estados Unidos? ¿Dónde trabaja? ¿Tiene familia aquí? ¿Cuánto tiempo planea quedarse? El oficial quiere asegurarse de que regresarás a tu país. Nuestro simulador te ayuda a practicar estas preguntas.',
-    },
-    {
-      'question': '¿Cómo me ayuda el simulador de entrevista?',
-      'answer': 'Es como practicar con un entrevistador real. La inteligencia artificial te hace preguntas típicas del consulado, escucha tus respuestas y te da consejos para mejorar. Entre más practiques, más confianza tendrás el día de tu cita real.',
-    },
-    {
-      'question': '¿Qué debo llevar el día de la entrevista?',
-      'answer': 'Lleva tu pasaporte, la confirmación del DS-160 (página con código de barras), foto reciente, comprobante de pago de la visa, carta de tu empleador, estados de cuenta bancarios, y cualquier documento que demuestre que regresarás (propiedades, familia, trabajo estable).',
-    },
-    {
-      'question': '¿Cuánto dura la entrevista?',
-      'answer': 'La entrevista en sí es muy corta: entre 2 y 5 minutos. Pero la espera en el consulado puede ser de varias horas. El oficial hace pocas preguntas clave y decide rápidamente. Por eso es importante que tus respuestas sean claras y directas.',
-    },
-    
-    // === SOBRE TIPOS DE VISA ===
-    {
-      'question': '¿Qué tipo de visa necesito para ir de vacaciones?',
-      'answer': 'Necesitas una visa B1/B2, que es la visa de turista y negocios. Te permite visitar Estados Unidos por placer, visitar familia, recibir tratamiento médico o asistir a reuniones de negocios. Es la visa más común y puede durar hasta 10 años.',
-    },
-    {
-      'question': '¿Cuál es la diferencia entre visa de inmigrante y no inmigrante?',
-      'answer': 'La visa de no inmigrante (como turista o estudiante) es temporal: visitas y regresas a tu país. La visa de inmigrante es para quedarte permanentemente en EE.UU. y obtener la residencia (Green Card). Esta app se enfoca en visas de no inmigrante.',
-    },
-    {
-      'question': '¿Cuánto cuesta la visa de turista?',
-      'answer': 'El costo del trámite (MRV fee) para la visa B1/B2 es de \\$185 dólares. Este pago no es reembolsable, incluso si te niegan la visa. Se paga antes de agendar la cita y es válido por un año.',
-    },
-    
-    // === PROBLEMAS COMUNES ===
-    {
-      'question': '¿Qué significa "214(b)" si me niegan la visa?',
-      'answer': 'Es la razón más común de rechazo. Significa que el oficial no quedó convencido de que regresarás a tu país después del viaje. No es un castigo: puedes volver a aplicar demostrando más lazos con tu país (trabajo, propiedades, familia).',
-    },
-    {
-      'question': '¿Puedo volver a aplicar si me negaron la visa?',
-      'answer': 'Sí, puedes aplicar de nuevo inmediatamente. No hay tiempo de espera obligatorio. Pero es importante que algo haya cambiado en tu situación (mejor empleo, más ahorro, documentos adicionales) para que el resultado sea diferente.',
-    },
-    {
-      'question': '¿Cómo demuestro que voy a regresar a mi país?',
-      'answer': 'Muestra pruebas de arraigo: un trabajo estable, carta de tu empleador, propiedades a tu nombre, cuenta bancaria con ahorros, familia que depende de ti, o un negocio propio. Entre más fuerte sea tu conexión con tu país, más fácil es obtener la visa.',
-    },
-    
-    // === SOBRE LA APP (TÉCNICO) ===
-    {
-      'question': '¿Puedo usar la app sin internet?',
-      'answer': 'Necesitas conexión a internet para usar el simulador de entrevista y sincronizar tus datos. Sin embargo, puedes revisar información guardada previamente sin conexión. Recomendamos tener WiFi cuando uses las funciones principales.',
-    },
-    {
-      'question': '¿Cómo contacto a soporte si tengo problemas?',
-      'answer': 'Puedes escribirnos desde la sección de Perfil > Ayuda > Contactar Soporte. Respondemos en menos de 24 horas. También puedes enviarnos un email a soporte@usavpc.com con tu consulta y te ayudaremos lo antes posible.',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
+    // REAL DATA ARCHITECT: Consume FAQs from provider connected to DB
+    final faqsAsync = ref.watch(faqsProvider);
+    
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
@@ -127,40 +91,65 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         title: const Text('Centro de Ayuda'),
         elevation: 0,
       ),
-      body: CustomScrollView(
-        slivers: [
-          // Hero Section
-          SliverToBoxAdapter(
-            child: _buildHeroSection(),
+      body: faqsAsync.when(
+        loading: () => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(AppTheme.navyPrimary),
           ),
-          
-          // FAQ Title
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-              child: Text(
-                'Preguntas Frecuentes',
-                style: AppTheme.h2NavyBold,
+        ),
+        error: (error, stack) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, color: AppTheme.errorRed, size: 48),
+              const SizedBox(height: 16),
+              Text(
+                'Error al cargar las preguntas',
+                style: AppTheme.labelBold.copyWith(color: AppTheme.inkPrimary),
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => ref.invalidate(faqsProvider),
+                child: const Text('Reintentar'),
+              ),
+            ],
+          ),
+        ),
+        data: (faqs) => CustomScrollView(
+          slivers: [
+            // Hero Section
+            SliverToBoxAdapter(
+              child: _buildHeroSection(),
+            ),
+            
+            // FAQ Title
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                child: Text(
+                  'Preguntas Frecuentes',
+                  style: AppTheme.h2NavyBold,
+                ),
               ),
             ),
-          ),
-          
-          // FAQ List
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildFaqItem(index),
-                childCount: _faqs.length,
+            
+            // FAQ List
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildFaqItem(faqs[index], index),
+                  childCount: faqs.length,
+                ),
               ),
             ),
-          ),
-          
-          // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 40),
-          ),
-        ],
+            
+            // Bottom padding
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 40),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -226,7 +215,6 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               // Contact button
               OutlinedButton.icon(
                 onPressed: () {
-                  // Could navigate to contact screen or open email
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Escríbenos a soporte@usavpc.com'),
@@ -252,8 +240,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     );
   }
 
-  Widget _buildFaqItem(int index) {
-    final faq = _faqs[index];
+  Widget _buildFaqItem(Faq faq, int index) {
     final isExpanded = _expandedIndex == index;
     
     return Padding(
@@ -322,7 +309,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                       // Question text
                       Expanded(
                         child: Text(
-                          faq['question']!,
+                          faq.question,
                           style: AppTheme.labelBold.copyWith(
                             color: AppTheme.inkPrimary,
                             fontSize: 15,
@@ -358,7 +345,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          faq['answer']!,
+                          faq.answer,
                           style: AppTheme.captionGreyRegular.copyWith(
                             color: AppTheme.inkPrimary,
                             fontSize: 14,
