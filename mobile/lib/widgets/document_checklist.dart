@@ -391,13 +391,14 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
           mimeType: mimeType,
         );
 
-        // Create document record
+        // Create document record and trigger OCR
         await repository.uploadDocument(
           documentTypeId: type.id,
           storagePath: storagePath,
           originalFilename: fileName,
           fileSizeBytes: fileBytes.length,
           mimeType: mimeType,
+          documentTypeCode: type.code, // Triggers OCR processing
         );
 
         // Refresh documents

@@ -88,7 +88,7 @@ class DocumentRepository {
     return UserDocument.fromJson(response);
   }
 
-  /// Subir un nuevo documento
+  /// Subir un nuevo documento y disparar OCR
   Future<UserDocument> uploadDocument({
     required String documentTypeId,
     required String storagePath,
@@ -96,6 +96,7 @@ class DocumentRepository {
     required int fileSizeBytes,
     required String mimeType,
     String? applicationId,
+    String? documentTypeCode,
   }) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) throw Exception('User not authenticated');
@@ -117,7 +118,40 @@ class DocumentRepository {
         .select()
         .single();
 
-    return UserDocument.fromJson(response);
+    final userDocument = UserDocument.fromJson(response);
+
+    // Trigger OCR processing asynchronously (don't wait)
+    if (documentTypeCode != null) {
+      _triggerOcrProcessing(
+        documentId: userDocument.id,
+        storagePath: storagePath,
+        documentTypeCode: documentTypeCode,
+      );
+    }
+
+    return userDocument;
+  }
+
+  /// Disparar procesamiento OCR via Edge Function
+  Future<void> _triggerOcrProcessing({
+    required String documentId,
+    required String storagePath,
+    required String documentTypeCode,
+  }) async {
+    try {
+      await _client.functions.invoke(
+        'process-document',
+        body: {
+          'document_id': documentId,
+          'storage_path': storagePath,
+          'document_type_code': documentTypeCode,
+        },
+      );
+    } catch (e) {
+      // Log but don't fail upload if OCR fails
+      // ignore: avoid_print
+      print('OCR trigger failed: $e');
+    }
   }
 
   /// Actualizar estado de OCR (llamado por backend/Edge Function)
