@@ -12,7 +12,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dataSavedSuccess => 'Datos guardados exitosamente';
 
   @override
-  String get appTitle => 'Consular Assistant';
+  String get appTitle => 'Asistente Consular';
 
   @override
   String get officialGuide => 'Guía Oficial';

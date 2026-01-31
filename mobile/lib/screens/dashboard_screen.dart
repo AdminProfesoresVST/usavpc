@@ -8,6 +8,8 @@ import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/providers/dashboard_provider.dart';
 import 'package:mobile/models/dashboard_data.dart';
 import 'package:mobile/providers/subscription_plans_provider.dart';
+import 'package:mobile/providers/consular_risk_provider.dart';
+import 'package:mobile/models/consular_risk_state.dart';
 
 /// Production-ready dashboard with functional action tiles and full i18n.
 /// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
@@ -101,13 +103,7 @@ class DashboardScreen extends ConsumerWidget {
                     onTap: () => GoRouter.of(context).push('/services/help/simulate'),
                   ),
                   const SizedBox(width: 8),
-                  _StepItem(
-                    icon: Icons.assignment_turned_in, 
-                    title: l10n.stepResults, 
-                    subtitle: l10n.stepResultsSubtitle, 
-                    isLast: true,
-                     onTap: () => GoRouter.of(context).push('/services/help/results'),
-                  ),
+                  _MiniRiskGauge(ref: ref),
                 ],
               ),
               SizedBox(height: AppTheme.espacioEntreSecciones),
@@ -648,5 +644,98 @@ class _StepItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Mini Risk Gauge widget for Dashboard "How it Works" section
+/// Shows compact probability indicator that navigates to full Risk Dashboard
+class _MiniRiskGauge extends StatelessWidget {
+  final WidgetRef ref;
+  
+  const _MiniRiskGauge({required this.ref});
+  
+  @override
+  Widget build(BuildContext context) {
+    final riskState = ref.watch(consularRiskProvider);
+    final probability = riskState.visaApprovalProbability;
+    final category = riskState.riskCategory;
+    final color = _getRiskColor(category);
+    
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => GoRouter.of(context).go('/services'),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+          decoration: BoxDecoration(
+            color: AppTheme.inkInverse,
+            borderRadius: AppTheme.buttonRadius,
+            border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+            boxShadow: [
+              BoxShadow(color: color.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2)),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Mini Circular Gauge
+              SizedBox(
+                width: 32,
+                height: 32,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: probability,
+                      strokeWidth: 3,
+                      backgroundColor: AppTheme.dividerGrey,
+                      valueColor: AlwaysStoppedAnimation<Color>(color),
+                    ),
+                    Text(
+                      '${(probability * 100).toInt()}',
+                      style: AppTheme.captionNavyBold.copyWith(
+                        fontSize: 9,
+                        color: color,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                context.l10n.stepResults,
+                style: AppTheme.captionNavyBold.copyWith(
+                  fontSize: AppTheme.fuenteCaption,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                _getRiskLabel(category),
+                style: AppTheme.captionGreyRegular.copyWith(fontSize: 9, color: color),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Color _getRiskColor(RiskCategory category) {
+    switch (category) {
+      case RiskCategory.low: return AppTheme.successGreen;
+      case RiskCategory.moderate: return AppTheme.warningOrange;
+      case RiskCategory.high: return const Color(0xFFE65100);
+      case RiskCategory.critical: return AppTheme.errorRed;
+    }
+  }
+  
+  String _getRiskLabel(RiskCategory category) {
+    switch (category) {
+      case RiskCategory.low: return 'Bajo';
+      case RiskCategory.moderate: return 'Moderado';
+      case RiskCategory.high: return 'Alto';
+      case RiskCategory.critical: return '214(b)';
+    }
   }
 }
