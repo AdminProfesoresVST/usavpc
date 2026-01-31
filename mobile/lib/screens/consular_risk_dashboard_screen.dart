@@ -6,7 +6,7 @@ import 'package:mobile/models/consular_risk_state.dart';
 import 'package:mobile/providers/consular_risk_provider.dart';
 
 /// Consular Risk Real-Time Dashboard
-/// SOC-style (Security Operations Center) forensic interface.
+/// Uses AppTheme design system for UI consistency.
 /// Implements consular-singularity-engine skill requirements.
 class ConsularRiskDashboardScreen extends ConsumerStatefulWidget {
   const ConsularRiskDashboardScreen({super.key});
@@ -24,22 +24,17 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
     final riskState = ref.watch(consularRiskProvider);
     
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E14), // Deep SOC Black
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D1117),
+        backgroundColor: AppTheme.navyPrimary,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.shield, color: _getRiskColor(riskState.riskCategory), size: 20),
+            Icon(Icons.shield, color: AppTheme.inkInverse, size: 20),
             const SizedBox(width: 8),
-            const Text(
-              'RISK COMMAND',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1.5,
-              ),
+            Text(
+              'Risk Command',
+              style: AppTheme.h1WhiteBold,
             ),
           ],
         ),
@@ -47,39 +42,35 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
         elevation: 0,
       ),
       body: riskState.isAnalyzing
-          ? const Center(
+          ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(color: Color(0xFF00D4FF)),
-                  SizedBox(height: 16),
+                  CircularProgressIndicator(color: AppTheme.actionBlue),
+                  const SizedBox(height: 16),
                   Text(
-                    'ANALYZING PROFILE...',
-                    style: TextStyle(
-                      color: Color(0xFF00D4FF),
-                      fontSize: 12,
-                      letterSpacing: 2,
-                    ),
+                    'Analyzing profile...',
+                    style: AppTheme.captionGreyRegular,
                   ),
                 ],
               ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: AppTheme.paddingEstandar,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // === PROBABILITY GAUGE ===
                   _buildProbabilityGauge(riskState),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppTheme.espacioEntreTarjetas),
                   
                   // === RADAR CHART - FRICTION MAP ===
                   _buildFrictionMapCard(riskState.frictionMap),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppTheme.espacioEntreTarjetas),
                   
                   // === RED FLAG FEED ===
                   _buildRedFlagFeed(riskState.redFlags),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppTheme.espacioEntreTarjetas),
                   
                   // === SENTENCE SIMULATOR ===
                   _buildSentenceSimulator(),
@@ -102,34 +93,25 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
     final color = _getRiskColor(category);
     
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 2),
-      ),
+      padding: AppTheme.paddingMedio,
+      decoration: AppTheme.standardCardDecoration,
       child: Column(
         children: [
           Text(
             'VISA APPROVAL PROBABILITY',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-              fontSize: 11,
-              letterSpacing: 2,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
           ),
           const SizedBox(height: 16),
           Stack(
             alignment: Alignment.center,
             children: [
               SizedBox(
-                width: 160,
-                height: 160,
+                width: 140,
+                height: 140,
                 child: CircularProgressIndicator(
                   value: probability,
-                  strokeWidth: 12,
-                  backgroundColor: Colors.white.withOpacity(0.1),
+                  strokeWidth: 10,
+                  backgroundColor: AppTheme.dividerGrey,
                   valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
               ),
@@ -138,25 +120,23 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                 children: [
                   Text(
                     '${(probability * 100).toInt()}%',
-                    style: TextStyle(
+                    style: AppTheme.h1NavyBold.copyWith(
+                      fontSize: 36,
                       color: color,
-                      fontSize: 42,
-                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
+                      color: color.withOpacity(0.15),
+                      borderRadius: AppTheme.badgeRadius,
                     ),
                     child: Text(
                       category.label,
-                      style: TextStyle(
+                      style: AppTheme.captionNavyBold.copyWith(
                         color: color,
                         fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ),
@@ -168,10 +148,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
           Text(
             category.description,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 13,
-            ),
+            style: AppTheme.captionGreyRegular,
           ),
         ],
       ),
@@ -180,42 +157,33 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 
   Widget _buildFrictionMapCard(FrictionMapData frictionMap) {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
+      padding: AppTheme.paddingMedio,
+      decoration: AppTheme.standardCardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.radar, color: Colors.white.withOpacity(0.6), size: 18),
+              Icon(Icons.radar, color: AppTheme.inkSecondary, size: 18),
               const SizedBox(width: 8),
               Text(
                 'FRICTION MAP',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 11,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
               ),
             ],
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 220,
+            height: 200,
             child: CustomPaint(
-              size: const Size(double.infinity, 220),
+              size: const Size(double.infinity, 200),
               painter: RadarChartPainter(frictionMap),
             ),
           ),
           const SizedBox(height: 16),
           // Legend
           Wrap(
-            spacing: 16,
+            spacing: 12,
             runSpacing: 8,
             children: List.generate(5, (i) {
               final labels = FrictionMapData.axisLabels;
@@ -230,10 +198,10 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 
   Widget _buildLegendItem(String label, double value) {
     final color = value > 0.6 
-        ? const Color(0xFF00C853) 
+        ? AppTheme.successGreen
         : value > 0.3 
-            ? const Color(0xFFFFAB00) 
-            : const Color(0xFFFF5252);
+            ? AppTheme.warningOrange 
+            : AppTheme.errorRed;
     
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -249,10 +217,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
         const SizedBox(width: 6),
         Text(
           '$label: ${(value * 100).toInt()}%',
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 11,
-          ),
+          style: AppTheme.captionGreyRegular,
         ),
       ],
     );
@@ -260,48 +225,38 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 
   Widget _buildRedFlagFeed(List<RedFlagAlert> redFlags) {
     return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
+      decoration: AppTheme.standardCardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppTheme.paddingEstandar,
             child: Row(
               children: [
                 Icon(
                   Icons.warning_amber_rounded,
-                  color: redFlags.isEmpty ? Colors.white.withOpacity(0.6) : const Color(0xFFFF5252),
+                  color: redFlags.isEmpty ? AppTheme.successGreen : AppTheme.errorRed,
                   size: 18,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'RED FLAG FEED',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 11,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
                 ),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: redFlags.isEmpty 
-                        ? const Color(0xFF00C853).withOpacity(0.2)
-                        : const Color(0xFFFF5252).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
+                        ? AppTheme.successGreenLight
+                        : AppTheme.errorRedLight,
+                    borderRadius: AppTheme.badgeRadius,
                   ),
                   child: Text(
                     redFlags.isEmpty ? 'CLEAR' : '${redFlags.length} ALERTS',
-                    style: TextStyle(
-                      color: redFlags.isEmpty ? const Color(0xFF00C853) : const Color(0xFFFF5252),
+                    style: AppTheme.captionNavyBold.copyWith(
+                      color: redFlags.isEmpty ? AppTheme.successGreen : AppTheme.errorRed,
                       fontSize: 10,
-                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -313,7 +268,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(
                 'No red flags detected in current profile.',
-                style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13),
+                style: AppTheme.captionGreyRegular,
               ),
             )
           else
@@ -321,7 +276,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: redFlags.length,
-              separatorBuilder: (_, __) => Divider(color: Colors.white.withOpacity(0.1), height: 1),
+              separatorBuilder: (_, __) => Divider(color: AppTheme.dividerGrey, height: 1),
               itemBuilder: (context, index) => _buildRedFlagItem(redFlags[index]),
             ),
         ],
@@ -331,18 +286,19 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 
   Widget _buildRedFlagItem(RedFlagAlert alert) {
     final isCritical = alert.severity == RedFlagSeverity.critical;
-    final color = isCritical ? const Color(0xFFFF5252) : const Color(0xFFFFAB00);
+    final color = isCritical ? AppTheme.errorRed : AppTheme.warningOrange;
+    final bgColor = isCritical ? AppTheme.errorRedLight : AppTheme.warningOrangeLight;
     
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: AppTheme.paddingEstandar,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
+              color: bgColor,
+              borderRadius: AppTheme.smallRadius,
             ),
             child: Icon(
               isCritical ? Icons.error : Icons.warning,
@@ -357,20 +313,12 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
               children: [
                 Text(
                   '[ALERT] ${alert.title}',
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5,
-                  ),
+                  style: AppTheme.captionNavyBold.copyWith(color: color),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   alert.description,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 12,
-                  ),
+                  style: AppTheme.captionGreyRegular,
                 ),
               ],
             ),
@@ -382,41 +330,25 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 
   Widget _buildSentenceSimulator() {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1A1A2E), Color(0xFF16213E)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF00D4FF).withOpacity(0.3)),
-      ),
+      padding: AppTheme.paddingMedio,
+      decoration: AppTheme.navyHeaderCardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.psychology, color: Color(0xFF00D4FF), size: 20),
+              Icon(Icons.psychology, color: AppTheme.inkInverse, size: 20),
               const SizedBox(width: 8),
               Text(
                 'ADVERSARIAL SIMULATION',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 11,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTheme.captionWhiteBold.copyWith(letterSpacing: 1),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             'Run a 3-question stress test based on detected vulnerabilities.',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 13,
-            ),
+            style: AppTheme.captionWhiteRegular,
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -424,23 +356,25 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
             child: ElevatedButton.icon(
               onPressed: _isSimulating ? null : _runSimulation,
               icon: _isSimulating
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2, 
+                        color: AppTheme.navyPrimary,
+                      ),
                     )
-                  : const Icon(Icons.play_arrow, size: 18),
-              label: Text(_isSimulating ? 'SIMULATING...' : 'START INTERROGATION'),
+                  : Icon(Icons.play_arrow, size: 18, color: AppTheme.navyPrimary),
+              label: Text(
+                _isSimulating ? 'SIMULATING...' : 'START INTERROGATION',
+                style: AppTheme.labelBold.copyWith(color: AppTheme.navyPrimary),
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00D4FF),
-                foregroundColor: const Color(0xFF0A0E14),
+                backgroundColor: AppTheme.inkInverse,
+                foregroundColor: AppTheme.navyPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                textStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1,
+                  borderRadius: AppTheme.buttonRadius,
                 ),
               ),
             ),
@@ -452,27 +386,20 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
 
   Widget _buildSimulationResults() {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF00D4FF).withOpacity(0.2)),
+      padding: AppTheme.paddingEstandar,
+      decoration: AppTheme.standardCardDecoration.copyWith(
+        border: Border.all(color: AppTheme.actionBlue.withOpacity(0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.question_answer, color: Color(0xFF00D4FF), size: 16),
+              Icon(Icons.question_answer, color: AppTheme.actionBlue, size: 16),
               const SizedBox(width: 8),
               Text(
                 'SIMULATED QUESTIONS',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 10,
-                  letterSpacing: 1.5,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
               ),
             ],
           ),
@@ -487,16 +414,15 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF00D4FF).withOpacity(0.2),
+                      color: AppTheme.softBlue,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '${i + 1}',
-                        style: const TextStyle(
-                          color: Color(0xFF00D4FF),
+                        style: AppTheme.captionNavyBold.copyWith(
+                          color: AppTheme.actionBlue,
                           fontSize: 11,
-                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -505,11 +431,7 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
                   Expanded(
                     child: Text(
                       _simulationQuestions![i],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        height: 1.4,
-                      ),
+                      style: AppTheme.bodyPrimaryRegular,
                     ),
                   ),
                 ],
@@ -527,7 +449,6 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
       _simulationQuestions = null;
     });
     
-    // Simulate processing delay
     await Future.delayed(const Duration(seconds: 2));
     
     final questions = await ref.read(consularRiskProvider.notifier).runSentenceSimulation();
@@ -541,18 +462,18 @@ class _ConsularRiskDashboardScreenState extends ConsumerState<ConsularRiskDashbo
   Color _getRiskColor(RiskCategory category) {
     switch (category) {
       case RiskCategory.low:
-        return const Color(0xFF00C853); // Green
+        return AppTheme.successGreen;
       case RiskCategory.moderate:
-        return const Color(0xFFFFAB00); // Amber
+        return AppTheme.warningOrange;
       case RiskCategory.high:
-        return const Color(0xFFFF6D00); // Orange
+        return const Color(0xFFE65100); // Deep orange
       case RiskCategory.critical:
-        return const Color(0xFFFF5252); // Red
+        return AppTheme.errorRed;
     }
   }
 }
 
-/// Custom painter for radar chart
+/// Custom painter for radar chart using AppTheme colors
 class RadarChartPainter extends CustomPainter {
   final FrictionMapData data;
   
@@ -567,7 +488,7 @@ class RadarChartPainter extends CustomPainter {
     
     // Draw grid circles
     final gridPaint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
+      ..color = AppTheme.dividerGrey
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
     
@@ -599,10 +520,10 @@ class RadarChartPainter extends CustomPainter {
     // Draw data polygon
     final dataPath = Path();
     final dataPaint = Paint()
-      ..color = const Color(0xFF00D4FF).withOpacity(0.3)
+      ..color = AppTheme.actionBlue.withOpacity(0.25)
       ..style = PaintingStyle.fill;
     final dataStrokePaint = Paint()
-      ..color = const Color(0xFF00D4FF)
+      ..color = AppTheme.actionBlue
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     
@@ -623,7 +544,7 @@ class RadarChartPainter extends CustomPainter {
     
     // Draw data points
     final pointPaint = Paint()
-      ..color = const Color(0xFF00D4FF)
+      ..color = AppTheme.actionBlue
       ..style = PaintingStyle.fill;
     
     for (int i = 0; i < sides; i++) {
@@ -637,14 +558,14 @@ class RadarChartPainter extends CustomPainter {
     // Draw labels
     final labels = FrictionMapData.axisLabels;
     final textStyle = TextStyle(
-      color: Colors.white.withOpacity(0.7),
+      color: AppTheme.inkSecondary,
       fontSize: 10,
       fontWeight: FontWeight.w500,
     );
     
     for (int i = 0; i < sides; i++) {
       final angle = (i * 2 * math.pi / sides) - (math.pi / 2);
-      final labelRadius = radius + 20;
+      final labelRadius = radius + 18;
       final x = center.dx + labelRadius * math.cos(angle);
       final y = center.dy + labelRadius * math.sin(angle);
       
