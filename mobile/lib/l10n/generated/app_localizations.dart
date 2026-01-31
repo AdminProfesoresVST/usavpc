@@ -494,6 +494,66 @@ abstract class AppLocalizations {
   /// **'Denied'**
   String get statusDenied;
 
+  /// Header for document checklist
+  ///
+  /// In en, this message translates to:
+  /// **'Required Documents'**
+  String get requiredDocuments;
+
+  /// Text for scanned count
+  ///
+  /// In en, this message translates to:
+  /// **'documents scanned'**
+  String get documentsScanned;
+
+  /// Progress complete text
+  ///
+  /// In en, this message translates to:
+  /// **'complete'**
+  String get complete;
+
+  /// Document not yet uploaded
+  ///
+  /// In en, this message translates to:
+  /// **'Upload required'**
+  String get uploadRequired;
+
+  /// Document uploaded successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded'**
+  String get uploadComplete;
+
+  /// Success message after upload
+  ///
+  /// In en, this message translates to:
+  /// **'Document uploaded successfully'**
+  String get uploadSuccess;
+
+  /// Error message for upload failure
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed'**
+  String get uploadError;
+
+  /// Option to upload PDF
+  ///
+  /// In en, this message translates to:
+  /// **'Upload PDF'**
+  String get uploadPdf;
+
+  /// Upload button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Upload'**
+  String get upload;
+
+  /// Replace document tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get replace;
+
   /// Profile screen title
   ///
   /// In en, this message translates to:

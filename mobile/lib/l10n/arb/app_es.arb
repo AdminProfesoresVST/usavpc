@@ -73,6 +73,17 @@
   "statusRejected": "Rechazado",
   "statusDenied": "Denegado",
   
+  "requiredDocuments": "Documentos Requeridos",
+  "documentsScanned": "documentos escaneados",
+  "complete": "completado",
+  "uploadRequired": "Carga requerida",
+  "uploadComplete": "Subido",
+  "uploadSuccess": "Documento subido exitosamente",
+  "uploadError": "Error al subir",
+  "uploadPdf": "Subir PDF",
+  "upload": "Subir",
+  "replace": "Reemplazar",
+  
   "profileTitle": "Perfil",
   "settingsOption": "Configuración",
   "helpOption": "Ayuda y Soporte",

@@ -220,6 +220,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusDenied => 'Denied';
 
   @override
+  String get requiredDocuments => 'Required Documents';
+
+  @override
+  String get documentsScanned => 'documents scanned';
+
+  @override
+  String get complete => 'complete';
+
+  @override
+  String get uploadRequired => 'Upload required';
+
+  @override
+  String get uploadComplete => 'Uploaded';
+
+  @override
+  String get uploadSuccess => 'Document uploaded successfully';
+
+  @override
+  String get uploadError => 'Upload failed';
+
+  @override
+  String get uploadPdf => 'Upload PDF';
+
+  @override
+  String get upload => 'Upload';
+
+  @override
+  String get replace => 'Replace';
+
+  @override
   String get profileTitle => 'Profile';
 
   @override

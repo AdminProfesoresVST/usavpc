@@ -221,6 +221,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statusDenied => 'Denegado';
 
   @override
+  String get requiredDocuments => 'Documentos Requeridos';
+
+  @override
+  String get documentsScanned => 'documentos escaneados';
+
+  @override
+  String get complete => 'completado';
+
+  @override
+  String get uploadRequired => 'Carga requerida';
+
+  @override
+  String get uploadComplete => 'Subido';
+
+  @override
+  String get uploadSuccess => 'Documento subido exitosamente';
+
+  @override
+  String get uploadError => 'Error al subir';
+
+  @override
+  String get uploadPdf => 'Subir PDF';
+
+  @override
+  String get upload => 'Subir';
+
+  @override
+  String get replace => 'Reemplazar';
+
+  @override
   String get profileTitle => 'Perfil';
 
   @override

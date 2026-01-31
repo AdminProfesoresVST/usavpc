@@ -166,6 +166,36 @@
   "statusDenied": "Denied",
   "@statusDenied": {"description": "Status for DENIED"},
   
+  "requiredDocuments": "Required Documents",
+  "@requiredDocuments": {"description": "Header for document checklist"},
+  
+  "documentsScanned": "documents scanned",
+  "@documentsScanned": {"description": "Text for scanned count"},
+  
+  "complete": "complete",
+  "@complete": {"description": "Progress complete text"},
+  
+  "uploadRequired": "Upload required",
+  "@uploadRequired": {"description": "Document not yet uploaded"},
+  
+  "uploadComplete": "Uploaded",
+  "@uploadComplete": {"description": "Document uploaded successfully"},
+  
+  "uploadSuccess": "Document uploaded successfully",
+  "@uploadSuccess": {"description": "Success message after upload"},
+  
+  "uploadError": "Upload failed",
+  "@uploadError": {"description": "Error message for upload failure"},
+  
+  "uploadPdf": "Upload PDF",
+  "@uploadPdf": {"description": "Option to upload PDF"},
+  
+  "upload": "Upload",
+  "@upload": {"description": "Upload button tooltip"},
+  
+  "replace": "Replace",
+  "@replace": {"description": "Replace document tooltip"},
+  
   "profileTitle": "Profile",
   "@profileTitle": {"description": "Profile screen title"},
   

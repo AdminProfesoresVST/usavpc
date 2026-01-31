@@ -128,7 +128,7 @@ class DocumentRepository {
     double? confidence,
     String? error,
   }) async {
-    final data = {
+    final Map<String, dynamic> data = {
       'ocr_status': status.value,
       'updated_at': DateTime.now().toIso8601String(),
     };
