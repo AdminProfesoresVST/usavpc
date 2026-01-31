@@ -207,54 +207,61 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final Color statusColor = statusInfo.color;
     final String statusText = _translateStatus(data.status, l10n);
 
-    return Container(
-      decoration: AppTheme.standardCardDecoration,
-      child: Padding(
-        padding: AppTheme.paddingEstandar,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.applicationStatus, style: AppTheme.labelBold),
-                Container(
-                  padding: AppTheme.paddingPequeno,
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.15),
-                    borderRadius: AppTheme.badgeRadius,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(statusInfo.icon, size: 14, color: statusColor),
-                      const SizedBox(width: 4),
-                      Text(
-                        statusText,
-                        style: AppTheme.captionNavyBold.copyWith(
-                          color: statusColor,
-                          fontSize: 12,
+    return ClipRRect(
+      borderRadius: AppTheme.cardRadius,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceWhite,
+          borderRadius: AppTheme.cardRadius,
+          border: Border.all(color: AppTheme.cardBorderColor),
+        ),
+        child: Padding(
+          padding: AppTheme.paddingEstandar,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(l10n.applicationStatus, style: AppTheme.labelBold),
+                  Container(
+                    padding: AppTheme.paddingPequeno,
+                    decoration: BoxDecoration(
+                      color: statusColor.withValues(alpha: 0.15),
+                      borderRadius: AppTheme.badgeRadius,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(statusInfo.icon, size: 14, color: statusColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          statusText,
+                          style: AppTheme.captionNavyBold.copyWith(
+                            color: statusColor,
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: AppTheme.espacioEntreSecciones),
-            LinearProgressIndicator(
-              value: data.progress.isNaN ? 0.0 : data.progress.clamp(0.0, 1.0),
-              backgroundColor: AppTheme.softBlue,
-              valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-            ),
-            SizedBox(height: AppTheme.espacioEntreCampos),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.percentComplete(((data.progress.isNaN ? 0.0 : data.progress) * 100).toInt())),
-                Text(l10n.lastEdited(data.lastEdited)),
-              ],
-            ),
-          ],
+                ],
+              ),
+              SizedBox(height: AppTheme.espacioEntreSecciones),
+              LinearProgressIndicator(
+                value: data.progress.isNaN ? 0.0 : data.progress.clamp(0.0, 1.0),
+                backgroundColor: AppTheme.softBlue,
+                valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+              ),
+              SizedBox(height: AppTheme.espacioEntreCampos),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(l10n.percentComplete(((data.progress.isNaN ? 0.0 : data.progress) * 100).toInt())),
+                  Text(l10n.lastEdited(data.lastEdited)),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
