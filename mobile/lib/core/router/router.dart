@@ -29,6 +29,7 @@ import 'package:mobile/screens/cost_calculator_screen.dart';
 import 'package:mobile/screens/help_topic_screen.dart';
 import 'package:mobile/screens/premium_checkout_screen.dart';
 import 'package:mobile/screens/admin_payment_config_screen.dart';
+import 'package:mobile/screens/help_center_screen.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -233,6 +234,15 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: '/profile',
                 builder: (context, state) => const ProfileScreen(),
+              ),
+            ],
+          ),
+          // Branch 3: Help Center
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/help',
+                builder: (context, state) => const HelpCenterScreen(),
               ),
             ],
           ),

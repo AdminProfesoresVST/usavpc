@@ -38,6 +38,11 @@ class MainScaffold extends StatelessWidget {
               activeIcon: const Icon(Icons.person),
               label: l10n.profile,
             ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.help_outline),
+              activeIcon: const Icon(Icons.help),
+              label: 'Ayuda',
+            ),
           ],
           currentIndex: navigationShell.currentIndex,
           onTap: (index) {
