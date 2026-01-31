@@ -185,27 +185,30 @@ class DashboardScreen extends ConsumerWidget {
       children: [
         Text(l10n.subscriptionTitle, style: AppTheme.h2NavyBold),
         SizedBox(height: AppTheme.espacioEntreGrupos),
-        Row(
-          children: [
-            Expanded(
-              child: _SubscriptionCard(
-                title: l10n.planMonthly,
-                price: l10n.priceMonthly,
-                isBestValue: false,
-                onTap: () => _handleNavigation(context, '/services/payment?plan=monthly'),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _SubscriptionCard(
+                  title: l10n.planMonthly,
+                  price: l10n.priceMonthly,
+                  isBestValue: false,
+                  onTap: () => _handleNavigation(context, '/services/payment?plan=monthly'),
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _SubscriptionCard(
-                title: l10n.planYearly,
-                price: l10n.priceYearly,
-                isBestValue: true,
-                badgeText: l10n.bestValue,
-                onTap: () => _handleNavigation(context, '/services/payment?plan=yearly'),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _SubscriptionCard(
+                  title: l10n.planYearly,
+                  price: l10n.priceYearly,
+                  isBestValue: true,
+                  badgeText: l10n.bestValue,
+                  onTap: () => _handleNavigation(context, '/services/payment?plan=yearly'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -410,11 +413,11 @@ class _SubscriptionCard extends StatelessWidget {
     required this.onTap,
   });
 
-  @override
   Widget build(BuildContext context) {
+    // Always show 3 features for equal height
     final features = isBestValue
-      ? ['Todo ilimitado', 'Soporte prioritario', 'Sin anuncios']
-      : ['Simulador IA', 'Tips básicos'];
+      ? ['Simulador IA ilimitado', 'Soporte prioritario', 'Sin anuncios']
+      : ['Simulador IA', 'Tips básicos', 'Acceso limitado'];
       
     return GestureDetector(
       onTap: onTap,
@@ -452,8 +455,8 @@ class _SubscriptionCard extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isBestValue) const SizedBox(height: 8),
                   // Title
                   Text(
                     title,
@@ -469,7 +472,7 @@ class _SubscriptionCard extends StatelessWidget {
                   Text(
                     price,
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: isBestValue ? Colors.white : AppTheme.navyPrimary,
                     ),

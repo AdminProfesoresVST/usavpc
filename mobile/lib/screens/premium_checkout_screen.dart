@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
+import 'package:mobile/providers/subscription_plans_provider.dart';
 
 /// Premium Checkout Screen
 /// Displays plan details and payment options (Google Play, App Store, PayPal)
@@ -22,33 +23,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final isMonthly = widget.planId == 'monthly';
-    
-    final planData = isMonthly 
-      ? _PlanData(
-          name: 'Plan Mensual',
-          price: '\$9.99',
-          period: '/mes',
-          features: [
-            'Simulador de Entrevista ilimitado',
-            'IA Consular Avanzada',
-            'Tips personalizados',
-            'Historial de sesiones',
-          ],
-          savings: null,
-        )
-      : _PlanData(
-          name: 'Plan Anual',
-          price: '\$79.99',
-          period: '/año',
-          features: [
-            'Todo del Plan Mensual',
-            'Auditoría de Documentos',
-            'Soporte Prioritario',
-            'Acceso a nuevas funciones',
-          ],
-          savings: 'Ahorra \$40 (33%)',
-        );
+    final planAsync = ref.watch(subscriptionPlanByIdProvider(widget.planId));
     
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
@@ -58,98 +33,108 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
         title: const Text('Checkout'),
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Plan Summary Card
-              _buildPlanSummaryCard(planData),
-              
-              const SizedBox(height: 24),
-              
-              // Payment Methods Section
-              Text(
-                'Método de Pago',
-                style: AppTheme.h2NavyBold,
-              ),
-              const SizedBox(height: 16),
-              
-              // Google Play
-              _buildPaymentOption(
-                id: 'google_play',
-                icon: Icons.shopping_bag_outlined,
-                title: 'Google Play',
-                subtitle: 'Pago seguro con tu cuenta Google',
-                color: const Color(0xFF34A853),
-              ),
-              
-              const SizedBox(height: 12),
-              
-              // Apple App Store
-              _buildPaymentOption(
-                id: 'app_store',
-                icon: Icons.apple,
-                title: 'App Store',
-                subtitle: 'Pago con Apple ID',
-                color: const Color(0xFF000000),
-              ),
-              
-              const SizedBox(height: 12),
-              
-              // PayPal
-              _buildPaymentOption(
-                id: 'paypal',
-                icon: Icons.payment,
-                title: 'PayPal',
-                subtitle: 'Tarjeta de crédito o cuenta PayPal',
-                color: const Color(0xFF003087),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Checkout Button
-              _buildCheckoutButton(),
-              
-              const SizedBox(height: 16),
-              
-              // Security Notice
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.lock_outline,
-                      size: 16,
-                      color: AppTheme.inkSecondary,
+      body: planAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e')),
+        data: (plan) {
+          if (plan == null) {
+            return const Center(child: Text('Plan no encontrado'));
+          }
+          
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Plan Summary Card - data from database
+                  _buildPlanSummaryCard(plan),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Payment Methods Section
+                  Text(
+                    'Método de Pago',
+                    style: AppTheme.h2NavyBold,
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Google Play
+                  _buildPaymentOption(
+                    id: 'google_play',
+                    icon: Icons.shopping_bag_outlined,
+                    title: 'Google Play',
+                    subtitle: 'Pago seguro con tu cuenta Google',
+                    color: const Color(0xFF34A853),
+                  ),
+                  
+                  const SizedBox(height: 12),
+                  
+                  // Apple App Store
+                  _buildPaymentOption(
+                    id: 'app_store',
+                    icon: Icons.apple,
+                    title: 'App Store',
+                    subtitle: 'Pago con Apple ID',
+                    color: const Color(0xFF000000),
+                  ),
+                  
+                  const SizedBox(height: 12),
+                  
+                  // PayPal
+                  _buildPaymentOption(
+                    id: 'paypal',
+                    icon: Icons.payment,
+                    title: 'PayPal',
+                    subtitle: 'Tarjeta de crédito o cuenta PayPal',
+                    color: const Color(0xFF003087),
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Checkout Button
+                  _buildCheckoutButton(),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Security Notice
+                  Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.lock_outline,
+                          size: 16,
+                          color: AppTheme.inkSecondary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Pago 100% seguro y encriptado',
+                          style: AppTheme.captionGreyRegular,
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Pago 100% seguro y encriptado',
-                      style: AppTheme.captionGreyRegular,
-                    ),
-                  ],
-                ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Terms
+                  Text(
+                    'Al continuar, aceptas los Términos de Servicio y Política de Privacidad. '
+                    'Puedes cancelar tu suscripción en cualquier momento.',
+                    style: AppTheme.captionGreyRegular.copyWith(fontSize: 11),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              
-              const SizedBox(height: 24),
-              
-              // Terms
-              Text(
-                'Al continuar, aceptas los Términos de Servicio y Política de Privacidad. '
-                'Puedes cancelar tu suscripción en cualquier momento.',
-                style: AppTheme.captionGreyRegular.copyWith(fontSize: 11),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
   
-  Widget _buildPlanSummaryCard(_PlanData plan) {
+  Widget _buildPlanSummaryCard(SubscriptionPlan plan) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -179,10 +164,10 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  plan.name,
+                  plan.title,
                   style: AppTheme.h2NavyBold.copyWith(color: Colors.white),
                 ),
-                if (plan.savings != null)
+                if (plan.savingsText != null)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
@@ -190,7 +175,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      plan.savings!,
+                      plan.savingsText!,
                       style: AppTheme.labelBold.copyWith(
                         color: AppTheme.navyPrimary,
                         fontSize: 11,
@@ -204,21 +189,11 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  plan.price,
+                  plan.priceFormatted,
                   style: const TextStyle(
-                    fontSize: 36,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Text(
-                    plan.period,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white.withValues(alpha: 0.7),
-                    ),
                   ),
                 ),
               ],
@@ -458,20 +433,4 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
     
     setState(() => _isProcessing = false);
   }
-}
-
-class _PlanData {
-  final String name;
-  final String price;
-  final String period;
-  final List<String> features;
-  final String? savings;
-  
-  const _PlanData({
-    required this.name,
-    required this.price,
-    required this.period,
-    required this.features,
-    this.savings,
-  });
 }
