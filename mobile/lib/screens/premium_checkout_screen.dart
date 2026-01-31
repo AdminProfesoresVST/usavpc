@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/providers/subscription_plans_provider.dart';
+import 'package:mobile/services/payment_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Premium Checkout Screen
 /// Displays plan details and payment options (Google Play, App Store, PayPal)
@@ -372,12 +376,94 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
   }
   
   Future<void> _processPayment() async {
+    if (_selectedPaymentMethod == null) return;
+    
     setState(() => _isProcessing = true);
     
-    // Simulate payment processing
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      // Determine which product to purchase based on plan
+      final productId = widget.planId == 'monthly' 
+          ? PaymentService.monthlyProductId 
+          : PaymentService.yearlyProductId;
+      
+      switch (_selectedPaymentMethod) {
+        case 'google_play':
+          if (!Platform.isAndroid) {
+            _showError('Google Play solo disponible en Android');
+            return;
+          }
+          await _processInAppPurchase(productId);
+          break;
+          
+        case 'app_store':
+          if (!Platform.isIOS) {
+            _showError('App Store solo disponible en iOS');
+            return;
+          }
+          await _processInAppPurchase(productId);
+          break;
+          
+        case 'paypal':
+          await _processPayPalPayment();
+          break;
+      }
+    } catch (e) {
+      _showError('Error: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+  
+  Future<void> _processInAppPurchase(String productId) async {
+    final paymentService = PaymentService();
     
+    if (!paymentService.isAvailable) {
+      await paymentService.initialize();
+    }
+    
+    if (!paymentService.isAvailable) {
+      _showError('Compras in-app no disponibles en este dispositivo');
+      return;
+    }
+    
+    final success = await paymentService.purchaseSubscription(productId);
+    
+    if (success) {
+      // Purchase initiated - the PaymentService will handle the rest
+      // via purchase stream listener
+      _showSuccess();
+    }
+  }
+  
+  Future<void> _processPayPalPayment() async {
+    // For PayPal, redirect to web checkout
+    // This would typically go to your backend which creates a PayPal order
+    final planId = widget.planId;
+    final paypalUrl = Uri.parse(
+      'https://www.paypal.com/checkoutnow?plan=$planId'
+    );
+    
+    if (await canLaunchUrl(paypalUrl)) {
+      await launchUrl(paypalUrl, mode: LaunchMode.externalApplication);
+      _showSuccess();
+    } else {
+      _showError('No se pudo abrir PayPal');
+    }
+  }
+  
+  void _showError(String message) {
     if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+  
+  void _showSuccess() {
     
     // Show success dialog
     showDialog(
