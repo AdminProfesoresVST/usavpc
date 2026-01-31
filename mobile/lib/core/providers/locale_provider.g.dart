@@ -13,7 +13,7 @@ part of 'locale_provider.dart';
 /// Added: 2026-01-21 - Implements dynamic language switching per multilingual-architect skill
 
 @ProviderFor(LocaleNotifier)
-const localeProvider = LocaleNotifierProvider._();
+final localeProvider = LocaleNotifierProvider._();
 
 /// Provider del locale actual de la aplicación.
 /// Controla el idioma de la app y persiste la preferencia del usuario.
@@ -23,7 +23,7 @@ final class LocaleNotifierProvider
   /// Provider del locale actual de la aplicación.
   /// Controla el idioma de la app y persiste la preferencia del usuario.
   /// Added: 2026-01-21 - Implements dynamic language switching per multilingual-architect skill
-  const LocaleNotifierProvider._()
+  LocaleNotifierProvider._()
       : super(
           from: null,
           argument: null,
@@ -61,10 +61,9 @@ abstract class _$LocaleNotifier extends $Notifier<Locale> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Locale, Locale>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<Locale, Locale>, Locale, Object?, Object?>;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

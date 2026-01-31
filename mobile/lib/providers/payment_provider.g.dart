@@ -11,7 +11,7 @@ part of 'payment_provider.dart';
 /// Provider for the PaymentService singleton
 
 @ProviderFor(paymentService)
-const paymentServiceProvider = PaymentServiceProvider._();
+final paymentServiceProvider = PaymentServiceProvider._();
 
 /// Provider for the PaymentService singleton
 
@@ -19,7 +19,7 @@ final class PaymentServiceProvider
     extends $FunctionalProvider<PaymentService, PaymentService, PaymentService>
     with $Provider<PaymentService> {
   /// Provider for the PaymentService singleton
-  const PaymentServiceProvider._()
+  PaymentServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -57,7 +57,7 @@ String _$paymentServiceHash() => r'7dd031e94e4a319931aa5ec11271d5a7eefe92f6';
 /// Provider to check if user has active subscription
 
 @ProviderFor(hasActiveSubscription)
-const hasActiveSubscriptionProvider = HasActiveSubscriptionProvider._();
+final hasActiveSubscriptionProvider = HasActiveSubscriptionProvider._();
 
 /// Provider to check if user has active subscription
 
@@ -65,7 +65,7 @@ final class HasActiveSubscriptionProvider
     extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
     with $FutureModifier<bool>, $FutureProvider<bool> {
   /// Provider to check if user has active subscription
-  const HasActiveSubscriptionProvider._()
+  HasActiveSubscriptionProvider._()
       : super(
           from: null,
           argument: null,
@@ -96,7 +96,7 @@ String _$hasActiveSubscriptionHash() =>
 /// Provider to get available products from store
 
 @ProviderFor(availableProducts)
-const availableProductsProvider = AvailableProductsProvider._();
+final availableProductsProvider = AvailableProductsProvider._();
 
 /// Provider to get available products from store
 
@@ -108,7 +108,7 @@ final class AvailableProductsProvider extends $FunctionalProvider<
         $FutureModifier<List<ProductDetails>>,
         $FutureProvider<List<ProductDetails>> {
   /// Provider to get available products from store
-  const AvailableProductsProvider._()
+  AvailableProductsProvider._()
       : super(
           from: null,
           argument: null,
@@ -139,7 +139,7 @@ String _$availableProductsHash() => r'3c2be4c27cdce47e5720d089e32f60a7f84475c5';
 /// Provider to get user's subscription history
 
 @ProviderFor(userSubscriptions)
-const userSubscriptionsProvider = UserSubscriptionsProvider._();
+final userSubscriptionsProvider = UserSubscriptionsProvider._();
 
 /// Provider to get user's subscription history
 
@@ -151,7 +151,7 @@ final class UserSubscriptionsProvider extends $FunctionalProvider<
         $FutureModifier<List<Map<String, dynamic>>>,
         $FutureProvider<List<Map<String, dynamic>>> {
   /// Provider to get user's subscription history
-  const UserSubscriptionsProvider._()
+  UserSubscriptionsProvider._()
       : super(
           from: null,
           argument: null,

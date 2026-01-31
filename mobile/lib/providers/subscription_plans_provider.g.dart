@@ -12,7 +12,7 @@ part of 'subscription_plans_provider.dart';
 /// Falls back to hardcoded defaults if DB is unavailable
 
 @ProviderFor(subscriptionPlans)
-const subscriptionPlansProvider = SubscriptionPlansProvider._();
+final subscriptionPlansProvider = SubscriptionPlansProvider._();
 
 /// Provider to fetch subscription plans from Supabase
 /// Falls back to hardcoded defaults if DB is unavailable
@@ -26,7 +26,7 @@ final class SubscriptionPlansProvider extends $FunctionalProvider<
         $FutureProvider<List<SubscriptionPlan>> {
   /// Provider to fetch subscription plans from Supabase
   /// Falls back to hardcoded defaults if DB is unavailable
-  const SubscriptionPlansProvider._()
+  SubscriptionPlansProvider._()
       : super(
           from: null,
           argument: null,
@@ -57,7 +57,7 @@ String _$subscriptionPlansHash() => r'7d4ab342b7cee1355ab44a10d20d2a5dc6763984';
 /// Provider to get a specific plan by ID
 
 @ProviderFor(subscriptionPlanById)
-const subscriptionPlanByIdProvider = SubscriptionPlanByIdFamily._();
+final subscriptionPlanByIdProvider = SubscriptionPlanByIdFamily._();
 
 /// Provider to get a specific plan by ID
 
@@ -69,7 +69,7 @@ final class SubscriptionPlanByIdProvider extends $FunctionalProvider<
         $FutureModifier<SubscriptionPlan?>,
         $FutureProvider<SubscriptionPlan?> {
   /// Provider to get a specific plan by ID
-  const SubscriptionPlanByIdProvider._(
+  SubscriptionPlanByIdProvider._(
       {required SubscriptionPlanByIdFamily super.from,
       required String super.argument})
       : super(
@@ -123,7 +123,7 @@ String _$subscriptionPlanByIdHash() =>
 
 final class SubscriptionPlanByIdFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<SubscriptionPlan?>, String> {
-  const SubscriptionPlanByIdFamily._()
+  SubscriptionPlanByIdFamily._()
       : super(
           retry: null,
           name: r'subscriptionPlanByIdProvider',

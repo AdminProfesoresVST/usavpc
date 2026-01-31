@@ -10,12 +10,12 @@ part of 'ai_repository.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(aiRepository)
-const aiRepositoryProvider = AiRepositoryProvider._();
+final aiRepositoryProvider = AiRepositoryProvider._();
 
 final class AiRepositoryProvider
     extends $FunctionalProvider<AiRepository, AiRepository, AiRepository>
     with $Provider<AiRepository> {
-  const AiRepositoryProvider._()
+  AiRepositoryProvider._()
       : super(
           from: null,
           argument: null,

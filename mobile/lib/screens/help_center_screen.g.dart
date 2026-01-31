@@ -10,12 +10,12 @@ part of 'help_center_screen.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(faqs)
-const faqsProvider = FaqsProvider._();
+final faqsProvider = FaqsProvider._();
 
 final class FaqsProvider extends $FunctionalProvider<AsyncValue<List<Faq>>,
         List<Faq>, FutureOr<List<Faq>>>
     with $FutureModifier<List<Faq>>, $FutureProvider<List<Faq>> {
-  const FaqsProvider._()
+  FaqsProvider._()
       : super(
           from: null,
           argument: null,

@@ -10,7 +10,7 @@ part of 'payments_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(servicePlans)
-const servicePlansProvider = ServicePlansProvider._();
+final servicePlansProvider = ServicePlansProvider._();
 
 final class ServicePlansProvider extends $FunctionalProvider<
         AsyncValue<List<ServicePlan>>,
@@ -19,7 +19,7 @@ final class ServicePlansProvider extends $FunctionalProvider<
     with
         $FutureModifier<List<ServicePlan>>,
         $FutureProvider<List<ServicePlan>> {
-  const ServicePlansProvider._()
+  ServicePlansProvider._()
       : super(
           from: null,
           argument: null,
