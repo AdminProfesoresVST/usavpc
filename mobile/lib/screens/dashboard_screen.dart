@@ -485,7 +485,7 @@ class _SubscriptionCard extends StatelessWidget {
                           size: 14,
                           color: isBestValue 
                             ? const Color(0xFFFFD700) 
-                            : AppTheme.accentGreen,
+                            : AppTheme.successGreen,
                         ),
                         const SizedBox(width: 6),
                         Expanded(

@@ -51,7 +51,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
         );
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
         backgroundColor: AppTheme.navyPrimary,
         foregroundColor: AppTheme.inkInverse,
@@ -139,7 +139,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
               Text(
                 'Al continuar, aceptas los Términos de Servicio y Política de Privacidad. '
                 'Puedes cancelar tu suscripción en cualquier momento.',
-                style: AppTheme.captionSecondary.copyWith(fontSize: 11),
+                style: AppTheme.captionGreyRegular.copyWith(fontSize: 11),
                 textAlign: TextAlign.center,
               ),
             ],
