@@ -45,38 +45,135 @@ export interface ApplicantProfile {
 // ============================================================================
 
 export const COUNTRY_RISK_FACTORS: Record<string, number> = {
-    // High Risk (1.5x severity)
+    // ============================================================================
+    // VERY HIGH RISK (1.5x-1.6x) - Countries with highest denial rates
+    // ============================================================================
+    'Haiti': 1.6,
+    'Somalia': 1.6,
+    'Yemen': 1.6,
+    'Syria': 1.6,
+    'Afghanistan': 1.6,
     'Honduras': 1.5,
     'Guatemala': 1.5,
     'El Salvador': 1.5,
-    'Haiti': 1.5,
+    'Eritrea': 1.5,
+    'Sudan': 1.5,
+    'Libya': 1.5,
+    'Iraq': 1.5,
+
+    // ============================================================================
+    // HIGH RISK (1.3x-1.4x) - Countries with high denial rates
+    // ============================================================================
     'Venezuela': 1.4,
     'Nicaragua': 1.4,
+    'Cuba': 1.4,
+    'Iran': 1.4,
+    'Pakistan': 1.4,
+    'Bangladesh': 1.4,
+    'Nigeria': 1.4,
     'Ecuador': 1.3,
-    'Cuba': 1.3,
+    'Bolivia': 1.3,
+    'Cameroon': 1.3,
+    'Ghana': 1.3,
+    'Senegal': 1.3,
+    'Ethiopia': 1.3,
+    'Nepal': 1.3,
+    'Myanmar': 1.3,
 
-    // Medium Risk (1.2x severity)
+    // ============================================================================
+    // MEDIUM-HIGH RISK (1.2x) - Countries with elevated denial rates
+    // ============================================================================
     'Mexico': 1.2,
+    'Dominican Republic': 1.2,
     'Colombia': 1.2,
     'Peru': 1.2,
-    'Dominican Republic': 1.2,
-    'Brazil': 1.1,
+    'Jamaica': 1.2,
+    'Trinidad and Tobago': 1.2,
+    'Guyana': 1.2,
+    'Suriname': 1.2,
+    'India': 1.2,
+    'Philippines': 1.2,
+    'Vietnam': 1.2,
+    'Egypt': 1.2,
+    'Morocco': 1.2,
+    'Tunisia': 1.2,
+    'Algeria': 1.2,
+    'Kenya': 1.2,
+    'Uganda': 1.2,
+    'Tanzania': 1.2,
 
-    // Low Risk (1.0x - baseline)
+    // ============================================================================
+    // MEDIUM RISK (1.1x) - Countries with moderate denial rates
+    // ============================================================================
+    'Brazil': 1.1,
+    'Paraguay': 1.1,
+    'Panama': 1.1,
+    'Belize': 1.1,
+    'Barbados': 1.1,
+    'Bahamas': 1.1,
+    'Thailand': 1.1,
+    'Indonesia': 1.1,
+    'Malaysia': 1.1,
+    'China': 1.1,
+    'Turkey': 1.1,
+    'Russia': 1.1,
+    'Ukraine': 1.1,
+    'South Africa': 1.1,
+    'Lebanon': 1.1,
+    'Jordan': 1.1,
+
+    // ============================================================================
+    // LOW RISK (1.0x) - Baseline countries
+    // ============================================================================
     'Argentina': 1.0,
     'Chile': 1.0,
     'Uruguay': 1.0,
     'Costa Rica': 1.0,
+    'Poland': 1.0,
+    'Hungary': 1.0,
+    'Czech Republic': 1.0,
+    'Slovakia': 1.0,
+    'Romania': 1.0,
+    'Bulgaria': 1.0,
+    'Greece': 1.0,
+    'Portugal': 1.0,
+    'Croatia': 1.0,
+    'Slovenia': 1.0,
+    'Israel': 1.0,
+    'South Korea': 1.0,
+    'Taiwan': 1.0,
+    'Singapore': 1.0,
+    'United Arab Emirates': 1.0,
+    'Saudi Arabia': 1.0,
+    'Qatar': 1.0,
 
-    // Very Low Risk (0.8x - OECD countries)
+    // ============================================================================
+    // VERY LOW RISK (0.8x-0.9x) - OECD & Visa Waiver countries
+    // ============================================================================
     'Canada': 0.8,
+    'United Kingdom': 0.8,
     'UK': 0.8,
     'Germany': 0.8,
     'France': 0.8,
     'Spain': 0.8,
+    'Italy': 0.8,
+    'Netherlands': 0.8,
+    'Belgium': 0.8,
+    'Austria': 0.8,
+    'Sweden': 0.8,
+    'Norway': 0.8,
+    'Denmark': 0.8,
+    'Finland': 0.8,
+    'Ireland': 0.8,
     'Japan': 0.8,
     'Australia': 0.8,
+    'New Zealand': 0.8,
     'Switzerland': 0.7,
+    'Luxembourg': 0.7,
+    'Iceland': 0.7,
+    'Liechtenstein': 0.7,
+    'Monaco': 0.7,
+    'Andorra': 0.7,
 };
 
 // ============================================================================
