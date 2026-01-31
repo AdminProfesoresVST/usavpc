@@ -160,7 +160,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
     dynamic l10n,
   ) {
     return DropdownButtonFormField<String>(
-      value: _selectedCountryCode,
+      initialValue: _selectedCountryCode,
       isExpanded: true,
       decoration: InputDecoration(
         hintText: l10n.selectCountry,
@@ -214,7 +214,7 @@ class _RestrictionCheckScreenState extends ConsumerState<RestrictionCheckScreen>
       loading: () => const LinearProgressIndicator(),
       error: (e, _) => Text(l10n.error(e.toString())),
       data: (cats) => DropdownButtonFormField<String>(
-        value: _selectedCategoryCode,
+        initialValue: _selectedCategoryCode,
         isExpanded: true, // Fixes overflow
         decoration: InputDecoration(
           hintText: l10n.selectCategory,

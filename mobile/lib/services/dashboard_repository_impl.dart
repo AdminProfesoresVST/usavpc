@@ -22,17 +22,17 @@ class DashboardRepositoryImpl implements DashboardRepository {
         progress: 0.0,
         lastEdited: 'N/A',
         nextSteps: [
-          const DashboardAction(
+          DashboardAction(
             title: 'Iniciar Solicitud',
             subtitle: 'Comienza tu proceso de visa',
             iconCode: 'start',
           ),
-          const DashboardAction(
+          DashboardAction(
             title: 'Verificar Restricciones',
             subtitle: 'Chequeo de Travel Ban 2026',
             iconCode: 'travel_ban',
           ),
-          const DashboardAction(
+          DashboardAction(
             title: 'Calculadora de Costos',
             subtitle: 'Estimación completa de tarifas',
             iconCode: 'calculator',
@@ -56,17 +56,17 @@ class DashboardRepositoryImpl implements DashboardRepository {
         progress: 0.0,
         lastEdited: 'N/A',
         nextSteps: [
-          const DashboardAction(
+          DashboardAction(
             title: 'Iniciar Solicitud',
             subtitle: 'Comienza tu proceso de visa',
             iconCode: 'start',
           ),
-          const DashboardAction(
+          DashboardAction(
             title: 'Verificar Restricciones',
             subtitle: 'Chequeo de Travel Ban 2026',
             iconCode: 'travel_ban',
           ),
-          const DashboardAction(
+          DashboardAction(
             title: 'Calculadora de Costos',
             subtitle: 'Estimación completa de tarifas',
             iconCode: 'calculator',

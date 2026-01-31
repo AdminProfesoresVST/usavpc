@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -37,7 +36,6 @@ class PaymentService {
     _isAvailable = await _inAppPurchase.isAvailable();
     
     if (!_isAvailable) {
-      debugPrint('PaymentService: In-app purchases not available on this device');
       return;
     }
     
@@ -45,7 +43,7 @@ class PaymentService {
     _subscription = _inAppPurchase.purchaseStream.listen(
       _handlePurchaseUpdates,
       onDone: () => _subscription?.cancel(),
-      onError: (error) => debugPrint('PaymentService: Error: $error'),
+      onError: (error) {},
     );
     
     // Load products from store
@@ -62,16 +60,10 @@ class PaymentService {
         await _inAppPurchase.queryProductDetails(productIds);
     
     if (response.error != null) {
-      debugPrint('PaymentService: Error loading products: ${response.error}');
       return;
     }
     
-    if (response.notFoundIDs.isNotEmpty) {
-      debugPrint('PaymentService: Products not found: ${response.notFoundIDs}');
-    }
-    
     _products = response.productDetails;
-    debugPrint('PaymentService: Loaded ${_products.length} products');
   }
   
   /// Get all available products
@@ -111,7 +103,6 @@ class PaymentService {
     for (final purchase in purchases) {
       switch (purchase.status) {
         case PurchaseStatus.pending:
-          debugPrint('PaymentService: Purchase pending: ${purchase.productID}');
           break;
           
         case PurchaseStatus.purchased:
@@ -121,11 +112,9 @@ class PaymentService {
           break;
           
         case PurchaseStatus.error:
-          debugPrint('PaymentService: Purchase error: ${purchase.error}');
           break;
           
         case PurchaseStatus.canceled:
-          debugPrint('PaymentService: Purchase canceled');
           break;
       }
       
@@ -138,13 +127,10 @@ class PaymentService {
   
   /// Verify purchase and save to database
   Future<void> _verifyAndDeliverPurchase(PurchaseDetails purchase) async {
-    debugPrint('PaymentService: Verifying purchase: ${purchase.productID}');
-    
     final supabase = Supabase.instance.client;
     final userId = supabase.auth.currentUser?.id;
     
     if (userId == null) {
-      debugPrint('PaymentService: User not logged in');
       return;
     }
     
@@ -171,10 +157,8 @@ class PaymentService {
         'starts_at': now.toIso8601String(),
         'expires_at': expiresAt.toIso8601String(),
       });
-      
-      debugPrint('PaymentService: Subscription saved successfully');
     } catch (e) {
-      debugPrint('PaymentService: Error saving subscription: $e');
+      // Error saving subscription - handled silently
     }
   }
   

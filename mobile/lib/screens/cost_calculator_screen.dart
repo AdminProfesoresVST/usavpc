@@ -92,7 +92,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
                   Switch(
                     value: _isRoundTrip,
                     onChanged: (val) => setState(() => _isRoundTrip = val),
-                    activeColor: AppTheme.actionBlue,
+                    activeThumbColor: AppTheme.actionBlue,
                   ),
                 ],
               ),
@@ -107,7 +107,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             trailing: Switch(
               value: !_isFlight,
               onChanged: (val) => setState(() => _isFlight = !val),
-              activeColor: AppTheme.actionBlue,
+              activeThumbColor: AppTheme.actionBlue,
             ),
           ),
           
@@ -198,7 +198,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
     ];
 
     return DropdownButtonFormField<String>(
-      value: _selectedCountryCode,
+      initialValue: _selectedCountryCode,
       isExpanded: true,
       decoration: InputDecoration(
         hintText: l10n.selectCountry,
@@ -231,7 +231,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
       loading: () => const LinearProgressIndicator(),
       error: (e, _) => Text(l10n.error(e.toString())),
       data: (cats) => DropdownButtonFormField<VisaCategory>(
-        value: _selectedCategory,
+        initialValue: _selectedCategory,
         isExpanded: true,
         decoration: InputDecoration(
           hintText: l10n.selectCategory,
@@ -296,7 +296,7 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
             title: Text(l10n.crossingByLand, style: AppTheme.bodyPrimaryRegular),
             subtitle: Text(l10n.crossingByLandSubtitle, style: AppTheme.captionGreyRegular),
             secondary: const Icon(Icons.directions_car, color: AppTheme.navyPrimary),
-            activeColor: AppTheme.actionBlue,
+            activeThumbColor: AppTheme.actionBlue,
             value: _crossingByLand,
             onChanged: (value) {
               setState(() {

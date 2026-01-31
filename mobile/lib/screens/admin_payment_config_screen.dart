@@ -416,7 +416,7 @@ class _AdminPaymentConfigScreenState extends ConsumerState<AdminPaymentConfigScr
                 Switch(
                   value: isEnabled,
                   onChanged: onEnabledChanged,
-                  activeColor: AppTheme.successGreen,
+                  activeThumbColor: AppTheme.successGreen,
                 ),
               ],
             ),
@@ -448,7 +448,7 @@ class _AdminPaymentConfigScreenState extends ConsumerState<AdminPaymentConfigScr
                       Switch(
                         value: isSandbox,
                         onChanged: onSandboxChanged,
-                        activeColor: AppTheme.warningOrange,
+                        activeThumbColor: AppTheme.warningOrange,
                         inactiveThumbColor: AppTheme.successGreen,
                         inactiveTrackColor: AppTheme.successGreen.withValues(alpha: 0.3),
                       ),

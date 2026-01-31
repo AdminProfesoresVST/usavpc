@@ -26,14 +26,14 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
   
   List<Map<String, dynamic>> _questions = [];
   int _currentQuestionIndex = 0;
-  Map<String, dynamic> _formData = {};
+  final Map<String, dynamic> _formData = {};
   bool _isLoading = true;
   bool _isInit = true;
   bool _isSending = false;
   // DEBUG VARIABLES
   String _debugError = '';
-  int _debugFetched = -1;
-  int _debugFiltered = -1;
+  final int _debugFetched = -1;
+  final int _debugFiltered = -1;
 
   // VOICE
   final VoiceManager _voiceManager = VoiceManager();
@@ -116,8 +116,9 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
 
       // Smart Skip - Nationality Logic
       String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
-      if (nat.contains('DOMINICA')) nat = 'DOM';
-      else if (nat.contains('MEXIC')) nat = 'MEX';
+      if (nat.contains('DOMINICA')) {
+        nat = 'DOM';
+      } else if (nat.contains('MEXIC')) nat = 'MEX';
       
       if (_latinNationalities.contains(nat) || _latinNationalities.contains(_formData['nationality'])) {
          if (!_formData.containsKey('native_alphabet_name')) _formData['native_alphabet_name'] = 'Does Not Apply'; 

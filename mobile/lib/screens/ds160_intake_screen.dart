@@ -24,7 +24,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   
   List<Map<String, dynamic>> _questions = [];
   int _currentQuestionIndex = 0;
-  Map<String, dynamic> _formData = {};
+  final Map<String, dynamic> _formData = {};
   bool _isLoading = true;
   bool _isSending = false;
 
@@ -114,8 +114,9 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
 
       // Smart Skip logic...
       String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
-      if (nat.contains('DOMINICA')) nat = 'DOM';
-      else if (nat.contains('MEXIC')) nat = 'MEX';
+      if (nat.contains('DOMINICA')) {
+        nat = 'DOM';
+      } else if (nat.contains('MEXIC')) nat = 'MEX';
       else if (nat.contains('ARGENT')) nat = 'ARG';
       else if (nat.contains('COLOMB')) nat = 'COL';
       

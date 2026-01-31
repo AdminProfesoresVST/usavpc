@@ -424,6 +424,7 @@ class _SubscriptionCard extends StatelessWidget {
     required this.onTap,
   });
 
+  @override
   Widget build(BuildContext context) {
     // Always show 3 features for equal height
     final features = isBestValue

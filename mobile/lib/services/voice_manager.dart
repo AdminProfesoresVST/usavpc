@@ -1,6 +1,5 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'package:flutter/foundation.dart'; // Import for debugPrint
 
 class VoiceManager {
   final FlutterTts _tts = FlutterTts();
@@ -41,12 +40,10 @@ class VoiceManager {
           "name": bestVoice["name"],
           "locale": bestVoice["locale"]
         });
-        debugPrint("✅ Voz seleccionada: ${bestVoice['name']} (${bestVoice['locale']})");
       } else {
          await _tts.setLanguage("es-US"); // Fallback
       }
     } catch (e) {
-      debugPrint("⚠️ Error configurando voz avanzada: $e");
       await _tts.setLanguage("es-US");
     }
 
