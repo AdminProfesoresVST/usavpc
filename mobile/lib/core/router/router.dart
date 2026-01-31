@@ -142,11 +142,7 @@ GoRouter goRouter(Ref ref) {
         path: '/admin/payments',
         builder: (context, state) => const AdminPaymentConfigScreen(),
       ),
-      // Consular Risk Command Dashboard
-      GoRoute(
-        path: '/risk-command',
-        builder: (context, state) => const ConsularRiskDashboardScreen(),
-      ),
+      // Removed: /risk-command is now inside the shell for navbar visibility
       
       // UNIFIED SHELL
       StatefulShellRoute.indexedStack(
@@ -161,21 +157,19 @@ GoRouter goRouter(Ref ref) {
               ),
             ],
           ),
-          // Branch 1: Services (Public Catalog + Tools)
+          // Branch 1: Services / Risk Dashboard
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/services',
-                redirect: (context, state) {
-                   // User Request: Services tab -> Risk Command instead of simulator
-                   final isLoggedIn = ref.read(authStateProvider).value != null;
-                   // FIX: Only redirect if explicitly hitting the tab root, NOT subroutes
-                   if (isLoggedIn && state.uri.toString() == '/services') {
-                     return '/risk-command';
-                   }
-                   return null;
+                builder: (context, state) {
+                  // For logged-in users, show Risk Dashboard directly
+                  final isLoggedIn = ref.read(authStateProvider).value != null;
+                  if (isLoggedIn) {
+                    return const ConsularRiskDashboardScreen();
+                  }
+                  return const ServiceSelectionScreen();
                 },
-                builder: (context, state) => const ServiceSelectionScreen(),
                 routes: [
                   GoRoute(
                     path: 'visa/select',
