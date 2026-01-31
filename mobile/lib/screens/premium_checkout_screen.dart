@@ -59,35 +59,35 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
                   ),
                   const SizedBox(height: 16),
                   
-                  // Google Play
+                  // Google Play - Official green
                   _buildPaymentOption(
                     id: 'google_play',
-                    icon: Icons.shopping_bag_outlined,
+                    icon: Icons.shop,
                     title: 'Google Play',
                     subtitle: 'Pago seguro con tu cuenta Google',
-                    color: const Color(0xFF34A853),
+                    color: AppTheme.successGreen,
                   ),
                   
                   const SizedBox(height: 12),
                   
-                  // Apple App Store
+                  // Apple App Store - Black (using inkPrimary for consistency)
                   _buildPaymentOption(
                     id: 'app_store',
                     icon: Icons.apple,
                     title: 'App Store',
                     subtitle: 'Pago con Apple ID',
-                    color: const Color(0xFF000000),
+                    color: AppTheme.inkPrimary,
                   ),
                   
                   const SizedBox(height: 12),
                   
-                  // PayPal
+                  // PayPal - Blue (using actionBlue from theme)
                   _buildPaymentOption(
                     id: 'paypal',
-                    icon: Icons.payment,
+                    icon: Icons.account_balance_wallet,
                     title: 'PayPal',
                     subtitle: 'Tarjeta de crédito o cuenta PayPal',
-                    color: const Color(0xFF003087),
+                    color: AppTheme.actionBlue,
                   ),
                   
                   const SizedBox(height: 32),
