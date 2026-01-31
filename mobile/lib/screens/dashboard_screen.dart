@@ -648,7 +648,7 @@ class _StepItem extends StatelessWidget {
 }
 
 /// Mini Risk Gauge widget for Dashboard "How it Works" section
-/// Shows compact probability indicator that navigates to full Risk Dashboard
+/// Professional semi-circular gauge that navigates to full Risk Dashboard
 class _MiniRiskGauge extends StatelessWidget {
   final WidgetRef ref;
   
@@ -658,15 +658,13 @@ class _MiniRiskGauge extends StatelessWidget {
   Widget build(BuildContext context) {
     final riskState = ref.watch(consularRiskProvider);
     final probability = riskState.visaApprovalProbability;
-    final category = riskState.riskCategory;
-    final color = _getRiskColor(category);
     final percentage = (probability * 100).toInt();
     
     return Expanded(
       child: GestureDetector(
         onTap: () => GoRouter.of(context).go('/services'),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           decoration: BoxDecoration(
             color: AppTheme.inkInverse,
             borderRadius: AppTheme.buttonRadius,
@@ -677,58 +675,35 @@ class _MiniRiskGauge extends StatelessWidget {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Icon with subtle risk indicator overlay
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppTheme.navyPrimary.withOpacity(0.08),
-                  shape: BoxShape.circle,
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Icon(Icons.analytics_outlined, color: AppTheme.navyPrimary, size: AppTheme.iconoMini),
-                    // Small status dot
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 1.5),
-                        ),
+              // Semi-circular gauge
+              SizedBox(
+                width: 60,
+                height: 35,
+                child: CustomPaint(
+                  painter: _SemiCircleGaugePainter(
+                    progress: probability,
+                    progressColor: AppTheme.navyPrimary,
+                    backgroundColor: AppTheme.dividerGrey,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      '$percentage%',
+                      style: AppTheme.captionNavyBold.copyWith(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 context.l10n.stepResults,
                 style: AppTheme.captionNavyBold.copyWith(
                   fontSize: AppTheme.fuenteCaption,
-                ),
-              ),
-              const SizedBox(height: 2),
-              // Subtle percentage badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  '$percentage%',
-                  style: AppTheme.captionGreyRegular.copyWith(
-                    fontSize: 9,
-                    color: color,
-                    fontWeight: FontWeight.w600,
-                  ),
                 ),
               ),
             ],
@@ -737,14 +712,62 @@ class _MiniRiskGauge extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Custom painter for semi-circular gauge
+class _SemiCircleGaugePainter extends CustomPainter {
+  final double progress;
+  final Color progressColor;
+  final Color backgroundColor;
   
-  Color _getRiskColor(RiskCategory category) {
-    switch (category) {
-      case RiskCategory.low: return AppTheme.successGreen;
-      case RiskCategory.moderate: return AppTheme.warningOrange;
-      case RiskCategory.high: return const Color(0xFFE65100);
-      case RiskCategory.critical: return AppTheme.errorRed;
-    }
+  _SemiCircleGaugePainter({
+    required this.progress,
+    required this.progressColor,
+    required this.backgroundColor,
+  });
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final strokeWidth = 6.0;
+    final center = Offset(size.width / 2, size.height);
+    final radius = size.width / 2 - strokeWidth / 2;
+    
+    // Background arc (full semi-circle)
+    final backgroundPaint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+    
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      3.14159, // Start from left (π radians)
+      3.14159, // Sweep 180 degrees (π radians)
+      false,
+      backgroundPaint,
+    );
+    
+    // Progress arc
+    final progressPaint = Paint()
+      ..color = progressColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+    
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      3.14159, // Start from left
+      3.14159 * progress, // Sweep based on progress
+      false,
+      progressPaint,
+    );
+  }
+  
+  @override
+  bool shouldRepaint(covariant _SemiCircleGaugePainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+           oldDelegate.progressColor != progressColor;
   }
 }
+
 
