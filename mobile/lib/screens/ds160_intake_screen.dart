@@ -11,6 +11,7 @@ import 'package:mobile/services/ai/smart_interview_agent.dart';
 import 'package:mobile/services/ai_repository.dart';
 import 'package:mobile/services/voice_manager.dart'; // Import VoiceManager
 import 'package:mobile/core/widgets/premium_chat_input.dart';
+import 'package:mobile/core/widgets/iami_suggestion_dialog.dart';
 
 /// AI-powered chat intake with full i18n support.
 class Ds160IntakeScreen extends ConsumerStatefulWidget {
@@ -445,20 +446,28 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     }
   }
 
-  /// IAMI: Handle send via Intelligent Migration Assistant API
-  Future<void> _handleSendIAMI() async {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
+  /// Handle send via IAMI API
+  // REFACTORED: Separated logic to allow callback from Dialog
+  Future<void> _processIAMIMessage(String message, {bool isSuggestion = false}) async {
+    if (message.isEmpty) return;
 
-    _addUserMessage(text);
-    _controller.clear();
+    if (!isSuggestion) {
+      _addUserMessage(message);
+      _controller.clear();
+    } else {
+      // If suggestion, show as user action in history
+       setState(() {
+         _messages.add(ChatMessage(text: message, isUser: true, isAction: true)); 
+       });
+    }
+
     setState(() => _isSending = true);
 
     try {
       final aiRepo = ref.read(aiRepositoryProvider);
       
       final response = await aiRepo.sendIntakeMessage(
-        message: text,
+        message: message,
         formType: 'DS-160',
         existingData: _formData,
       );
@@ -475,72 +484,42 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
         if (response.nextStep != null && response.nextStep!['field'] != null) {
           final field = response.nextStep!['field'] as String;
           // Save the user's answer to local state
-          _formData[field] = text;
+          _formData[field] = message;
         }
       }
     } catch (e) {
       debugPrint('[IAMI] Send Error: $e');
-      _addBotMessage('Error procesando tu respuesta. Por favor intenta de nuevo.');
+      _addBotMessage('Error procesando respuesta. Reintentando...');
     } finally {
       setState(() => _isSending = false);
     }
   }
 
-  /// IAMI: Show suggestion dialog for user consent
+  Future<void> _handleSendIAMI() async {
+    final text = _controller.text.trim();
+    await _processIAMIMessage(text);
+  }
+
+  /// Show suggestion consent dialog
   void _showSuggestionDialog(IAMISuggestion suggestion, String aiMessage) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.navyPrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('💡 Sugerencia de Mejora', style: TextStyle(color: Colors.white)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(aiMessage, style: const TextStyle(color: Colors.white70)),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppTheme.navyPrimary.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Tu respuesta:', style: TextStyle(color: Colors.white54, fontSize: 12)),
-                  Text('"${suggestion.original}"', style: const TextStyle(color: Colors.white)),
-                  const SizedBox(height: 8),
-                  Text('Sugerencia mejorada:', style: TextStyle(color: AppTheme.accentGold, fontSize: 12)),
-                  Text('"${suggestion.improved}"', style: TextStyle(color: AppTheme.accentGold, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text('📌 ${suggestion.reason}', style: const TextStyle(color: Colors.white70, fontSize: 11)),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _addBotMessage('Entendido, usaremos tu respuesta original.');
-              setState(() => _pendingSuggestion = null);
-            },
-            child: const Text('Mantener Original', style: TextStyle(color: Colors.white54)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentGold),
-            onPressed: () {
-              Navigator.pop(ctx);
-              _addBotMessage('Perfecto, he guardado la versión mejorada. ✅');
-              // TODO: Call backend to confirm save with improved version
-              setState(() => _pendingSuggestion = null);
-            },
-            child: Text('Aceptar Mejora', style: TextStyle(color: AppTheme.navyPrimary)),
-          ),
-        ],
+      builder: (ctx) => IAMISuggestionDialog(
+        suggestion: suggestion,
+        aiMessage: aiMessage,
+        onAccept: () {
+          Navigator.pop(ctx);
+          // CRITICAL FIX: Send the IMPROVED response to backend to continue flow
+          _processIAMIMessage(suggestion.improved, isSuggestion: true);
+          _addBotMessage('Aplicando mejora... ✅');
+          setState(() => _pendingSuggestion = null);
+        },
+        onReject: () {
+          Navigator.pop(ctx);
+          _processIAMIMessage(suggestion.original, isSuggestion: true);
+          _addBotMessage('Usando respuesta original.');
+          setState(() => _pendingSuggestion = null);
+        },
       ),
     );
   }

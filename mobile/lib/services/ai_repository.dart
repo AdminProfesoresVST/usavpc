@@ -11,7 +11,12 @@ part 'ai_repository.g.dart';
 @riverpod
 AiRepository aiRepository(Ref ref) {
   final config = ref.watch(appConfigProvider);
-  return AiRepository(Dio(), config.netlifyFunctionsUrl, config.supabaseAnonKey);
+  final dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 60),
+    receiveTimeout: const Duration(seconds: 60),
+    sendTimeout: const Duration(seconds: 60),
+  ));
+  return AiRepository(dio, config.netlifyFunctionsUrl, config.supabaseAnonKey);
 }
 
 class AiRepository {

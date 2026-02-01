@@ -95,7 +95,7 @@ export async function POST(req: Request) {
                 }
             );
 
-            const { error: profileError } = await adminClient
+            const { data: profileData, error: profileError } = await adminClient
                 .from('profiles')
                 .upsert(
                     {
@@ -107,6 +107,9 @@ export async function POST(req: Request) {
                 )
                 .select()
                 .single();
+
+            // Store for reuse to avoid extra DB call in IAMI mode
+            var userProfile = profileData;
 
             if (profileError) {
                 console.error("[API] CRITICAL: Profile Sync Failed even with Admin Key:", profileError.message);
@@ -460,10 +463,15 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
         // IAMI INTAKE MODE (Intelligent Migration Assistant)
         // ---------------------------------------------------------
         if (mode === 'intake') {
-            // 1. PROFILE SWEEP: Load ALL existing user data
+            // 1. PROFILE SWEEP: Reuse loaded data
             const payload = application.ds160_payload || {};
             const formData = application.form_data || {};
-            const profile = await supabase.from('profiles').select('*').eq('id', user.id).single();
+
+            // Fallback fetch if sync failed or was skipped
+            if (!userProfile) {
+                const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+                userProfile = data;
+            }
 
             // Build KNOWN_DATA object for AI context
             const knownData = {
@@ -475,8 +483,8 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                 // From Form Data (Intake)
                 ...formData,
                 // From Profile
-                email: profile?.data?.email,
-                phone: profile?.data?.phone,
+                email: userProfile?.email,
+                phone: userProfile?.phone,
             };
 
             // Filter out null/undefined values
@@ -509,7 +517,7 @@ ${answer ? `RESPUESTA DEL USUARIO: "${answer}"` : 'Es la primera interacción. S
             ];
 
             const iamiResponse = await openai.chat.completions.create({
-                model: "gpt-5",
+                model: "gpt-4o", // OPTIMIZATION: Faster than GPT-5 for intake logic
                 messages: iamiMessages,
                 response_format: { type: "json_object" }
             });

@@ -7,8 +7,10 @@ import 'package:mobile/core/network/supabase_client.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/core/widgets/app_toast.dart';
-import 'package:mobile/services/voice_manager.dart'; // Import VoiceManager
+import 'package:mobile/services/voice_manager.dart';
 import 'package:mobile/core/widgets/premium_chat_input.dart';
+import 'package:mobile/services/ai_repository.dart'; // IAMI
+import 'package:mobile/core/widgets/iami_suggestion_dialog.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Dedicated intake screen for DS-260 (Immigrant Visa)
@@ -31,6 +33,11 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
   bool _isLoading = true;
   bool _isInit = true;
   bool _isSending = false;
+  
+  // IAMI: Intelligent Migration Assistant Mode
+  final bool _useIAMI = true;
+  IAMISuggestion? _pendingSuggestion;
+  
   // DEBUG VARIABLES
   String _debugError = '';
   final int _debugFetched = -1;
@@ -88,14 +95,159 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
 
 
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // IAMI IMPLEMENTATION (Intelligent Migration Assistant)
+  // ═══════════════════════════════════════════════════════════════════════════
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_isInit) {
-      _loadQuestions();
-      _voiceManager.initialize(); // Initialize Voice
+      // IAMI: Use intelligent initialization instead of loadQuestions
+      _initIAMI(); 
+      _voiceManager.initialize();
       _isInit = false;
     }
+  }
+
+  /// Initialize conversation with IAMI (Profile Sweep)
+  Future<void> _initIAMI() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final aiRepo = ref.read(aiRepositoryProvider);
+      
+      // First call with null message to get greeting + acknowledge existing data
+      final response = await aiRepo.sendIntakeMessage(
+        message: null,
+        formType: 'DS-260', // Specifying DS-260 context
+        existingData: _formData,
+      );
+      
+      _addBotMessage(response.message);
+      
+      if (response.skippedFields != null && response.skippedFields!.isNotEmpty) {
+        debugPrint('[IAMI DS-260] Skipped fields: ${response.skippedFields}');
+      }
+      
+      setState(() => _isLoading = false);
+    } catch (e) {
+      debugPrint('[IAMI] Init Error: $e');
+      // Fallback to legacy local logic
+      _loadQuestions();
+    }
+  }
+
+  /// Handle send via IAMI API
+  // REFACTORED: Separated logic to allow callback from Dialog
+  Future<void> _processIAMIMessage(String message, {bool isSuggestion = false}) async {
+    if (message.isEmpty) return;
+
+    if (!isSuggestion) {
+      _addUserMessage(message);
+      _controller.clear();
+    } else {
+      // If suggestion, show as user action in history
+       setState(() {
+         _messages.add(ChatMessage(text: message, isUser: true, isAction: true)); 
+       });
+    }
+
+    setState(() => _isSending = true);
+
+    try {
+      final aiRepo = ref.read(aiRepositoryProvider);
+      
+      final response = await aiRepo.sendIntakeMessage(
+        message: message,
+        formType: 'DS-260',
+        existingData: _formData,
+      );
+
+      // Handle Suggestion Consent
+      if (response.requiresConsent && response.suggestion != null) {
+        setState(() => _pendingSuggestion = response.suggestion);
+        _showSuggestionDialog(response.suggestion!, response.message);
+      } else {
+        _addBotMessage(response.message);
+
+        // Update local form data if next step provides field info
+        if (response.nextStep != null && response.nextStep!['field'] != null) {
+          final field = response.nextStep!['field'] as String;
+          _formData[field] = message;
+        }
+      }
+    } catch (e) {
+      debugPrint('[IAMI] Send Error: $e');
+      _addBotMessage('Error procesando respuesta. Reintentando...');
+    } finally {
+      setState(() => _isSending = false);
+    }
+  }
+
+  Future<void> _handleSendIAMI() async {
+    final text = _controller.text.trim();
+    await _processIAMIMessage(text);
+  }
+
+  /// Show suggestion consent dialog
+  void _showSuggestionDialog(IAMISuggestion suggestion, String aiMessage) {
+    showDialog(
+      context: context,
+      builder: (ctx) => IAMISuggestionDialog(
+        suggestion: suggestion,
+        aiMessage: aiMessage,
+        onAccept: () {
+          Navigator.pop(ctx);
+          // CRITICAL FIX: Send the IMPROVED response to backend to continue flow
+          _processIAMIMessage(suggestion.improved, isSuggestion: true);
+          _addBotMessage('Aplicando mejora... ✅');
+          setState(() => _pendingSuggestion = null);
+        },
+        onReject: () {
+          Navigator.pop(ctx);
+          _processIAMIMessage(suggestion.original, isSuggestion: true);
+          _addBotMessage('Usando respuesta original.');
+          setState(() => _pendingSuggestion = null);
+        },
+      ),
+    );
+  }
+
+  // HELPER METHODS
+  
+  void _addBotMessage(String text, {List<String>? tips, String? example}) {
+     setState(() {
+       _messages.add(ChatMessage(
+         text: text, 
+         isUser: false, 
+         tips: tips, 
+         example: example
+       ));
+       _scrollToBottom();
+     });
+     
+     // Speak the bot message
+     _voiceManager.speak(text); 
+  }
+
+  void _addUserMessage(String text) {
+     setState(() {
+       _messages.add(ChatMessage(text: text, isUser: true));
+       _scrollToBottom();
+     });
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   @override
@@ -305,37 +457,8 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
     }
   }
 
-  void _addBotMessage(String text, {List<String>? tips, String? example}) {
-    setState(() {
-      _messages.add(ChatMessage(
-        text: text,
-        isUser: false,
-        tips: tips,
-        example: example,
-      ));
-    });
-    _scrollToBottom();
-    _voiceManager.speak(text); // Speak the question
-  }
 
-  void _addUserMessage(String text) {
-    setState(() {
-      _messages.add(ChatMessage(text: text, isUser: true));
-    });
-    _scrollToBottom();
-  }
 
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
 
   void _askNextQuestion() {
     try {
@@ -358,6 +481,14 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
 
   Future<void> _handleSend() async {
     if (_isSending) return;
+    
+    // IAMI Mode: Use intelligent API instead of local logic
+    if (_useIAMI) {
+      await _handleSendIAMI();
+      return;
+    }
+    
+    // LEGACY: Guard for local question flow
     if (_questions.isEmpty || _currentQuestionIndex >= _questions.length) {
        _completeIntake();
        return;
