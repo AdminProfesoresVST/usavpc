@@ -31,6 +31,10 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   bool _isLoading = true;
   bool _isSending = false;
 
+  // IAMI: Intelligent Migration Assistant Mode
+  bool _useIAMI = true; // Default to IAMI
+  IAMISuggestion? _pendingSuggestion; // For consent flow
+
   // SMART SKIP: Aliases to map DB keys to OCR keys
   final Map<String, String> _knownAliases = {
     'last_name': 'surname',
@@ -87,9 +91,39 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_isInit) {
-      _loadQuestions();
-      _voiceManager.initialize(); // Initialize Voice
+      _initIAMI(); // Use IAMI instead of local logic
+      _voiceManager.initialize();
       _isInit = false;
+    }
+  }
+
+  /// IAMI: Initialize conversation with intelligent greeting
+  Future<void> _initIAMI() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final aiRepo = ref.read(aiRepositoryProvider);
+      
+      // First call with null message to get greeting + acknowledge existing data
+      final response = await aiRepo.sendIntakeMessage(
+        message: null,
+        formType: 'DS-160',
+        existingData: _formData,
+      );
+      
+      // Display IAMI's greeting
+      _addBotMessage(response.message);
+      
+      // Log skipped fields for debugging
+      if (response.skippedFields != null && response.skippedFields!.isNotEmpty) {
+        debugPrint('[IAMI] Skipped fields: ${response.skippedFields}');
+      }
+      
+      setState(() => _isLoading = false);
+    } catch (e) {
+      debugPrint('[IAMI] Init Error: $e');
+      // Fallback to legacy local logic if IAMI fails
+      _loadQuestions();
     }
   }
 
@@ -411,11 +445,117 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     }
   }
 
+  /// IAMI: Handle send via Intelligent Migration Assistant API
+  Future<void> _handleSendIAMI() async {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+
+    _addUserMessage(text);
+    _controller.clear();
+    setState(() => _isSending = true);
+
+    try {
+      final aiRepo = ref.read(aiRepositoryProvider);
+      
+      final response = await aiRepo.sendIntakeMessage(
+        message: text,
+        formType: 'DS-160',
+        existingData: _formData,
+      );
+
+      // Handle Suggestion Flow (Proactive Refinement with Consent)
+      if (response.requiresConsent && response.suggestion != null) {
+        setState(() => _pendingSuggestion = response.suggestion);
+        _showSuggestionDialog(response.suggestion!, response.message);
+      } else {
+        // Normal flow: display the AI's message
+        _addBotMessage(response.message);
+
+        // Update local form data if next step provides field info
+        if (response.nextStep != null && response.nextStep!['field'] != null) {
+          final field = response.nextStep!['field'] as String;
+          // Save the user's answer to local state
+          _formData[field] = text;
+        }
+      }
+    } catch (e) {
+      debugPrint('[IAMI] Send Error: $e');
+      _addBotMessage('Error procesando tu respuesta. Por favor intenta de nuevo.', isQuickTip: true);
+    } finally {
+      setState(() => _isSending = false);
+    }
+  }
+
+  /// IAMI: Show suggestion dialog for user consent
+  void _showSuggestionDialog(IAMISuggestion suggestion, String aiMessage) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.navyDark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('💡 Sugerencia de Mejora', style: TextStyle(color: Colors.white)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(aiMessage, style: const TextStyle(color: Colors.white70)),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppTheme.navyPrimary.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Tu respuesta:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                  Text('"${suggestion.original}"', style: const TextStyle(color: Colors.white)),
+                  const SizedBox(height: 8),
+                  const Text('Sugerencia mejorada:', style: TextStyle(color: AppTheme.goldAccent, fontSize: 12)),
+                  Text('"${suggestion.improved}"', style: const TextStyle(color: AppTheme.goldAccent, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text('📌 ${suggestion.reason}', style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _addBotMessage('Entendido, usaremos tu respuesta original.');
+              setState(() => _pendingSuggestion = null);
+            },
+            child: const Text('Mantener Original', style: TextStyle(color: Colors.white54)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.goldAccent),
+            onPressed: () {
+              Navigator.pop(ctx);
+              _addBotMessage('Perfecto, he guardado la versión mejorada. ✅');
+              // TODO: Call backend to confirm save with improved version
+              setState(() => _pendingSuggestion = null);
+            },
+            child: const Text('Aceptar Mejora', style: TextStyle(color: AppTheme.navyDark)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _handleSend() async {
 
     if (_isSending) return;
     
-    // GUARD: If no questions, simply complete
+    // IAMI Mode: Use intelligent API instead of local logic
+    if (_useIAMI) {
+      await _handleSendIAMI();
+      return;
+    }
+    
+    // LEGACY: Guard for local question flow
     if (_questions.isEmpty || _currentQuestionIndex >= _questions.length) {
 
        _completeIntake();

@@ -10,6 +10,7 @@ import { DS160Payload } from "@/types/ds160";
 import OpenAI from "openai";
 import { calculateConsularScore } from "@/lib/ai/scoring-logic";
 import { QUESTION_CATEGORIES, DECISION_THRESHOLDS, COUNTRY_RISK_FACTORS } from "@/lib/ai/interview-config";
+import { IAMI_SYSTEM_PROMPT, IAMI_PROFILE_SWEEP_PROMPT, IAMI_QUALITY_GATE_PROMPT } from "@/lib/ai/iami-persona";
 
 export const maxDuration = 60; // Allow up to 60 seconds for complex AI processing
 export const runtime = 'nodejs'; // Switch to Node.js for stability (Avoid Edge 10s timeout)
@@ -451,6 +452,96 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                     suggestion: finalObj.suggestion, // Pass the Pre-Answer Hint
                     current_score: finalObj.current_score
                 }
+            });
+        }
+        // ---------------------------------------------------------
+
+        // ---------------------------------------------------------
+        // IAMI INTAKE MODE (Intelligent Migration Assistant)
+        // ---------------------------------------------------------
+        if (mode === 'intake') {
+            // 1. PROFILE SWEEP: Load ALL existing user data
+            const payload = application.ds160_payload || {};
+            const formData = application.form_data || {};
+            const profile = await supabase.from('profiles').select('*').eq('id', user.id).single();
+
+            // Build KNOWN_DATA object for AI context
+            const knownData = {
+                // From DS-160 Payload
+                ...payload.ds160_data?.personal,
+                ...payload.ds160_data?.passport,
+                ...payload.ds160_data?.travel,
+                ...payload.ds160_data?.work_history?.current_job,
+                // From Form Data (Intake)
+                ...formData,
+                // From Profile
+                email: profile?.data?.email,
+                phone: profile?.data?.phone,
+            };
+
+            // Filter out null/undefined values
+            const cleanKnownData = Object.fromEntries(
+                Object.entries(knownData).filter(([_, v]) => v != null && v !== '')
+            );
+
+            console.log('[IAMI] Known Data:', Object.keys(cleanKnownData).length, 'fields');
+
+            // 2. Get current question context from state machine
+            const sm = new DS160StateMachine(payload, supabase, locale, user.id);
+            const currentStep = await sm.getNextStep();
+
+            // 3. IAMI INTERACTION
+            const iamiMessages = [
+                { role: 'system' as const, content: IAMI_SYSTEM_PROMPT },
+                {
+                    role: 'user' as const,
+                    content: `
+KNOWN_DATA (datos que YA tenemos del usuario):
+${JSON.stringify(cleanKnownData, null, 2)}
+
+FORMULARIO_ACTUAL: ${context?.form_type || 'DS-160'}
+CAMPO_SIGUIENTE: ${currentStep?.field || 'inicio'}
+PREGUNTA_OFICIAL: ${currentStep?.question || 'Inicia la conversación'}
+
+${answer ? `RESPUESTA DEL USUARIO: "${answer}"` : 'Es la primera interacción. Saluda y reconoce los datos existentes.'}
+                    `
+                }
+            ];
+
+            const iamiResponse = await openai.chat.completions.create({
+                model: "gpt-5",
+                messages: iamiMessages,
+                response_format: { type: "json_object" }
+            });
+
+            const iamiResult = JSON.parse(iamiResponse.choices[0].message.content || '{}');
+
+            // 4. Handle Suggestion Flow (Proactive Refinement)
+            if (iamiResult.suggestion && iamiResult.requires_consent) {
+                // Don't save yet, return for user consent
+                return NextResponse.json({
+                    response: iamiResult.message,
+                    suggestion: iamiResult.suggestion,
+                    requiresConsent: true,
+                    nextStep: currentStep
+                });
+            }
+
+            // 5. Save answer if valid and no consent needed
+            if (answer && currentStep && !iamiResult.requires_consent) {
+                const valueToSave = iamiResult.suggestion?.improved || answer;
+                await sm.saveAnswer(user.id, currentStep.field, valueToSave);
+            }
+
+            // 6. Get next step after save
+            const nextStep = await sm.getNextStep();
+
+            return NextResponse.json({
+                response: iamiResult.message,
+                skipped_fields: iamiResult.skipped_fields,
+                suggestion: iamiResult.suggestion,
+                requiresConsent: iamiResult.requires_consent || false,
+                nextStep
             });
         }
         // ---------------------------------------------------------

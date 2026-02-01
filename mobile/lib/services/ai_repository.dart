@@ -109,4 +109,100 @@ class AiRepository {
       );
     }
   }
+
+  /// IAMI: Intelligent Migration Assistant - Intake Mode
+  /// Returns structured response with optional suggestion for user consent
+  Future<IAMIResponse> sendIntakeMessage({
+    required String? message, // Null for first interaction
+    required String formType,
+    Map<String, dynamic>? existingData,
+  }) async {
+    try {
+      final session = Supabase.instance.client.auth.currentSession;
+      if (session == null) throw Exception('User not logged in');
+
+      final token = session.accessToken;
+      
+      final response = await _dio.post(
+        _baseUrl.endsWith('/api/chat') ? _baseUrl : '$_baseUrl/api/chat',
+        data: {
+          'answer': message,
+          'mode': 'intake', // IAMI Mode
+          'locale': 'es',
+          'context': {
+            'form_type': formType,
+            ...?existingData,
+          },
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+            'apikey': _anonKey, 
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        return IAMIResponse.fromJson(data);
+      } else {
+        throw Exception('Server Error: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      final serverError = e.response?.data?.toString() ?? e.message;
+      throw Exception('IAMI Error: $serverError');
+    }
+  }
 }
+
+/// IAMI Response Model
+class IAMIResponse {
+  final String message;
+  final List<String>? skippedFields;
+  final IAMISuggestion? suggestion;
+  final bool requiresConsent;
+  final Map<String, dynamic>? nextStep;
+
+  IAMIResponse({
+    required this.message,
+    this.skippedFields,
+    this.suggestion,
+    this.requiresConsent = false,
+    this.nextStep,
+  });
+
+  factory IAMIResponse.fromJson(Map<String, dynamic> json) {
+    return IAMIResponse(
+      message: json['response'] ?? 'Error: No response',
+      skippedFields: (json['skipped_fields'] as List?)?.cast<String>(),
+      suggestion: json['suggestion'] != null 
+          ? IAMISuggestion.fromJson(json['suggestion']) 
+          : null,
+      requiresConsent: json['requiresConsent'] ?? false,
+      nextStep: json['nextStep'] as Map<String, dynamic>?,
+    );
+  }
+}
+
+/// IAMI Suggestion (Proactive Refinement)
+class IAMISuggestion {
+  final String original;
+  final String improved;
+  final String reason;
+
+  IAMISuggestion({
+    required this.original,
+    required this.improved,
+    required this.reason,
+  });
+
+  factory IAMISuggestion.fromJson(Map<String, dynamic> json) {
+    return IAMISuggestion(
+      original: json['original'] ?? '',
+      improved: json['improved'] ?? '',
+      reason: json['reason'] ?? '',
+    );
+  }
+}
+
