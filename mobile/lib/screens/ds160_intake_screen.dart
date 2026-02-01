@@ -480,7 +480,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
       }
     } catch (e) {
       debugPrint('[IAMI] Send Error: $e');
-      _addBotMessage('Error procesando tu respuesta. Por favor intenta de nuevo.', isQuickTip: true);
+      _addBotMessage('Error procesando tu respuesta. Por favor intenta de nuevo.');
     } finally {
       setState(() => _isSending = false);
     }
@@ -491,7 +491,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.navyDark,
+        backgroundColor: AppTheme.navyPrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('💡 Sugerencia de Mejora', style: TextStyle(color: Colors.white)),
         content: Column(
@@ -512,8 +512,8 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
                   const Text('Tu respuesta:', style: TextStyle(color: Colors.white54, fontSize: 12)),
                   Text('"${suggestion.original}"', style: const TextStyle(color: Colors.white)),
                   const SizedBox(height: 8),
-                  const Text('Sugerencia mejorada:', style: TextStyle(color: AppTheme.goldAccent, fontSize: 12)),
-                  Text('"${suggestion.improved}"', style: const TextStyle(color: AppTheme.goldAccent, fontWeight: FontWeight.bold)),
+                  Text('Sugerencia mejorada:', style: TextStyle(color: AppTheme.accentGold, fontSize: 12)),
+                  Text('"${suggestion.improved}"', style: TextStyle(color: AppTheme.accentGold, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Text('📌 ${suggestion.reason}', style: const TextStyle(color: Colors.white70, fontSize: 11)),
                 ],
@@ -531,14 +531,14 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
             child: const Text('Mantener Original', style: TextStyle(color: Colors.white54)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.goldAccent),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentGold),
             onPressed: () {
               Navigator.pop(ctx);
               _addBotMessage('Perfecto, he guardado la versión mejorada. ✅');
               // TODO: Call backend to confirm save with improved version
               setState(() => _pendingSuggestion = null);
             },
-            child: const Text('Aceptar Mejora', style: TextStyle(color: AppTheme.navyDark)),
+            child: Text('Aceptar Mejora', style: TextStyle(color: AppTheme.navyPrimary)),
           ),
         ],
       ),
@@ -579,7 +579,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
       // SMART AGENT VALIDATION (Phase 2)
       final validationError = SmartInterviewAgent.validateAnswer(fieldKey, text);
       if (validationError != null) {
-          _addBotMessage(validationError, isQuickTip: true);
+          _addBotMessage(validationError);
           setState(() => _isSending = false);
           return;
       }
