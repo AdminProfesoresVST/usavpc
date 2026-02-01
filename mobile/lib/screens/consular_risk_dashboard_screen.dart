@@ -142,6 +142,7 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
       l10n.axisConsistency,
       l10n.axisTravel,
     ];
+    final values = frictionMap.toRadarValues();
     
     return Container(
       padding: AppTheme.paddingMedio,
@@ -151,30 +152,57 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.radar, color: AppTheme.inkSecondary, size: 18),
+              Icon(Icons.tune, color: AppTheme.inkSecondary, size: 18),
               const SizedBox(width: 8),
               Text(
-                l10n.frictionMap,
+                'FACTORES CLAVE', // [UX] Simplified Title
                 style: AppTheme.captionGreyBold.copyWith(letterSpacing: 1),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            height: 200,
-            child: CustomPaint(
-              size: const Size(double.infinity, 200),
-              painter: RadarChartPainter(frictionMap, labels),
-            ),
+          ...List.generate(5, (i) => _buildFactorRow(context, labels[i], values[i])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFactorRow(BuildContext context, String label, double value) {
+    final isStrong = value > 0.7;
+    final isModerate = value > 0.4;
+    // [UI-SKILL] Enforcing Navy/Blue Palette (No Red/Green for status)
+    final color = isStrong 
+        ? AppTheme.navyPrimary 
+        : isModerate ? AppTheme.actionBlue : AppTheme.inkSecondary;
+        
+    final statusText = isStrong 
+        ? 'Fuerte' 
+        : isModerate ? 'Moderado' : 'Por Mejorar';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label, style: AppTheme.bodyPrimaryRegular.copyWith(fontWeight: FontWeight.w500)),
+              Text(
+                statusText,
+                style: AppTheme.captionNavyBold.copyWith(color: color, fontSize: 12),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            runSpacing: 8,
-            children: List.generate(5, (i) {
-              final values = frictionMap.toRadarValues();
-              return _buildLegendItem(labels[i], values[i]);
-            }),
+          const SizedBox(height: 6),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: value,
+              backgroundColor: AppTheme.dividerGrey.withOpacity(0.3),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+              minHeight: 8,
+            ),
           ),
         ],
       ),
@@ -182,24 +210,8 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildLegendItem(String label, double value) {
-    final color = value > 0.6 
-        ? AppTheme.successGreen
-        : value > 0.3 
-            ? AppTheme.warningOrange 
-            : AppTheme.errorRed;
-    
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 6),
-        Text('$label: ${(value * 100).toInt()}%', style: AppTheme.captionGreyRegular),
-      ],
-    );
+    // Deprecated: No longer used in new layout
+    return const SizedBox.shrink();
   }
 
   Widget _buildRedFlagFeed(BuildContext context, List<RedFlagAlert> redFlags) {
@@ -361,105 +373,12 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
   }
 
   Color _getRiskColor(RiskCategory category) {
+    // [UI-SKILL] Enforcing Navy/Blue Palette
     switch (category) {
-      case RiskCategory.low: return AppTheme.successGreen;
-      case RiskCategory.moderate: return AppTheme.warningOrange;
-      case RiskCategory.high: return const Color(0xFFE65100);
-      case RiskCategory.critical: return AppTheme.errorRed;
+      case RiskCategory.low: return AppTheme.navyPrimary; // Best case
+      case RiskCategory.moderate: return AppTheme.actionBlue;
+      case RiskCategory.high: return AppTheme.inkSecondary; // Neutral warning
+      case RiskCategory.critical: return AppTheme.inkSecondary; // Avoid red
     }
   }
-}
-
-/// Custom painter for radar chart using AppTheme colors
-class RadarChartPainter extends CustomPainter {
-  final FrictionMapData data;
-  final List<String> labels;
-  
-  RadarChartPainter(this.data, this.labels);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2 - 30;
-    final values = data.toRadarValues();
-    const sides = 5;
-    
-    final gridPaint = Paint()
-      ..color = AppTheme.dividerGrey
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    
-    for (int i = 1; i <= 4; i++) {
-      final r = radius * (i / 4);
-      final path = Path();
-      for (int j = 0; j < sides; j++) {
-        final angle = (j * 2 * math.pi / sides) - (math.pi / 2);
-        final x = center.dx + r * math.cos(angle);
-        final y = center.dy + r * math.sin(angle);
-        if (j == 0) { path.moveTo(x, y); } else { path.lineTo(x, y); }
-      }
-      path.close();
-      canvas.drawPath(path, gridPaint);
-    }
-    
-    for (int i = 0; i < sides; i++) {
-      final angle = (i * 2 * math.pi / sides) - (math.pi / 2);
-      final x = center.dx + radius * math.cos(angle);
-      final y = center.dy + radius * math.sin(angle);
-      canvas.drawLine(center, Offset(x, y), gridPaint);
-    }
-    
-    final dataPath = Path();
-    final dataPaint = Paint()
-      ..color = AppTheme.actionBlue.withOpacity(0.25)
-      ..style = PaintingStyle.fill;
-    final dataStrokePaint = Paint()
-      ..color = AppTheme.actionBlue
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    
-    for (int i = 0; i < sides; i++) {
-      final angle = (i * 2 * math.pi / sides) - (math.pi / 2);
-      final r = radius * values[i];
-      final x = center.dx + r * math.cos(angle);
-      final y = center.dy + r * math.sin(angle);
-      if (i == 0) { dataPath.moveTo(x, y); } else { dataPath.lineTo(x, y); }
-    }
-    dataPath.close();
-    canvas.drawPath(dataPath, dataPaint);
-    canvas.drawPath(dataPath, dataStrokePaint);
-    
-    final pointPaint = Paint()
-      ..color = AppTheme.actionBlue
-      ..style = PaintingStyle.fill;
-    
-    for (int i = 0; i < sides; i++) {
-      final angle = (i * 2 * math.pi / sides) - (math.pi / 2);
-      final r = radius * values[i];
-      final x = center.dx + r * math.cos(angle);
-      final y = center.dy + r * math.sin(angle);
-      canvas.drawCircle(Offset(x, y), 4, pointPaint);
-    }
-    
-    final textStyle = TextStyle(
-      color: AppTheme.inkSecondary,
-      fontSize: 10,
-      fontWeight: FontWeight.w500,
-    );
-    
-    for (int i = 0; i < sides; i++) {
-      final angle = (i * 2 * math.pi / sides) - (math.pi / 2);
-      final labelRadius = radius + 18;
-      final x = center.dx + labelRadius * math.cos(angle);
-      final y = center.dy + labelRadius * math.sin(angle);
-      
-      final textSpan = TextSpan(text: labels[i], style: textStyle);
-      final textPainter = TextPainter(text: textSpan, textDirection: TextDirection.ltr);
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

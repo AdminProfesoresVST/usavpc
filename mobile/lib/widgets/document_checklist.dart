@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,10 +38,20 @@ class DocumentChecklist extends ConsumerWidget {
     WidgetRef ref,
     List<DocumentWithStatus> documents,
   ) {
-    // Group by category
-    final grouped = <DocumentCategory, List<DocumentWithStatus>>{};
-    for (final doc in documents) {
-      grouped.putIfAbsent(doc.type.category, () => []).add(doc);
+    // Separate Mandatory vs Optional
+    final mandatoryDocs = documents.where((d) => d.isMandatory).toList();
+    final optionalDocs = documents.where((d) => !d.isMandatory).toList();
+
+    // Group Mandatory by category
+    final groupedMandatory = <DocumentCategory, List<DocumentWithStatus>>{};
+    for (final doc in mandatoryDocs) {
+      groupedMandatory.putIfAbsent(doc.type.category, () => []).add(doc);
+    }
+    
+    // Group Optional by category
+    final groupedOptional = <DocumentCategory, List<DocumentWithStatus>>{};
+    for (final doc in optionalDocs) {
+      groupedOptional.putIfAbsent(doc.type.category, () => []).add(doc);
     }
 
     final languageCode = context.locale.languageCode;
@@ -48,16 +59,17 @@ class DocumentChecklist extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Progress Header
-        _buildProgressHeader(context, documents),
+        // Progress Header (COUNTS ONLY MANDATORY)
+        _buildProgressHeader(context, mandatoryDocs),
         SizedBox(height: AppTheme.espacioEntreSecciones),
-
-        // Document tiles by category
-        ...grouped.entries.map((entry) {
+        
+        // ----------------------------------------------------
+        // REQUIRED DOCUMENTS SECTION
+        // ----------------------------------------------------
+        ...groupedMandatory.entries.map((entry) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Category label
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
@@ -65,7 +77,6 @@ class DocumentChecklist extends ConsumerWidget {
                   style: AppTheme.labelBold.copyWith(color: AppTheme.navyPrimary),
                 ),
               ),
-              // Document tiles
               ...entry.value.map((doc) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: DocumentUploadTile(
@@ -77,6 +88,61 @@ class DocumentChecklist extends ConsumerWidget {
             ],
           );
         }),
+
+        // ----------------------------------------------------
+        // OPTIONAL DOCUMENTS SECTION (Expanded if any uploaded)
+        // ----------------------------------------------------
+        if (optionalDocs.isNotEmpty) ...[
+          SizedBox(height: AppTheme.espacioEntreSecciones),
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              title: Row(
+                children: [
+                   Icon(Icons.add_circle_outline, color: AppTheme.navyPrimary, size: 20),
+                   SizedBox(width: 12),
+                   Text(
+                      'Subir documentos adicionales', // [UX] Action-oriented text
+                      style: AppTheme.h2NavyBold,
+                   ),
+                ],
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(left: 32.0),
+                child: Text(
+                  'Toque para ver lista desplegable', // [UX] Explicit instruction
+                  style: AppTheme.captionGreyRegular,
+                ),
+              ),
+              iconColor: AppTheme.navyPrimary,
+              collapsedIconColor: AppTheme.navyPrimary,
+              initiallyExpanded: optionalDocs.any((d) => d.isUploaded), // Open if user used them
+              tilePadding: EdgeInsets.symmetric(horizontal: 8), // [UX] Better touch target
+              children: groupedOptional.entries.map((entry) {
+                return Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     // Optional Category Label
+                     Padding(
+                        padding: const EdgeInsets.only(bottom: 8, top: 8),
+                        child: Text(
+                          "${entry.key.getDisplayName(languageCode)} (Opcional)",
+                          style: AppTheme.captionNavyBold,
+                        ),
+                      ),
+                      ...entry.value.map((doc) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: DocumentUploadTile(
+                              documentWithStatus: doc,
+                              languageCode: languageCode,
+                            ),
+                          )),
+                   ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -154,7 +220,7 @@ class DocumentChecklist extends ConsumerWidget {
   Color _getProgressColor(double progress) {
     if (progress >= 1.0) return AppTheme.successGreen;
     if (progress >= 0.5) return AppTheme.navyPrimary;
-    return AppTheme.warningOrange;
+    return AppTheme.navyPrimary; // [STRICT COMPLIANCE] No orange for low progress
   }
 }
 
@@ -222,16 +288,16 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
         color = AppTheme.navyPrimary;
       case DocumentStatus.processing:
         icon = Icons.hourglass_top;
-        color = AppTheme.warningOrange;
+        color = AppTheme.actionBlue; // [STRICT] Blue for processing
       case DocumentStatus.uploaded:
         icon = Icons.upload_file;
         color = AppTheme.navyPrimary;
       case DocumentStatus.failed:
         icon = Icons.error;
-        color = AppTheme.errorRed;
+        color = AppTheme.navyPrimary; // [STRICT] Navy for error (cleaner)
       case DocumentStatus.notUploaded:
         icon = Icons.upload_outlined;
-        color = AppTheme.cardBorderColor;
+        color = AppTheme.actionBlue; // [STRICT] Blue for pending action
     }
 
     return Container(
@@ -251,9 +317,9 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
       case DocumentStatus.scanned:
         return AppTheme.navyPrimary;
       case DocumentStatus.processing:
-        return AppTheme.warningOrange;
+        return AppTheme.actionBlue; // [STRICT]
       case DocumentStatus.failed:
-        return AppTheme.errorRed;
+        return AppTheme.navyPrimary; // [STRICT]
       default:
         return AppTheme.cardBorderColor;
     }
@@ -266,11 +332,11 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
       case DocumentStatus.scanned:
         return AppTheme.navyPrimary;
       case DocumentStatus.processing:
-        return AppTheme.warningOrange;
+        return AppTheme.actionBlue; // [STRICT]
       case DocumentStatus.failed:
-        return AppTheme.errorRed;
+        return AppTheme.navyPrimary; // [STRICT]
       default:
-        return AppTheme.cardBorderColor;
+        return AppTheme.captionGreyRegular.color!; // Neutral
     }
   }
 
@@ -356,6 +422,7 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
       List<int>? fileBytes;
       String? fileName;
       String? mimeType;
+      String? filePath; // [FIX] Capture path for validation
 
       if (choice == 'camera' || choice == 'gallery') {
         final picker = ImagePicker();
@@ -365,6 +432,7 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
           fileBytes = await image.readAsBytes();
           fileName = image.name;
           mimeType = 'image/jpeg';
+          filePath = image.path; // [FIX] Store path
         }
       } else if (choice == 'pdf') {
         final result = await FilePicker.platform.pickFiles(
@@ -375,10 +443,21 @@ class _DocumentUploadTileState extends ConsumerState<DocumentUploadTile> {
           fileBytes = result.files.single.bytes!;
           fileName = result.files.single.name;
           mimeType = 'application/pdf';
+          filePath = result.files.single.path;
         }
       }
 
       if (fileBytes != null && fileName != null && mimeType != null) {
+        
+        // [STRICT] Consular Photo Validation (BEFORE UPLOAD)
+        if (filePath != null && (type.code == 'photo' || type.code.contains('photo'))) {
+           final validator = ref.read(consularPhotoValidatorProvider);
+           // Validate strict rules (Face count, dimensions, eyes, etc.)
+           // Create a temporary file object solely for validation
+           // Note: On web this wouldn't work, but we are mobile-first
+           await validator.validate(File(filePath));
+        }
+
         final repository = ref.read(documentRepositoryProvider);
 
         // Generate storage path

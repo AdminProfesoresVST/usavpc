@@ -7,7 +7,10 @@ import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/core/widgets/app_toast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart'; // FIXED: Added missing import
+import 'package:mobile/services/ai/smart_interview_agent.dart';
+import 'package:mobile/services/ai_repository.dart';
 import 'package:mobile/services/voice_manager.dart'; // Import VoiceManager
+import 'package:mobile/core/widgets/premium_chat_input.dart';
 
 /// AI-powered chat intake with full i18n support.
 class Ds160IntakeScreen extends ConsumerStatefulWidget {
@@ -34,22 +37,39 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     'first_name': 'given_name',
     'dob': 'birth_date',
     'passport_num': 'passport_number',
-    'nationality': 'nationality', // usually matches
+    'nationality': 'nationality', 
     'gender': 'sex',
+    // Robust mappings for missing fields
+    'native_alphabet': 'native_alphabet_name',
+    'native_name': 'native_alphabet_name',
+    'telecode': 'telecode_name',
+    'other_names_used': 'other_names', 
+    'other_names_list': 'other_names', // If list depends on the same key
+
+    // SCHEMA COMPATIBILITY MAPPINGS (Critical Fix)
+    'ds160_data.personal.native_name': 'native_name',
+    'ds160_data.personal.telecode_name': 'telecode_name',
+    'ds160_data.personal.other_names_used': 'other_names_used',
+    'ds160_data.personal.other_names_list': 'other_names_list',
+    'native_name': 'native_alphabet_name', // Double alias
+    'telecode_name': 'telecode', // Double alias
   };
 
-  // SMART SKIP: Keys that must ALWAYS be skipped if they exist in FormData (OCR)
+  // SMART SKIP: Keys that must ALWAYS be skipped if they exist in FormData
   final Set<String> _alwaysSkipKeys = {
     'surname', 'given_name', 'birth_date', 'passport_number', 'nationality', 'sex',
     'last_name', 'first_name', 'dob', 'passport_num', 'gender',
-    'native_alphabet_name', 'other_names', 'telecode_name' // Skip "Native Name" questions if any identity data exists
+    'native_alphabet_name', 'native_alphabet', 'native_name',
+    'telecode_name', 'telecode', 'telecode_status',
+    'ds160_data.personal.native_name', 'ds160_data.personal.telecode_name', // Include Schema Keys
+    'other_names_used', 'other_names', 'ds160_data.personal.other_names_used'
   };
 
   // SMART SKIP: Nationalities that use Latin alphabet (Verification V2)
-  // If user is from these countries, 'native_alphabet_name' is implicitly "Does Not Apply"
   final Set<String> _latinNationalities = {
     'MEX', 'DOM', 'COL', 'ARG', 'PER', 'VEN', 'CHL', 'ECU', 'GTM', 'CUB', 'ESP', 'USA', 'CAN', 
-    'GBR', 'FRA', 'DEU', 'ITA', 'BRA', 'PRT', 'HND', 'SLV', 'PAN', 'CRI', 'URY', 'PRY', 'BOL'
+    'GBR', 'FRA', 'DEU', 'ITA', 'BRA', 'PRT', 'HND', 'SLV', 'PAN', 'CRI', 'URY', 'PRY', 'BOL',
+    'DOMINICAN REPUBLIC', 'MEXICO', 'COLOMBIA' // Add full names just in case
   };
 
   // DEBUG STATS
@@ -90,47 +110,81 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
         if (params['nationality'] != null) _formData['nationality'] = params['nationality'];
         if (params['passport'] != null) _formData['passport_number'] = params['passport'];
         if (params['sex'] != null) _formData['sex'] = params['sex'];
-        
-        // if (mounted) {
-        //    AppToast.show(context, 'DS-160: Loaded ${params.length} params', isError: false);
-        // }
       }
 
       final supabase = ref.read(supabaseClientProvider);
       
       final userId = supabase.auth.currentUser?.id;
-      if (userId != null) {
-        final app = await supabase
-            .from('applications')
-            .select('form_data')
-            .eq('user_id', userId)
-            .maybeSingle();
-            
-        if (app != null && app['form_data'] != null) {
-          final dbData = Map<String, dynamic>.from(app['form_data']);
-          _formData.addAll(dbData);
-        }
-      }
-
-      // Smart Skip logic...
-      String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
-      if (nat.contains('DOMINICA')) {
-        nat = 'DOM';
-      } else if (nat.contains('MEXIC')) nat = 'MEX';
-      else if (nat.contains('ARGENT')) nat = 'ARG';
-      else if (nat.contains('COLOMB')) nat = 'COL';
       
-      if (_latinNationalities.contains(nat) || _latinNationalities.contains(_formData['nationality'])) {
-         if (!_formData.containsKey('native_alphabet_name')) _formData['native_alphabet_name'] = 'Does Not Apply'; 
-         if (!_formData.containsKey('telecode_name')) _formData['telecode_name'] = 'No';
-      }
+      List<dynamic> rawQuestions = [];
+      Map<String, dynamic>? appData;
+      Map<String, dynamic>? profileData;
 
-      // Fetch DS-160 Questions
-      final rawQuestions = await supabase
+      if (userId != null) {
+        // PARALLEL FETCH: App Data, Profile Context, and Questions
+        final responses = await Future.wait([
+          supabase.from('applications').select('form_data').eq('user_id', userId).maybeSingle(),
+          supabase.from('profiles').select().eq('id', userId).maybeSingle(),
+          supabase.from(tableName).select().order('section').order('section_order'),
+        ]);
+
+        appData = responses[0] as Map<String, dynamic>?;
+        profileData = responses[1] as Map<String, dynamic>?;
+        rawQuestions = responses[2] as List<dynamic>;
+      } else {
+        // Fallback for anonymous (unlikely)
+         rawQuestions = await supabase
           .from(tableName)
           .select()
           .order('section')
           .order('section_order');
+      }
+
+      // 1. Hydrate Form Data from Application
+      if (appData != null && appData['form_data'] != null) {
+        final dbData = Map<String, dynamic>.from(appData['form_data']);
+        _formData.addAll(dbData);
+      }
+
+      // 2. Hydrate from Profile (if missing in App) - CRITICAL FOR NATIVE ALPHABET SKIP
+      if (_formData['nationality'] == null && profileData != null) {
+         // Try to find nationality in profile fields
+         // Note: profiles table might have 'country' or 'citizenship' depending on schema evolution
+         final profileNat = profileData['nationality'] ?? profileData['citizenship'] ?? profileData['country'];
+         if (profileNat != null) {
+           _formData['nationality'] = profileNat.toString().toUpperCase();
+         }
+      }
+
+      // 3. Ensure Latin Logic Triggers (Verification V2)
+      String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
+      
+      // Heuristic normalization
+      if (nat.contains('DOMINICA')) nat = 'DOM';
+      else if (nat.contains('MEXIC')) nat = 'MEX';
+      else if (nat.contains('ARGENT')) nat = 'ARG';
+      else if (nat.contains('COLOMB')) nat = 'COL';
+      
+      final isLatin = _latinNationalities.contains(nat) || _latinNationalities.contains(_formData['nationality']); // 3. Smart Skip - Nationality Logic
+      _applyNationalitySkips(isLatin);
+
+      // 4. SMART AGENT: Pre-process existing data (Passport)
+      // If we have passport data in raw form, normalize it now so the bot sees it.
+      // This solves "Why is it asking for my name if I scanned it?"
+      if (_formData.isNotEmpty) {
+          // Attempt to normalize any passport-like keys
+          if (_formData['passport_number'] != null || _formData['document_number'] != null) {
+              // Creating a pseudo-model to re-inject standard keys
+               final passportContext = {
+                  'passport_number': _formData['passport_number'] ?? _formData['document_number'],
+                  'surname': _formData['surname'] ?? _formData['last_name'],
+                  'given_name': _formData['given_name'] ?? _formData['first_name'],
+                  'nationality': nat,
+                  'birth_date': _formData['birth_date'] ?? _formData['dob'],
+               };
+               _formData.addAll(passportContext); // Ensure standard keys are set
+          }
+      }
  
       final totalFetched = (rawQuestions as List).length;
 
@@ -139,71 +193,87 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
         setState(() => _isLoading = false);
         return;
       }
-
-      // DS-160 Section Order
-    final sectionOrder = {
-      'personal': 1,
-      'address': 2,
-      'passport': 3,
-      'travel': 4,
-      'family': 5,
-      'work': 6,
-      'security': 7,
-    };
-
-    rawQuestions.sort((a, b) {
-      final secA = a['section'] as String? ?? '';
-      final secB = b['section'] as String? ?? '';
       
-      final orderA = sectionOrder[secA] ?? 99;
-      final orderB = sectionOrder[secB] ?? 99;
-      
-      if (orderA != orderB) return orderA.compareTo(orderB);
-      
-      final secOrderA = a['section_order'] as int? ?? 0;
-      final secOrderB = b['section_order'] as int? ?? 0;
-      
-      return secOrderA.compareTo(secOrderB);
-    });
+      // CAST to List<Map> for manipulation
+      var questionsList = rawQuestions.toList().cast<Map<String, dynamic>>();
 
-      if (totalFetched > 0) {
-
+      // CONTEXT RECOVERY: If Nationality is missing, ASK IT FIRST!
+      // This solves the "Native Alphabet" loop for fresh users.
+      if (_formData['nationality'] == null) {
+          final natIndex = questionsList.indexWhere((q) => q['field_key'] == 'nationality');
+          if (natIndex != -1) {
+            final natQ = questionsList.removeAt(natIndex);
+            questionsList.insert(0, natQ); // Move to TOP
+            
+             // Also move "Country of Origin" if it exists, to keep flow natural?
+             // No, Nationality is the critical dependency for skipping.
+          }
       }
 
-      // Filter Logic
-      var filteredQuestions = rawQuestions.where((q) {
-        final fieldKey = q['field_key'] as String;
+      // DS-160 Section Order
+      final sectionOrder = {
+        'personal': 1,
+        'address': 2,
+        'passport': 3,
+        'travel': 4,
+        'family': 5,
+        'work': 6,
+        'security': 7,
+      };
+
+      questionsList.sort((a, b) {
+        final secA = a['section'] as String? ?? '';
+        final secB = b['section'] as String? ?? '';
         
-        // 1. Resolve Alias
-        final normalizedKey = _knownAliases[fieldKey] ?? fieldKey;
+        final orderA = sectionOrder[secA] ?? 99;
+        final orderB = sectionOrder[secB] ?? 99;
+        
+        if (orderA != orderB) return orderA.compareTo(orderB);
+        
+        final secOrderA = a['section_order'] as int? ?? 0;
+        final secOrderB = b['section_order'] as int? ?? 0;
+        
+        return secOrderA.compareTo(secOrderB);
+      });
 
-        // 2. Check Existence
-        // We check both the raw key AND the normalized key in formData
-        final hasData = _formData.containsKey(fieldKey) || _formData.containsKey(normalizedKey);
-        final dataValue = _formData[fieldKey] ?? _formData[normalizedKey];
-
-        // 3. Smart Skip Logic
-        if (hasData && dataValue != null && dataValue.toString().isNotEmpty) {
-           // A. Forced Skip (Zero Tolerance for Name/Passport redundancy)
-           if (_alwaysSkipKeys.contains(fieldKey) || _alwaysSkipKeys.contains(normalizedKey)) {
-
-             return false;
-           }
-
-           // B. DB Flag Skip
-           if (q['skip_if_ocr'] == true) {
-
-             return false;
-           }
+      // Filter Logic
+      final filteredQuestions = questionsList.where((q) {
+        // 1. Check "skip_if_exists" (Smart Skip)
+        final key = q['field_key']; // FIX: Use field_key (string), not id (UUID)
+        if (_alwaysSkipKeys.contains(key) && _formData.containsKey(key)) {
+            // Special check: don't skip if the value is null/empty
+             final val = _formData[key];
+             if (val != null && val.toString().isNotEmpty) {
+                 return false;
+             }
         }
 
+        // 2. Check "skip_if_ocr"
+        if (q['skip_if_ocr'] == true) {
+             // If field is in _knownAliases keys (e.g. 'surname', 'dob') AND we have data
+             if (_formData.containsKey(key) && _formData[key] != null) {
+               return false;
+             }
+        }
+
+        // 3. Dependency Check (CASE INSENSITIVE FIX)
         if (q['depends_on'] != null && q['depends_on_value'] != null) {
           final dependKey = q['depends_on'];
           final dependAlias = _knownAliases[dependKey] ?? dependKey;
-          final dependValue = _formData[dependKey] ?? _formData[dependAlias]; // Check both
+          var dependValue = _formData[dependKey] ?? _formData[dependAlias]; 
 
-          if (dependValue.toString() != q['depends_on_value'].toString()) {
-            // debugPrint('VERIFICATION: Skipping $fieldKey (Dependency not met: $dependKey=$dependValue != ${q['depends_on_value']})');
+          // Fallback check for schema keys
+          if (dependValue == null && dependKey.startsWith('ds160_data')) {
+             // Try to find the short key version in formData
+             final shortKey = dependKey.split('.').last;
+             dependValue = _formData[shortKey];
+          }
+
+          // SMART AGENT LOGIC (Phase 1)
+          final requiredVal = q['depends_on_value'].toString();
+          final actualVal = dependValue?.toString();
+
+          if (!SmartInterviewAgent.evaluateLogic(actualVal, requiredVal)) {
             return false;
           }
         }
@@ -214,13 +284,8 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
       _debugFetched = totalFetched;
       _debugFiltered = filteredQuestions.length;
 
-
-      _debugFetched = totalFetched;
-      _debugFiltered = filteredQuestions.length;
-
       // FORCE RAW if filter is too aggressive
       if (filteredQuestions.isEmpty && totalFetched > 0) {
-
          _questions = rawQuestions.toList().cast<Map<String, dynamic>>();
       } else {
          _questions = filteredQuestions;
@@ -288,6 +353,41 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     });
   }
 
+  void _applyNationalitySkips([bool? forceLatin]) {
+      String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
+      
+      // ROBUST MATCHING: Check strictly codes OR substring matches for common Latin inputs
+      bool matchCode = ['DOM', 'MEX', 'COL', 'ESP', 'ARG', 'PER', 'CHL', 'VEN', 'PAN', 'CRI'].contains(nat);
+      bool matchFuzzy = nat.contains('DOMINI') || 
+                        nat.contains('MEXIC') || 
+                        nat.contains('COLOMB') || 
+                        nat.contains('VENEZ') || 
+                        nat.contains('ARGENT') || 
+                        nat.contains('PANAM') ||
+                        nat.contains('PERU') ||
+                        nat.contains('CHIL') ||
+                        nat.contains('COSTA RICA') ||
+                        nat.contains('SANTO DOMINGO'); // Specific fix for user behavior
+
+      bool isLatin = forceLatin ?? (matchCode || matchFuzzy);
+      
+      if (isLatin) {
+         // NUCLEAR INJECTION: Set ALL variants to ensures usage
+         _formData['native_alphabet_name'] = 'Does Not Apply'; 
+         _formData['native_alphabet'] = 'Does Not Apply';
+         _formData['native_name'] = 'Does Not Apply';
+
+         _formData['telecode_name'] = 'No';
+         _formData['telecode'] = 'No';
+         _formData['telecode_status'] = 'No';
+         
+         // INJECT SCHEMA KEYS TOO
+         _formData['ds160_data.personal.native_name'] = 'Does Not Apply';
+         _formData['ds160_data.personal.telecode_name'] = 'No';
+         _formData['full_name_native'] = 'Does Not Apply'; // CRITICAL: Matches DB field_key
+      }
+  }
+
   void _askNextQuestion() {
     try {
       if (_currentQuestionIndex >= _questions.length) {
@@ -336,6 +436,14 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
 
       // ... regex validation ...
 
+      // SMART AGENT VALIDATION (Phase 2)
+      final validationError = SmartInterviewAgent.validateAnswer(fieldKey, text);
+      if (validationError != null) {
+          _addBotMessage(validationError, isQuickTip: true);
+          setState(() => _isSending = false);
+          return;
+      }
+
       _formData[fieldKey] = text;
       
       final supabase = ref.read(supabaseClientProvider);
@@ -368,6 +476,29 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
       }
 
       _currentQuestionIndex++;
+      
+      // RE-APPLY SKIPS: If nationality changed, update nuclear overrides
+      if (fieldKey == 'nationality') {
+         _applyNationalitySkips();
+      }
+
+      // AUTO-SKIP mechanism for runtime changes
+      while (_currentQuestionIndex < _questions.length) {
+          final nextQ = _questions[_currentQuestionIndex];
+          final nextKey = nextQ['field_key'] as String;
+          // Check key AND potential aliases (e.g. if list uses full_name_native but we set native_name)
+          final nextAlias = _knownAliases[nextKey] ?? nextKey;
+          
+          final hasData = _formData.containsKey(nextKey) || _formData.containsKey(nextAlias);
+          final val = _formData[nextKey] ?? _formData[nextAlias];
+
+          if (hasData && val != null && val.toString().isNotEmpty) {
+              _currentQuestionIndex++;
+          } else {
+             break;
+          }
+      }
+
       _askNextQuestion();
     } catch (e) {
 
@@ -472,70 +603,12 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   }
 
   Widget _buildInputArea(dynamic l10n) {
-    return Container(
-      padding: AppTheme.paddingEstandar,
-      decoration: BoxDecoration(
-        color: AppTheme.inkInverse,
-        boxShadow: [
-          BoxShadow(color: AppTheme.inkPrimary.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2)),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                decoration: InputDecoration(
-                  hintText: l10n.typeYourResponse,
-                  hintStyle: AppTheme.labelRegular.copyWith(color: AppTheme.inkSecondary),
-                  filled: true,
-                  fillColor: AppTheme.dividerGreyLight,
-                  contentPadding: AppTheme.paddingCampo, // Reduced vertical
-                  border: OutlineInputBorder(
-                    borderRadius: AppTheme.badgeRadius, // Reduced from 24
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                textCapitalization: TextCapitalization.sentences,
-                onSubmitted: (_) => _handleSend(),
-              ),
-            ),
-            SizedBox(width: AppTheme.espacioEntreCampos),
-            Container(
-              decoration: const BoxDecoration(
-                color: AppTheme.navyPrimary,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: _isSending ? null : _handleSend,
-                icon: _isSending
-                    ? const SizedBox(
-                        width: AppTheme.iconoEnTarjeta,
-                        height: AppTheme.iconoEnTarjeta,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.inkInverse),
-                      )
-                    : const Icon(Icons.send, color: AppTheme.inkInverse, size: AppTheme.iconoEnTarjeta),
-              ),
-            ),
-            SizedBox(width: AppTheme.espacioEntreCampos),
-            // MIC BUTTON
-            Container(
-              decoration: BoxDecoration(
-                color: _isListening ? Colors.red : AppTheme.backgroundGrey,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppTheme.dividerGrey),
-              ),
-              child: IconButton(
-                onPressed: _toggleListening,
-                icon: Icon(_isListening ? Icons.mic : Icons.mic_none, 
-                  color: _isListening ? Colors.white : AppTheme.navyPrimary, 
-                  size: AppTheme.iconoEnTarjeta),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return PremiumChatInput(
+      controller: _controller,
+      onSend: _handleSend,
+      onToggleListening: _toggleListening,
+      isSending: _isSending,
+      isListening: _isListening,
     );
   }
 

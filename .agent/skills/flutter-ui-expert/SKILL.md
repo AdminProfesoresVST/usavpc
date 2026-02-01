@@ -27,6 +27,16 @@ Eres un Lead Flutter Developer con un fuerte enfoque en UI/UX. Tu objetivo es cr
 
 ## Guías de Estilo
 
+### 🚫 Prohibiciones Estrictas de Color (Zero Tolerance)
+- **PALETA PERMITIDA:** Únicamente Azules (`navyPrimary`, `actionBlue`), Grises, Blanco y Negro.
+- **PROHIBIDO:** Rojos, Naranjas, Amarillos o Verdes brillantes para estados neutros/informativos.
+- **CONTRASTE:** Asegura siempre un contraste alto. Texto `navyPrimary` sobre fondo blanco, o texto `whtie` sobre fondo `navyPrimary`. Nunca gris sobre gris.
+
+### ⚠️ Lógica de Negocio en UI
+- **NO TODOS LOS DOCUMENTOS SON REQUERIDOS:** Nunca muestres "X Documentos Requeridos" si no estaz 100% seguro de que aplican a ESE usuario específico.
+- **UNIVERSALES:** Los únicos documentos obligatorios para TODOS son: **Pasaporte** y **Foto de Formulario**.
+- El resto depende estrictamente del ``Visa Type``.
+
 ### Imports
 Ordena los imports en este orden:
 1. Dart SDK (`dart:...`)

@@ -49,8 +49,8 @@ class ConsularRisk extends _$ConsularRisk {
     } else if (employment == 'unemployed') {
       redFlags.add(RedFlagAlert(
         id: 'rf_unemployed',
-        title: 'EMPLOYMENT VOID',
-        description: 'Unemployed status significantly weakens economic ties.',
+        title: 'SIN EMPLEO REGISTRADO',
+        description: 'La falta de empleo formal debilita significativamente los lazos económicos.',
         severity: RedFlagSeverity.critical,
         timestamp: DateTime.now(),
         fieldKey: 'employment_status',
@@ -71,8 +71,8 @@ class ConsularRisk extends _$ConsularRisk {
     if (maritalStatus == 'single' && !hasChildren && !ownsProperty) {
       redFlags.add(RedFlagAlert(
         id: 'rf_no_anchors',
-        title: 'WEAK SOCIAL ANCHORS',
-        description: 'Single, no children, no property. High abandonment risk per 9 FAM.',
+        title: 'LAZOS SOCIALES DÉBILES',
+        description: 'Perfil soltero sin hijos ni propiedades detectadas. Mayor riesgo de arraigo.',
         severity: RedFlagSeverity.warning,
         timestamp: DateTime.now(),
       ));
@@ -99,8 +99,8 @@ class ConsularRisk extends _$ConsularRisk {
     if (previousVisas == 0 && oecdCountriesVisited == 0) {
       redFlags.add(RedFlagAlert(
         id: 'rf_no_travel',
-        title: 'VIRGIN PASSPORT',
-        description: 'No prior international travel history. First-time applicant risk.',
+        title: 'SIN HISTORIAL DE VIAJES',
+        description: 'Pasaporte sin viajes internacionales previos registrados.',
         severity: RedFlagSeverity.warning,
         timestamp: DateTime.now(),
       ));
@@ -115,8 +115,8 @@ class ConsularRisk extends _$ConsularRisk {
       inconsistencyScore += 0.3;
       redFlags.add(RedFlagAlert(
         id: 'rf_long_stay',
-        title: 'EXTENDED DURATION',
-        description: 'Intended stay ($tripDuration days) exceeds standard vacation profile. High abandonment suspicion.',
+        title: 'DURACIÓN DE VIAJE EXTENSA',
+        description: 'La estadía planeada ($tripDuration días) excede el perfil turístico estándar.',
         severity: RedFlagSeverity.critical,
         timestamp: DateTime.now(),
         fieldKey: 'intended_stay_days',

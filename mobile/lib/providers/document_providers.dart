@@ -9,9 +9,19 @@ import 'package:mobile/providers/visa_providers.dart';
 /// REPOSITORY PROVIDER
 /// ============================================================
 
+import 'package:mobile/services/consular_photo_validator.dart';
+import 'package:mobile/services/dashboard_repository_impl.dart'; // [FIX] Import for dashboardRepositoryProvider
+
 /// Provider del repository de documentos
 final documentRepositoryProvider = Provider<DocumentRepository>((ref) {
   return DocumentRepository(ref.watch(supabaseClientProvider));
+});
+
+/// Provider del validador de fotos consulares (AutoDispose cleans up resources)
+final consularPhotoValidatorProvider = Provider.autoDispose<ConsularPhotoValidator>((ref) {
+  final validator = ConsularPhotoValidator();
+  ref.onDispose(() => validator.dispose());
+  return validator;
 });
 
 /// ============================================================
@@ -88,10 +98,12 @@ final documentProgressProvider = FutureProvider.family<DocumentProgress, String>
 class DocumentWithStatus {
   final DocumentType type;
   final UserDocument? userDocument;
+  final bool isMandatory; // [NEW] Distinction between Required vs Optional
 
   DocumentWithStatus({
     required this.type,
     this.userDocument,
+    this.isMandatory = false,
   });
 
   /// Si el documento ha sido subido
@@ -126,12 +138,46 @@ enum DocumentStatus {
 
 /// Provider de documentos con estado para DS-160
 final ds160DocumentsWithStatusProvider = FutureProvider<List<DocumentWithStatus>>((ref) async {
-  final types = await ref.watch(ds160DocumentTypesProvider.future);
+  // 1. Get raw list of all possible DS-160 documents
+  final allTypes = await ref.watch(ds160DocumentTypesProvider.future);
   final userDocs = await ref.watch(userDocumentsProvider.future);
+  
+  // 2. Get User Profile to determine Visa Type
+  final dashboardRepo = ref.watch(dashboardRepositoryProvider);
+  final profileData = await dashboardRepo.getProfileData().catchError((_) => <String, dynamic>{});
+  
+  // Extract Visa Type from form_data or use logic
+  final app = profileData['app'] as Map<String, dynamic>?;
+  final formData = app?['form_data'] as Map<String, dynamic>?;
+  // Try to find visa type in various possible locations
+  final String visaType = (formData?['visa_type'] ?? formData?['visa_category'] ?? '').toString().toUpperCase();
 
-  return types.map((type) {
+  // 3. Define Logic: Who needs what?
+  final bool isStudent = visaType.contains('F1') || visaType.contains('M1') || visaType.contains('J1');
+  final bool isWorker = visaType.contains('H1B') || visaType.contains('L1');
+
+  // 4. Map Types with Mandatory Flag (Instead of Filtering Out)
+  return allTypes.map((type) {
+    final code = type.code.toLowerCase();
+    bool mandatory = false;
+    
+    // MANDATORY FOR EVERYONE (Universal)
+    if (code == 'passport' || code.contains('photo') || code.contains('confirmation') || code.contains('ds160')) {
+        mandatory = true;
+    } 
+    // Conditional: Student Documents
+    else if (code.contains('i20') || code.contains('sevis')) {
+        mandatory = isStudent;
+    }
+    // Conditional: Worker Documents
+    else if (code.contains('petition') || code.contains('i797') || code.contains('labor')) {
+        mandatory = isWorker;
+    }
+    
+    // All others remain mandatory = false (Optional)
+
     final userDoc = userDocs.where((d) => d.documentTypeId == type.id).firstOrNull;
-    return DocumentWithStatus(type: type, userDocument: userDoc);
+    return DocumentWithStatus(type: type, userDocument: userDoc, isMandatory: mandatory);
   }).toList();
 });
 

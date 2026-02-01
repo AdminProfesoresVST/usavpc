@@ -303,7 +303,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
             let finalObj;
             try {
                 const { object } = await generateObject({
-                    model: openaiModelProvider('gpt-4o-mini'),
+                    model: openaiModelProvider('gpt-5'),
                     schema: simulatorSchema,
                     system: simulatorPromptContent,
                     messages: effectiveHistory.map((m: any) => ({ role: m.role, content: m.content })),
@@ -315,7 +315,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                 // [REPAIR LAYER - AGENT 5]
                 try {
                     const { object: repairObj } = await generateObject({
-                        model: openaiModelProvider('gpt-4o-mini'),
+                        model: openaiModelProvider('gpt-5'),
                         schema: simulatorSchema,
                         system: `You are the Consular Officer. Your last JSON output failed validation. 
                         REPAIR the data.
@@ -344,7 +344,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                             : `You are a US consular officer evaluating a B1/B2 visa. The applicant said: "${answer}". Respond with ONE brief follow-up question in English. Just the question, no explanations.`;
 
                         const { text: fallbackResponse } = await generateText({
-                            model: openaiModelProvider('gpt-4o-mini'),
+                            model: openaiModelProvider('gpt-5'),
                             prompt: fallbackPrompt,
                         });
 
@@ -610,7 +610,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                     // We send the Context/Rules as System, and the actual Data as User.
 
                     const validationCompletion = await openai.chat.completions.create({
-                        model: "gpt-4o-mini",
+                        model: "gpt-5",
                         messages: [
                             { role: "system", content: validatorPromptTemplate }, // The Rules/Persona
                             { role: "user", content: `QUESTION CONTEXT: \n${queryContext} \n\nUSER INPUT: \n"${answer}"\n\nValidate and parse this answer.` }
@@ -709,7 +709,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                     .replace('{property}', answer); // Current answer is property.
 
                 const assessmentCompletion = await openai.chat.completions.create({
-                    model: "gpt-4o-mini",
+                    model: "gpt-5",
                     messages: [{ role: "system", content: assessmentPrompt }],
                     response_format: { type: "json_object" }
                 });
@@ -756,7 +756,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
                 // User is replying to "Is X correct?"
                 const checkerPrompt = await getSystemPrompt(supabase, 'CONFIRMATION_CHECKER');
                 const checkCompletion = await openai.chat.completions.create({
-                    model: "gpt-4o-mini",
+                    model: "gpt-5",
                     messages: [
                         { role: "system", content: checkerPrompt },
                         { role: "user", content: `PROPOSAL: "${pendingConf.value}"\nUSER REPLY: "${answer}"` }

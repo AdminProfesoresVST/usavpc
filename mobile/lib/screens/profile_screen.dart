@@ -11,7 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mobile/providers/dashboard_provider.dart';
 import 'package:mobile/models/dashboard_data.dart';
+import 'package:mobile/models/user_document.dart'; // [FIX] Import DocumentProgress
 import 'package:mobile/widgets/document_checklist.dart';
+import 'package:mobile/widgets/cards/application_status_card.dart';
+import 'package:mobile/providers/document_providers.dart';
 
 // Helper Provider for Profile Data
 final profileDataProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
@@ -58,6 +61,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final l10n = context.l10n;
     final profileAsync = ref.watch(profileDataProvider);
     final dashboardAsync = ref.watch(dashboardProvider);
+    
+    // [FIX] Source of Truth Consistency
+    // Instead of trusting the RPC provider (which might drift), we calculate progress
+    // directly from the SAME list provider that feeds the DocumentChecklist below.
+    // This ensures "0/8" appears in both places.
+    final documentsAsync = ref.watch(ds160DocumentsWithStatusProvider);
+    
+    // Calculate synthetic progress from the list
+    DocumentProgress? calculatedProgress;
+    if (documentsAsync.hasValue) {
+      final docs = documentsAsync.value!;
+      final total = docs.length;
+      final uploaded = docs.where((d) => d.isUploaded).length;
+      final ocrComplete = docs.where((d) => d.isOcrComplete).length;
+      final verified = docs.where((d) => d.isVerified).length;
+      
+      calculatedProgress = DocumentProgress(
+        totalRequired: total,
+        totalUploaded: uploaded,
+        totalOcrComplete: ocrComplete,
+        totalVerified: verified,
+        progressPercentage: total > 0 ? uploaded / total : 0.0,
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
@@ -67,19 +94,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         elevation: AppTheme.elevacionNula,
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppTheme.inkInverse),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-               ref.invalidate(profileDataProvider);
-               ref.invalidate(dashboardProvider);
-            },
-          ),
-        ],
+        actions: [], // [UX] Removed manual refresh button as per user feedback
       ),
       body: profileAsync.when(
         data: (data) => dashboardAsync.when(
-          data: (dashboardData) => _buildBody(context, data, dashboardData, l10n),
+          data: (dashboardData) => _buildBody(context, data, dashboardData, l10n, calculatedProgress),
            // If dashboard loads but profile is ready, we could show partial, but loading is safer
           loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.navyPrimary)),
           error: (e, _) => Center(child: Text(l10n.error(e.toString()))),
@@ -90,7 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildBody(BuildContext context, Map<String, dynamic> data, DashboardData dashboardData, dynamic l10n) {
+  Widget _buildBody(BuildContext context, Map<String, dynamic> data, DashboardData dashboardData, dynamic l10n, DocumentProgress? docProgress) {
     final app = data['app'] as Map<String, dynamic>?;
     final formData = app?['form_data'] as Map<String, dynamic>?;
     final passportData = formData?['ocr_data'] ?? formData;
@@ -116,8 +135,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           _buildIdentityCard(context, l10n, fullName, nationality, passportNumber, dob, email),
           SizedBox(height: AppTheme.espacioEntreSecciones),
 
-          // 2. Application Status (Transplanted from Dashboard)
-          _buildStatusCard(context, dashboardData, l10n),
+          // 2. Application Status (New Premium Card with Real Data)
+          ApplicationStatusCard(
+            status: dashboardData.status,
+            progress: docProgress, // Pass real OCR progress
+            lastEdited: dashboardData.lastEdited,
+          ),
           SizedBox(height: AppTheme.espacioEntreSecciones),
           
           // 2.5 Document Checklist (Real progress based on uploaded docs)

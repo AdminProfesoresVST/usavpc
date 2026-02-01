@@ -76,7 +76,7 @@
   "requiredDocuments": "Documentos Requeridos",
   "documentsScanned": "documentos escaneados",
   "complete": "completado",
-  "uploadRequired": "Carga requerida",
+  "uploadRequired": "Subir documentos",
   "uploadComplete": "Subido",
   "uploadSuccess": "Documento subido exitosamente",
   "uploadError": "Error al subir",

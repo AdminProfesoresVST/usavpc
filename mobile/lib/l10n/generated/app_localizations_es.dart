@@ -230,7 +230,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get complete => 'completado';
 
   @override
-  String get uploadRequired => 'Carga requerida';
+  String get uploadRequired => 'Subir documentos';
 
   @override
   String get uploadComplete => 'Subido';

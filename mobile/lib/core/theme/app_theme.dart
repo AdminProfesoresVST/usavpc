@@ -30,6 +30,9 @@ class AppTheme {
   /// Color de Acción Blue - Usado en: Links, Focus, Iconos activos
   static const actionBlue = Color(0xFF2B5C8A);
   
+  /// Color Premium Gold - Usado en: Elementos premium, estados verificados
+  static const accentGold = Color(0xFFD4AF37);
+  
   /// Color Suave Blue - Usado en: Fondos de alertas info, Hover states
   static const softBlue = Color(0xFFEBF5FB);
   
@@ -69,23 +72,24 @@ class AppTheme {
   // ═══════════════════════════════════════════════════════════════════════════
   // 2. 🚦 COLORES SEMÁNTICOS (Estados y Alertas)
   // ═══════════════════════════════════════════════════════════════════════════
-  // 📍 Use estos colores para indicar estados en la UI.
+  // [UI-SKILL] ZERO TOLERANCE ENFORCED: 
+  // Prohibido el uso de Rojo/Verde/Naranja. Todo se mapea a Navy/Azul/Gris.
   
-  /// ✅ Color de Éxito (Verde)
-  static const successGreen = Color(0xFF2E7D32);
-  static const successGreenLight = Color(0xFFE8F5E9);
+  /// ✅ Color de Éxito (Mapeado a Navy - Identidad de Marca)
+  static const successGreen = navyPrimary;
+  static const successGreenLight = softBlue;
   
-  /// ⚠️ Color de Advertencia (Naranja/Ámbar)
-  static const warningOrange = Color(0xFFE65100);
-  static const warningOrangeLight = Color(0xFFFFF3E0);
+  /// ⚠️ Color de Advertencia (Mapeado a Gris - Informativo)
+  static const warningOrange = inkSecondary;
+  static const warningOrangeLight = dividerGreyLight;
   
-  /// ❌ Color de Error (Rojo)
-  static const errorRed = Color(0xFFC62828);
-  static const errorRedLight = Color(0xFFFFEBEE);
+  /// ❌ Color de Error (Mapeado a Navy - Atención Crítica)
+  static const errorRed = navyPrimary; // Zero Tolerance to Red
+  static const errorRedLight = softBlue;
   
   /// ℹ️ Color Informativo (Azul)
-  static const infoBlue = Color(0xFF1565C0);
-  static const infoBlueLight = Color(0xFFE3F2FD);
+  static const infoBlue = actionBlue;
+  static const infoBlueLight = softBlue;
   
   // --- COLORES DE REDES SOCIALES ---
   /// LinkedIn
@@ -371,6 +375,13 @@ class AppTheme {
   );
   static TextStyle get bodyWhiteBold => GoogleFonts.roboto(
     fontSize: _sizeBody, 
+    fontWeight: FontWeight.w700, 
+    color: inkInverse
+  );
+  
+  // --- H3: Titulos Pequeños (14px) ---
+  static TextStyle get h3WhiteBold => GoogleFonts.roboto(
+    fontSize: 14.0, 
     fontWeight: FontWeight.w700, 
     color: inkInverse
   );

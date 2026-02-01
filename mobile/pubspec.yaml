@@ -13,13 +13,13 @@ dependencies:
     sdk: flutter
 
   # Core
-  flutter_riverpod: ^3.0.3
+  flutter_riverpod: ^3.1.0
   go_router: ^17.0.1
   dio: ^5.7.0
   dio_smart_retry: ^7.0.1
   get_it: ^9.2.0
   intl: ^0.20.2
-  riverpod_annotation: ^4.0.0
+  riverpod_annotation: 4.0.0
   
   # Data
   supabase_flutter: ^2.8.3
@@ -54,7 +54,7 @@ dependencies:
   speech_to_text: ^7.3.0
   flutter_tts: ^4.2.5
   url_launcher: ^6.3.1
-  file_picker: ^8.1.7
+  file_picker: ^10.3.10
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +64,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   mockito: ^5.4.4
   build_runner: ^2.4.13
-  riverpod_generator: ^4.0.0+1
+  riverpod_generator: 4.0.0+1
 
   local_auth_android: any
   local_auth_darwin: any

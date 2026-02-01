@@ -163,11 +163,35 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     for (final cat in categories) {
       grouped.putIfAbsent(cat.baseFeeUsd, () => []).add(cat);
     }
-    // Sort by fee descending
-    final sorted = Map.fromEntries(
-      grouped.entries.toList()..sort((a, b) => b.key.compareTo(a.key)),
-    );
-    return sorted;
+    
+    // [UX-AUDIT] Sort groups by Fee ASCENDING ($185 Tourist first, not $205 Petition)
+    // Then sort items within groups by Popularity
+    final sortedEntries = grouped.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key)); // Ascending Fee
+
+    for (var entry in sortedEntries) {
+      entry.value.sort((a, b) {
+        final popA = _getPopularityScore(a.code);
+        final popB = _getPopularityScore(b.code);
+        if (popA != popB) return popB.compareTo(popA); // Higher popularity first
+        return a.name.compareTo(b.name); // Alphabetical fallback
+      });
+    }
+
+    return Map.fromEntries(sortedEntries);
+  }
+
+  int _getPopularityScore(String code) {
+    // [UX-AUDIT] Hardcoded popularity for sort order
+    switch (code) {
+      case 'B1/B2': return 100; // Tourist - Most Popular
+      case 'F1': return 90;     // Student
+      case 'J1': return 80;     // Exchange
+      case 'H1B': return 70;    // Work (Specialty)
+      case 'H2A': return 65;    // Work (Agri)
+      case 'H2B': return 60;    // Work (Non-Agri)
+      default: return 0;
+    }
   }
 
   Widget _buildFeeGroup(
@@ -195,7 +219,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
                   style: AppTheme.captionWhiteBold,
                 ),
               ),
-              const Expanded(child: Divider(indent: AppTheme.espacioEntreGrupos)),
+              // [UX-AUDIT] Removed Divider per user request
             ],
           ),
         ),
@@ -215,18 +239,25 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
     Color? badgeColor;
     Color? badgeBg;
 
-    if (category.requiresSevis) {
+    // [UX-AUDIT] Highlighting Popular Options
+    final isRecommended = ['B1/B2', 'CR1', 'IR1'].contains(category.code);
+
+    if (isRecommended) {
+      badgeText = 'Más Solicitada'; // Most Requested
+      badgeColor = AppTheme.navyPrimary;
+      badgeBg = AppTheme.accentGold; // Using distinct gold for recommendation
+    } else if (category.requiresSevis) {
       badgeText = l10n.sevis;
       badgeColor = AppTheme.infoBlue;
       badgeBg = AppTheme.infoBlueLight;
     } else if (category.requiresPetition) {
       badgeText = l10n.petition;
-      badgeColor = AppTheme.warningOrange;
-      badgeBg = AppTheme.warningOrangeLight;
+      badgeColor = AppTheme.inkSecondary; // Mapped from Orange
+      badgeBg = AppTheme.dividerGreyLight;
     } else if (category.isFianceVisa) {
       badgeText = l10n.kVisa;
-      badgeColor = AppTheme.errorRed;
-      badgeBg = AppTheme.errorRedLight;
+      badgeColor = AppTheme.navyPrimary; // Mapped from Red
+      badgeBg = AppTheme.softBlue;
     }
 
     // Custom "Code Badge" for the icon slot
@@ -234,13 +265,13 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
       constraints: BoxConstraints(minWidth: AppTheme.espacioAntesBotonPrincipal, minHeight: AppTheme.espacioAntesBotonPrincipal),
       padding: AppTheme.paddingCompacto,
       decoration: BoxDecoration(
-        color: AppTheme.navyPrimary.withValues(alpha: 0.08),
+        color: isRecommended ? AppTheme.navyPrimary : AppTheme.navyPrimary.withValues(alpha: 0.08),
         borderRadius: AppTheme.buttonRadius,
       ),
       child: Center(
         child: Text(
           category.code,
-          style: AppTheme.h2NavyBold,
+          style: isRecommended ? AppTheme.h2WhiteBold : AppTheme.h2NavyBold,
           textAlign: TextAlign.center,
         ),
       ),
@@ -248,25 +279,31 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
 
     return Padding(
       padding: EdgeInsets.only(bottom: AppTheme.espacioEntreCampos),
-      child: StandardServiceCard(
-        title: VisaLocalization.getVisaName(category.code, category.name, l10n),
-        description: VisaLocalization.getVisaDescription(category.code, category.description ?? '', l10n),
-        onTap: () {
-          ref.read(selectedVisaCategoryProvider.notifier).set(category);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PrerequisiteCheckerScreen(
-                visaCategoryCode: category.code,
+      child: Container(
+        decoration: isRecommended ? BoxDecoration(
+          borderRadius: AppTheme.cardRadius,
+          border: Border.all(color: AppTheme.accentGold, width: 2), // Highlight border
+          color: AppTheme.softBlue.withOpacity(0.3),
+        ) : null,
+        child: StandardServiceCard(
+          title: VisaLocalization.getVisaName(category.code, category.name, l10n),
+          description: VisaLocalization.getVisaDescription(category.code, category.description ?? '', l10n),
+          onTap: () {
+            ref.read(selectedVisaCategoryProvider.notifier).set(category);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PrerequisiteCheckerScreen(
+                  visaCategoryCode: category.code,
+                ),
               ),
-            ),
-          );
-        },
-        customBadge: codeBadge, // Instead of Icon
-        badgeText: badgeText,
-        badgeColor: badgeColor,
-        badgeBg: badgeBg,
-        // icon: null, // We act as if customBadge is the icon replacement in logic
+            );
+          },
+          customBadge: codeBadge, 
+          badgeText: badgeText,
+          badgeColor: badgeColor,
+          badgeBg: badgeBg,
+        ),
       ),
     );
   }
