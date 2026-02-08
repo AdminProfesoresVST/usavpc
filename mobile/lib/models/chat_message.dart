@@ -7,10 +7,17 @@ class ChatMessage {
   final String text;
   final DateTime timestamp;
 
+  final bool isAction;
+  final List<String>? tips;
+  final String? example;
+
   ChatMessage({
     required this.sender,
     required this.text,
     DateTime? timestamp,
+    this.isAction = false,
+    this.tips,
+    this.example,
   }) : timestamp = timestamp ?? DateTime.now();
 
   bool get isConsul => sender == ChatSender.consul;

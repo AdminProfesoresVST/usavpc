@@ -12,6 +12,8 @@ import 'package:mobile/services/ai_repository.dart';
 import 'package:mobile/services/voice_manager.dart'; // Import VoiceManager
 import 'package:mobile/core/widgets/premium_chat_input.dart';
 import 'package:mobile/core/widgets/iami_suggestion_dialog.dart';
+import 'package:mobile/models/chat_message.dart'; // Unified Model
+
 
 /// AI-powered chat intake with full i18n support.
 class Ds160IntakeScreen extends ConsumerStatefulWidget {
@@ -33,7 +35,8 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   bool _isSending = false;
 
   // IAMI: Intelligent Migration Assistant Mode
-  bool _useIAMI = true; // Default to IAMI
+  final bool _useIAMI = true; // Default to IAMI
+  // ignore: unused_field
   IAMISuggestion? _pendingSuggestion; // For consent flow
 
   // SMART SKIP: Aliases to map DB keys to OCR keys
@@ -56,7 +59,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     'ds160_data.personal.telecode_name': 'telecode_name',
     'ds160_data.personal.other_names_used': 'other_names_used',
     'ds160_data.personal.other_names_list': 'other_names_list',
-    'native_name': 'native_alphabet_name', // Double alias
+    // 'native_name' already mapped above (line 51), removed duplicate
     'telecode_name': 'telecode', // Double alias
   };
 
@@ -195,10 +198,15 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
       String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
       
       // Heuristic normalization
-      if (nat.contains('DOMINICA')) nat = 'DOM';
-      else if (nat.contains('MEXIC')) nat = 'MEX';
-      else if (nat.contains('ARGENT')) nat = 'ARG';
-      else if (nat.contains('COLOMB')) nat = 'COL';
+      if (nat.contains('DOMINICA')) {
+        nat = 'DOM';
+      } else if (nat.contains('MEXIC')) {
+        nat = 'MEX';
+      } else if (nat.contains('ARGENT')) {
+        nat = 'ARG';
+      } else if (nat.contains('COLOMB')) {
+        nat = 'COL';
+      }
       
       final isLatin = _latinNationalities.contains(nat) || _latinNationalities.contains(_formData['nationality']); // 3. Smart Skip - Nationality Logic
       _applyNationalitySkips(isLatin);
@@ -221,7 +229,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
           }
       }
  
-      final totalFetched = (rawQuestions as List).length;
+      final totalFetched = rawQuestions.length;
 
       if (totalFetched == 0) {
         _debugError = 'Error: No questions found in DS-160';
@@ -359,8 +367,8 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   void _addBotMessage(String text, {List<String>? tips, String? example}) {
     setState(() {
       _messages.add(ChatMessage(
+        sender: ChatSender.consul,
         text: text,
-        isUser: false,
         tips: tips,
         example: example,
       ));
@@ -371,7 +379,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
 
   void _addUserMessage(String text) {
     setState(() {
-      _messages.add(ChatMessage(text: text, isUser: true));
+      _messages.add(ChatMessage(sender: ChatSender.user, text: text));
     });
     _scrollToBottom();
   }
@@ -457,7 +465,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
     } else {
       // If suggestion, show as user action in history
        setState(() {
-         _messages.add(ChatMessage(text: message, isUser: true, isAction: true)); 
+         _messages.add(ChatMessage(sender: ChatSender.user, text: message, isAction: true)); 
        });
     }
 
@@ -470,6 +478,8 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
         message: message,
         formType: 'DS-160',
         existingData: _formData,
+        // CRITICAL FIX: Use sublist to get all previous messages safe from duplicate text issue
+        history: _messages.length > 1 ? _messages.sublist(0, _messages.length - 1) : [],
       );
 
       // Handle Suggestion Flow (Proactive Refinement with Consent)
@@ -634,8 +644,8 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
       if (mounted) {
         setState(() {
           _messages.add(ChatMessage(
+            sender: ChatSender.consul,
             text: '',
-            isUser: false,
             isAction: true,
           ));
         });
@@ -751,21 +761,7 @@ class _Ds160IntakeScreenState extends ConsumerState<Ds160IntakeScreen> {
   }
 }
 
-class ChatMessage {
-  final String text;
-  final bool isUser;
-  final List<String>? tips;
-  final String? example;
-  final bool isAction;
 
-  ChatMessage({
-    required this.text,
-    required this.isUser,
-    this.tips,
-    this.example,
-    this.isAction = false,
-  });
-}
 
 class _ChatBubble extends StatelessWidget {
   final ChatMessage message;

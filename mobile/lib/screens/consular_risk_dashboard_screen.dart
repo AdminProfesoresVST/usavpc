@@ -1,4 +1,4 @@
-import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -106,7 +106,7 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.15),
+                      color: color.withValues(alpha: 0.15),
                       borderRadius: AppTheme.badgeRadius,
                     ),
                     child: Text(
@@ -199,7 +199,7 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: value,
-              backgroundColor: AppTheme.dividerGrey.withOpacity(0.3),
+              backgroundColor: AppTheme.dividerGrey.withValues(alpha: 0.3),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 8,
             ),
@@ -209,10 +209,7 @@ class ConsularRiskDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, double value) {
-    // Deprecated: No longer used in new layout
-    return const SizedBox.shrink();
-  }
+
 
   Widget _buildRedFlagFeed(BuildContext context, List<RedFlagAlert> redFlags) {
     final l10n = context.l10n;

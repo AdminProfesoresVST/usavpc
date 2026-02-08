@@ -64,7 +64,6 @@ class _VerificationLandingScreenState extends ConsumerState<VerificationLandingS
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final visaType = GoRouterState.of(context).uri.queryParameters['type'] ?? 'b1b2';
 
     return Scaffold(
       backgroundColor: AppTheme.inkInverse, // Pure White per reference

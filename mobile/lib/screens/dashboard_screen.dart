@@ -6,10 +6,10 @@ import 'package:mobile/core/extensions/build_context_extensions.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/widgets/app_header.dart';
 import 'package:mobile/providers/dashboard_provider.dart';
-import 'package:mobile/models/dashboard_data.dart';
+
 import 'package:mobile/providers/subscription_plans_provider.dart';
 import 'package:mobile/providers/consular_risk_provider.dart';
-import 'package:mobile/models/consular_risk_state.dart';
+
 
 /// Production-ready dashboard with functional action tiles and full i18n.
 /// Updated: 2026-01-21 - Applied i18n and AppHeader per audit requirements
@@ -237,68 +237,8 @@ class DashboardScreen extends ConsumerWidget {
     GoRouter.of(context).push('/simulator/chat');
   }
 
-  Widget _buildStatusCard(BuildContext context, DashboardData data, dynamic l10n) {
-    Color statusColor = AppTheme.warningOrange;
-    if (data.status == 'PAID' || data.status == 'SUBMITTED') {
-      statusColor = AppTheme.successGreen;
-    } else if (data.status == 'REJECTED') {
-      statusColor = AppTheme.errorRed;
-    }
 
-    return Container(
-      decoration: AppTheme.standardCardDecoration,
-      child: Padding(
-        padding: AppTheme.paddingEstandar,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.applicationStatus, style: AppTheme.labelBold),
-                Container(
-                  padding: AppTheme.paddingPequeno,
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.2),
-                    borderRadius: AppTheme.badgeRadius,
-                  ),
-                  child: Text(
-                    _translateStatus(data.status, l10n), 
-                    style: AppTheme.h2NavyBold.copyWith(color: statusColor),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: AppTheme.espacioEntreSecciones),
-            // Safely handle NaN or infinite progress
-            LinearProgressIndicator(
-              value: data.progress.isNaN ? 0.0 : data.progress.clamp(0.0, 1.0),
-              backgroundColor: AppTheme.softBlue,
-              valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-            ),
-            SizedBox(height: AppTheme.espacioEntreCampos),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.percentComplete(((data.progress.isNaN ? 0.0 : data.progress) * 100).toInt())),
-                Text(l10n.lastEdited(data.lastEdited)),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  String _translateStatus(String status, dynamic l10n) {
-    switch (status.toUpperCase()) {
-      case 'DRAFT': return l10n.statusDraft;
-      case 'PENDING_PAYMENT': return l10n.statusPendingPayment;
-      case 'PAID': return l10n.statusPaid;
-      case 'SUBMITTED': return l10n.statusSubmitted;
-      case 'NOT_STARTED': return l10n.statusNotStarted;
-      default: return status;
-    }
-  }
 }
 
 class _ServiceCard extends StatelessWidget {
@@ -589,7 +529,7 @@ class _StepItem extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.isFirst = false,
-    this.isLast = false,
+    this.isLast = false, // ignore: unused_element_parameter
     this.onTap,
   });
 
@@ -669,7 +609,7 @@ class _MiniRiskGauge extends StatelessWidget {
             color: AppTheme.navyPrimary, // Navy background
             borderRadius: AppTheme.buttonRadius,
             boxShadow: [
-              BoxShadow(color: AppTheme.navyPrimary.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 3)),
+              BoxShadow(color: AppTheme.navyPrimary.withValues(alpha: 0.2), blurRadius: 6, offset: const Offset(0, 3)),
             ],
           ),
           child: Column(
@@ -683,7 +623,7 @@ class _MiniRiskGauge extends StatelessWidget {
                   painter: _SemiCircleGaugePainter(
                     progress: probability,
                     progressColor: Colors.white,
-                    backgroundColor: Colors.white.withOpacity(0.25),
+                    backgroundColor: Colors.white.withValues(alpha: 0.25),
                   ),
                   child: Align(
                     alignment: Alignment.bottomCenter,
@@ -709,7 +649,7 @@ class _MiniRiskGauge extends StatelessWidget {
                 context.l10n.seeRiskDetails,
                 style: AppTheme.captionGreyRegular.copyWith(
                   fontSize: 9,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,

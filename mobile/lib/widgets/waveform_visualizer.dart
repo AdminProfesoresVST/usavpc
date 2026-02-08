@@ -102,7 +102,7 @@ class _WaveformVisualizerState extends State<WaveformVisualizer> with TickerProv
                 width: 2,
                 height: idleHeight,
                 decoration: BoxDecoration(
-                  color: _getBarColor(index).withOpacity(0.5), // Lower opacity for idle
+                  color: _getBarColor(index).withValues(alpha: 0.5), // Lower opacity for idle
                   borderRadius: AppTheme.smallRadius,
                 ),
               );
@@ -127,7 +127,7 @@ class _WaveformVisualizerState extends State<WaveformVisualizer> with TickerProv
                   width: 2, // Thin lines
                   height: 40 * _heightAnimations[index].value, // Larger height
                   decoration: BoxDecoration(
-                    color: _getBarColor(index).withOpacity(0.8),
+                    color: _getBarColor(index).withValues(alpha: 0.8),
                     borderRadius: AppTheme.smallRadius,
                   ),
                 );

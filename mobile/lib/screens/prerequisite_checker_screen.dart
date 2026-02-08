@@ -209,53 +209,8 @@ class _PrerequisiteCheckerScreenState extends ConsumerState<PrerequisiteCheckerS
     );
   }
 
-  Widget _buildNoPrerequisitesView(BuildContext context, dynamic l10n) {
-    return Center(
-      child: Padding(
-        padding: AppTheme.paddingExtraGrande,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.check_circle_outline,
-              size: AppTheme.iconoHero,
-              color: AppTheme.successGreen,
-            ),
-            SizedBox(height: AppTheme.espacioEntreCards),
-            Text(
-              l10n.noPrerequisities,
-              style: AppTheme.h1NavyBold,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: AppTheme.espacioEntreGrupos),
-            Text(
-              l10n.noPrerequisitiesDesc,
-              textAlign: TextAlign.center,
-              style: AppTheme.labelRegular,
-            ),
-            SizedBox(height: AppTheme.espacioEntreBloques),
-            SizedBox(
-              width: double.infinity,
-              height: AppTheme.alturaBotonGrande,
-              child: ElevatedButton.icon(
-                onPressed: () => _continueToApplication(context, l10n),
-                icon: const Icon(Icons.arrow_forward),
-                label: Text(l10n.continueToApp),
-                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.navyPrimary,
-                  foregroundColor: AppTheme.inkInverse,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: AppTheme.buttonRadius,
-                  ),
-                  textStyle: AppTheme.h2WhiteBold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
+
 
   Widget _buildBottomBar(BuildContext context, List<PrerequisiteForm> prerequisites, dynamic l10n) {
     final mandatoryForms = prerequisites.where((p) => p.isMandatory).toList();

@@ -228,120 +228,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  // ============== DASHBOARD WIDGETS TRANSPLANT ==============
-  Widget _buildStatusCard(BuildContext context, DashboardData data, dynamic l10n) {
-    // Use navy for in-progress states, green for complete, red for errors
-    final statusInfo = _getStatusInfo(data.status);
-    final Color statusColor = statusInfo.color;
-    final String statusText = _translateStatus(data.status, l10n);
 
-    return ClipRRect(
-      borderRadius: AppTheme.cardRadius,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceWhite,
-          borderRadius: AppTheme.cardRadius,
-          border: Border.all(color: AppTheme.cardBorderColor),
-        ),
-        child: Padding(
-          padding: AppTheme.paddingEstandar,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(l10n.applicationStatus, style: AppTheme.labelBold),
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Container(
-                      padding: AppTheme.paddingPequeno,
-                      decoration: BoxDecoration(
-                        color: statusColor.withValues(alpha: 0.15),
-                        borderRadius: AppTheme.badgeRadius,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(statusInfo.icon, size: 14, color: statusColor),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              statusText,
-                              style: AppTheme.captionNavyBold.copyWith(
-                                color: statusColor,
-                                fontSize: 12,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: AppTheme.espacioEntreSecciones),
-              LinearProgressIndicator(
-                value: data.progress.isNaN ? 0.0 : data.progress.clamp(0.0, 1.0),
-                backgroundColor: AppTheme.softBlue,
-                valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-              ),
-              SizedBox(height: AppTheme.espacioEntreCampos),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(l10n.percentComplete(((data.progress.isNaN ? 0.0 : data.progress) * 100).toInt())),
-                  Text(l10n.lastEdited(data.lastEdited)),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  ({Color color, IconData icon}) _getStatusInfo(String status) {
-    switch (status.toUpperCase()) {
-      case 'PAID':
-      case 'SUBMITTED':
-      case 'COMPLETE':
-        return (color: AppTheme.successGreen, icon: Icons.check_circle);
-      case 'REJECTED':
-      case 'DENIED':
-        return (color: AppTheme.errorRed, icon: Icons.cancel);
-      case 'OCR_COMPLETE':
-      case 'VERIFIED':
-      case 'SCANNING_DONE':
-        return (color: AppTheme.navyPrimary, icon: Icons.verified);
-      case 'PENDING_PAYMENT':
-      case 'AWAITING':
-        return (color: AppTheme.navyPrimary, icon: Icons.schedule);
-      case 'DRAFT':
-      case 'IN_PROGRESS':
-      default:
-        return (color: AppTheme.navyPrimary, icon: Icons.edit_note);
-    }
-  }
-
-  String _translateStatus(String status, dynamic l10n) {
-    switch (status.toUpperCase()) {
-      case 'DRAFT': return l10n.statusDraft;
-      case 'PENDING_PAYMENT': return l10n.statusPendingPayment;
-      case 'PAID': return l10n.statusPaid;
-      case 'SUBMITTED': return l10n.statusSubmitted;
-      case 'NOT_STARTED': return l10n.statusNotStarted;
-      case 'OCR_COMPLETE': return l10n.statusDocumentsScanned;
-      case 'VERIFIED': return l10n.statusVerified;
-      case 'IN_PROGRESS': return l10n.statusInProgress;
-      case 'COMPLETE': return l10n.statusComplete;
-      case 'REJECTED': return l10n.statusRejected;
-      case 'DENIED': return l10n.statusDenied;
-      default: return l10n.statusInProgress; // User-friendly fallback
-    }
-  }
 
   IconData _getIcon(String code) {
     switch (code) {
@@ -670,11 +558,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(dialogContext);
+              final messenger = ScaffoldMessenger.of(context);
               try {
                 await supabase.auth.resetPasswordForEmail(email);
-                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.passwordResetSent(email))));
+                if (mounted) messenger.showSnackBar(SnackBar(content: Text(l10n.passwordResetSent(email))));
               } catch (e) {
-                if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.error(e.toString()))));
+                if (mounted) messenger.showSnackBar(SnackBar(content: Text(l10n.error(e.toString()))));
               }
             },
             child: Text(l10n.send),
@@ -745,7 +634,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _handleLogout(BuildContext context) async {
+    final router = GoRouter.of(context);
     await ref.read(authProvider.notifier).signOut();
-    if (mounted) context.go('/services');
+    if (mounted) router.go('/services');
   }
 }

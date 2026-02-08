@@ -107,7 +107,6 @@ GoRouter goRouter(Ref ref) {
                ),
              );
            }
-           final type = state.uri.queryParameters['visa_type'] ?? 'b1b2'; 
            return const Ds160IntakeScreen();
         },
       ),

@@ -283,7 +283,7 @@ class VisaCategorySelectorScreen extends ConsumerWidget {
         decoration: isRecommended ? BoxDecoration(
           borderRadius: AppTheme.cardRadius,
           border: Border.all(color: AppTheme.accentGold, width: 2), // Highlight border
-          color: AppTheme.softBlue.withOpacity(0.3),
+          color: AppTheme.softBlue.withValues(alpha: 0.3),
         ) : null,
         child: StandardServiceCard(
           title: VisaLocalization.getVisaName(category.code, category.name, l10n),

@@ -26,7 +26,7 @@ class CostBreakdownCard extends StatelessWidget {
         borderRadius: AppTheme.badgeRadius,
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withOpacity(0.1),
+            color: colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -41,7 +41,7 @@ class CostBreakdownCard extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   colorScheme.primary,
-                  colorScheme.primary.withOpacity(0.8),
+                  colorScheme.primary.withValues(alpha: 0.8),
                 ],
               ),
               borderRadius: BorderRadius.only(
@@ -57,7 +57,7 @@ class CostBreakdownCard extends StatelessWidget {
                     Text(
                       'Total Cost',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onPrimary.withOpacity(0.8),
+                        color: colorScheme.onPrimary.withValues(alpha: 0.8),
                       ),
                     ),
                     Container(
@@ -66,7 +66,7 @@ class CostBreakdownCard extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: colorScheme.onPrimary.withOpacity(0.2),
+                        color: colorScheme.onPrimary.withValues(alpha: 0.2),
                         borderRadius: AppTheme.badgeRadius,
                       ),
                       child: Text(
@@ -91,7 +91,7 @@ class CostBreakdownCard extends StatelessWidget {
                 Text(
                   'USD',
                   style: theme.textTheme.titleSmall?.copyWith(
-                    color: colorScheme.onPrimary.withOpacity(0.7),
+                    color: colorScheme.onPrimary.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -132,7 +132,7 @@ class CostBreakdownCard extends StatelessWidget {
           Container(
             padding: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.only(
                 bottomLeft: AppTheme.radiusModal,
                 bottomRight: AppTheme.radiusModal,
@@ -187,7 +187,7 @@ class CostBreakdownCard extends StatelessWidget {
           Container(
             padding: AppTheme.paddingCompacto,
             decoration: BoxDecoration(
-              color: _getFeeColor(item.feeType).withOpacity(0.1),
+              color: _getFeeColor(item.feeType).withValues(alpha: 0.1),
               borderRadius: AppTheme.buttonRadius,
             ),
             child: Icon(
@@ -315,7 +315,7 @@ class CostBreakdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.successGreenLight,
         borderRadius: AppTheme.buttonRadius,
-        border: Border.all(color: AppTheme.successGreen.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.successGreen.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [

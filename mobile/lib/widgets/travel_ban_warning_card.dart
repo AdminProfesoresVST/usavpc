@@ -55,7 +55,7 @@ class TravelBanWarningCard extends StatelessWidget {
         borderRadius: AppTheme.cardRadius,
         boxShadow: [
           BoxShadow(
-            color: iconColor.withOpacity(0.2),
+            color: iconColor.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -68,7 +68,7 @@ class TravelBanWarningCard extends StatelessWidget {
           Container(
             padding: AppTheme.paddingEstandar,
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
+              color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.only(
                 topLeft: AppTheme.radiusBurbuja,
                 topRight: AppTheme.radiusBurbuja,
@@ -79,7 +79,7 @@ class TravelBanWarningCard extends StatelessWidget {
                 Container(
                   padding: AppTheme.paddingCompacto,
                   decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.2),
+                    color: iconColor.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: iconColor, size: 24),
@@ -100,7 +100,7 @@ class TravelBanWarningCard extends StatelessWidget {
                         Text(
                           result.countryName!,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: iconColor.withOpacity(0.8),
+                            color: iconColor.withValues(alpha: 0.8),
                           ),
                         ),
                     ],
@@ -109,7 +109,7 @@ class TravelBanWarningCard extends StatelessWidget {
                 if (onDismiss != null)
                   IconButton(
                     icon: const Icon(Icons.close),
-                    color: iconColor.withOpacity(0.5),
+                    color: iconColor.withValues(alpha: 0.5),
                     onPressed: onDismiss,
                   ),
               ],
@@ -122,7 +122,7 @@ class TravelBanWarningCard extends StatelessWidget {
             child: Text(
               result.message ?? 'Visa processing is currently restricted.',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: iconColor.withOpacity(0.9),
+                color: iconColor.withValues(alpha: 0.9),
               ),
             ),
           ),
@@ -137,9 +137,9 @@ class TravelBanWarningCard extends StatelessWidget {
                 children: result.blockedCategories!.map((cat) {
                   return Chip(
                     label: Text(cat),
-                    backgroundColor: iconColor.withOpacity(0.1),
+                    backgroundColor: iconColor.withValues(alpha: 0.1),
                     labelStyle: AppTheme.captionGreyRegular.copyWith(color: iconColor),
-                    side: BorderSide(color: iconColor.withOpacity(0.3)),
+                    side: BorderSide(color: iconColor.withValues(alpha: 0.3)),
                   );
                 }).toList(),
               ),
@@ -223,9 +223,9 @@ class RestrictionStatusBadge extends StatelessWidget {
     return Container(
       padding: AppTheme.paddingBadge,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: AppTheme.badgeRadius,
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

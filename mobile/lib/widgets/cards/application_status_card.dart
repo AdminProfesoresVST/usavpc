@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
-import 'package:mobile/providers/document_providers.dart';
+
 
 import 'package:mobile/models/user_document.dart'; // [FIX] Import DocumentProgress
 

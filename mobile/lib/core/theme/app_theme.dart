@@ -461,7 +461,7 @@ class AppTheme {
     border: Border.all(color: cardBorderColor),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.03),
+        color: Colors.black.withValues(alpha: 0.03),
         blurRadius: 6,
         offset: const Offset(0, 2),
       ),
@@ -474,7 +474,7 @@ class AppTheme {
     borderRadius: cardRadius,
     boxShadow: [
       BoxShadow(
-        color: navyPrimary.withOpacity(0.3),
+        color: navyPrimary.withValues(alpha: 0.3),
         blurRadius: 8,
         offset: const Offset(0, 4),
       ),

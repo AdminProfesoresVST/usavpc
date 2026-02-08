@@ -27,9 +27,9 @@ class ConsulBubble extends StatelessWidget {
             bottomLeft: AppTheme.radiusBurbuja,
             bottomRight: AppTheme.radiusBurbuja,
           ),
-          border: Border.all(color: AppTheme.inkPrimary.withOpacity(0.1), width: 1), // Subtle border
+          border: Border.all(color: AppTheme.inkPrimary.withValues(alpha: 0.1), width: 1), // Subtle border
           boxShadow: [
-             BoxShadow(color: AppTheme.inkPrimary.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+             BoxShadow(color: AppTheme.inkPrimary.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
           ],
         ),
         child: Text(

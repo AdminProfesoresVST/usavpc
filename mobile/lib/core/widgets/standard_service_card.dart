@@ -49,7 +49,7 @@ class StandardServiceCard extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: AppTheme.navyPrimary.withOpacity(0.08),
+                      color: AppTheme.navyPrimary.withValues(alpha: 0.08),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(icon, color: AppTheme.navyPrimary, size: 20),

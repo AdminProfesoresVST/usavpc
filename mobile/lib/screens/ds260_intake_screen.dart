@@ -11,6 +11,7 @@ import 'package:mobile/services/voice_manager.dart';
 import 'package:mobile/core/widgets/premium_chat_input.dart';
 import 'package:mobile/services/ai_repository.dart'; // IAMI
 import 'package:mobile/core/widgets/iami_suggestion_dialog.dart';
+import 'package:mobile/models/chat_message.dart'; // Unified Model
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Dedicated intake screen for DS-260 (Immigrant Visa)
@@ -36,6 +37,7 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
   
   // IAMI: Intelligent Migration Assistant Mode
   final bool _useIAMI = true;
+  // ignore: unused_field
   IAMISuggestion? _pendingSuggestion;
   
   // DEBUG VARIABLES
@@ -69,8 +71,7 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
     'ds260_data.personal.telecode_name': 'telecode_name',
     'ds260_data.personal.other_names_used': 'other_names_used',
     'ds260_data.personal.other_names_list': 'other_names_list',
-    'native_name': 'native_alphabet_name', // Double alias
-    'telecode_name': 'telecode', // Double alias
+    // 'native_name' already mapped above (line 59), removed duplicate
   };
 
   // Keys to skip if OCR data exists
@@ -149,7 +150,7 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
     } else {
       // If suggestion, show as user action in history
        setState(() {
-         _messages.add(ChatMessage(text: message, isUser: true, isAction: true)); 
+         _messages.add(ChatMessage(sender: ChatSender.user, text: message, isAction: true)); 
        });
     }
 
@@ -162,6 +163,8 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
         message: message,
         formType: 'DS-260',
         existingData: _formData,
+        // CRITICAL FIX: Use sublist to get all previous messages safe from duplicate text issue
+        history: _messages.length > 1 ? _messages.sublist(0, _messages.length - 1) : [],
       );
 
       // Handle Suggestion Consent
@@ -217,25 +220,25 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
   // HELPER METHODS
   
   void _addBotMessage(String text, {List<String>? tips, String? example}) {
-     setState(() {
-       _messages.add(ChatMessage(
-         text: text, 
-         isUser: false, 
-         tips: tips, 
-         example: example
-       ));
-       _scrollToBottom();
-     });
+      setState(() {
+        _messages.add(ChatMessage(
+          sender: ChatSender.consul,
+          text: text, 
+          tips: tips, 
+          example: example
+        ));
+        _scrollToBottom();
+      });
      
      // Speak the bot message
      _voiceManager.speak(text); 
   }
 
   void _addUserMessage(String text) {
-     setState(() {
-       _messages.add(ChatMessage(text: text, isUser: true));
-       _scrollToBottom();
-     });
+      setState(() {
+        _messages.add(ChatMessage(sender: ChatSender.user, text: text));
+        _scrollToBottom();
+      });
   }
 
   void _scrollToBottom() {
@@ -315,7 +318,9 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
       String nat = _formData['nationality']?.toString().toUpperCase() ?? '';
       if (nat.contains('DOMINICA')) {
         nat = 'DOM';
-      } else if (nat.contains('MEXIC')) nat = 'MEX';
+      } else if (nat.contains('MEXIC')) {
+        nat = 'MEX';
+      }
 
       final isLatin = _latinNationalities.contains(nat) || _latinNationalities.contains(_formData['nationality']);
       
@@ -334,7 +339,7 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
          _formData['ds260_data.personal.telecode_name'] = 'No';
       }
  
-      final totalFetched = (rawQuestions as List).length;
+      final totalFetched = rawQuestions.length;
 
       if (totalFetched == 0) {
         _debugError = 'Error: No questions found in ds260_questions';
@@ -543,7 +548,7 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
-          _messages.add(ChatMessage(text: '', isUser: false, isAction: true));
+          _messages.add(ChatMessage(sender: ChatSender.consul, text: '', isAction: true));
         });
         _scrollToBottom();
       }
@@ -678,21 +683,7 @@ class _Ds260IntakeScreenState extends ConsumerState<Ds260IntakeScreen> {
   }
 }
 
-class ChatMessage {
-  final String text;
-  final bool isUser;
-  final List<String>? tips;
-  final String? example;
-  final bool isAction;
 
-  ChatMessage({
-    required this.text,
-    required this.isUser,
-    this.tips,
-    this.example,
-    this.isAction = false,
-  });
-}
 
 class _ChatBubble extends StatelessWidget {
   final ChatMessage message;

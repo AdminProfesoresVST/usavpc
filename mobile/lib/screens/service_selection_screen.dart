@@ -16,7 +16,6 @@ class ServiceSelectionScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final isLoggedIn = ref.watch(authStateProvider).value != null;
     
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,

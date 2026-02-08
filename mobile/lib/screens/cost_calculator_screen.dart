@@ -181,46 +181,8 @@ class _CostCalculatorScreenState extends ConsumerState<CostCalculatorScreen> {
   bool get _canCalculate =>
       _selectedCountryCode != null && _selectedCategory != null;
 
-  Widget _buildCountryDropdown(BuildContext context, dynamic l10n) {
-    final countries = [
-      ('MX', 'Mexico 🇲🇽'),
-      ('CO', 'Colombia 🇨🇴'),
-      ('BR', 'Brazil 🇧🇷'),
-      ('AR', 'Argentina 🇦🇷'),
-      ('IN', 'India 🇮🇳'),
-      ('CN', 'China 🇨🇳'),
-      ('PH', 'Philippines 🇵🇭'),
-      ('VE', 'Venezuela 🇻🇪'),
-      ('CL', 'Chile 🇨🇱'),
-      ('PE', 'Peru 🇵🇪'),
-      ('EC', 'Ecuador 🇪🇨'),
-      ('DO', 'Dominican Republic 🇩🇴'),
-    ];
 
-    return DropdownButtonFormField<String>(
-      initialValue: _selectedCountryCode,
-      isExpanded: true,
-      decoration: InputDecoration(
-        hintText: l10n.selectCountry,
-        prefixIcon: const Icon(Icons.public, color: AppTheme.navyPrimary),
-        filled: true,
-        fillColor: AppTheme.inkInverse,
-        border: OutlineInputBorder(borderRadius: AppTheme.inputRadius),
-      ),
-      items: countries.map((c) {
-        return DropdownMenuItem(
-          value: c.$1,
-          child: Text(c.$2, overflow: TextOverflow.ellipsis),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedCountryCode = value;
-          _calculationRequested = false;
-        });
-      },
-    );
-  }
+
 
   Widget _buildCategoryDropdown(
     BuildContext context,

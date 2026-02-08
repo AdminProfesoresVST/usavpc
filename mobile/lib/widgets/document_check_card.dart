@@ -65,7 +65,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
       decoration: AppTheme.standardCardDecoration.copyWith(
         border: Border.all(
-          color: _isExpanded ? statusColor.withOpacity(0.5) : AppTheme.cardBorderColor,
+          color: _isExpanded ? statusColor.withValues(alpha: 0.5) : AppTheme.cardBorderColor,
           width: _isExpanded ? 1.5 : 1,
         ),
       ),
@@ -86,7 +86,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                   Container(
                     padding: AppTheme.paddingCompacto,
                     decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
+                      color: statusColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(statusIcon, color: statusColor, size: 24),
@@ -114,7 +114,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.errorRed.withOpacity(0.1),
+                                  color: AppTheme.errorRed.withValues(alpha: 0.1),
                                   borderRadius: AppTheme.smallRadius,
                                 ),
                                 child: Text(
@@ -132,7 +132,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.dividerGrey.withOpacity(0.1),
+                                  color: AppTheme.dividerGrey.withValues(alpha: 0.1),
                                   borderRadius: AppTheme.smallRadius,
                                 ),
                                 child: Text(
@@ -202,7 +202,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
             Container(
               padding: AppTheme.paddingPequeno,
               decoration: BoxDecoration(
-                color: colorScheme.primaryContainer.withOpacity(0.3),
+                color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: AppTheme.buttonRadius,
               ),
               child: Row(
@@ -355,7 +355,7 @@ class _DocumentCheckCardState extends State<DocumentCheckCard> {
         duration: const Duration(milliseconds: 150),
         padding: AppTheme.paddingVertical,
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: AppTheme.inputRadius,
           border: Border.all(
             color: isSelected ? color : AppTheme.inkSecondary,

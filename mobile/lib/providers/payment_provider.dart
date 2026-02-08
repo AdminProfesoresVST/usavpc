@@ -7,6 +7,7 @@ part 'payment_provider.g.dart';
 
 /// Provider for the PaymentService singleton
 @riverpod
+// ignore: strict_top_level_inference
 PaymentService paymentService(ref) {
   final service = PaymentService();
   // Initialize when first accessed
@@ -16,6 +17,7 @@ PaymentService paymentService(ref) {
 
 /// Provider to check if user has active subscription
 @riverpod
+// ignore: strict_top_level_inference
 Future<bool> hasActiveSubscription(ref) async {
   final supabase = Supabase.instance.client;
   final userId = supabase.auth.currentUser?.id;
@@ -35,6 +37,7 @@ Future<bool> hasActiveSubscription(ref) async {
 
 /// Provider to get available products from store
 @riverpod
+// ignore: strict_top_level_inference
 Future<List<ProductDetails>> availableProducts(ref) async {
   final service = ref.watch(paymentServiceProvider);
   
@@ -48,6 +51,7 @@ Future<List<ProductDetails>> availableProducts(ref) async {
 
 /// Provider to get user's subscription history
 @riverpod
+// ignore: strict_top_level_inference
 Future<List<Map<String, dynamic>>> userSubscriptions(ref) async {
   final supabase = Supabase.instance.client;
   final userId = supabase.auth.currentUser?.id;

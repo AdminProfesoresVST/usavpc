@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:mobile/core/theme/app_theme.dart';
 import 'package:mobile/core/extensions/build_context_extensions.dart';
 
@@ -25,7 +25,7 @@ class PremiumChatInput extends StatefulWidget {
 }
 
 class _PremiumChatInputState extends State<PremiumChatInput> with SingleTickerProviderStateMixin {
-  bool _isFocused = false;
+  bool _isFocused = false; // ignore: unused_field
   late AnimationController _micPulseController;
   late FocusNode _focusNode; // Persistent focus management
 

@@ -26,7 +26,7 @@ class _PremiumCheckoutScreenState extends ConsumerState<PremiumCheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
+    final _ = context.l10n;
     final planAsync = ref.watch(subscriptionPlanByIdProvider(widget.planId));
     
     return Scaffold(

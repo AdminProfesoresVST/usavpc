@@ -501,6 +501,7 @@ EJECUTA EL ALGORITMO. TOMA DECISIONES. PROTEGE LA FRONTERA.
             // 3. IAMI INTERACTION
             const iamiMessages = [
                 { role: 'system' as const, content: IAMI_SYSTEM_PROMPT },
+                ...(history || []).map((m: any) => ({ role: m.role, content: m.content })),
                 {
                     role: 'user' as const,
                     content: `

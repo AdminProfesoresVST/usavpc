@@ -23,7 +23,7 @@ class UserBubble extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               AppTheme.actionBlue,
-              AppTheme.actionBlue.withOpacity(0.85),
+              AppTheme.actionBlue.withValues(alpha: 0.85),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -36,7 +36,7 @@ class UserBubble extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.actionBlue.withOpacity(0.25),
+              color: AppTheme.actionBlue.withValues(alpha: 0.25),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),

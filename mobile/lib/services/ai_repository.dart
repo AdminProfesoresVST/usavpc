@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mobile/core/service_locator/app_config_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:mobile/models/simulator_models.dart';
+import 'package:mobile/models/chat_message.dart'; // Import ChatMessage
 import 'dart:convert';
 
 part 'ai_repository.g.dart';
@@ -121,6 +122,7 @@ class AiRepository {
     required String? message, // Null for first interaction
     required String formType,
     Map<String, dynamic>? existingData,
+    List<ChatMessage> history = const [], // ADDED HISTORY
   }) async {
     try {
       final session = Supabase.instance.client.auth.currentSession;
@@ -134,6 +136,10 @@ class AiRepository {
           'answer': message,
           'mode': 'intake', // IAMI Mode
           'locale': 'es',
+          'history': history.map((m) => {
+            'role': m.isUser ? 'user' : 'assistant',
+            'content': m.text
+          }).toList(),
           'context': {
             'form_type': formType,
             ...?existingData,

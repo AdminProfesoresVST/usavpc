@@ -40,7 +40,7 @@ class FeedbackCard extends StatelessWidget {
         color: cardColor,
         borderRadius: AppTheme.inputRadius,
         border: Border.all(
-          color: AppTheme.navyPrimary.withOpacity(0.1),
+          color: AppTheme.navyPrimary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -70,7 +70,7 @@ class FeedbackCard extends StatelessWidget {
             Container(
               padding: AppTheme.paddingCompacto,
               decoration: BoxDecoration(
-                color: AppTheme.inkInverse.withOpacity(0.6),
+                color: AppTheme.inkInverse.withValues(alpha: 0.6),
                 borderRadius: AppTheme.smallRadius,
               ),
               child: Row(
